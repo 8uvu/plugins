@@ -12,7 +12,7 @@
             },
             "versions": {
                 "1.0.1": {
-                    "url": "https://8uvu.github.io/msglog/pool/93b180993c97@1.0.1.zip",
+                    "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.quick-check@1.0.1.zip",
                     "sha256": "f8a41c03cda9d16dbe1bc8e570be3799d29e56f36214af7361b94389b77cabac",
                     "size": 3345,
                     "dependencies": {

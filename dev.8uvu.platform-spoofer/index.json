@@ -12,7 +12,7 @@
             },
             "versions": {
                 "1.4.0": {
-                    "url": "https://8uvu.github.io/msglog/pool/76e58bf750b1@1.4.0.zip",
+                    "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.platform-spoofer@1.4.0.zip",
                     "sha256": "5448932a764a62bad13f4ebebf72e3bc2068fa4e9cb3a1ee77af89a19dba3455",
                     "size": 6017,
                     "dependencies": {
