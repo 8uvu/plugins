@@ -14,7 +14,7 @@ const { join } = require('node:path');
 
 const repoRoot = join(__dirname, '..');
 const POLICY_PATH = join(repoRoot, 'publish.json');
-const BASE_URL = 'https://8uvu.github.io/msglog';
+const BASE_URL = 'https://8uvu.github.io/plugins';
 
 // A published path segment with nothing to read a name out of. Rotating a slug
 // means anyone who installed from the old URL has to add the plugin again, so
