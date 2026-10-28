@@ -249,13 +249,13 @@ for (const { id, manifest } of plugins) {
     const folderIndex = {
         format: 1,
         name: manifest.name,
-        description: manifest.description ?? "Revenge plugins by 8uvu",
+        description: manifest.description ?? "Cenotaph plugins",
         plugins: { [id]: pluginEntry(id, manifest) },
     };
     await writeFile(`./dist/${path}/index.json`, JSON.stringify(folderIndex, null, 4) + "\n");
 }
 
-// Root-level plugin install: pasting https://8uvu.github.io/msglog/ straight
+// Root-level plugin install: pasting https://8uvu.github.io/plugins/ straight
 // into Revenge's plugin URL box fetches <root>/manifest.json then <root>/index.js.
 const primary = plugins.find((p) => p.id === ROOT_PLUGIN_ID) ?? plugins[0];
 if (primary) {
@@ -287,8 +287,8 @@ for (const { id, manifest } of plugins) {
 
 const index = {
     format: 1,
-    name: "msglog",
-    description: "Revenge plugins by 8uvu",
+    name: "Cenotaph plugins",
+    description: "Cenotaph plugins",
     plugins: output,
 };
 

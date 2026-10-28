@@ -3,12 +3,12 @@
     "id": "dev.8uvu.message-logger",
     "name": "MessageLogger",
     "description": "Message logger with searchable deleted/edited history, edit diffs, ghost pings, muted-channel filters, image caching and import/export",
-    "author": "8uvu aka Epitaph",
+    "author": "Cenotaph",
     "main": "index.js",
     "display": {
         "name": "MessageLogger",
         "description": "Message logger with searchable deleted/edited history, edit diffs, ghost pings, muted-channel filters, image caching and import/export",
-        "authors": [{ "name": "8uvu aka Epitaph" }]
+        "authors": [{ "name": "Cenotaph" }]
     },
     "version": "1.7.3",
     "dependencies": {
