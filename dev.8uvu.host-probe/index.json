@@ -12,7 +12,7 @@
             },
             "versions": {
                 "1.0.1": {
-                    "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.host-probe@1.0.1.zip",
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.0.1.zip",
                     "sha256": "e0e75256b0d73ce12940ec524b8074091cc08b9d031add8b6d8ba40a20179680",
                     "size": 4083,
                     "dependencies": {

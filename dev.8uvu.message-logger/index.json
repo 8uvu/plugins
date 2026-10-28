@@ -12,7 +12,7 @@
             },
             "versions": {
                 "1.7.3": {
-                    "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.message-logger@1.7.3.zip",
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.7.3.zip",
                     "sha256": "4ed4f8a0e615697e7cbd93c753ba316a597ebe18e45b8bef42d242c49b7b445c",
                     "size": 24231,
                     "dependencies": {

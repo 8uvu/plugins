@@ -12,7 +12,7 @@
             },
             "versions": {
                 "1.2.2": {
-                    "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.fake-dm@1.2.2.zip",
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.2.2.zip",
                     "sha256": "e7e1f2360d44e233c1d378acc5bbca40e35c1061daebf2e5ee06ec0b0aaaaed3",
                     "size": 14431,
                     "dependencies": {

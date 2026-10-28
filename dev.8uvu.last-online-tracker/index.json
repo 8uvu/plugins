@@ -12,7 +12,7 @@
             },
             "versions": {
                 "1.5.0": {
-                    "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.last-online-tracker@1.5.0.zip",
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.5.0.zip",
                     "sha256": "f63a7fa30ef3eae6ac3744d77fbfad760bf8f6282ce99127c1f9209612543718",
                     "size": 10078,
                     "dependencies": {

@@ -12,7 +12,7 @@
             },
             "versions": {
                 "1.0.3": {
-                    "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.clean-urls@1.0.3.zip",
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.clean-urls@1.0.3.zip",
                     "sha256": "0cc78b058610a404bc4f786a712f23f91c333cb667f1583ad1ceefc11a651e63",
                     "size": 6209,
                     "dependencies": {
@@ -35,7 +35,7 @@
             },
             "versions": {
                 "1.2.2": {
-                    "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.fake-dm@1.2.2.zip",
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.2.2.zip",
                     "sha256": "e7e1f2360d44e233c1d378acc5bbca40e35c1061daebf2e5ee06ec0b0aaaaed3",
                     "size": 14431,
                     "dependencies": {
@@ -58,7 +58,7 @@
             },
             "versions": {
                 "1.0.1": {
-                    "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.host-probe@1.0.1.zip",
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.0.1.zip",
                     "sha256": "e0e75256b0d73ce12940ec524b8074091cc08b9d031add8b6d8ba40a20179680",
                     "size": 4083,
                     "dependencies": {
@@ -81,7 +81,7 @@
             },
             "versions": {
                 "1.5.0": {
-                    "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.last-online-tracker@1.5.0.zip",
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.5.0.zip",
                     "sha256": "f63a7fa30ef3eae6ac3744d77fbfad760bf8f6282ce99127c1f9209612543718",
                     "size": 10078,
                     "dependencies": {
@@ -104,7 +104,7 @@
             },
             "versions": {
                 "1.7.3": {
-                    "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.message-logger@1.7.3.zip",
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.7.3.zip",
                     "sha256": "4ed4f8a0e615697e7cbd93c753ba316a597ebe18e45b8bef42d242c49b7b445c",
                     "size": 24231,
                     "dependencies": {
@@ -127,7 +127,7 @@
             },
             "versions": {
                 "1.4.0": {
-                    "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.platform-spoofer@1.4.0.zip",
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.4.0.zip",
                     "sha256": "e9054798bf72fd3436dd685dcdc13ea1a3ae3f51d25720b6e6405456ee34b764",
                     "size": 6012,
                     "dependencies": {
@@ -150,7 +150,7 @@
             },
             "versions": {
                 "1.0.1": {
-                    "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.quick-check@1.0.1.zip",
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.quick-check@1.0.1.zip",
                     "sha256": "d94070089c9267622d2701f9bd0512ad8f004cb34d987cd0f19e2bc30af5352a",
                     "size": 3348,
                     "dependencies": {
