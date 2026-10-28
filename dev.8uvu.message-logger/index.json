@@ -6,15 +6,15 @@
         "dev.8uvu.message-logger": {
             "name": "MessageLogger",
             "description": "Message logger with searchable deleted/edited history, edit diffs, ghost pings, muted-channel filters, image caching and import/export",
-            "author": "8uvu aka Epitaph",
+            "author": "Cenotaph",
             "channels": {
                 "latest": "1.7.3"
             },
             "versions": {
                 "1.7.3": {
                     "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.message-logger@1.7.3.zip",
-                    "sha256": "d89de1b9e05630df5fded30179434288909b4199550d4d78ed511df51292b6fc",
-                    "size": 24236,
+                    "sha256": "e518617da7c6033734b3b138751b3403d26f81dd768bcf61c13a633e903d9c35",
+                    "size": 24230,
                     "dependencies": {
                         "revenge.api": {
                             "version": ">=1"

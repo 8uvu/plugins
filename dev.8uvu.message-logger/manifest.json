@@ -3,14 +3,14 @@
     "id": "dev.8uvu.message-logger",
     "name": "MessageLogger",
     "description": "Message logger with searchable deleted/edited history, edit diffs, ghost pings, muted-channel filters, image caching and import/export",
-    "author": "8uvu aka Epitaph",
+    "author": "Cenotaph",
     "main": "index.js",
     "display": {
         "name": "MessageLogger",
         "description": "Message logger with searchable deleted/edited history, edit diffs, ghost pings, muted-channel filters, image caching and import/export",
         "authors": [
             {
-                "name": "8uvu aka Epitaph"
+                "name": "Cenotaph"
             }
         ]
     },
@@ -29,7 +29,7 @@
     "hash": "183ef86a4dfc1eb4d0fac891861aed8f331f76810281ef4b6b6ad8cec8648351",
     "authors": [
         {
-            "name": "8uvu aka Epitaph"
+            "name": "Cenotaph"
         }
     ],
     "vendetta": {
