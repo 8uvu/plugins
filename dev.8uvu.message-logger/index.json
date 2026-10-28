@@ -13,10 +13,10 @@
             "versions": {
                 "1.7.3": {
                     "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.message-logger@1.7.3.zip",
-                    "sha256": "e518617da7c6033734b3b138751b3403d26f81dd768bcf61c13a633e903d9c35",
-                    "size": 24230,
+                    "sha256": "4ed4f8a0e615697e7cbd93c753ba316a597ebe18e45b8bef42d242c49b7b445c",
+                    "size": 24231,
                     "dependencies": {
-                        "revenge.api": {
+                        "valenced.api": {
                             "version": ">=1"
                         },
                         "discord": {

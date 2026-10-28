@@ -6,17 +6,17 @@
         "dev.8uvu.clean-urls": {
             "name": "Clean URLs",
             "description": "Strips tracking parameters (utm_*, fbclid, gclid, igshid, ...) from links in messages, with blacklist and whitelist modes.",
-            "author": "8uvu",
+            "author": "Cenotaph",
             "channels": {
                 "latest": "1.0.3"
             },
             "versions": {
                 "1.0.3": {
                     "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.clean-urls@1.0.3.zip",
-                    "sha256": "4f29f5d48d84a7a5679db7c914a62e799c00565f4e93f43384ae9f4402e867a7",
-                    "size": 6205,
+                    "sha256": "0cc78b058610a404bc4f786a712f23f91c333cb667f1583ad1ceefc11a651e63",
+                    "size": 6209,
                     "dependencies": {
-                        "revenge.api": {
+                        "valenced.api": {
                             "version": "*"
                         },
                         "discord": {

@@ -6,17 +6,17 @@
         "dev.8uvu.clean-urls": {
             "name": "Clean URLs",
             "description": "Strips tracking parameters (utm_*, fbclid, gclid, igshid, ...) from links in messages, with blacklist and whitelist modes.",
-            "author": "8uvu",
+            "author": "Cenotaph",
             "channels": {
                 "latest": "1.0.3"
             },
             "versions": {
                 "1.0.3": {
                     "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.clean-urls@1.0.3.zip",
-                    "sha256": "4f29f5d48d84a7a5679db7c914a62e799c00565f4e93f43384ae9f4402e867a7",
-                    "size": 6205,
+                    "sha256": "0cc78b058610a404bc4f786a712f23f91c333cb667f1583ad1ceefc11a651e63",
+                    "size": 6209,
                     "dependencies": {
-                        "revenge.api": {
+                        "valenced.api": {
                             "version": "*"
                         },
                         "discord": {
@@ -29,17 +29,17 @@
         "dev.8uvu.fake-dm": {
             "name": "FakeDM",
             "description": "Injects fake messages, calls, system messages, reactions & embeds into any DM or channel. Batch fake conversations. Persists across restarts. Mobile port of your Equicord plugin.",
-            "author": "8uvu aka Epitaph",
+            "author": "Cenotaph",
             "channels": {
                 "latest": "1.2.2"
             },
             "versions": {
                 "1.2.2": {
                     "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.fake-dm@1.2.2.zip",
-                    "sha256": "58ff24121bbbd6a7da49c998a103598065a5d9f4bfbe290a2c56772e1c7fdd55",
-                    "size": 14437,
+                    "sha256": "e7e1f2360d44e233c1d378acc5bbca40e35c1061daebf2e5ee06ec0b0aaaaed3",
+                    "size": 14431,
                     "dependencies": {
-                        "revenge.api": {
+                        "valenced.api": {
                             "version": ">=1"
                         },
                         "discord": {
@@ -52,17 +52,17 @@
         "dev.8uvu.host-probe": {
             "name": "Host Probe",
             "description": "Diagnostic tool: reports which plugin loader and APIs your Revenge build actually exposes (globals, flux, storage, toasts, file module). Shows the result as a toast and in its settings page.",
-            "author": "8uvu",
+            "author": "Cenotaph",
             "channels": {
                 "latest": "1.0.1"
             },
             "versions": {
                 "1.0.1": {
                     "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.host-probe@1.0.1.zip",
-                    "sha256": "4aafbbc69a87216b748a2b80d9a7c33f12d36ca05b78a1231b783ed1da235cf4",
-                    "size": 4079,
+                    "sha256": "e0e75256b0d73ce12940ec524b8074091cc08b9d031add8b6d8ba40a20179680",
+                    "size": 4083,
                     "dependencies": {
-                        "revenge.api": {
+                        "valenced.api": {
                             "version": "*"
                         },
                         "discord": {
@@ -75,17 +75,17 @@
         "dev.8uvu.last-online-tracker": {
             "name": "LastOnlineTracker",
             "description": "Records when friends go offline — a 'last seen' Discord never shows you. Only counts departures you actually witnessed, so server syncs can't fake them.",
-            "author": "8uvu aka Epitaph",
+            "author": "Cenotaph",
             "channels": {
                 "latest": "1.5.0"
             },
             "versions": {
                 "1.5.0": {
                     "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.last-online-tracker@1.5.0.zip",
-                    "sha256": "536c28367f3d3736d0b06e95c161ddc543a2db231fcb32c75a015a8e0f7869e6",
-                    "size": 10083,
+                    "sha256": "f63a7fa30ef3eae6ac3744d77fbfad760bf8f6282ce99127c1f9209612543718",
+                    "size": 10078,
                     "dependencies": {
-                        "revenge.api": {
+                        "valenced.api": {
                             "version": ">=1"
                         },
                         "discord": {
@@ -105,10 +105,10 @@
             "versions": {
                 "1.7.3": {
                     "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.message-logger@1.7.3.zip",
-                    "sha256": "e518617da7c6033734b3b138751b3403d26f81dd768bcf61c13a633e903d9c35",
-                    "size": 24230,
+                    "sha256": "4ed4f8a0e615697e7cbd93c753ba316a597ebe18e45b8bef42d242c49b7b445c",
+                    "size": 24231,
                     "dependencies": {
-                        "revenge.api": {
+                        "valenced.api": {
                             "version": ">=1"
                         },
                         "discord": {
@@ -121,17 +121,17 @@
         "dev.8uvu.platform-spoofer": {
             "name": "PlatformSpoofer",
             "description": "Spoof what platform you're on — Discord shows the matching platform icon (desktop, web, iOS, Xbox…) next to your name. Mobile port of Equicord's platformSpoofer.",
-            "author": "8uvu aka Epitaph",
+            "author": "Cenotaph",
             "channels": {
                 "latest": "1.4.0"
             },
             "versions": {
                 "1.4.0": {
                     "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.platform-spoofer@1.4.0.zip",
-                    "sha256": "5448932a764a62bad13f4ebebf72e3bc2068fa4e9cb3a1ee77af89a19dba3455",
-                    "size": 6017,
+                    "sha256": "e9054798bf72fd3436dd685dcdc13ea1a3ae3f51d25720b6e6405456ee34b764",
+                    "size": 6012,
                     "dependencies": {
-                        "revenge.api": {
+                        "valenced.api": {
                             "version": ">=1"
                         },
                         "discord": {
@@ -144,17 +144,17 @@
         "dev.8uvu.quick-check": {
             "name": "Quick Check",
             "description": "Diagnostic: pops a native Alert with your device's full host diagnosis (React, flux dispatcher, stores, file module) the moment the plugin is enabled.",
-            "author": "8uvu",
+            "author": "Cenotaph",
             "channels": {
                 "latest": "1.0.1"
             },
             "versions": {
                 "1.0.1": {
                     "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.quick-check@1.0.1.zip",
-                    "sha256": "f8a41c03cda9d16dbe1bc8e570be3799d29e56f36214af7361b94389b77cabac",
-                    "size": 3345,
+                    "sha256": "d94070089c9267622d2701f9bd0512ad8f004cb34d987cd0f19e2bc30af5352a",
+                    "size": 3348,
                     "dependencies": {
-                        "revenge.api": {
+                        "valenced.api": {
                             "version": "*"
                         },
                         "discord": {

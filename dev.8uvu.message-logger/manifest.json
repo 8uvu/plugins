@@ -16,7 +16,7 @@
     },
     "version": "1.7.3",
     "dependencies": {
-        "revenge.api": {
+        "valenced.api": {
             "version": ">=1"
         },
         "discord": {

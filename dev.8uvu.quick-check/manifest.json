@@ -3,11 +3,11 @@
     "id": "dev.8uvu.quick-check",
     "name": "Quick Check",
     "description": "Diagnostic: pops a native Alert with your device's full host diagnosis (React, flux dispatcher, stores, file module) the moment the plugin is enabled.",
-    "author": "8uvu",
+    "author": "Cenotaph",
     "version": "1.0.1",
     "license": "MIT",
     "dependencies": {
-        "revenge.api": {
+        "valenced.api": {
             "version": "*"
         },
         "discord": {
@@ -21,7 +21,7 @@
     "hash": "48f54af7fcab5edc492f5e7d55b30a0080f960117038d0ac38f9c9b39f48458e",
     "authors": [
         {
-            "name": "8uvu"
+            "name": "Cenotaph"
         }
     ],
     "vendetta": {

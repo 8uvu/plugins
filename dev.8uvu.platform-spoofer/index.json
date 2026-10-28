@@ -6,17 +6,17 @@
         "dev.8uvu.platform-spoofer": {
             "name": "PlatformSpoofer",
             "description": "Spoof what platform you're on — Discord shows the matching platform icon (desktop, web, iOS, Xbox…) next to your name. Mobile port of Equicord's platformSpoofer.",
-            "author": "8uvu aka Epitaph",
+            "author": "Cenotaph",
             "channels": {
                 "latest": "1.4.0"
             },
             "versions": {
                 "1.4.0": {
                     "url": "https://8uvu.github.io/msglog/pool/dev.8uvu.platform-spoofer@1.4.0.zip",
-                    "sha256": "5448932a764a62bad13f4ebebf72e3bc2068fa4e9cb3a1ee77af89a19dba3455",
-                    "size": 6017,
+                    "sha256": "e9054798bf72fd3436dd685dcdc13ea1a3ae3f51d25720b6e6405456ee34b764",
+                    "size": 6012,
                     "dependencies": {
-                        "revenge.api": {
+                        "valenced.api": {
                             "version": ">=1"
                         },
                         "discord": {

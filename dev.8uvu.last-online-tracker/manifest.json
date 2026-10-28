@@ -3,21 +3,21 @@
     "id": "dev.8uvu.last-online-tracker",
     "name": "LastOnlineTracker",
     "description": "Records when friends go offline — a 'last seen' Discord never shows you. Only counts departures you actually witnessed, so server syncs can't fake them.",
-    "author": "8uvu aka Epitaph",
+    "author": "Cenotaph",
     "main": "index.js",
     "display": {
         "name": "LastOnlineTracker",
         "description": "Records when friends go offline — a 'last seen' Discord never shows you.",
         "authors": [
             {
-                "name": "8uvu aka Epitaph"
+                "name": "Cenotaph"
             }
         ]
     },
     "version": "1.5.0",
     "license": "GPL-3.0-or-later",
     "dependencies": {
-        "revenge.api": {
+        "valenced.api": {
             "version": ">=1"
         },
         "discord": {
@@ -30,7 +30,7 @@
     "hash": "ca9a36c80dcbc393e2f246ad936db0512a484c6c77543ceeee8756c9e0403d30",
     "authors": [
         {
-            "name": "8uvu aka Epitaph"
+            "name": "Cenotaph"
         }
     ],
     "vendetta": {
