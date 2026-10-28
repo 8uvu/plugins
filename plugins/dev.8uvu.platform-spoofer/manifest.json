@@ -3,17 +3,17 @@
     "id": "dev.8uvu.platform-spoofer",
     "name": "PlatformSpoofer",
     "description": "Spoof what platform you're on — Discord shows the matching platform icon (desktop, web, iOS, Xbox…) next to your name. Mobile port of Equicord's platformSpoofer.",
-    "author": "8uvu aka Epitaph",
+    "author": "Cenotaph",
     "main": "index.js",
     "display": {
         "name": "PlatformSpoofer",
         "description": "Spoof what platform you're on — Discord shows the matching platform icon next to your name.",
-        "authors": [{ "name": "8uvu aka Epitaph" }]
+        "authors": [{ "name": "Cenotaph" }]
     },
     "version": "1.4.0",
     "license": "GPL-3.0-or-later",
     "dependencies": {
-        "revenge.api": { "version": ">=1" },
+        "valenced.api": { "version": ">=1" },
         "discord": { "version": "*" }
     },
     "dist": {
