@@ -13,7 +13,7 @@
 //   - Toasts via ToastActionCreators.open (+ ToastAndroid fallback).
 //   - Dispatcher subscriptions are removed on stop().
 
-const PLUGIN_VERSION = '1.5.1';
+const PLUGIN_VERSION = '1.5.2';
 
 // Valenced (phone) exposes itself as the `valenced` global / bundle parameter.
 // Prefer it over the revenge/bunny/vendetta globals: on Valenced those don't

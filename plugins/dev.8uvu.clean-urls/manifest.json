@@ -10,7 +10,7 @@
         "description": "Strips tracking parameters (utm_*, fbclid, gclid, igshid, ...) from links in messages, with blacklist and whitelist modes.",
         "authors": [{ "name": "Cenotaph" }]
     },
-    "version": "1.0.3",
+    "version": "1.0.4",
     "dependencies": {
         "valenced.api": { "version": "*" },
         "discord": { "version": "*" }

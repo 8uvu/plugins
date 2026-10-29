@@ -15,6 +15,12 @@ const missing = [];
 
 steps.push({ name: 'dist integrity', args: ['scripts/check-dist.cjs'] });
 
+// The bundle's module shape is part of the host contract: returns .default or the
+// plugin registers with no options and no settings tab at all.
+if (existsSync(join(root, 'scripts', 'check-host-contract.cjs'))) {
+    steps.push({ name: 'host contract', args: ['scripts/check-host-contract.cjs'] });
+}
+
 if (existsSync(join(root, 'verify-ui.cjs'))) {
     steps.push({ name: 'settings UI harness', args: ['verify-ui.cjs'] });
 }

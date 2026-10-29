@@ -6,7 +6,7 @@
 // across restarts, and can batch-inject a whole fake conversation from a
 // simple "[14:30] Name: text" script.
 //
-const PLUGIN_VERSION = '1.2.6';
+const PLUGIN_VERSION = '1.2.7';
 
 // Desktop-only pieces (chat-bar button portal, context-menu edit, CSS) have no
 // Revenge equivalent — here everything lives in the plugin's settings page,

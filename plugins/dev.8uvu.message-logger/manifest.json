@@ -10,7 +10,7 @@
         "description": "Message logger with searchable deleted/edited history, edit diffs, ghost pings, muted-channel filters, image caching and import/export",
         "authors": [{ "name": "Cenotaph" }]
     },
-    "version": "1.7.3",
+    "version": "1.7.4",
     "dependencies": {
         "valenced.api": { "version": ">=1" },
         "discord": { "version": "*" }

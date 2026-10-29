@@ -1,0 +1,15 @@
+{
+    "format": 1,
+    "id": "dev.8uvu.user-change-alerts",
+    "name": "UserChangeAlerts",
+    "description": "Toasts when someone changes their username, display name or profile picture.",
+    "author": "Cenotaph",
+    "version": "1.0.1",
+    "dependencies": {
+        "valenced.api": { "version": ">=1" },
+        "discord": { "version": "*" }
+    },
+    "dist": {
+        "script": "index.js"
+    }
+}

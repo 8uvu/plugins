@@ -10,7 +10,7 @@
         "description": "Records when friends go offline — a 'last seen' Discord never shows you.",
         "authors": [{ "name": "Cenotaph" }]
     },
-    "version": "1.5.1",
+    "version": "1.5.2",
     "license": "GPL-3.0-or-later",
     "dependencies": {
         "valenced.api": { "version": ">=1" },

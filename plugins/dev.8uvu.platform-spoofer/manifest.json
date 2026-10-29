@@ -10,7 +10,7 @@
         "description": "Spoof what platform you're on — Discord shows the matching platform icon next to your name.",
         "authors": [{ "name": "Cenotaph" }]
     },
-    "version": "1.4.0",
+    "version": "1.4.1",
     "license": "GPL-3.0-or-later",
     "dependencies": {
         "valenced.api": { "version": ">=1" },

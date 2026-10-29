@@ -14,7 +14,7 @@
 //   - Toasts go through ToastActionCreators.open, never revenge.ui.showToast.
 //   - Hermes: children passed to createElement are always arrays/normalized.
 
-const PLUGIN_VERSION = '1.4.0';
+const PLUGIN_VERSION = '1.4.1';
 
 // ---- Host lookups (lazy, call inside start/UI render only) --------------------
 

@@ -7,7 +7,10 @@
         "dev.8uvu.host-probe",
         "dev.8uvu.last-online-tracker",
         "dev.8uvu.platform-spoofer",
-        "dev.8uvu.quick-check"
+        "dev.8uvu.quick-check",
+        "dev.8uvu.user-change-alerts",
+        "dev.8uvu.message-bookmarks",
+        "dev.8uvu.voice-time"
     ],
     "slug": {}
 }

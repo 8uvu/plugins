@@ -189,11 +189,20 @@ for (let plug of await readdir("./plugins", { withFileTypes: true })) {
         ${bundle};
         const exported = (module.exports && module.exports.default) || module.exports;
         if (!exported || typeof exported !== 'object') throw new Error('bundle exported ' + typeof exported + ' instead of a plugin object');
+        // Valenced evaluates this file and then reads result.default
+        // (bundle/lib/plugins/src/_internal/script.ts). Returning the bare plugin
+        // therefore gives it undefined and it fails with
+        // "Plugin options must be an object" — the plugin never starts and has no
+        // settings page. Older loaders want the plugin itself, so expose BOTH:
+        // the object is the plugin and its own .default points back at it.
+        if (!exported.default) {
+            try { exported.default = exported; } catch (ignored) {}
+        }
         return exported;
     } catch (error) {
         const message = String((error && (error.stack || error.message)) || error);
         try { console.error('[${manifest.id}] bundle failed to evaluate', error); } catch (ignored) {}
-        return {
+        const fallback = {
             jsonStorage: { load: true, default: {} },
             start() {},
             stop() {},
@@ -212,6 +221,8 @@ for (let plug of await readdir("./plugins", { withFileTypes: true })) {
                 }
             },
         };
+        try { fallback.default = fallback; } catch (ignored) {}
+        return fallback;
     }
 })()`;
     const bundleBytes = Buffer.from(wrapped, "utf8");
