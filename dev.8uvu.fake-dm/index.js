@@ -27,12 +27,12 @@ __export(index_exports, {
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "1.4.2";
+var PLUGIN_VERSION = "1.5.0";
 var DEFAULT_SETTINGS = {
   jitterSeconds: true,
   // randomize seconds like the desktop plugin's randomSeconds
   chatButton: false,
-  // chat-bar Fake button — opt-in, because it edits Discord's own chat row
+  // chat-bar Fake button — opt-in, because it wraps Discord's chat row
   quickText: "hello"
   // what one tap of the chat-bar button sends
 };
@@ -1403,7 +1403,7 @@ function buildSettingsComponent() {
       ),
       el(SwitchRow, {
         label: "Chat-bar Fake button",
-        subLabel: "Adds a Fake pill to the chat action row",
+        subLabel: "Puts a Fake pill beside the chat buttons",
         value: chatBtn,
         onValueChange: (val) => {
           setChatBtn(val);
@@ -1464,17 +1464,22 @@ function quickFake() {
     hostError("quick fake failed", e);
   }
 }
+var PILL_LABEL = "FakeDM quick fake";
+var MAX_RENDER_FAULTS = 3;
 var buttonStatus = "not installed yet";
+var buttonActive = false;
+var renderFaults = 0;
 function chatButtonElement() {
   const React = getReact();
   const RN = getRN();
   if (!(React == null ? void 0 : React.createElement) || !(RN == null ? void 0 : RN.Pressable) || !(RN == null ? void 0 : RN.Text)) return null;
   const el = React.createElement;
   return el(RN.Pressable, {
-    accessibilityLabel: "FakeDM quick fake",
+    accessibilityLabel: PILL_LABEL,
     accessibilityRole: "button",
     onPress: () => quickFake(),
     style: {
+      flexShrink: 0,
       marginLeft: 6,
       marginRight: 2,
       minWidth: 44,
@@ -1487,50 +1492,31 @@ function chatButtonElement() {
     }
   }, el(RN.Text, { style: { color: "#ffffff", fontSize: 12, fontWeight: "700" } }, "Fake"));
 }
-function insertChatButton(tree) {
-  var _a, _b, _c;
+function wrapChatRow(tree) {
+  if (!buttonActive) return tree;
+  if (!tree || typeof tree !== "object" || tree.type === void 0) return tree;
   try {
-    if (!tree || typeof tree !== "object") return tree;
-    const btn = chatButtonElement();
-    if (!btn) return tree;
-    const find = (_c = (_b = (_a = getValenced()) == null ? void 0 : _a.utils) == null ? void 0 : _b.react) == null ? void 0 : _c.findInReactFiber;
-    const isRow = (n) => {
-      var _a2;
-      return Array.isArray((_a2 = n == null ? void 0 : n.props) == null ? void 0 : _a2.children) && n.props.children.length > 0 && n.props.children.length < 10 && n.props.children.some((k) => k && typeof k === "object");
-    };
-    let target = null;
-    try {
-      target = find == null ? void 0 : find(tree, (n) => isRow(n) && n.props.children.some((k) => {
-        var _a2, _b2;
-        return ((_a2 = k == null ? void 0 : k.props) == null ? void 0 : _a2.onPress) || ((_b2 = k == null ? void 0 : k.props) == null ? void 0 : _b2.accessibilityLabel);
-      }));
-    } catch {
-    }
-    if (!target) {
-      try {
-        target = find == null ? void 0 : find(tree, isRow);
-      } catch {
-      }
-    }
-    if (!target) return tree;
-    const kids = target.props.children;
-    if (!Array.isArray(kids) || Object.isFrozen(kids)) return tree;
-    if (kids.some((k) => {
-      var _a2;
-      return ((_a2 = k == null ? void 0 : k.props) == null ? void 0 : _a2.accessibilityLabel) === "FakeDM quick fake";
-    })) return tree;
-    if (!kids.every((k) => k && typeof k === "object" && k.type !== void 0)) return tree;
-    if (!Object.isExtensible(kids)) return tree;
-    try {
-      kids.push(btn);
-    } catch {
+    const React = getReact();
+    const RN = getRN();
+    const el = React == null ? void 0 : React.createElement;
+    const pill = chatButtonElement();
+    if (!el || !(RN == null ? void 0 : RN.View) || !pill) {
+      renderFault("wrapper unavailable (react-native view or pill missing)");
       return tree;
     }
-    return tree;
+    return el(RN.View, { style: { flexDirection: "row", alignItems: "center" } }, tree, pill);
   } catch (e) {
-    hostError("chat button insert failed", e);
+    renderFault(e);
     return tree;
   }
+}
+function renderFault(detail) {
+  if (!buttonActive) return;
+  renderFaults++;
+  hostError("chat button render fault " + renderFaults + "/" + MAX_RENDER_FAULTS, detail);
+  if (renderFaults < MAX_RENDER_FAULTS) return;
+  uninstallChatButton();
+  buttonStatus = "auto-disabled after " + renderFaults + " render faults";
 }
 function finderApi() {
   var _a, _b, _c;
@@ -1574,7 +1560,7 @@ function memoFilter(filters, name) {
     return null;
   }
 }
-var CHAT_ROW_NAMES = ["ChatInputRightActions"];
+var CHAT_ANCHORS = ["ChatInputRightActions", "ChatInputActions"];
 var chatRowNames = [];
 var MAX_INSTALL_TRIES = 4;
 var installTimer = null;
@@ -1582,11 +1568,13 @@ var installTries = 0;
 var buttonCleanups = [];
 function uninstallChatButton() {
   var _a;
+  buttonActive = false;
   if (installTimer) {
     clearTimeout(installTimer);
     installTimer = null;
   }
   installTries = 0;
+  renderFaults = 0;
   while (buttonCleanups.length) {
     try {
       (_a = buttonCleanups.pop()) == null ? void 0 : _a();
@@ -1639,18 +1627,20 @@ function scanChatRows() {
   }
 }
 function installChatButton() {
-  var _a, _b, _c, _d, _e, _f, _g, _h;
+  var _a;
   try {
     if (installTimer) {
       clearTimeout(installTimer);
       installTimer = null;
     }
+    buttonActive = false;
     while (buttonCleanups.length) {
       try {
         (_a = buttonCleanups.pop()) == null ? void 0 : _a();
       } catch {
       }
     }
+    renderFaults = 0;
     if ((cfg == null ? void 0 : cfg.chatButton) === false) {
       buttonStatus = "off in settings";
       return;
@@ -1669,12 +1659,14 @@ function installChatButton() {
       if (!Comp) return false;
       const key = typeof Comp === "function" ? null : typeof Comp.type === "function" ? "type" : typeof Comp.render === "function" ? "render" : null;
       if (!key) return false;
+      buttonActive = true;
       try {
-        const off = patcher.after(Comp, key, (_args, tree) => insertChatButton(tree));
+        const off = patcher.after(Comp, key, (_args, tree) => wrapChatRow(tree));
         if (typeof off === "function") buttonCleanups.push(off);
         buttonStatus = "hooked " + label + " (" + key + ")";
         return true;
       } catch (e) {
+        buttonActive = false;
         buttonStatus = "patch failed on " + label;
         hostError("chat button patch failed", e);
         return false;
@@ -1691,7 +1683,7 @@ function installChatButton() {
       return null;
     };
     let installed = false;
-    for (const name of CHAT_ROW_NAMES) {
+    for (const name of CHAT_ANCHORS) {
       const filter = memoFilter(filters, name);
       if (!filter) continue;
       try {
@@ -1700,43 +1692,6 @@ function installChatButton() {
           if (hook(pick(exports), name)) installed = true;
         });
         if (typeof off === "function") buttonCleanups.push(off);
-      } catch {
-      }
-    }
-    if (!installed) {
-      try {
-        const r = (_c = (_b = getValenced()) == null ? void 0 : _b.react) != null ? _c : {};
-        const afterJSX = (_g = (_f = (_d = r.jsxRuntime) == null ? void 0 : _d.afterJSX) != null ? _f : (_e = r.ReactJSXRuntime) == null ? void 0 : _e.afterJSX) != null ? _g : null;
-        if (typeof afterJSX === "function") {
-          const byName = ["ChatInput", "ChannelTextArea", "MessageInput"].map((n) => {
-            var _a2, _b2;
-            try {
-              return (_b2 = (_a2 = filters.withName) == null ? void 0 : _a2.call(filters, n)) != null ? _b2 : null;
-            } catch {
-              return null;
-            }
-          }).filter(Boolean);
-          if (byName.length) {
-            const filter = byName.length === 1 ? byName[0] : (_h = filters.anyOf) == null ? void 0 : _h.call(filters, ...byName);
-            if (filter) {
-              const off = finders.getModules(filter, (exports) => {
-                var _a2;
-                if (installed) return;
-                const Comp = pick(exports);
-                const render = typeof Comp === "function" ? Comp : (_a2 = Comp == null ? void 0 : Comp.type) != null ? _a2 : Comp == null ? void 0 : Comp.render;
-                if (typeof render !== "function") return;
-                try {
-                  const unpatch = afterJSX(render, (tree) => insertChatButton(tree));
-                  if (typeof unpatch === "function") buttonCleanups.push(unpatch);
-                  buttonStatus = "hooked via jsx";
-                  installed = true;
-                } catch {
-                }
-              });
-              if (typeof off === "function") cleanupFns.push(off);
-            }
-          }
-        }
       } catch {
       }
     }
@@ -1756,6 +1711,7 @@ function installChatButton() {
       buttonStatus = "chat row not found \u2014 settings page only";
     }
   } catch (e) {
+    buttonActive = false;
     buttonStatus = "install failed";
     hostError("chat button install failed", e);
   }

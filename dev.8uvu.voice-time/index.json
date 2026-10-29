@@ -1,20 +1,20 @@
 {
     "format": 1,
     "name": "VoiceTime",
-    "description": "Counts your voice time per day and server.",
+    "description": "Counts voice time per day, server and person.",
     "plugins": {
         "dev.8uvu.voice-time": {
             "name": "VoiceTime",
-            "description": "Counts your voice time per day and server.",
+            "description": "Counts voice time per day, server and person.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.2"
+                "latest": "1.1.0"
             },
             "versions": {
-                "1.0.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.voice-time@1.0.2.zip",
-                    "sha256": "f562902143191fa0c62db91605033e31be1561283333c0568278b0c21fdd91e7",
-                    "size": 5259,
+                "1.1.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.voice-time@1.1.0.zip",
+                    "sha256": "4caa397e5de209db732ca2f55d98f4b5fff03be7b3d39144672abd8ed0549393",
+                    "size": 7391,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
