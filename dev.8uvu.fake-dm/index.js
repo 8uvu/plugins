@@ -23,6 +23,7 @@ __export(index_exports, {
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
+var PLUGIN_VERSION = "1.2.4";
 var DEFAULT_SETTINGS = {
   jitterSeconds: true,
   // randomize seconds like the desktop plugin's randomSeconds
@@ -1328,7 +1329,7 @@ function buildSettingsComponent() {
       el(
         View,
         { style: { paddingHorizontal: 16, paddingTop: 14 } },
-        el(Text, { style: { color: C.text, fontSize: 18, fontWeight: "800" } }, "FakeDM"),
+        el(Text, { style: { color: C.text, fontSize: 18, fontWeight: "800" } }, "FakeDM " + PLUGIN_VERSION),
         el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, "Injects into: " + (channelId ? (_j = (_i = (_h = (_g = getChannelStore()) == null ? void 0 : _g.getChannel) == null ? void 0 : _h.call(_g, channelId)) == null ? void 0 : _i.name) != null ? _j : "DM \xB7 " + channelId.slice(-6) : "no channel open \u2014 open a DM first"))
       ),
       el(SwitchRow, { label: "Chat-bar Fake button (reload chat to apply)", value: chatBtn, onValueChange: (val) => {
