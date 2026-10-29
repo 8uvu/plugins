@@ -1,4 +1,8 @@
-(() => { const module = { exports: {} }; const exports = module.exports; var __defProp = Object.defineProperty;
+(() => {
+    try {
+        const module = { exports: {} };
+        const exports = module.exports;
+        var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
@@ -270,4 +274,31 @@ instance.onUnload = function() {
 };
 instance.settings = instance.SettingsComponent;
 var index_default = globalThis.plugin;
-; return (module.exports && module.exports.default) || module.exports; })()
+;
+        const exported = (module.exports && module.exports.default) || module.exports;
+        if (!exported || typeof exported !== 'object') throw new Error('bundle exported ' + typeof exported + ' instead of a plugin object');
+        return exported;
+    } catch (error) {
+        const message = String((error && (error.stack || error.message)) || error);
+        try { console.error('[dev.8uvu.quick-check] bundle failed to evaluate', error); } catch (ignored) {}
+        return {
+            jsonStorage: { load: true, default: {} },
+            start() {},
+            stop() {},
+            SettingsComponent() {
+                try {
+                    const R = valenced.react.React;
+                    const N = valenced.react.ReactNative;
+                    if (!R || !N || typeof R.createElement !== 'function') return null;
+                    const el = R.createElement;
+                    return el(N.ScrollView, { style: { padding: 16 } },
+                        el(N.Text, { style: { color: '#f04747', fontSize: 16, fontWeight: '700', marginBottom: 8 } }, "Quick Check" + ' failed to load'),
+                        el(N.Text, { style: { color: '#9ba0a8', fontSize: 12, marginBottom: 8 } }, 'Copy this text to the plugin author — it is the exact error:'),
+                        el(N.Text, { style: { color: '#ffffff', fontSize: 11 } }, message));
+                } catch (uiError) {
+                    return null;
+                }
+            },
+        };
+    }
+})()

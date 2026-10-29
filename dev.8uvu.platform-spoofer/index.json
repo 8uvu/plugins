@@ -13,8 +13,8 @@
             "versions": {
                 "1.4.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.4.0.zip",
-                    "sha256": "e9054798bf72fd3436dd685dcdc13ea1a3ae3f51d25720b6e6405456ee34b764",
-                    "size": 6012,
+                    "sha256": "d9682de479cd3d50f34d10823af4bd543b91eef56eee3dd48ce39a024e743498",
+                    "size": 6506,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

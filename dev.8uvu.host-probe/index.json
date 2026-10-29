@@ -13,8 +13,8 @@
             "versions": {
                 "1.0.2": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.0.2.zip",
-                    "sha256": "4928d3ae71320a09ee3b46fb9a652800f78939fc1b9f5dee02f757cf64bb4234",
-                    "size": 5462,
+                    "sha256": "02eb4ea956d72b555a4177c3ef1e5448c359002c4d9cb914ea7f914a7a4f5b52",
+                    "size": 5964,
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"

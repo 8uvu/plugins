@@ -13,8 +13,8 @@
             "versions": {
                 "1.0.1": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.quick-check@1.0.1.zip",
-                    "sha256": "d94070089c9267622d2701f9bd0512ad8f004cb34d987cd0f19e2bc30af5352a",
-                    "size": 3348,
+                    "sha256": "9cd6216c3c645a1c02e8be052d09dc151654cd7e55a9cf099f90ad828178b254",
+                    "size": 3853,
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"

@@ -1,4 +1,8 @@
-(() => { const module = { exports: {} }; const exports = module.exports; var __defProp = Object.defineProperty;
+(() => {
+    try {
+        const module = { exports: {} };
+        const exports = module.exports;
+        var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
@@ -23,7 +27,7 @@ __export(index_exports, {
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "1.2.4";
+var PLUGIN_VERSION = "1.2.6";
 var DEFAULT_SETTINGS = {
   jitterSeconds: true,
   // randomize seconds like the desktop plugin's randomSeconds
@@ -1330,7 +1334,8 @@ function buildSettingsComponent() {
         View,
         { style: { paddingHorizontal: 16, paddingTop: 14 } },
         el(Text, { style: { color: C.text, fontSize: 18, fontWeight: "800" } }, "FakeDM " + PLUGIN_VERSION),
-        el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, "Injects into: " + (channelId ? (_j = (_i = (_h = (_g = getChannelStore()) == null ? void 0 : _g.getChannel) == null ? void 0 : _h.call(_g, channelId)) == null ? void 0 : _i.name) != null ? _j : "DM \xB7 " + channelId.slice(-6) : "no channel open \u2014 open a DM first"))
+        el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, "Injects into: " + (channelId ? (_j = (_i = (_h = (_g = getChannelStore()) == null ? void 0 : _g.getChannel) == null ? void 0 : _h.call(_g, channelId)) == null ? void 0 : _i.name) != null ? _j : "DM \xB7 " + channelId.slice(-6) : "no channel open \u2014 open a DM first")),
+        el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 2 } }, "Chat button: " + buttonStatus)
       ),
       el(SwitchRow, { label: "Chat-bar Fake button (reload chat to apply)", value: chatBtn, onValueChange: (val) => {
         cfg.chatButton = val;
@@ -1373,100 +1378,160 @@ function quickFake() {
     hostError("quick fake failed", e);
   }
 }
-function installChatButton() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+var buttonStatus = "not installed yet";
+function chatButtonElement() {
+  const React = getReact();
+  const RN = getRN();
+  if (!(React == null ? void 0 : React.createElement) || !(RN == null ? void 0 : RN.Pressable) || !(RN == null ? void 0 : RN.Text)) return null;
+  const el = React.createElement;
+  return el(RN.Pressable, {
+    accessibilityLabel: "FakeDM quick fake",
+    onPress: () => quickFake(),
+    style: { marginLeft: 6, paddingHorizontal: 8, paddingVertical: 4, justifyContent: "center", alignItems: "center" }
+  }, el(RN.Text, { style: { color: "#ffffff", fontSize: 13, fontWeight: "700" } }, "Fake"));
+}
+function insertChatButton(tree) {
+  var _a, _b, _c;
   try {
-    if ((cfg == null ? void 0 : cfg.chatButton) === false) return;
-    const v = getValenced();
-    if (!v) return;
-    const afterJSX = (_f = (_e = (_b = (_a = v == null ? void 0 : v.react) == null ? void 0 : _a.jsxRuntime) == null ? void 0 : _b.afterJSX) != null ? _e : (_d = (_c = v == null ? void 0 : v.react) == null ? void 0 : _c.ReactJSXRuntime) == null ? void 0 : _d.afterJSX) != null ? _f : null;
-    if (typeof afterJSX !== "function") return;
-    const finders = (_g = v == null ? void 0 : v.modules) == null ? void 0 : _g.finders;
-    const filters = (_i = (_h = v == null ? void 0 : v.modules) == null ? void 0 : _h.finders) == null ? void 0 : _i.filters;
-    if (!finders || !filters) return;
-    const candidates = [];
+    if (!tree || typeof tree !== "object") return tree;
+    const btn = chatButtonElement();
+    if (!btn) return tree;
+    const find = (_c = (_b = (_a = getValenced()) == null ? void 0 : _a.utils) == null ? void 0 : _b.react) == null ? void 0 : _c.findInReactFiber;
+    const isRow = (n) => {
+      var _a2;
+      return Array.isArray((_a2 = n == null ? void 0 : n.props) == null ? void 0 : _a2.children) && n.props.children.length > 0 && n.props.children.length < 10 && n.props.children.some((k) => k && typeof k === "object");
+    };
+    let target = null;
     try {
-      candidates.push(filters.withName("ChatInput"), filters.withName("ChannelTextArea"), filters.withName("MessageInput"), filters.withName("ChatBox"));
-      candidates.push(filters.withProps("channelId", "onSend"), filters.withProps("sendMessage", "channelId"), filters.withProps("renderAccessory", "channelId"));
+      target = find == null ? void 0 : find(tree, (n) => isRow(n) && n.props.children.some((k) => {
+        var _a2, _b2;
+        return ((_a2 = k == null ? void 0 : k.props) == null ? void 0 : _a2.onPress) || ((_b2 = k == null ? void 0 : k.props) == null ? void 0 : _b2.accessibilityLabel);
+      }));
     } catch {
-      return;
     }
-    let filter = null;
-    try {
-      filter = candidates.length === 1 ? candidates[0] : filters.anyOf(...candidates);
-    } catch {
-      return;
-    }
-    const React = getReact();
-    const RN = getRN();
-    if (!React || !RN) return;
-    const el = React.createElement;
-    const installed = /* @__PURE__ */ new Set();
-    const placeButton = (node, btn, depth) => {
-      var _a2, _b2;
-      if (!node || typeof node !== "object" || depth > 4) return false;
+    if (!target) {
       try {
-        const props = (_a2 = node.props) != null ? _a2 : {};
-        const kids = (_b2 = props.children) != null ? _b2 : node.children;
-        if (Array.isArray(kids) && kids.length > 0 && kids.length < 12) {
-          const row = props == null ? void 0 : props.style;
-          const styles = Array.isArray(row) ? row : [row];
-          const horizontal = styles.some((s) => (s == null ? void 0 : s.flexDirection) === "row");
-          const hasPressable = kids.some((k) => {
-            var _a3, _b3;
-            return ((_a3 = k == null ? void 0 : k.props) == null ? void 0 : _a3.onPress) || ((_b3 = k == null ? void 0 : k.props) == null ? void 0 : _b3.accessibilityLabel);
-          });
-          if ((horizontal || hasPressable) && !kids.some((k) => {
-            var _a3;
-            return ((_a3 = k == null ? void 0 : k.props) == null ? void 0 : _a3.accessibilityLabel) === "FakeDM quick fake";
-          })) {
-            kids.push(btn);
-            return true;
-          }
-        }
-        if (Array.isArray(kids)) {
-          for (const k of kids) if (placeButton(k, btn, depth + 1)) return true;
-        } else if (kids && typeof kids === "object") return placeButton(kids, btn, depth + 1);
+        target = find == null ? void 0 : find(tree, isRow);
       } catch {
+      }
+    }
+    if (!target) return tree;
+    const kids = target.props.children;
+    if (kids.some((k) => {
+      var _a2;
+      return ((_a2 = k == null ? void 0 : k.props) == null ? void 0 : _a2.accessibilityLabel) === "FakeDM quick fake";
+    })) return tree;
+    kids.push(btn);
+    return tree;
+  } catch (e) {
+    hostError("chat button insert failed", e);
+    return tree;
+  }
+}
+function installChatButton() {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
+  try {
+    if ((cfg == null ? void 0 : cfg.chatButton) === false) {
+      buttonStatus = "off in settings";
+      return;
+    }
+    const v = getValenced();
+    if (!v) {
+      buttonStatus = "no valenced host";
+      return;
+    }
+    const finders = (_a = v == null ? void 0 : v.modules) == null ? void 0 : _a.finders;
+    const filters = (_c = (_b = v == null ? void 0 : v.modules) == null ? void 0 : _b.finders) == null ? void 0 : _c.filters;
+    const patcher = v == null ? void 0 : v.patcher;
+    if (!(finders == null ? void 0 : finders.getModules) || !(filters == null ? void 0 : filters.createFilterGenerator) || typeof (patcher == null ? void 0 : patcher.after) !== "function") {
+      buttonStatus = "host lacks finders/patcher";
+      return;
+    }
+    const hookComponent = (Comp, label) => {
+      if (!Comp) return false;
+      if (typeof Comp === "object") {
+        const key = typeof Comp.type === "function" ? "type" : typeof Comp.render === "function" ? "render" : null;
+        if (!key) return false;
+        try {
+          const unpatch = patcher.after(Comp, key, (_args, tree) => insertChatButton(tree));
+          if (typeof unpatch === "function") cleanupFns.push(unpatch);
+          buttonStatus = "hooked " + label + " (" + key + ")";
+          return true;
+        } catch (e) {
+          buttonStatus = "patch failed on " + label;
+          hostError("chat button patch failed", e);
+          return false;
+        }
       }
       return false;
     };
-    const hook = (Comp) => {
-      if (!Comp || typeof Comp !== "function" && typeof Comp !== "object" || installed.has(Comp)) return;
-      installed.add(Comp);
+    const memoNamed = (name) => {
       try {
-        const unpatch = afterJSX(Comp, (tree) => {
-          var _a2, _b2;
-          try {
-            const btn = el((_a2 = RN.Pressable) != null ? _a2 : "view", {
-              accessibilityLabel: "FakeDM quick fake",
-              onPress: () => quickFake(),
-              style: { paddingHorizontal: 10, paddingVertical: 8, borderRadius: 8, backgroundColor: "#5865F2", marginLeft: 6 }
-            }, el((_b2 = RN.Text) != null ? _b2 : "text", { style: { color: "#ffffff", fontWeight: "700", fontSize: 13 } }, "Fake"));
-            placeButton(tree, btn, 0);
-          } catch {
-          }
-          return tree;
-        });
-        if (typeof unpatch === "function") cleanupFns.push(unpatch);
-      } catch (e) {
-        hostError("chat button hook failed", e);
+        return filters.createFilterGenerator(
+          ([n], _id, exports) => {
+            const t = exports == null ? void 0 : exports.type;
+            if (t && typeof t === "function" && (t.displayName === n || t.name === n)) return true;
+            if ((exports == null ? void 0 : exports.displayName) === n || (exports == null ? void 0 : exports.name) === n) return true;
+            const r = exports == null ? void 0 : exports.render;
+            return !!r && typeof r === "function" && (r.displayName === n || r.name === n);
+          },
+          ([n]) => "cenotaph.fakedm.memo(" + n + ")"
+        )(name);
+      } catch {
+        return null;
       }
     };
-    try {
-      const [found] = finders.lookupModule(filter);
-      if (found) hook(found);
-    } catch {
+    const isComponentLike = (x) => !!x && (typeof x === "function" || typeof x === "object" && (typeof x.type === "function" || typeof x.render === "function"));
+    const names = ["ChatInputRightActions", "ChatInputActions", "ChatInputButtons", "ChatInputAppButtons"];
+    let installed = false;
+    for (const name of names) {
+      const filter = memoNamed(name);
+      if (!filter) continue;
+      try {
+        const off = finders.getModules(filter, (exports) => {
+          var _a2;
+          if (installed) return;
+          const Comp = isComponentLike(exports) ? exports : (_a2 = exports == null ? void 0 : exports.default) != null ? _a2 : exports;
+          if (hookComponent(Comp, name)) installed = true;
+        });
+        if (typeof off === "function") cleanupFns.push(off);
+      } catch {
+      }
     }
     try {
-      const off = (_j = finders.getModules) == null ? void 0 : _j.call(finders, filter, (exports) => {
-        var _a2;
-        return hook((_a2 = exports == null ? void 0 : exports.default) != null ? _a2 : exports);
-      });
-      if (typeof off === "function") cleanupFns.push(off);
+      const afterJSX = (_i = (_h = (_e = (_d = v == null ? void 0 : v.react) == null ? void 0 : _d.jsxRuntime) == null ? void 0 : _e.afterJSX) != null ? _h : (_g = (_f = v == null ? void 0 : v.react) == null ? void 0 : _f.ReactJSXRuntime) == null ? void 0 : _g.afterJSX) != null ? _i : null;
+      if (typeof afterJSX === "function" && !installed) {
+        const byName = [
+          (_j = filters.withName) == null ? void 0 : _j.call(filters, "ChatInput"),
+          (_k = filters.withName) == null ? void 0 : _k.call(filters, "ChannelTextArea"),
+          (_l = filters.withName) == null ? void 0 : _l.call(filters, "MessageInput")
+        ].filter(Boolean);
+        if (byName.length) {
+          const filter = byName.length === 1 ? byName[0] : (_m = filters.anyOf) == null ? void 0 : _m.call(filters, ...byName);
+          if (filter) {
+            const off = finders.getModules(filter, (exports) => {
+              var _a2, _b2;
+              if (installed) return;
+              const Comp = isComponentLike(exports) ? exports : (_a2 = exports == null ? void 0 : exports.default) != null ? _a2 : exports;
+              const render = typeof Comp === "function" ? Comp : (_b2 = Comp == null ? void 0 : Comp.type) != null ? _b2 : Comp == null ? void 0 : Comp.render;
+              if (!render) return;
+              try {
+                const unpatch = afterJSX(render, (tree) => insertChatButton(tree));
+                if (typeof unpatch === "function") cleanupFns.push(unpatch);
+                buttonStatus = "hooked via jsx";
+                installed = true;
+              } catch {
+              }
+            });
+            if (typeof off === "function") cleanupFns.push(off);
+          }
+        }
+      }
     } catch {
     }
+    if (!installed) buttonStatus = "chat row not found (yet)";
   } catch (e) {
+    buttonStatus = "install failed";
     hostError("chat button install failed", e);
   }
 }
@@ -1581,7 +1646,8 @@ __instance.__engine = {
   removeFakeById,
   doRestore,
   memberCandidates,
-  getFakes: readFakes
+  getFakes: readFakes,
+  chatButtonStatus: () => buttonStatus
 };
 if (typeof plugin === "function") {
   __instance = plugin(__instance);
@@ -1597,4 +1663,31 @@ __instance.onUnload = function() {
 };
 __instance.settings = __instance.SettingsComponent;
 var index_default = __instance;
-; return (module.exports && module.exports.default) || module.exports; })()
+;
+        const exported = (module.exports && module.exports.default) || module.exports;
+        if (!exported || typeof exported !== 'object') throw new Error('bundle exported ' + typeof exported + ' instead of a plugin object');
+        return exported;
+    } catch (error) {
+        const message = String((error && (error.stack || error.message)) || error);
+        try { console.error('[dev.8uvu.fake-dm] bundle failed to evaluate', error); } catch (ignored) {}
+        return {
+            jsonStorage: { load: true, default: {} },
+            start() {},
+            stop() {},
+            SettingsComponent() {
+                try {
+                    const R = valenced.react.React;
+                    const N = valenced.react.ReactNative;
+                    if (!R || !N || typeof R.createElement !== 'function') return null;
+                    const el = R.createElement;
+                    return el(N.ScrollView, { style: { padding: 16 } },
+                        el(N.Text, { style: { color: '#f04747', fontSize: 16, fontWeight: '700', marginBottom: 8 } }, "FakeDM" + ' failed to load'),
+                        el(N.Text, { style: { color: '#9ba0a8', fontSize: 12, marginBottom: 8 } }, 'Copy this text to the plugin author — it is the exact error:'),
+                        el(N.Text, { style: { color: '#ffffff', fontSize: 11 } }, message));
+                } catch (uiError) {
+                    return null;
+                }
+            },
+        };
+    }
+})()

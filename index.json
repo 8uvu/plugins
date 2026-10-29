@@ -13,8 +13,8 @@
             "versions": {
                 "1.0.3": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.clean-urls@1.0.3.zip",
-                    "sha256": "0cc78b058610a404bc4f786a712f23f91c333cb667f1583ad1ceefc11a651e63",
-                    "size": 6209,
+                    "sha256": "102cccae368c8e7a0453570ddb5ce4c34a8a6b8a17377466b62a47af3f449358",
+                    "size": 6719,
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"
@@ -31,13 +31,13 @@
             "description": "Injects fake messages, calls, system messages, reactions & embeds into any DM or channel. Batch fake conversations. Persists across restarts. Mobile port of your Equicord plugin.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.2.4"
+                "latest": "1.2.6"
             },
             "versions": {
-                "1.2.4": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.2.4.zip",
-                    "sha256": "9f7349c5874939ecf3ba20207139fe3485c3119bf5cfdb8f6ff731918a5ef98b",
-                    "size": 16223,
+                "1.2.6": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.2.6.zip",
+                    "sha256": "c5de3cfd64aa0e5f1f06b37c33eb63520908e3bb515dbe38696768378a0ab9e9",
+                    "size": 17291,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -59,8 +59,8 @@
             "versions": {
                 "1.0.2": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.0.2.zip",
-                    "sha256": "4928d3ae71320a09ee3b46fb9a652800f78939fc1b9f5dee02f757cf64bb4234",
-                    "size": 5462,
+                    "sha256": "02eb4ea956d72b555a4177c3ef1e5448c359002c4d9cb914ea7f914a7a4f5b52",
+                    "size": 5964,
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"
@@ -82,8 +82,8 @@
             "versions": {
                 "1.5.1": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.5.1.zip",
-                    "sha256": "0c6ad0fc1668e96f62dbfd4c0bdcdf60c5c21a569586e4fdecfc967371a0d1f8",
-                    "size": 10470,
+                    "sha256": "cce854a0914ab4cac6df33803c138cab5b909bb0f480c6a67626c02dd46dee08",
+                    "size": 10982,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -105,8 +105,8 @@
             "versions": {
                 "1.7.3": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.7.3.zip",
-                    "sha256": "4ed4f8a0e615697e7cbd93c753ba316a597ebe18e45b8bef42d242c49b7b445c",
-                    "size": 24231,
+                    "sha256": "276eac3a642ba9dec0b7a2a22af50ed63f5ec958810d1dc86f2c297ac2a574c0",
+                    "size": 24730,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -128,8 +128,8 @@
             "versions": {
                 "1.4.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.4.0.zip",
-                    "sha256": "e9054798bf72fd3436dd685dcdc13ea1a3ae3f51d25720b6e6405456ee34b764",
-                    "size": 6012,
+                    "sha256": "d9682de479cd3d50f34d10823af4bd543b91eef56eee3dd48ce39a024e743498",
+                    "size": 6506,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -151,8 +151,8 @@
             "versions": {
                 "1.0.1": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.quick-check@1.0.1.zip",
-                    "sha256": "d94070089c9267622d2701f9bd0512ad8f004cb34d987cd0f19e2bc30af5352a",
-                    "size": 3348,
+                    "sha256": "9cd6216c3c645a1c02e8be052d09dc151654cd7e55a9cf099f90ad828178b254",
+                    "size": 3853,
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"

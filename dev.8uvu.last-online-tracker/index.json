@@ -13,8 +13,8 @@
             "versions": {
                 "1.5.1": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.5.1.zip",
-                    "sha256": "0c6ad0fc1668e96f62dbfd4c0bdcdf60c5c21a569586e4fdecfc967371a0d1f8",
-                    "size": 10470,
+                    "sha256": "cce854a0914ab4cac6df33803c138cab5b909bb0f480c6a67626c02dd46dee08",
+                    "size": 10982,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
