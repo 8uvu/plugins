@@ -10,7 +10,7 @@ Custom Revenge plugins by 8uvu.
 | **Last Online Tracker** | Remembers when people went offline, so you can see how long someone has been away. | `https://8uvu.github.io/plugins/dev.8uvu.last-online-tracker/` |
 | **User Change Alerts** | Toasts when a tracked user changes name, avatar, status or activity. | `https://8uvu.github.io/plugins/dev.8uvu.user-change-alerts/` |
 | **Message Bookmarks** | Saves message links with their text and author, and opens them from one list. | `https://8uvu.github.io/plugins/dev.8uvu.message-bookmarks/` |
-| **Voice Time** | Counts how long you spent in voice, per day and per server. | `https://8uvu.github.io/plugins/dev.8uvu.voice-time/` |
+| **Voice Time** | Counts how long you spent in voice, per day, per server and per person, with a leaderboard and a 14-day history. | `https://8uvu.github.io/plugins/dev.8uvu.voice-time/` |
 | **Voice Guard** | Undoes server-side mute/deafen and reconnects you after a drop. | `https://8uvu.github.io/plugins/dev.8uvu.voice-guard/` |
 | **Zero Width Sanitizer** | Strips invisible zero-width characters from what you send and edit. | `https://8uvu.github.io/plugins/dev.8uvu.zero-width-sanitizer/` |
 | **Clean URLs** | Strips tracking parameters from links in messages. | `https://8uvu.github.io/plugins/dev.8uvu.clean-urls/` |

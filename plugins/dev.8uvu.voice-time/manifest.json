@@ -2,9 +2,9 @@
     "format": 1,
     "id": "dev.8uvu.voice-time",
     "name": "VoiceTime",
-    "description": "Counts your voice time per day and server.",
+    "description": "Counts voice time per day, server and person.",
     "author": "Cenotaph",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"
