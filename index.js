@@ -27,7 +27,7 @@ __export(index_exports, {
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "1.5.0";
+var PLUGIN_VERSION = "1.5.1";
 var DEFAULT_SETTINGS = {
   jitterSeconds: true,
   // randomize seconds like the desktop plugin's randomSeconds
@@ -1469,6 +1469,8 @@ var MAX_RENDER_FAULTS = 3;
 var buttonStatus = "not installed yet";
 var buttonActive = false;
 var renderFaults = 0;
+var rowPatches = [];
+var dedupeTimer = null;
 function chatButtonElement() {
   const React = getReact();
   const RN = getRN();
@@ -1492,9 +1494,23 @@ function chatButtonElement() {
     }
   }, el(RN.Text, { style: { color: "#ffffff", fontSize: 12, fontWeight: "700" } }, "Fake"));
 }
-function wrapChatRow(tree) {
+var WRAP_MARKER = "fakedm-row";
+function alreadyWrapped(tree, depth = 0) {
+  var _a, _b, _c;
+  if (!tree || typeof tree !== "object" || depth > 3) return false;
+  if (((_a = tree.props) == null ? void 0 : _a.testID) === WRAP_MARKER) return true;
+  const kids = (_c = tree.children) != null ? _c : (_b = tree.props) == null ? void 0 : _b.children;
+  if (Array.isArray(kids)) {
+    for (const kid of kids) {
+      if (alreadyWrapped(kid, depth + 1)) return true;
+    }
+  } else if (alreadyWrapped(kids, depth + 1)) return true;
+  return false;
+}
+function wrapChatRow(label, tree) {
   if (!buttonActive) return tree;
   if (!tree || typeof tree !== "object" || tree.type === void 0) return tree;
+  if (alreadyWrapped(tree)) return tree;
   try {
     const React = getReact();
     const RN = getRN();
@@ -1504,7 +1520,9 @@ function wrapChatRow(tree) {
       renderFault("wrapper unavailable (react-native view or pill missing)");
       return tree;
     }
-    return el(RN.View, { style: { flexDirection: "row", alignItems: "center" } }, tree, pill);
+    for (const p of rowPatches) if (p.label === label) p.wraps += 1;
+    refreshButtonStatus();
+    return el(RN.View, { testID: WRAP_MARKER, style: { flexDirection: "row", alignItems: "center", overflow: "visible" } }, pill, tree);
   } catch (e) {
     renderFault(e);
     return tree;
@@ -1517,6 +1535,31 @@ function renderFault(detail) {
   if (renderFaults < MAX_RENDER_FAULTS) return;
   uninstallChatButton();
   buttonStatus = "auto-disabled after " + renderFaults + " render faults";
+}
+function refreshButtonStatus() {
+  if (!rowPatches.length) return;
+  const parts = rowPatches.map((p) => p.label + " (" + p.key + (p.wraps ? " \xB7 wrapped " + p.wraps : " \xB7 never rendered") + ")");
+  buttonStatus = "hooked: " + parts.join(", ");
+}
+function dedupeRowPatches() {
+  var _a;
+  try {
+    const live = rowPatches.filter((p) => p.wraps > 0);
+    if (!live.length || live.length === rowPatches.length) return;
+    const keep = live.sort((a, b) => b.wraps - a.wraps)[0];
+    while (rowPatches.length) {
+      const p = rowPatches.pop();
+      if (p !== keep) {
+        try {
+          (_a = p.off) == null ? void 0 : _a.call(p);
+        } catch {
+        }
+      } else rowPatches.push(p);
+    }
+    refreshButtonStatus();
+  } catch (e) {
+    hostError("chat button dedupe failed", e);
+  }
 }
 function finderApi() {
   var _a, _b, _c;
@@ -1573,6 +1616,10 @@ function uninstallChatButton() {
     clearTimeout(installTimer);
     installTimer = null;
   }
+  if (dedupeTimer) {
+    clearInterval(dedupeTimer);
+    dedupeTimer = null;
+  }
   installTries = 0;
   renderFaults = 0;
   while (buttonCleanups.length) {
@@ -1581,6 +1628,7 @@ function uninstallChatButton() {
     } catch {
     }
   }
+  rowPatches = [];
   buttonStatus = "off in settings";
 }
 function setChatButton(on) {
@@ -1659,14 +1707,22 @@ function installChatButton() {
       if (!Comp) return false;
       const key = typeof Comp === "function" ? null : typeof Comp.type === "function" ? "type" : typeof Comp.render === "function" ? "render" : null;
       if (!key) return false;
-      buttonActive = true;
+      if (rowPatches.some((p) => p.label === label)) return false;
       try {
-        const off = patcher.after(Comp, key, (_args, tree) => wrapChatRow(tree));
-        if (typeof off === "function") buttonCleanups.push(off);
-        buttonStatus = "hooked " + label + " (" + key + ")";
+        const off = patcher.after(Comp, key, (_args, tree) => wrapChatRow(label, tree));
+        if (typeof off !== "function") return false;
+        buttonActive = true;
+        rowPatches.push({ label, key: String(key), wraps: 0, off });
+        buttonCleanups.push(off);
+        installTries = 0;
+        if (installTimer) {
+          clearTimeout(installTimer);
+          installTimer = null;
+        }
+        refreshButtonStatus();
+        if (!dedupeTimer) dedupeTimer = setInterval(dedupeRowPatches, 15e3);
         return true;
       } catch (e) {
-        buttonActive = false;
         buttonStatus = "patch failed on " + label;
         hostError("chat button patch failed", e);
         return false;
@@ -1674,33 +1730,48 @@ function installChatButton() {
     };
     const pick = (exports) => {
       var _a2;
-      const candidates = [exports, exports == null ? void 0 : exports.default, (_a2 = exports == null ? void 0 : exports.default) == null ? void 0 : _a2.default];
-      for (const c of candidates) {
+      const ways = [exports, exports == null ? void 0 : exports.default, (_a2 = exports == null ? void 0 : exports.default) == null ? void 0 : _a2.default];
+      for (const c of ways) {
         if (!c) continue;
         if (typeof c === "function") return c;
         if (typeof c === "object" && (typeof c.type === "function" || typeof c.render === "function")) return c;
       }
       return null;
     };
-    let installed = false;
-    for (const name of CHAT_ANCHORS) {
+    const candidates = CHAT_ANCHORS.slice();
+    try {
+      scanChatRows();
+    } catch {
+    }
+    for (const extra of chatRowNames) {
+      if (typeof extra === "string" && extra.indexOf("ChatInput") === 0 && candidates.indexOf(extra) === -1) candidates.push(extra);
+    }
+    let hooked = 0;
+    for (const name of candidates) {
+      if (rowPatches.some((p) => p.label === name)) continue;
       const filter = memoFilter(filters, name);
       if (!filter) continue;
       try {
         const off = finders.getModules(filter, (exports) => {
-          if (installed) return;
-          if (hook(pick(exports), name)) installed = true;
+          if (hook(pick(exports), name)) hooked++;
         });
         if (typeof off === "function") buttonCleanups.push(off);
       } catch {
       }
     }
-    if (installed) {
+    if (hooked) {
       installTries = 0;
+      refreshButtonStatus();
+      if (dedupeTimer) clearInterval(dedupeTimer);
+      dedupeTimer = setInterval(dedupeRowPatches, 15e3);
       return;
     }
-    scanChatRows();
-    if (installTries < MAX_INSTALL_TRIES) {
+    if (rowPatches.length) {
+      buttonActive = true;
+      installTries = 0;
+      refreshButtonStatus();
+      if (!dedupeTimer) dedupeTimer = setInterval(dedupeRowPatches, 15e3);
+    } else if (installTries < MAX_INSTALL_TRIES) {
       installTries++;
       buttonStatus = "chat row not found (try " + installTries + "/" + MAX_INSTALL_TRIES + ")";
       installTimer = setTimeout(() => {
