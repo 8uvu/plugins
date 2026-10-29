@@ -27,12 +27,12 @@ __export(index_exports, {
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "1.2.8";
+var PLUGIN_VERSION = "1.2.9";
 var DEFAULT_SETTINGS = {
   jitterSeconds: true,
   // randomize seconds like the desktop plugin's randomSeconds
-  chatButton: true,
-  // chat-bar Fake button (Valenced via afterJSX; reload chat to apply)
+  chatButton: false,
+  // chat-bar Fake button — opt-in, because it edits Discord's own chat row
   quickText: "hello"
   // what one tap of the chat-bar button sends
 };
@@ -1345,7 +1345,7 @@ function buildSettingsComponent() {
           el(Text, { style: { color: C.blurple, fontSize: 11, marginTop: 2 } }, "Chat button: " + buttonStatus + " \xB7 tap to retry")
         )
       ),
-      el(SwitchRow, { label: "Chat-bar Fake button (reload chat to apply)", value: chatBtn, onValueChange: (val) => {
+      el(SwitchRow, { label: "Chat-bar Fake button (off by default, reload chat after)", value: chatBtn, onValueChange: (val) => {
         cfg.chatButton = val;
         setChatBtn(val);
         savePluginCfg();
@@ -1425,11 +1425,18 @@ function insertChatButton(tree) {
     }
     if (!target) return tree;
     const kids = target.props.children;
+    if (!Array.isArray(kids) || Object.isFrozen(kids)) return tree;
     if (kids.some((k) => {
       var _a2;
       return ((_a2 = k == null ? void 0 : k.props) == null ? void 0 : _a2.accessibilityLabel) === "FakeDM quick fake";
     })) return tree;
-    kids.push(btn);
+    if (!kids.every((k) => k && typeof k === "object" && k.type !== void 0)) return tree;
+    if (!Object.isExtensible(kids)) return tree;
+    try {
+      kids.push(btn);
+    } catch {
+      return tree;
+    }
     return tree;
   } catch (e) {
     hostError("chat button insert failed", e);
@@ -1478,8 +1485,8 @@ function memoFilter(filters, name) {
     return null;
   }
 }
-var CHAT_ROW_NAMES = ["ChatInputRightActions", "ChatInputActions", "ChatInputButtons", "ChatInputAppButtons"];
-var MAX_INSTALL_TRIES = 12;
+var CHAT_ROW_NAMES = ["ChatInputRightActions"];
+var MAX_INSTALL_TRIES = 4;
 var installTimer = null;
 var installTries = 0;
 function installChatButton() {
@@ -1588,7 +1595,7 @@ function installChatButton() {
       installTimer = setTimeout(() => {
         installTimer = null;
         installChatButton();
-      }, 3e3);
+      }, 5e3);
     } else {
       buttonStatus = "chat row not found \u2014 settings page only";
     }
