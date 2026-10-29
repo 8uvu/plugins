@@ -6,7 +6,7 @@
 // across restarts, and can batch-inject a whole fake conversation from a
 // simple "[14:30] Name: text" script.
 //
-const PLUGIN_VERSION = '1.5.1';
+const PLUGIN_VERSION = '1.5.2';
 
 // The chat-bar button is here too, but as a wrapper around Discord's chat row
 // rather than a portal: the row is handed back untouched and the Fake pill is a
@@ -1367,7 +1367,7 @@ function buildSettingsComponent() {
             el(View, { style: { paddingHorizontal: 16, paddingTop: 14 } },
                 el(Text, { style: { color: C.text, fontSize: 18, fontWeight: '800' } }, 'FakeDM ' + PLUGIN_VERSION),
                 el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, 'Injects into: ' + (channelId ? (getChannelStore()?.getChannel?.(channelId)?.name ?? 'DM · ' + channelId.slice(-6)) : 'no channel open — open a DM first')),
-                el(Pressable, { onPress: () => { installTries = 0; installChatButton(); toast('Chat button: ' + buttonStatus); } },
+                el(Pressable, { onPress: () => { installTries = 0; anchorCursor = 0; uninstallChatButton(); installChatButton(); } },
                     el(Text, { style: { color: C.blurple, fontSize: 11, marginTop: 2 } }, 'Chat button: ' + buttonStatus + ' · tap to retry')),
                 chatRowNames.length && buttonStatus.indexOf('hooked') !== 0
                     ? el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 2 } }, 'Chat components on this build: ' + chatRowNames.join(', '))
@@ -1439,13 +1439,17 @@ let buttonStatus = 'not installed yet';
 let buttonActive = false;
 let renderFaults = 0;
 // "Hooked" is not enough: on the phone the status line said hooked while the pill
-// never appeared, because the hooked component was never rendered (or it is and
-// the appended pill was clipped past the row's edge). Each patch tracks how many
-// renders it actually wrapped and the status line shows that number, so
-// "hooked ... · never rendered" and "wrapped N" are distinguishable rigs.
+// never appeared, because the hooked component was never rendered. Each patch
+// tracks how many renders it actually wrapped and the status line shows that
+// number, so "hooked ... · never rendered" and "wrapped N" are distinguishable.
+//
+// One patch at a time: 1.5.1 stacked wrappers on every chat-input candidate at
+// once and one of them sat around the text box, which remounted it per
+// keystroke. Only ONE row is ever wrapped — the one a hook currently points at.
 interface RowPatch { label: string; key: string; wraps: number; off: () => void }
 let rowPatches: RowPatch[] = [];
-let dedupeTimer: any = null;
+let fallbackTimer: any = null;
+let anchorCursor = 0;
 
 function chatButtonElement(): any {
     const React = getReact();
@@ -1526,30 +1530,30 @@ function renderFault(detail?: unknown) {
 }
 
 // One hook can be true and still useless on this phone — the memo exists but
-// never finishes a render. Several hooks are installed at once, and a counter
-// per hook records how many renders it actually wrapped, so the status line can
-// tell "hooked and rendering" from "hooked but never shown".
+// never finishes a render, so the status line can tell "hooked and rendering"
+// from "hooked but never shown".
 function refreshButtonStatus(): void {
     if (!rowPatches.length) return;
     const parts = rowPatches.map((p) => p.label + ' (' + p.key + (p.wraps ? ' · wrapped ' + p.wraps : ' · never rendered') + ')');
     buttonStatus = 'hooked: ' + parts.join(', ');
 }
 
-// When several anchors were hooked and only some actually render, keep the one
-// that has proven it wraps the row and take the silent ones back out, so no host
-// code is touched more than the visible button needs.
-function dedupeRowPatches(): void {
-    try {
-        const live = rowPatches.filter((p) => p.wraps > 0);
-        if (!live.length || live.length === rowPatches.length) return;
-        const keep = live.sort((a, b) => b.wraps - a.wraps)[0];
-        while (rowPatches.length) {
-            const p = rowPatches.pop()!;
-            if (p !== keep) { try { p.off?.(); } catch {} }
-            else rowPatches.push(p);
-        }
-        refreshButtonStatus();
-    } catch (e) { hostError('chat button dedupe failed', e); }
+// Called 15 s after a hook was installed. If that single anchor never wrapped a
+// render, it is taken back out and the NEXT anchor on the list is tried — so a
+// silent hook moves on instead of stacking a second wrapper next to the first
+// (stacking them remounts the message box per keystroke).
+function checkFallback(): void {
+    fallbackTimer = null;
+    if (!buttonActive) return;
+    const current = rowPatches[0];
+    if (!current || current.wraps > 0) return;
+    if (anchorCursor >= CHAT_ANCHORS.length - 1) return; // last candidate stays
+    try { current.off?.(); } catch {}
+    rowPatches = [];
+    anchorCursor += 1;
+    buttonStatus = 'that chat row never rendered — trying the next one';
+    hostError('chat button: silent anchor, moving on', current.label);
+    installChatButton();
 }
 function finderApi(): { finders: any; filters: any; patcher: any } | null {
     const v = getValenced();
@@ -1605,9 +1609,10 @@ let buttonCleanups: (() => void)[] = [];
 function uninstallChatButton() {
     buttonActive = false;
     if (installTimer) { clearTimeout(installTimer); installTimer = null; }
-    if (dedupeTimer) { clearInterval(dedupeTimer); dedupeTimer = null; }
+    if (fallbackTimer) { clearTimeout(fallbackTimer); fallbackTimer = null; }
     installTries = 0;
     renderFaults = 0;
+    anchorCursor = 0;
     while (buttonCleanups.length) {
         try { buttonCleanups.pop()?.(); } catch {}
     }
@@ -1692,11 +1697,14 @@ function installChatButton() {
                 // start() or after a retry was scheduled), so the success
                 // bookkeeping lives HERE, not in the synchronous install loop
                 // that fired the request.
-                installTries = 0;
-                if (installTimer) { clearTimeout(installTimer); installTimer = null; }
-                refreshButtonStatus();
-                if (!dedupeTimer) dedupeTimer = setInterval(dedupeRowPatches, 15000);
-                return true;
+            installTries = 0;
+            if (installTimer) { clearTimeout(installTimer); installTimer = null; }
+            refreshButtonStatus();
+            if (!fallbackTimer) {
+                fallbackTimer = setTimeout(checkFallback, 15000);
+                try { fallbackTimer.unref?.(); } catch {}
+            }
+            return true;
             } catch (e) {
                 buttonStatus = 'patch failed on ' + label;
                 hostError('chat button patch failed', e);
@@ -1714,33 +1722,21 @@ function installChatButton() {
             return null;
         };
 
-        // Hook every candidate, not the first one: a hooked memo that never
-        // renders is a dead button, and 1.5.0 shipped exactly that on some
-        // builds. The dedupe timer later drops the silent ones.
-        const candidates = CHAT_ANCHORS.slice();
+        // Hook ONE chat row, never two: a second wrapper in the input's ancestor
+        // chain is what remounts the message box on every keystroke. Try each
+        // anchor in order; a silent hook hands the baton to the next at 15 s.
         try { scanChatRows(); } catch {}
-        for (const extra of chatRowNames) {
-            if (typeof extra === 'string' && extra.indexOf('ChatInput') === 0 && candidates.indexOf(extra) === -1) candidates.push(extra);
-        }
-        let hooked = 0;
-        for (const name of candidates) {
-            if (rowPatches.some((p) => p.label === name)) continue;
+        for (const name of CHAT_ANCHORS.slice(anchorCursor)) {
+            if (rowPatches.length) break;
             const filter = memoFilter(filters, name);
             if (!filter) continue;
             try {
                 const off = finders.getModules(filter, (exports: any) => {
-                    if (hook(pick(exports), name)) hooked++;
+                    if (rowPatches.length) return; // single patch, ever
+                    hook(pick(exports), name);
                 });
                 if (typeof off === 'function') buttonCleanups.push(off);
             } catch {}
-        }
-
-        if (hooked) {
-            installTries = 0;
-            refreshButtonStatus();
-            if (dedupeTimer) clearInterval(dedupeTimer);
-            dedupeTimer = setInterval(dedupeRowPatches, 15000);
-            return;
         }
 
         // The row is often registered a few seconds after start(). Keep asking,
@@ -1751,8 +1747,13 @@ function installChatButton() {
             buttonActive = true;
             installTries = 0;
             refreshButtonStatus();
-            if (!dedupeTimer) dedupeTimer = setInterval(dedupeRowPatches, 15000);
-        } else if (installTries < MAX_INSTALL_TRIES) {
+            if (!fallbackTimer) {
+                fallbackTimer = setTimeout(checkFallback, 15000);
+                try { fallbackTimer.unref?.(); } catch {}
+            }
+            return;
+        }
+        if (installTries < MAX_INSTALL_TRIES) {
             installTries++;
             buttonStatus = 'chat row not found (try ' + installTries + '/' + MAX_INSTALL_TRIES + ')';
             installTimer = setTimeout(() => { installTimer = null; installChatButton(); }, 5000);
@@ -1885,6 +1886,7 @@ __instance.__engine = {
     memberCandidates,
     getFakes: readFakes,
     chatButtonStatus: () => buttonStatus,
+    forceFallback: checkFallback,
     setChatButton,
 };
 

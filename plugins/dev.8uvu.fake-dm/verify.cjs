@@ -19,7 +19,7 @@ function check(label, condition, detail) {
     problems.push(label + (detail === undefined ? '' : ' — ' + detail));
 }
 
-function makeHost() {
+function makeHost(options = {}) {
     const events = [];
     const state = { patchedKeys: [], rowFound: false, releases: [] };
 
@@ -58,6 +58,22 @@ function makeHost() {
 
     // Discord's chat action row is a memo: an object whose `type` is the render
     // function. It registers a moment after a plugin starts, hence the delay.
+    // A second chat anchor, for the fallback test: a build can expose both memo
+    // rows, and the install must never hook more than one at a time.
+    let rowB = null;
+    if (options.extraRow) {
+        rowB = {
+            type: function ChatInputActions() {
+                return React.createElement(
+                    RN.View,
+                    { style: { flexDirection: 'row' } },
+                    React.createElement(RN.Pressable, { accessibilityLabel: 'sticker', onPress() {} }, React.createElement(RN.Text, {}, 'Sticker')),
+                );
+            },
+        };
+        rowB.type.displayName = 'ChatInputActions';
+    }
+
     const row = {
         type: function ChatInputRightActions() {
             return React.createElement(
@@ -99,6 +115,8 @@ function makeHost() {
                     state.rowFound = true;
                     callback(row);
                 }, 20);
+            } else if (filter && filter.token === 'ChatInputActions' && rowB) {
+                setTimeout(() => callback(rowB), 20);
             }
             return () => {};
         },
@@ -144,7 +162,7 @@ function makeHost() {
             native: {},
         },
     };
-    return { host, row, React, RN, events, state };
+    return { host, row, rowB, React, RN, events, state };
 }
 
 const buttonsIn = (tree) => {
@@ -303,6 +321,26 @@ const labelsOf = (tree) => {
     const recovered = faulty.row.type({});
     check('after the rollback the row renders bare', recovered?.type === 'View' && recovered.children.length === 3 && buttonsIn(recovered).length === 0, labelsOf(recovered));
     faultyOptions.stop?.();
+
+    // 2c. Single-anchor fallback. A hooked memo that never renders is a dead
+    //     button, and stacking a second wrapper beside it remounted the text
+    //     box per keystroke. So the silent anchor must be taken back out and
+    //     the next anchor — and only the next — given the pill instead.
+    const multi = makeHost({ extraRow: true });
+    const multiOptions = new Function('valenced', 'plugin', `return ${code}\n//# sourceURL=Valenced:Plugin:${manifest.id}`)(multi.host, (o) => o)?.default;
+    await multiOptions.start?.({ jsonStorage: { get: async () => ({ chatButton: true }), set: async () => {}, use: () => ({ chatButton: true }), subscribe: () => () => {} } });
+    await new Promise((resolve) => setTimeout(resolve, 80));
+    check('the first anchor was hooked', String(multiOptions.__engine.chatButtonStatus()).includes('ChatInputRightActions'), multiOptions.__engine.chatButtonStatus());
+
+    multiOptions.__engine.forceFallback();
+    await new Promise((resolve) => setTimeout(resolve, 80));
+    check('the silent anchor moved the hook to the next chat row', String(multiOptions.__engine.chatButtonStatus()).includes('ChatInputActions'), multiOptions.__engine.chatButtonStatus());
+    const bareA = multi.row.type({});
+    check('the silent anchor renders bare again', bareA?.children?.length === 3 && buttonsIn(bareA).length === 0, labelsOf(bareA));
+    const wrappedB = multi.rowB.type({});
+    check('the next anchor carries the pill', buttonsIn(wrappedB).length === 1 && buttonsIn(wrappedB)[0]?.props?.accessibilityLabel === PILL_LABEL, labelsOf(wrappedB));
+    check('one patch is still exactly one patch', buttonsIn(multi.row.type({})).length === 0 && buttonsIn(multi.rowB.type({})).length === 1);
+    multiOptions.stop?.();
 
     // 3. Boot must not replay saved fakes. That replay is what turns one bad
     //    entry into a crash loop that survives reinstalling the plugin.
