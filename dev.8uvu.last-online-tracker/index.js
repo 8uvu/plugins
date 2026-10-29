@@ -25,7 +25,14 @@ __export(index_exports, {
   handlePresence: () => handlePresence
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "1.5.0";
+var PLUGIN_VERSION = "1.5.1";
+function getValenced() {
+  try {
+    if (typeof valenced !== "undefined" && valenced) return valenced;
+  } catch {
+  }
+  return null;
+}
 function getMetro() {
   var _a, _b, _c, _d, _e;
   try {
@@ -43,52 +50,67 @@ function getMetro() {
   return null;
 }
 function getReact(api) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
   try {
     const react = (_d = (_b = (_a = api == null ? void 0 : api.unscoped) == null ? void 0 : _a.react) == null ? void 0 : _b.React) != null ? _d : (_c = api == null ? void 0 : api.react) == null ? void 0 : _c.React;
     if ((react == null ? void 0 : react.createElement) && (react == null ? void 0 : react.useState)) return react;
   } catch {
   }
   try {
+    const r = (_f = (_e = getValenced()) == null ? void 0 : _e.react) == null ? void 0 : _f.React;
+    if ((r == null ? void 0 : r.createElement) && (r == null ? void 0 : r.useState)) return r;
+  } catch {
+  }
+  try {
     const m = getMetro();
-    const r = (_h = (_g = (_e = m == null ? void 0 : m.findByDisplayName) == null ? void 0 : _e.call(m, "React")) != null ? _g : (_f = m == null ? void 0 : m.findByProps) == null ? void 0 : _f.call(m, "createElement", "cloneElement")) != null ? _h : null;
+    const r = (_j = (_i = (_g = m == null ? void 0 : m.findByDisplayName) == null ? void 0 : _g.call(m, "React")) != null ? _i : (_h = m == null ? void 0 : m.findByProps) == null ? void 0 : _h.call(m, "createElement", "cloneElement")) != null ? _j : null;
     if (r) return r;
   } catch {
   }
   try {
-    if (typeof revenge !== "undefined") return (_j = (_i = revenge == null ? void 0 : revenge.react) == null ? void 0 : _i.React) != null ? _j : null;
+    if (typeof revenge !== "undefined") return (_l = (_k = revenge == null ? void 0 : revenge.react) == null ? void 0 : _k.React) != null ? _l : null;
   } catch {
   }
   return null;
 }
 function getRN(api) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
   try {
     const rn = (_d = (_b = (_a = api == null ? void 0 : api.unscoped) == null ? void 0 : _a.react) == null ? void 0 : _b.ReactNative) != null ? _d : (_c = api == null ? void 0 : api.react) == null ? void 0 : _c.ReactNative;
     if ((rn == null ? void 0 : rn.View) && (rn == null ? void 0 : rn.Text)) return rn;
   } catch {
   }
   try {
+    const rn = (_f = (_e = getValenced()) == null ? void 0 : _e.react) == null ? void 0 : _f.ReactNative;
+    if ((rn == null ? void 0 : rn.View) && (rn == null ? void 0 : rn.Text)) return rn;
+  } catch {
+  }
+  try {
     const m = getMetro();
-    const rn = (_h = (_g = (_e = m == null ? void 0 : m.findByDisplayName) == null ? void 0 : _e.call(m, "ReactNative")) != null ? _g : (_f = m == null ? void 0 : m.findByProps) == null ? void 0 : _f.call(m, "View", "Text", "TextInput")) != null ? _h : null;
+    const rn = (_j = (_i = (_g = m == null ? void 0 : m.findByDisplayName) == null ? void 0 : _g.call(m, "ReactNative")) != null ? _i : (_h = m == null ? void 0 : m.findByProps) == null ? void 0 : _h.call(m, "View", "Text", "TextInput")) != null ? _j : null;
     if (rn) return rn;
   } catch {
   }
   try {
-    if (typeof revenge !== "undefined") return (_j = (_i = revenge == null ? void 0 : revenge.react) == null ? void 0 : _i.ReactNative) != null ? _j : null;
+    if (typeof revenge !== "undefined") return (_l = (_k = revenge == null ? void 0 : revenge.react) == null ? void 0 : _k.ReactNative) != null ? _l : null;
   } catch {
   }
   return null;
 }
 function findStore(name, props, api) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
   try {
     const s = (_f = (_c = (_b = (_a = api == null ? void 0 : api.unscoped) == null ? void 0 : _a.discord) == null ? void 0 : _b.flux) == null ? void 0 : _c.Stores) != null ? _f : (_e = (_d = api == null ? void 0 : api.discord) == null ? void 0 : _d.flux) == null ? void 0 : _e.Stores;
     if (s == null ? void 0 : s[name]) return s[name];
   } catch {
   }
   try {
-    const s = typeof revenge !== "undefined" && ((_h = (_g = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _g.flux) == null ? void 0 : _h.Stores) || null;
+    const s = (_i = (_h = (_g = getValenced()) == null ? void 0 : _g.discord) == null ? void 0 : _h.flux) == null ? void 0 : _i.Stores;
+    if (s == null ? void 0 : s[name]) return s[name];
+  } catch {
+  }
+  try {
+    const s = typeof revenge !== "undefined" && ((_k = (_j = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _j.flux) == null ? void 0 : _k.Stores) || null;
     if (s == null ? void 0 : s[name]) return s[name];
   } catch {
   }
@@ -106,7 +128,7 @@ function findStore(name, props, api) {
   }
   try {
     const v = typeof vendetta !== "undefined" ? vendetta : null;
-    if ((_j = (_i = v == null ? void 0 : v.metro) == null ? void 0 : _i.common) == null ? void 0 : _j[name]) return v.metro.common[name];
+    if ((_m = (_l = v == null ? void 0 : v.metro) == null ? void 0 : _l.common) == null ? void 0 : _m[name]) return v.metro.common[name];
   } catch {
   }
   return null;
@@ -115,22 +137,27 @@ function getUserStore(api) {
   return findStore("UserStore", ["getCurrentUser"], api);
 }
 function getFlux(api) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
   try {
     const flux = (_d = (_b = (_a = api == null ? void 0 : api.unscoped) == null ? void 0 : _a.discord) == null ? void 0 : _b.flux) != null ? _d : (_c = api == null ? void 0 : api.discord) == null ? void 0 : _c.flux;
     if (typeof (flux == null ? void 0 : flux.onFluxEventDispatched) === "function") return flux;
   } catch {
   }
   try {
+    const flux = (_f = (_e = getValenced()) == null ? void 0 : _e.discord) == null ? void 0 : _f.flux;
+    if (flux && typeof (flux == null ? void 0 : flux.onFluxEventDispatched) === "function") return flux;
+  } catch {
+  }
+  try {
     if (typeof revenge !== "undefined") {
-      const flux = (_e = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _e.flux;
+      const flux = (_g = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _g.flux;
       if (flux) return flux;
     }
   } catch {
   }
   try {
     if (typeof bunny !== "undefined") {
-      const flux = (_f = bunny == null ? void 0 : bunny.api) == null ? void 0 : _f.flux;
+      const flux = (_h = bunny == null ? void 0 : bunny.api) == null ? void 0 : _h.flux;
       if (flux == null ? void 0 : flux.intercept) {
         return {
           onFluxEventDispatched: (event, listener) => flux.intercept((payload) => (payload == null ? void 0 : payload.type) === event ? listener(payload) : void 0)
@@ -142,7 +169,7 @@ function getFlux(api) {
   try {
     if (typeof vendetta !== "undefined") {
       const v = vendetta;
-      const fd = (_j = (_h = (_g = v == null ? void 0 : v.metro) == null ? void 0 : _g.common) == null ? void 0 : _h.FluxDispatcher) != null ? _j : (_i = v == null ? void 0 : v.common) == null ? void 0 : _i.FluxDispatcher;
+      const fd = (_l = (_j = (_i = v == null ? void 0 : v.metro) == null ? void 0 : _i.common) == null ? void 0 : _j.FluxDispatcher) != null ? _l : (_k = v == null ? void 0 : v.common) == null ? void 0 : _k.FluxDispatcher;
       if (fd == null ? void 0 : fd.addInterceptor) {
         return {
           onFluxEventDispatched: (event, listener) => fd.addInterceptor((payload) => (payload == null ? void 0 : payload.type) === event ? listener(payload) : void 0)
@@ -154,11 +181,21 @@ function getFlux(api) {
   return null;
 }
 function getDispatcher() {
-  var _a, _b, _c, _d;
+  var _a, _b, _c, _d, _e, _f, _g;
   try {
     const metro = getMetro();
     const fd = (_d = (_c = (_a = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _a.call(metro, "subscribe", "dispatch")) != null ? _c : (_b = metro == null ? void 0 : metro.common) == null ? void 0 : _b.FluxDispatcher) != null ? _d : null;
     if (fd == null ? void 0 : fd.subscribe) return fd;
+  } catch {
+  }
+  try {
+    const v = getValenced();
+    const finders = (_e = v == null ? void 0 : v.modules) == null ? void 0 : _e.finders;
+    const filters = (_g = (_f = v == null ? void 0 : v.modules) == null ? void 0 : _f.finders) == null ? void 0 : _g.filters;
+    if (finders && filters) {
+      const [mod] = finders.lookupModule(filters.withProps("subscribe", "dispatch"));
+      if (mod == null ? void 0 : mod.subscribe) return mod;
+    }
   } catch {
   }
   try {
@@ -178,10 +215,15 @@ function getStorage() {
   return null;
 }
 function getActions() {
-  var _a, _b, _c, _d, _e;
+  var _a, _b, _c, _d, _e, _f, _g;
+  try {
+    const a = (_b = (_a = getValenced()) == null ? void 0 : _a.discord) == null ? void 0 : _b.actions;
+    if (a) return a;
+  } catch {
+  }
   try {
     if (typeof revenge !== "undefined") {
-      const a = (_a = revenge.discord) == null ? void 0 : _a.actions;
+      const a = (_c = revenge.discord) == null ? void 0 : _c.actions;
       if (a) return a;
     }
   } catch {
@@ -189,7 +231,7 @@ function getActions() {
   try {
     if (typeof bunny !== "undefined") {
       const b = bunny;
-      const a = ((_c = (_b = b.metro) == null ? void 0 : _b.common) == null ? void 0 : _c.toasts) || ((_e = (_d = b.api) == null ? void 0 : _d.actions) == null ? void 0 : _e.ToastActionCreators);
+      const a = ((_e = (_d = b.metro) == null ? void 0 : _d.common) == null ? void 0 : _e.toasts) || ((_g = (_f = b.api) == null ? void 0 : _f.actions) == null ? void 0 : _g.ToastActionCreators);
       if (a) return a;
     }
   } catch {
@@ -251,7 +293,7 @@ async function persistConfig() {
   }
   settingsChangedCb == null ? void 0 : settingsChangedCb();
 }
-var MIN_ONLINE_MS = 15e3;
+var MIN_ONLINE_MS = 5e3;
 var lastSeenRaw = {};
 var seenOnlineAt = /* @__PURE__ */ new Map();
 function presenceStatus(payload) {
@@ -488,7 +530,7 @@ function presenceStore(api) {
   return found;
 }
 function readOnlineSet(store) {
-  var _a, _b, _c;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
   for (const method of ["getOnlineUserIds", "getOnlineFriendIds", "getUserIds"]) {
     try {
       const value = (_a = store == null ? void 0 : store[method]) == null ? void 0 : _a.call(store);
@@ -506,6 +548,17 @@ function readOnlineSet(store) {
       }
       if (ids.size) return ids;
     }
+  } catch {
+  }
+  try {
+    const presences = (_h = (_g = (_e = (_d = store == null ? void 0 : store.getState) == null ? void 0 : _d.call(store)) == null ? void 0 : _e.presences) != null ? _g : (_f = store == null ? void 0 : store.getPresences) == null ? void 0 : _f.call(store)) != null ? _h : null;
+    const entries = presences instanceof Map ? Array.from(presences.entries()) : presences && typeof presences === "object" ? Object.entries(presences) : [];
+    const ids = /* @__PURE__ */ new Set();
+    for (const [id, p] of entries) {
+      const st = typeof p === "string" ? p : (_j = p == null ? void 0 : p.status) != null ? _j : (_i = p == null ? void 0 : p.presence) == null ? void 0 : _i.status;
+      if (typeof st === "string" && ["online", "idle", "dnd"].includes(st.toLowerCase())) ids.add(String(id));
+    }
+    if (ids.size) return ids;
   } catch {
   }
   return null;
