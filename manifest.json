@@ -14,7 +14,7 @@
             }
         ]
     },
-    "version": "1.7.3",
+    "version": "1.7.4",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"
@@ -26,7 +26,7 @@
     "dist": {
         "script": "index.js"
     },
-    "hash": "b42ba8e4753e9977d253d61e1b6bdf7de3bc2eb326bb3fadef5e6c0d9fbf0ffc",
+    "hash": "3dfd876f38c4073f1d70744d5365aaba7c5f5348c718bb68a3b5ad60119c4a8f",
     "authors": [
         {
             "name": "Cenotaph"

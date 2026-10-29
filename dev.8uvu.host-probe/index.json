@@ -8,13 +8,13 @@
             "description": "Diagnostic tool: reports which plugin loader and APIs your Revenge build actually exposes (globals, flux, storage, toasts, file module). Shows the result as a toast and in its settings page.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.2"
+                "latest": "1.0.3"
             },
             "versions": {
-                "1.0.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.0.2.zip",
-                    "sha256": "02eb4ea956d72b555a4177c3ef1e5448c359002c4d9cb914ea7f914a7a4f5b52",
-                    "size": 5964,
+                "1.0.3": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.0.3.zip",
+                    "sha256": "426938bd4231374af81982c6ad7fad643ad459016f7c61c19b1253ea87750817",
+                    "size": 6220,
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"

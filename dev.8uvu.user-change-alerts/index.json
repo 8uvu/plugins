@@ -1,0 +1,30 @@
+{
+    "format": 1,
+    "name": "UserChangeAlerts",
+    "description": "Toasts when someone changes their username, display name or profile picture.",
+    "plugins": {
+        "dev.8uvu.user-change-alerts": {
+            "name": "UserChangeAlerts",
+            "description": "Toasts when someone changes their username, display name or profile picture.",
+            "author": "Cenotaph",
+            "channels": {
+                "latest": "1.0.1"
+            },
+            "versions": {
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.user-change-alerts@1.0.1.zip",
+                    "sha256": "8fa2d0c11df2e4ad43f7f77c15a64c7e10f447743a0bfbc0f83156a5f99651fd",
+                    "size": 5330,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -4,7 +4,7 @@
     "name": "Host Probe",
     "description": "Diagnostic tool: reports which plugin loader and APIs your Revenge build actually exposes (globals, flux, storage, toasts, file module). Shows the result as a toast and in its settings page.",
     "author": "Cenotaph",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "license": "MIT",
     "dependencies": {
         "valenced.api": {
@@ -18,7 +18,7 @@
         "script": "index.js"
     },
     "main": "index.js",
-    "hash": "d0fe5c9aa3f9603bf5aa3be7344668c55013db965c056476bd73859617f60caf",
+    "hash": "6654e7edbd79d28180c83cad16995f1a1985478ec771ffd7f4fcb0440e54031b",
     "authors": [
         {
             "name": "Cenotaph"

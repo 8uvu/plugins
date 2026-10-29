@@ -4,7 +4,7 @@
     "name": "Quick Check",
     "description": "Diagnostic: pops a native Alert with your device's full host diagnosis (React, flux dispatcher, stores, file module) the moment the plugin is enabled.",
     "author": "Cenotaph",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "license": "MIT",
     "dependencies": {
         "valenced.api": {
@@ -18,7 +18,7 @@
         "script": "index.js"
     },
     "main": "index.js",
-    "hash": "800c74f410a99c8f932b843af5569565cfc9812341a52eaded8958403cea076e",
+    "hash": "abbcb361fa7ab0ed4edccc336dde1853688b55e33f46bc8f54fff188a413319f",
     "authors": [
         {
             "name": "Cenotaph"

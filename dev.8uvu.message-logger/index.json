@@ -8,13 +8,13 @@
             "description": "Message logger with searchable deleted/edited history, edit diffs, ghost pings, muted-channel filters, image caching and import/export",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.7.3"
+                "latest": "1.7.4"
             },
             "versions": {
-                "1.7.3": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.7.3.zip",
-                    "sha256": "276eac3a642ba9dec0b7a2a22af50ed63f5ec958810d1dc86f2c297ac2a574c0",
-                    "size": 24730,
+                "1.7.4": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.7.4.zip",
+                    "sha256": "d66eee534be82940ef9bb306e671d0482bac5473a0a8144a39cea459224a5ef7",
+                    "size": 24986,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

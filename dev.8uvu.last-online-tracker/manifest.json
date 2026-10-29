@@ -14,7 +14,7 @@
             }
         ]
     },
-    "version": "1.5.1",
+    "version": "1.5.2",
     "license": "GPL-3.0-or-later",
     "dependencies": {
         "valenced.api": {
@@ -27,7 +27,7 @@
     "dist": {
         "script": "index.js"
     },
-    "hash": "1251166d439be56b7427e430892d587bfb97671ad88497fe9ddbe32e19bcc5c5",
+    "hash": "9fc8efb00fbb00130ccc13070d528ac7128de8db3e21396fe12db1c464252275",
     "authors": [
         {
             "name": "Cenotaph"

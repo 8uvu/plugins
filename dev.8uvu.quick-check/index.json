@@ -8,13 +8,13 @@
             "description": "Diagnostic: pops a native Alert with your device's full host diagnosis (React, flux dispatcher, stores, file module) the moment the plugin is enabled.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.1"
+                "latest": "1.0.2"
             },
             "versions": {
-                "1.0.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.quick-check@1.0.1.zip",
-                    "sha256": "9cd6216c3c645a1c02e8be052d09dc151654cd7e55a9cf099f90ad828178b254",
-                    "size": 3853,
+                "1.0.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.quick-check@1.0.2.zip",
+                    "sha256": "7823050cf35639fb4138f35133ea5ff1eeabcf35780c5c90008be3165a94b31a",
+                    "size": 4103,
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"

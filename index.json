@@ -8,13 +8,13 @@
             "description": "Strips tracking parameters (utm_*, fbclid, gclid, igshid, ...) from links in messages, with blacklist and whitelist modes.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.3"
+                "latest": "1.0.4"
             },
             "versions": {
-                "1.0.3": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.clean-urls@1.0.3.zip",
-                    "sha256": "102cccae368c8e7a0453570ddb5ce4c34a8a6b8a17377466b62a47af3f449358",
-                    "size": 6719,
+                "1.0.4": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.clean-urls@1.0.4.zip",
+                    "sha256": "84a9cb3b6ceb91379717b78687378c63a170d0645407b62c6651f6e049d28d41",
+                    "size": 6972,
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"
@@ -31,13 +31,13 @@
             "description": "Injects fake messages, calls, system messages, reactions & embeds into any DM or channel. Batch fake conversations. Persists across restarts. Mobile port of your Equicord plugin.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.2.6"
+                "latest": "1.2.7"
             },
             "versions": {
-                "1.2.6": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.2.6.zip",
-                    "sha256": "c5de3cfd64aa0e5f1f06b37c33eb63520908e3bb515dbe38696768378a0ab9e9",
-                    "size": 17291,
+                "1.2.7": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.2.7.zip",
+                    "sha256": "01e08d2d32bef37004ccdee3c14ccd8743eb052d27e638936359d9b2e6a9e066",
+                    "size": 17545,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -54,13 +54,13 @@
             "description": "Diagnostic tool: reports which plugin loader and APIs your Revenge build actually exposes (globals, flux, storage, toasts, file module). Shows the result as a toast and in its settings page.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.2"
+                "latest": "1.0.3"
             },
             "versions": {
-                "1.0.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.0.2.zip",
-                    "sha256": "02eb4ea956d72b555a4177c3ef1e5448c359002c4d9cb914ea7f914a7a4f5b52",
-                    "size": 5964,
+                "1.0.3": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.0.3.zip",
+                    "sha256": "426938bd4231374af81982c6ad7fad643ad459016f7c61c19b1253ea87750817",
+                    "size": 6220,
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"
@@ -77,13 +77,36 @@
             "description": "Records when friends go offline — a 'last seen' Discord never shows you. Only counts departures you actually witnessed, so server syncs can't fake them.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.5.1"
+                "latest": "1.5.2"
             },
             "versions": {
-                "1.5.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.5.1.zip",
-                    "sha256": "cce854a0914ab4cac6df33803c138cab5b909bb0f480c6a67626c02dd46dee08",
-                    "size": 10982,
+                "1.5.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.5.2.zip",
+                    "sha256": "c5bc42f193099bee4e36f6b415977f70bf7d3c81a0c3baccf5c73d851fa64446",
+                    "size": 11236,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        },
+        "dev.8uvu.message-bookmarks": {
+            "name": "MessageBookmarks",
+            "description": "Save messages privately on your device by pasting a message link, and read them again later.",
+            "author": "Cenotaph",
+            "channels": {
+                "latest": "1.0.1"
+            },
+            "versions": {
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-bookmarks@1.0.1.zip",
+                    "sha256": "9bf7cb58281ad4a2fd531faa4ca99e376827b72df80553a6517f793e4b513472",
+                    "size": 4952,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -100,13 +123,13 @@
             "description": "Message logger with searchable deleted/edited history, edit diffs, ghost pings, muted-channel filters, image caching and import/export",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.7.3"
+                "latest": "1.7.4"
             },
             "versions": {
-                "1.7.3": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.7.3.zip",
-                    "sha256": "276eac3a642ba9dec0b7a2a22af50ed63f5ec958810d1dc86f2c297ac2a574c0",
-                    "size": 24730,
+                "1.7.4": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.7.4.zip",
+                    "sha256": "d66eee534be82940ef9bb306e671d0482bac5473a0a8144a39cea459224a5ef7",
+                    "size": 24986,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -123,13 +146,13 @@
             "description": "Spoof what platform you're on — Discord shows the matching platform icon (desktop, web, iOS, Xbox…) next to your name. Mobile port of Equicord's platformSpoofer.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.4.0"
+                "latest": "1.4.1"
             },
             "versions": {
-                "1.4.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.4.0.zip",
-                    "sha256": "d9682de479cd3d50f34d10823af4bd543b91eef56eee3dd48ce39a024e743498",
-                    "size": 6506,
+                "1.4.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.4.1.zip",
+                    "sha256": "e0d6dabbb2ef8caef691d87b8627b6dd0eb5fe7f0e1e3ade7d0f58f614e5ab20",
+                    "size": 6756,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -146,16 +169,62 @@
             "description": "Diagnostic: pops a native Alert with your device's full host diagnosis (React, flux dispatcher, stores, file module) the moment the plugin is enabled.",
             "author": "Cenotaph",
             "channels": {
+                "latest": "1.0.2"
+            },
+            "versions": {
+                "1.0.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.quick-check@1.0.2.zip",
+                    "sha256": "7823050cf35639fb4138f35133ea5ff1eeabcf35780c5c90008be3165a94b31a",
+                    "size": 4103,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": "*"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        },
+        "dev.8uvu.user-change-alerts": {
+            "name": "UserChangeAlerts",
+            "description": "Toasts when someone changes their username, display name or profile picture.",
+            "author": "Cenotaph",
+            "channels": {
                 "latest": "1.0.1"
             },
             "versions": {
                 "1.0.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.quick-check@1.0.1.zip",
-                    "sha256": "9cd6216c3c645a1c02e8be052d09dc151654cd7e55a9cf099f90ad828178b254",
-                    "size": 3853,
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.user-change-alerts@1.0.1.zip",
+                    "sha256": "8fa2d0c11df2e4ad43f7f77c15a64c7e10f447743a0bfbc0f83156a5f99651fd",
+                    "size": 5330,
                     "dependencies": {
                         "valenced.api": {
+                            "version": ">=1"
+                        },
+                        "discord": {
                             "version": "*"
+                        }
+                    }
+                }
+            }
+        },
+        "dev.8uvu.voice-time": {
+            "name": "VoiceTime",
+            "description": "Counts how long you spent in voice calls, per day and per server.",
+            "author": "Cenotaph",
+            "channels": {
+                "latest": "1.0.1"
+            },
+            "versions": {
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.voice-time@1.0.1.zip",
+                    "sha256": "5828dac8a7ab5c8f77676399a97d84c275b8cd6871cd6f97552934803dfbfaef",
+                    "size": 5277,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1"
                         },
                         "discord": {
                             "version": "*"

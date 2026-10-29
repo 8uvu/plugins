@@ -8,13 +8,13 @@
             "description": "Strips tracking parameters (utm_*, fbclid, gclid, igshid, ...) from links in messages, with blacklist and whitelist modes.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.3"
+                "latest": "1.0.4"
             },
             "versions": {
-                "1.0.3": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.clean-urls@1.0.3.zip",
-                    "sha256": "102cccae368c8e7a0453570ddb5ce4c34a8a6b8a17377466b62a47af3f449358",
-                    "size": 6719,
+                "1.0.4": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.clean-urls@1.0.4.zip",
+                    "sha256": "84a9cb3b6ceb91379717b78687378c63a170d0645407b62c6651f6e049d28d41",
+                    "size": 6972,
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"

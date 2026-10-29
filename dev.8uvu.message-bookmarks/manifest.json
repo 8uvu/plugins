@@ -1,0 +1,29 @@
+{
+    "format": 1,
+    "id": "dev.8uvu.message-bookmarks",
+    "name": "MessageBookmarks",
+    "description": "Save messages privately on your device by pasting a message link, and read them again later.",
+    "author": "Cenotaph",
+    "version": "1.0.1",
+    "dependencies": {
+        "valenced.api": {
+            "version": ">=1"
+        },
+        "discord": {
+            "version": "*"
+        }
+    },
+    "dist": {
+        "script": "index.js"
+    },
+    "main": "index.js",
+    "hash": "69922e5d4d2d9312211aa550ca89e0f2a5507ba30a15c2fbf194d950124e256a",
+    "authors": [
+        {
+            "name": "Cenotaph"
+        }
+    ],
+    "vendetta": {
+        "icon": "ic_chat_bubble"
+    }
+}

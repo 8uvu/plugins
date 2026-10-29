@@ -8,13 +8,13 @@
             "description": "Records when friends go offline — a 'last seen' Discord never shows you. Only counts departures you actually witnessed, so server syncs can't fake them.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.5.1"
+                "latest": "1.5.2"
             },
             "versions": {
-                "1.5.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.5.1.zip",
-                    "sha256": "cce854a0914ab4cac6df33803c138cab5b909bb0f480c6a67626c02dd46dee08",
-                    "size": 10982,
+                "1.5.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.5.2.zip",
+                    "sha256": "c5bc42f193099bee4e36f6b415977f70bf7d3c81a0c3baccf5c73d851fa64446",
+                    "size": 11236,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

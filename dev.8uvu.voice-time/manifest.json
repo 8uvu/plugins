@@ -1,0 +1,29 @@
+{
+    "format": 1,
+    "id": "dev.8uvu.voice-time",
+    "name": "VoiceTime",
+    "description": "Counts how long you spent in voice calls, per day and per server.",
+    "author": "Cenotaph",
+    "version": "1.0.1",
+    "dependencies": {
+        "valenced.api": {
+            "version": ">=1"
+        },
+        "discord": {
+            "version": "*"
+        }
+    },
+    "dist": {
+        "script": "index.js"
+    },
+    "main": "index.js",
+    "hash": "6c18fd166c86fbf72404cec99271884a2cebe9dcb944da0d7def98b98c355f31",
+    "authors": [
+        {
+            "name": "Cenotaph"
+        }
+    ],
+    "vendetta": {
+        "icon": "ic_chat_bubble"
+    }
+}

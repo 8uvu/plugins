@@ -1,0 +1,29 @@
+{
+    "format": 1,
+    "id": "dev.8uvu.user-change-alerts",
+    "name": "UserChangeAlerts",
+    "description": "Toasts when someone changes their username, display name or profile picture.",
+    "author": "Cenotaph",
+    "version": "1.0.1",
+    "dependencies": {
+        "valenced.api": {
+            "version": ">=1"
+        },
+        "discord": {
+            "version": "*"
+        }
+    },
+    "dist": {
+        "script": "index.js"
+    },
+    "main": "index.js",
+    "hash": "b771ef475d571a3377a0161eff34e66669e9eb97b4bdd0123944e92d145bd85d",
+    "authors": [
+        {
+            "name": "Cenotaph"
+        }
+    ],
+    "vendetta": {
+        "icon": "ic_chat_bubble"
+    }
+}
