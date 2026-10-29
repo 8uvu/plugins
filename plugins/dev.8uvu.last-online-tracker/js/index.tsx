@@ -10,10 +10,11 @@
 // Hard rules honored here:
 //   - ZERO `revenge.*` access at eval time.
 //   - Settings UI is plain React Native components that always render.
-//   - Toasts via ToastActionCreators.open (+ ToastAndroid fallback).
+//   - Toasts go through React Native's native surface only (Discord's toast
+//     container crashes this client).
 //   - Dispatcher subscriptions are removed on stop().
 
-const PLUGIN_VERSION = '1.5.2';
+const PLUGIN_VERSION = '1.5.3';
 
 // Valenced (phone) exposes itself as the `valenced` global / bundle parameter.
 // Prefer it over the revenge/bunny/vendetta globals: on Valenced those don't
@@ -183,40 +184,15 @@ function getStorage(): any {
     return null;
 }
 
-function getActions(): any {
-    try {
-        const a = getValenced()?.discord?.actions;
-        if (a) return a;
-    } catch {}
-    try {
-        if (typeof revenge !== 'undefined') {
-            const a: any = revenge.discord?.actions;
-            if (a) return a;
-        }
-    } catch {}
-    try {
-        if (typeof bunny !== 'undefined') {
-            const b: any = bunny;
-            const a = b.metro?.common?.toasts || b.api?.actions?.ToastActionCreators;
-            if (a) return a;
-        }
-    } catch {}
-    return null;
-}
-
 function toast(content: string) {
+    // Native surfaces only. Discord's toast container crashed the whole client on
+    // this build (useToastContainer: "Cannot read property 'position' of
+    // undefined"), so this never opens a Discord toast.
     const text = String(content ?? '');
     try {
-        const actions: any = getActions();
-        const open = actions?.ToastActionCreators?.open ?? actions?.open;
-        if (typeof open === 'function') {
-            open({ key: 'lot-' + Date.now(), content: text });
-            return;
-        }
-    } catch {}
-    try {
         const RN: any = getRN();
-        RN?.ToastAndroid?.show?.(text, RN?.ToastAndroid?.SHORT ?? 0);
+        if (RN?.ToastAndroid?.show) { RN.ToastAndroid.show(text, RN.ToastAndroid.SHORT ?? 0); return; }
+        if (RN?.Alert?.alert) { RN.Alert.alert('Last Online Tracker', text); }
     } catch {}
 }
 

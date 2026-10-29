@@ -9,7 +9,7 @@
 // The link may be the full https://discord.com/channels/<guild>/<channel>/<msg>
 // form or just <channel>/<message> — both are accepted.
 
-const PLUGIN_VERSION = '1.0.1';
+const PLUGIN_VERSION = '1.0.2';
 
 interface Bookmark {
     channelId: string;
@@ -69,16 +69,14 @@ function getStores(): any {
 }
 
 function toast(text: string): void {
-    try {
-        const open = getValenced()?.discord?.actions?.ToastActionCreators?.open;
-        if (typeof open === 'function') {
-            open({ key: 'bookmark-' + Date.now(), content: text });
-            return;
-        }
-    } catch {}
+    // Native surfaces only. Discord's toast container crashed the whole client on
+    // this build (useToastContainer: "Cannot read property 'position' of
+    // undefined"), so this never opens a Discord toast.
+    const s = String(text ?? '');
     try {
         const RN: any = getRN();
-        RN?.ToastAndroid?.show?.(text, RN?.ToastAndroid?.SHORT ?? 0);
+        if (RN?.ToastAndroid?.show) { RN.ToastAndroid.show(s, RN.ToastAndroid.SHORT ?? 0); return; }
+        if (RN?.Alert?.alert) { RN.Alert.alert('Message Bookmarks', s); }
     } catch {}
 }
 

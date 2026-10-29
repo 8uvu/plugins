@@ -281,38 +281,18 @@ function makeSettings(): any {
     };
 }
 
-function showToastEverywhere(content: string, key: string): void {
-    const show = (fn: any, arg: any) => {
-        try {
-            if (typeof fn !== 'function') return false;
-            fn(arg);
-            return true;
-        } catch {
-            return false;
+// Discord's own toast container crashed the whole client on this build
+// (useToastContainer reading `position` of undefined), so a diagnostic never goes
+// through it. Native surfaces only: Android's system toast, then a dialog.
+function showToastEverywhere(content: string, _key: string): void {
+    const message = String(content ?? '');
+    try {
+        const RN: any = reactNative();
+        if (RN?.ToastAndroid?.show) {
+            RN.ToastAndroid.show(message, RN.ToastAndroid.SHORT ?? 0);
+            return;
         }
-    };
-    try {
-        const v: any = typeof valenced !== 'undefined' ? valenced : null;
-        const open = v?.discord?.actions?.ToastActionCreators?.open;
-        if (show(open, { key, content })) return;
-    } catch {}
-    try {
-        const a: any = typeof revenge !== 'undefined' ? (revenge as any)?.discord?.actions : null;
-        const open = a?.ToastActionCreators?.open ?? a?.open;
-        if (show(open, { key, content })) return;
-    } catch {}
-    try {
-        const v: any = typeof vendetta !== 'undefined' ? vendetta : null;
-        const s = v?.ui?.toasts?.showToast ?? v?.common?.toasts?.showToast;
-        if (show(s, { key, content }) || show(s, content)) return;
-    } catch {}
-    try {
-        const b: any = typeof bunny !== 'undefined' ? bunny : null;
-        if (show(b?.api?.toasts?.showToast, { key, content })) return;
-    } catch {}
-    try {
-        const ta: any = reactNative()?.ToastAndroid;
-        ta?.show?.(content, ta?.SHORT ?? 0);
+        RN?.Alert?.alert?.('Host Probe', message);
     } catch {}
 }
 
@@ -328,7 +308,9 @@ function runProbe(startApi: any): void {
     probeValenced();
 
     const oneLine = summary();
-    showToastEverywhere('Host Probe: ' + oneLine, 'hostprobe-summary');
+    // No notification on boot: the settings page already shows these rows, and
+    // firing anything while the client starts is what kept taking it down.
+    void oneLine;
     try {
         (typeof revenge !== 'undefined' ? (revenge as any)?.logger : null)?.log?.('[HostProbe] ' + rows.map((r) => r.key + '=' + r.value).join(' | '));
     } catch {}

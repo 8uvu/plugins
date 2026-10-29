@@ -4,7 +4,7 @@
     "name": "MessageBookmarks",
     "description": "Saves message links you want to keep.",
     "author": "Cenotaph",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"

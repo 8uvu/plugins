@@ -11,10 +11,11 @@
 //   - ZERO `revenge.*` access at eval time (the client kills the toggle).
 //   - Settings UI is plain React Native components that always render; we
 //     never return null for the page just because a Design row is missing.
-//   - Toasts go through ToastActionCreators.open, never revenge.ui.showToast.
+//   - Toasts go through React Native's native surface only (Discord's toast
+//     container crashes this client).
 //   - Hermes: children passed to createElement are always arrays/normalized.
 
-const PLUGIN_VERSION = '1.4.1';
+const PLUGIN_VERSION = '1.4.2';
 
 // ---- Host lookups (lazy, call inside start/UI render only) --------------------
 
@@ -109,38 +110,16 @@ function hostError(msg: string, e?: unknown) {
 
 // ---- Toast -------------------------------------------------------------------
 
-function getActions(): any {
-    try {
-        if (typeof revenge !== 'undefined') {
-            const a: any = revenge.discord?.actions;
-            if (a) return a;
-        }
-    } catch {}
-    try {
-        if (typeof bunny !== 'undefined') {
-            const b: any = bunny;
-            const a = b.metro?.common?.toasts || b.api?.actions?.ToastActionCreators;
-            if (a) return a;
-        }
-    } catch {}
-    return null;
-}
-
 function toast(content: string) {
+    // Native surfaces only. Discord's toast container crashed the whole client on
+    // this build (useToastContainer: "Cannot read property 'position' of
+    // undefined"), so this never opens a Discord toast.
     const text = String(content ?? '');
     try {
-        const actions: any = getActions();
-        const open = actions?.ToastActionCreators?.open ?? actions?.open;
-        if (typeof open === 'function') {
-            open({ key: 'spoofer-' + Date.now(), content: text });
-            return;
-        }
-    } catch {}
-    try {
         const RN: any = getRN();
-        RN?.ToastAndroid?.show?.(text, RN?.ToastAndroid?.SHORT ?? 0);
+        if (RN?.ToastAndroid?.show) { RN.ToastAndroid.show(text, RN.ToastAndroid.SHORT ?? 0); return; }
+        if (RN?.Alert?.alert) { RN.Alert.alert('Platform Spoofer', text); }
     } catch {}
-    hostError('no toast channel available');
 }
 
 // ---- Platform table ------------------------------------------------------------

@@ -4,7 +4,7 @@
     "name": "Host Probe",
     "description": "Shows which host APIs your build exposes.",
     "author": "Cenotaph",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "license": "MIT",
     "dependencies": {
         "valenced.api": {

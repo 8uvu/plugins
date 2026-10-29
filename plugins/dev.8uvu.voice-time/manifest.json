@@ -4,7 +4,7 @@
     "name": "VoiceTime",
     "description": "Counts your voice time per day and server.",
     "author": "Cenotaph",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"

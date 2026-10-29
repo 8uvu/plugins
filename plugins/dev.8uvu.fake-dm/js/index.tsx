@@ -6,7 +6,7 @@
 // across restarts, and can batch-inject a whole fake conversation from a
 // simple "[14:30] Name: text" script.
 //
-const PLUGIN_VERSION = '1.4.0';
+const PLUGIN_VERSION = '1.4.1';
 
 // Desktop-only pieces (chat-bar button portal, context-menu edit, CSS) have no
 // Revenge equivalent — here everything lives in the plugin's settings page,
@@ -866,27 +866,32 @@ function getActions(): any {
     return null;
 }
 
-// Toast via revenge.discord.actions.ToastActionCreators.open — the pattern
-// MessageLogger uses and which renders correctly on Revenge Next. The older
-// revenge.ui.showToast({content,type}) path hands an OBJECT to React as a
-// child on current builds and crashes the tree ('Objects are not valid as a
-// React child'). Never touch revenge.ui here.
+// Native notifications only.
+//
+// Discord's toast container crashed the whole client on this build:
+//   TypeError: Cannot read property 'position' of undefined
+//     at useToastContainer -> ToastContainer -> ManaToastSurface
+// when it was handed a toast from a plugin. A confirmation message is never worth
+// taking the app down, so this never touches ToastActionCreators or any other
+// Discord toast path: Android gets its own native toast, everything else gets a
+// plain native dialog, and if neither exists the caller simply gets no popup.
 function toast(content: string) {
     const text = String(content ?? '');
     try {
-        const actions: any = getActions();
-        const open = actions?.ToastActionCreators?.open ?? actions?.open;
-        if (typeof open === 'function') {
-            open({ key: 'fakedm-' + Date.now(), content: text });
+        const RN: any = getRN();
+        if (RN?.ToastAndroid?.show) {
+            RN.ToastAndroid.show(text, RN.ToastAndroid.SHORT ?? 0);
             return;
         }
     } catch {}
     try {
         const RN: any = getRN();
-        RN?.ToastAndroid?.show?.(text, RN?.ToastAndroid?.SHORT ?? 0);
-        return;
+        if (RN?.Alert?.alert) {
+            RN.Alert.alert('FakeDM', text);
+            return;
+        }
     } catch {}
-    hostError('no toast channel available');
+    hostError('no notification channel available: ' + text);
 }
 
 // ---- Settings UI ---------------------------------------------------------------
@@ -1631,7 +1636,8 @@ async function startNext(api: any) {
     // Nothing is restored or dispatched here on purpose: the client must be able
     // to boot with this plugin enabled even if the saved fakes are unusable.
     installChatButton();
-    toast('FakeDM ready — saved fakes are replayed only when you ask');
+    // Deliberately silent on boot: nothing to report, and a popup during startup
+    // is the least useful moment for one.
 }
 
 async function startClassic() {

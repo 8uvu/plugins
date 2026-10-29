@@ -4,7 +4,7 @@
     "name": "ZeroWidthSanitizer",
     "description": "Strips invisible characters from your messages.",
     "author": "Cenotaph",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"

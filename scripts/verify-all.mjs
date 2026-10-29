@@ -17,6 +17,12 @@ steps.push({ name: 'dist integrity', args: ['scripts/check-dist.cjs'] });
 
 // The bundle's module shape is part of the host contract: returns .default or the
 // plugin registers with no options and no settings tab at all.
+// Notifications must never reach Discord's toast container: it crashed the
+// client with `Cannot read property 'position' of undefined`.
+if (existsSync(join(root, 'scripts', 'check-notifications.cjs'))) {
+    steps.push({ name: 'notification safety', args: ['scripts/check-notifications.cjs'] });
+}
+
 if (existsSync(join(root, 'scripts', 'check-host-contract.cjs'))) {
     steps.push({ name: 'host contract', args: ['scripts/check-host-contract.cjs'] });
 }

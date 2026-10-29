@@ -4,7 +4,7 @@
     "name": "Voice Guard",
     "description": "Undoes server mute/deafen and reconnects you.",
     "author": "Cenotaph",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"

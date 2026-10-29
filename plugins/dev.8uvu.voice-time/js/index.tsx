@@ -7,7 +7,7 @@
 // The counter deliberately ignores every voice state that is not you, and it
 // resumes correctly after a reload because the open session is stored too.
 
-const PLUGIN_VERSION = '1.0.1';
+const PLUGIN_VERSION = '1.0.2';
 
 interface Day {
     totalSec: number;
@@ -69,17 +69,18 @@ function getStores(): any {
     return {};
 }
 
+// Discord's own toast container has crashed the whole client on this build
+// (useToastContainer reading `position` of undefined), and a notification is
+// never worth an app crash — so only native surfaces are used here.
 function toast(text: string): void {
-    try {
-        const open = getValenced()?.discord?.actions?.ToastActionCreators?.open;
-        if (typeof open === 'function') {
-            open({ key: 'voicetime-' + Date.now(), content: text });
-            return;
-        }
-    } catch {}
+    const message = String(text ?? '');
     try {
         const RN: any = getRN();
-        RN?.ToastAndroid?.show?.(text, RN?.ToastAndroid?.SHORT ?? 0);
+        if (RN?.ToastAndroid?.show) {
+            RN.ToastAndroid.show(message, RN.ToastAndroid.SHORT ?? 0);
+            return;
+        }
+        RN?.Alert?.alert?.('VoiceTime', message);
     } catch {}
 }
 
