@@ -4,7 +4,7 @@
     "name": "VoiceTime",
     "description": "Counts your voice time per day and server.",
     "author": "Cenotaph",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"
@@ -17,7 +17,7 @@
         "script": "index.js"
     },
     "main": "index.js",
-    "hash": "6c18fd166c86fbf72404cec99271884a2cebe9dcb944da0d7def98b98c355f31",
+    "hash": "022d5b7b2da0af9beb7a7a88d449e09be526d1d2beef9630cf95ee6ea485361d",
     "authors": [
         {
             "name": "Cenotaph"

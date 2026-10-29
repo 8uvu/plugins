@@ -29,7 +29,7 @@ __export(index_exports, {
   voiceState: () => voiceState
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "1.0.1";
+var PLUGIN_VERSION = "1.0.2";
 var DEFAULTS = { days: {}, session: null };
 var MAX_DAYS = 90;
 function getValenced() {

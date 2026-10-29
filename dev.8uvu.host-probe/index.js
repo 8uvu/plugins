@@ -388,43 +388,16 @@ function makeSettings() {
     );
   };
 }
-function showToastEverywhere(content, key) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p;
-  const show = (fn, arg) => {
-    try {
-      if (typeof fn !== "function") return false;
-      fn(arg);
-      return true;
-    } catch {
-      return false;
+function showToastEverywhere(content, _key) {
+  var _a, _b, _c, _d;
+  const message = String(content != null ? content : "");
+  try {
+    const RN = reactNative();
+    if ((_a = RN == null ? void 0 : RN.ToastAndroid) == null ? void 0 : _a.show) {
+      RN.ToastAndroid.show(message, (_b = RN.ToastAndroid.SHORT) != null ? _b : 0);
+      return;
     }
-  };
-  try {
-    const v = typeof valenced !== "undefined" ? valenced : null;
-    const open = (_c = (_b = (_a = v == null ? void 0 : v.discord) == null ? void 0 : _a.actions) == null ? void 0 : _b.ToastActionCreators) == null ? void 0 : _c.open;
-    if (show(open, { key, content })) return;
-  } catch {
-  }
-  try {
-    const a = typeof revenge !== "undefined" ? (_d = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _d.actions : null;
-    const open = (_f = (_e = a == null ? void 0 : a.ToastActionCreators) == null ? void 0 : _e.open) != null ? _f : a == null ? void 0 : a.open;
-    if (show(open, { key, content })) return;
-  } catch {
-  }
-  try {
-    const v = typeof vendetta !== "undefined" ? vendetta : null;
-    const s = (_k = (_h = (_g = v == null ? void 0 : v.ui) == null ? void 0 : _g.toasts) == null ? void 0 : _h.showToast) != null ? _k : (_j = (_i = v == null ? void 0 : v.common) == null ? void 0 : _i.toasts) == null ? void 0 : _j.showToast;
-    if (show(s, { key, content }) || show(s, content)) return;
-  } catch {
-  }
-  try {
-    const b = typeof bunny !== "undefined" ? bunny : null;
-    if (show((_m = (_l = b == null ? void 0 : b.api) == null ? void 0 : _l.toasts) == null ? void 0 : _m.showToast, { key, content })) return;
-  } catch {
-  }
-  try {
-    const ta = (_n = reactNative()) == null ? void 0 : _n.ToastAndroid;
-    (_p = ta == null ? void 0 : ta.show) == null ? void 0 : _p.call(ta, content, (_o = ta == null ? void 0 : ta.SHORT) != null ? _o : 0);
+    (_d = (_c = RN == null ? void 0 : RN.Alert) == null ? void 0 : _c.alert) == null ? void 0 : _d.call(_c, "Host Probe", message);
   } catch {
   }
 }
@@ -440,7 +413,7 @@ function runProbe(startApi) {
   probeVendetta();
   probeValenced();
   const oneLine = summary();
-  showToastEverywhere("Host Probe: " + oneLine, "hostprobe-summary");
+  void oneLine;
   try {
     (_b = (_a = typeof revenge !== "undefined" ? revenge == null ? void 0 : revenge.logger : null) == null ? void 0 : _a.log) == null ? void 0 : _b.call(_a, "[HostProbe] " + rows.map((r) => r.key + "=" + r.value).join(" | "));
   } catch {

@@ -4,7 +4,7 @@
     "name": "MessageBookmarks",
     "description": "Saves message links you want to keep.",
     "author": "Cenotaph",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"
@@ -17,7 +17,7 @@
         "script": "index.js"
     },
     "main": "index.js",
-    "hash": "69922e5d4d2d9312211aa550ca89e0f2a5507ba30a15c2fbf194d950124e256a",
+    "hash": "f6945b19509675227ec892cb850df2d542b811804db03124c448bff3329bd5af",
     "authors": [
         {
             "name": "Cenotaph"

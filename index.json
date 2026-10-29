@@ -31,13 +31,13 @@
             "description": "Fake messages and calls in any chat.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.4.0"
+                "latest": "1.4.1"
             },
             "versions": {
-                "1.4.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.4.0.zip",
-                    "sha256": "5f7d8235673009a02432dbc13d201e20eb072521f74eb67bd68a2608223b27c0",
-                    "size": 18929,
+                "1.4.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.4.1.zip",
+                    "sha256": "dea9743372bbd64a22a70f73d0444ac96aaeff7cb98ea7081e6ad90e270416b9",
+                    "size": 18775,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -54,13 +54,13 @@
             "description": "Shows which host APIs your build exposes.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.3"
+                "latest": "1.0.4"
             },
             "versions": {
-                "1.0.3": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.0.3.zip",
-                    "sha256": "466c273e780ad6510dbcfe7d6c1b81950410950eb5eba10b06e6f41474f943c1",
-                    "size": 6120,
+                "1.0.4": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.0.4.zip",
+                    "sha256": "9c8c5a240c3345d3e8e136f718a5d1c14e6024fe595463b0a48125da4f1e22fc",
+                    "size": 5926,
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"
@@ -77,13 +77,13 @@
             "description": "Remembers when people went offline.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.5.2"
+                "latest": "1.5.3"
             },
             "versions": {
-                "1.5.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.5.2.zip",
-                    "sha256": "5df4ce61f320ae56ccaba9d201844b892a39d9d348faf6d5b0cab1b12e09a280",
-                    "size": 11150,
+                "1.5.3": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.5.3.zip",
+                    "sha256": "3b497bf4cb31210f7f0333f67c8813ef1b1c36917f94ffdc9427757eced38259",
+                    "size": 11016,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -100,13 +100,13 @@
             "description": "Saves message links you want to keep.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.1"
+                "latest": "1.0.2"
             },
             "versions": {
-                "1.0.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-bookmarks@1.0.1.zip",
-                    "sha256": "c91eb1f6461a597dd4b955f8c10e61d5d205afd8eb836a87e956fd16d0714ae9",
-                    "size": 4919,
+                "1.0.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-bookmarks@1.0.2.zip",
+                    "sha256": "c3f382e317bd355dba3382fa019e442f685a3e1563db0b551a420f291330dd53",
+                    "size": 4892,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -123,12 +123,12 @@
             "description": "Shows a different platform than you are on.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.4.1"
+                "latest": "1.4.2"
             },
             "versions": {
-                "1.4.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.4.1.zip",
-                    "sha256": "545f3655a7c7f1c9b2cd1313e18746009bbf6c297f4d7d2965a594b742c70402",
+                "1.4.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.4.2.zip",
+                    "sha256": "6382c5511fcc9508e173521d2f7521e5c56ac3e75417fa3031985ae78d00b698",
                     "size": 6663,
                     "dependencies": {
                         "valenced.api": {
@@ -169,13 +169,13 @@
             "description": "Toasts when a user changes name or avatar.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.1"
+                "latest": "1.0.2"
             },
             "versions": {
-                "1.0.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.user-change-alerts@1.0.1.zip",
-                    "sha256": "0579dd2bd4168dde75f366ca328c1668ed132b3f7526cb5bf4e9fbbc99c57138",
-                    "size": 5305,
+                "1.0.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.user-change-alerts@1.0.2.zip",
+                    "sha256": "faa6ef065f232e8dbbf4224cf9aede98303d29790209953689b9c1002f238136",
+                    "size": 5281,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -192,13 +192,13 @@
             "description": "Undoes server mute/deafen and reconnects you.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.0"
+                "latest": "1.0.1"
             },
             "versions": {
-                "1.0.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.voice-guard@1.0.0.zip",
-                    "sha256": "4cb1ae4d6ac165ecf5621e39854892187328e11dfc6b9bd3a77d220884524dd0",
-                    "size": 5751,
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.voice-guard@1.0.1.zip",
+                    "sha256": "454161b914985f7953a7958cd09c0c55f8eb2bc113df8aa76a60eaa50bc05085",
+                    "size": 5714,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -215,13 +215,13 @@
             "description": "Counts your voice time per day and server.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.1"
+                "latest": "1.0.2"
             },
             "versions": {
-                "1.0.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.voice-time@1.0.1.zip",
-                    "sha256": "d02831f9e75045f5ef555b89e2c1eb4851109884ba78d58de47a2362edd637b9",
-                    "size": 5260,
+                "1.0.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.voice-time@1.0.2.zip",
+                    "sha256": "f562902143191fa0c62db91605033e31be1561283333c0568278b0c21fdd91e7",
+                    "size": 5259,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -238,13 +238,13 @@
             "description": "Strips invisible characters from your messages.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.0"
+                "latest": "1.0.1"
             },
             "versions": {
-                "1.0.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.zero-width-sanitizer@1.0.0.zip",
-                    "sha256": "a9b725ad39b68a5aa635cde88d3b767a24c3e6a698fb651a4483a7d1b6242e9d",
-                    "size": 5955,
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.zero-width-sanitizer@1.0.1.zip",
+                    "sha256": "071ff3b707fbe9f1ca7483c59b82cd08b25022e40766450d7481eb46c57e77f1",
+                    "size": 5921,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

@@ -8,13 +8,13 @@
             "description": "Shows which host APIs your build exposes.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.3"
+                "latest": "1.0.4"
             },
             "versions": {
-                "1.0.3": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.0.3.zip",
-                    "sha256": "466c273e780ad6510dbcfe7d6c1b81950410950eb5eba10b06e6f41474f943c1",
-                    "size": 6120,
+                "1.0.4": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.0.4.zip",
+                    "sha256": "9c8c5a240c3345d3e8e136f718a5d1c14e6024fe595463b0a48125da4f1e22fc",
+                    "size": 5926,
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"

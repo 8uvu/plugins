@@ -8,13 +8,13 @@
             "description": "Saves message links you want to keep.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.1"
+                "latest": "1.0.2"
             },
             "versions": {
-                "1.0.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-bookmarks@1.0.1.zip",
-                    "sha256": "c91eb1f6461a597dd4b955f8c10e61d5d205afd8eb836a87e956fd16d0714ae9",
-                    "size": 4919,
+                "1.0.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-bookmarks@1.0.2.zip",
+                    "sha256": "c3f382e317bd355dba3382fa019e442f685a3e1563db0b551a420f291330dd53",
+                    "size": 4892,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

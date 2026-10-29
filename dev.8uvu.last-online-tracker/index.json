@@ -8,13 +8,13 @@
             "description": "Remembers when people went offline.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.5.2"
+                "latest": "1.5.3"
             },
             "versions": {
-                "1.5.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.5.2.zip",
-                    "sha256": "5df4ce61f320ae56ccaba9d201844b892a39d9d348faf6d5b0cab1b12e09a280",
-                    "size": 11150,
+                "1.5.3": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.5.3.zip",
+                    "sha256": "3b497bf4cb31210f7f0333f67c8813ef1b1c36917f94ffdc9427757eced38259",
+                    "size": 11016,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

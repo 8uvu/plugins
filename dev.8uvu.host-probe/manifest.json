@@ -4,7 +4,7 @@
     "name": "Host Probe",
     "description": "Shows which host APIs your build exposes.",
     "author": "Cenotaph",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "license": "MIT",
     "dependencies": {
         "valenced.api": {
@@ -18,7 +18,7 @@
         "script": "index.js"
     },
     "main": "index.js",
-    "hash": "6654e7edbd79d28180c83cad16995f1a1985478ec771ffd7f4fcb0440e54031b",
+    "hash": "4bee97dad2756a35fa7231740220ade73cb972672b31ad7578302d8b8aad6fc7",
     "authors": [
         {
             "name": "Cenotaph"

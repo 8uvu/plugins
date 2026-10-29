@@ -29,7 +29,7 @@ __export(index_exports, {
   sanitize: () => sanitize
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "1.0.0";
+var PLUGIN_VERSION = "1.0.1";
 var DEFAULTS = {
   sanitizeOutgoing: true,
   sanitizeEdits: true,
@@ -117,18 +117,15 @@ function getStores() {
   return {};
 }
 function toast(text) {
-  var _a, _b, _c, _d, _e, _f, _g, _h;
-  try {
-    const open = (_d = (_c = (_b = (_a = getValenced()) == null ? void 0 : _a.discord) == null ? void 0 : _b.actions) == null ? void 0 : _c.ToastActionCreators) == null ? void 0 : _d.open;
-    if (typeof open === "function") {
-      open({ key: "zwsanitizer-" + Date.now(), content: text });
-      return;
-    }
-  } catch {
-  }
+  var _a, _b, _c, _d;
+  const message = String(text != null ? text : "");
   try {
     const RN = getRN();
-    (_h = (_e = RN == null ? void 0 : RN.ToastAndroid) == null ? void 0 : _e.show) == null ? void 0 : _h.call(_e, text, (_g = (_f = RN == null ? void 0 : RN.ToastAndroid) == null ? void 0 : _f.SHORT) != null ? _g : 0);
+    if ((_a = RN == null ? void 0 : RN.ToastAndroid) == null ? void 0 : _a.show) {
+      RN.ToastAndroid.show(message, (_b = RN.ToastAndroid.SHORT) != null ? _b : 0);
+      return;
+    }
+    (_d = (_c = RN == null ? void 0 : RN.Alert) == null ? void 0 : _c.alert) == null ? void 0 : _d.call(_c, "Zero Width Sanitizer", message);
   } catch {
   }
 }

@@ -27,7 +27,7 @@ __export(index_exports, {
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "1.4.0";
+var PLUGIN_VERSION = "1.4.1";
 var DEFAULT_SETTINGS = {
   jitterSeconds: true,
   // randomize seconds like the desktop plugin's randomSeconds
@@ -832,49 +832,26 @@ function presetDate(key) {
   }
   return new Date(now);
 }
-function getActions() {
-  var _a, _b, _c, _d, _e, _f, _g;
-  try {
-    const a = (_b = (_a = getValenced()) == null ? void 0 : _a.discord) == null ? void 0 : _b.actions;
-    if (a) return a;
-  } catch {
-  }
-  try {
-    if (typeof revenge !== "undefined") {
-      const a = (_c = revenge.discord) == null ? void 0 : _c.actions;
-      if (a) return a;
-    }
-  } catch {
-  }
-  try {
-    if (typeof bunny !== "undefined") {
-      const b = bunny;
-      const a = ((_e = (_d = b.metro) == null ? void 0 : _d.common) == null ? void 0 : _e.toasts) || ((_g = (_f = b.api) == null ? void 0 : _f.actions) == null ? void 0 : _g.ToastActionCreators);
-      if (a) return a;
-    }
-  } catch {
-  }
-  return null;
-}
 function toast(content) {
-  var _a, _b, _c, _d, _e, _f;
+  var _a, _b, _c;
   const text = String(content != null ? content : "");
   try {
-    const actions = getActions();
-    const open = (_b = (_a = actions == null ? void 0 : actions.ToastActionCreators) == null ? void 0 : _a.open) != null ? _b : actions == null ? void 0 : actions.open;
-    if (typeof open === "function") {
-      open({ key: "fakedm-" + Date.now(), content: text });
+    const RN = getRN();
+    if ((_a = RN == null ? void 0 : RN.ToastAndroid) == null ? void 0 : _a.show) {
+      RN.ToastAndroid.show(text, (_b = RN.ToastAndroid.SHORT) != null ? _b : 0);
       return;
     }
   } catch {
   }
   try {
     const RN = getRN();
-    (_f = (_c = RN == null ? void 0 : RN.ToastAndroid) == null ? void 0 : _c.show) == null ? void 0 : _f.call(_c, text, (_e = (_d = RN == null ? void 0 : RN.ToastAndroid) == null ? void 0 : _d.SHORT) != null ? _e : 0);
-    return;
+    if ((_c = RN == null ? void 0 : RN.Alert) == null ? void 0 : _c.alert) {
+      RN.Alert.alert("FakeDM", text);
+      return;
+    }
   } catch {
   }
-  hostError("no toast channel available");
+  hostError("no notification channel available: " + text);
 }
 function hexToInt(hex) {
   const m = String(hex != null ? hex : "").trim().replace("#", "");
@@ -1720,7 +1697,6 @@ async function startNext(api) {
     if (typeof off === "function") cleanupFns.push(off);
   }
   installChatButton();
-  toast("FakeDM ready \u2014 saved fakes are replayed only when you ask");
 }
 async function startClassic() {
   var _a, _b;

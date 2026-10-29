@@ -4,7 +4,7 @@
     "name": "UserChangeAlerts",
     "description": "Toasts when a user changes name or avatar.",
     "author": "Cenotaph",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"
@@ -17,7 +17,7 @@
         "script": "index.js"
     },
     "main": "index.js",
-    "hash": "b771ef475d571a3377a0161eff34e66669e9eb97b4bdd0123944e92d145bd85d",
+    "hash": "85dcd9b4e5de9123afcf1acfa532082c68e49eb9b673306f4050c48a1e0842d7",
     "authors": [
         {
             "name": "Cenotaph"

@@ -8,13 +8,13 @@
             "description": "Undoes server mute/deafen and reconnects you.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.0.0"
+                "latest": "1.0.1"
             },
             "versions": {
-                "1.0.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.voice-guard@1.0.0.zip",
-                    "sha256": "4cb1ae4d6ac165ecf5621e39854892187328e11dfc6b9bd3a77d220884524dd0",
-                    "size": 5751,
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.voice-guard@1.0.1.zip",
+                    "sha256": "454161b914985f7953a7958cd09c0c55f8eb2bc113df8aa76a60eaa50bc05085",
+                    "size": 5714,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

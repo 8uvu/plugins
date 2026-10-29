@@ -4,7 +4,7 @@
     "name": "Voice Guard",
     "description": "Undoes server mute/deafen and reconnects you.",
     "author": "Cenotaph",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"
@@ -17,7 +17,7 @@
         "script": "index.js"
     },
     "main": "index.js",
-    "hash": "80bdcd0d06f283c909f90117abed6b96688f6231a418d381b26bd76430c5926d",
+    "hash": "85478b6ecefc07afcc13e3897da29fe0623e9fb6f0b7d97477c419a6926f58d8",
     "authors": [
         {
             "name": "Cenotaph"
