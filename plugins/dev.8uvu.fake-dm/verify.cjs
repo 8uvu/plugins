@@ -173,8 +173,25 @@ const textIn = (tree) => {
     return out.join(' | ');
 };
 
+const PILL_LABEL = "FakeDM quick fake";
+
+// Accessibility labels in DOM order: a structural fingerprint of a rendered row,
+// used to prove the wrapper hands Discord's own subtree back untouched.
+const labelsOf = (tree) => {
+    const out = [];
+    const walk = (node) => {
+        if (!node || typeof node !== "object") return;
+        const label = node.props && node.props.accessibilityLabel;
+        if (label) out.push(label);
+        const kids = node.children;
+        for (const kid of Array.isArray(kids) ? kids : [kids]) walk(kid);
+    };
+    walk(tree);
+    return out.join(",");
+};
+
 (async () => {
-    // 1. Default: the button must stay OFF. It edits Discord's own tree, so a
+    // 1. Default: the button must stay OFF. It wraps Discord's own tree, so a
     //    fresh install has to load without patching anything at all.
     const off = makeHost();
     const offOptions = new Function('valenced', 'plugin', `return ${code}
@@ -188,10 +205,16 @@ const textIn = (tree) => {
     check('a fresh install reports the button as off', String(offOptions.__engine?.chatButtonStatus?.()).includes('off in settings'), offOptions.__engine?.chatButtonStatus?.());
     const untouched = off.row.type({});
     check('an unpatched row has no Fake button', buttonsIn(untouched).length === 0, String(buttonsIn(untouched).length));
+    // The reference shape the wrapper must hand back untouched.
+    const baselineLabels = labelsOf(untouched);
+    check('the reference row has Discord\'s own three buttons', baselineLabels === 'gift,emoji,attach', baselineLabels);
     offOptions.stop?.();
 
-    // 2. Opted in: the memo row must be hooked, exactly one button inserted, and
-    //    a tap must produce a real MESSAGE_CREATE.
+    // 2. Opted in: the memo row is WRAPPED, never edited. The row's own element
+    //    must come back as the wrapper's first child, same shape as an unpatched
+    //    render, with the pill beside it. That is the property that keeps the
+    //    message box typing: nothing inside Discord's subtree is added to or
+    //    moved, so no child array the input depends on is mutated.
     const on = makeHost();
     const onOptions = new Function('valenced', 'plugin', `return ${code}
 //# sourceURL=Valenced:Plugin:${manifest.id}`)(on.host, (o) => o)?.default;
@@ -204,27 +227,37 @@ const textIn = (tree) => {
     const status = onOptions.__engine?.chatButtonStatus?.() ?? '';
     check('the settings status reports the hook', status.startsWith('hooked ChatInputRightActions'), status);
 
-    const first = on.row.type({});
-    check('the chat row renders one Fake button', buttonsIn(first).length === 1, String(buttonsIn(first).length));
-    const second = on.row.type({});
-    check('a re-render does not add a second button', buttonsIn(second).length === 1, String(buttonsIn(second).length));
+    const wrapped = on.row.type({});
+    check('the row is wrapped in a plain row view', wrapped?.type === 'View' && wrapped?.props?.style?.flexDirection === 'row', JSON.stringify(wrapped?.props?.style ?? {}));
+    const inner = Array.isArray(wrapped?.children) ? wrapped.children[0] : null;
+    const pill = Array.isArray(wrapped?.children) ? wrapped.children[1] : null;
+    check('Discord\'s row element is the wrapper\'s first child', inner?.type === 'View', String(inner?.type));
+    check('the Fake pill is a sibling, not inside the row', pill?.props?.accessibilityLabel === PILL_LABEL, pill?.props?.accessibilityLabel);
+    check('the row subtree carries no injected button', buttonsIn(inner).length === 0, String(buttonsIn(inner).length));
+    check('the row subtree is handed back untouched', labelsOf(inner) === baselineLabels, labelsOf(inner));
+    check('the wrapper adds exactly one pill', buttonsIn(wrapped).length === 1, String(buttonsIn(wrapped).length));
+    const innerKids = inner?.props?.children;
+    check('the row keeps its own three buttons', Array.isArray(innerKids) && innerKids.length === 3, String(innerKids?.length));
 
-    const button = buttonsIn(second)[0];
-    if (button) {
-        button.props.onPress();
+    const second = on.row.type({});
+    check('a re-render does not add a second pill', buttonsIn(second).length === 1, String(buttonsIn(second).length));
+    check('a re-render does not edit the row children', Array.isArray(innerKids) && innerKids.length === 3, String(innerKids?.length));
+    check('the row shape is stable across renders', labelsOf(second.children[0]) === baselineLabels, labelsOf(second.children[0]));
+
+    if (pill) {
+        pill.props.onPress();
         const sent = on.events.filter((event) => event && event.type === 'MESSAGE_CREATE');
         check('tapping it dispatches a MESSAGE_CREATE', sent.length === 1, String(sent.length));
         check('the dispatched message carries the quick text', sent[0]?.message?.content === 'hello', sent[0]?.message?.content);
     }
 
-    // The switch must act immediately: enabling has to install the button on the
-    // spot, disabling has to take the patch back out. Waiting for a reload is what
-    // made the feature look broken.
+    // The switch must act immediately: enabling has to install the wrapper on
+    // the spot, disabling has to take the patch back out. Waiting for a reload is
+    // what made the feature look broken.
     const switchedOff = onOptions.__engine.setChatButton(false);
     check('turning the switch off reports it is off', String(switchedOff).includes('off in settings'), switchedOff);
     const afterOff = on.row.type({});
-    check('turning the switch off removes the button', buttonsIn(afterOff).length === 0, String(buttonsIn(afterOff).length));
-    void on.state.patchedKeys;
+    check('turning the switch off unwraps the row', afterOff?.type === 'View' && Array.isArray(afterOff.children) && afterOff.children.length === 3 && buttonsIn(afterOff).length === 0, JSON.stringify(labelsOf(afterOff)));
 
     onOptions.__engine.setChatButton(true);
     // The module handover is asynchronous on a cold chat; the point is that it
@@ -233,10 +266,11 @@ const textIn = (tree) => {
     const switchedOn = onOptions.__engine.chatButtonStatus();
     check('turning the switch on hooks without a reload', String(switchedOn).startsWith('hooked ChatInputRightActions'), switchedOn);
     const afterOn = on.row.type({});
-    const pill = buttonsIn(afterOn)[0];
-    check('the button comes back after enabling', !!pill);
-    check('the button has its own visible surface', pill?.props?.style?.backgroundColor === '#5865F2', JSON.stringify(pill?.props?.style ?? {}));
-    check('the button is a real hit target', (pill?.props?.style?.height ?? 0) >= 24 && (pill?.props?.style?.minWidth ?? 0) >= 40, JSON.stringify(pill?.props?.style ?? {}));
+    const again = buttonsIn(afterOn)[0];
+    check('the button comes back after enabling', !!again);
+    check('the button has its own visible surface', again?.props?.style?.backgroundColor === '#5865F2', JSON.stringify(again?.props?.style ?? {}));
+    check('the button keeps its width in a crowded row', again?.props?.style?.flexShrink === 0, JSON.stringify(again?.props?.style ?? {}));
+    check('the button is a real hit target', (again?.props?.style?.height ?? 0) >= 24 && (again?.props?.style?.minWidth ?? 0) >= 40, JSON.stringify(again?.props?.style ?? {}));
 
     const page = onOptions.SettingsComponent({ api: { jsonStorage: storage } });
     const text = textIn(page);
@@ -245,6 +279,28 @@ const textIn = (tree) => {
     check('the settings page shows the chat-button state', text.includes('Chat button:'), text.slice(0, 120));
 
     onOptions.stop?.();
+
+    // 2b. Auto-rollback. A wrapper that cannot build must hand Discord its row
+    //     back instead of throwing on every render, and repeated faults must take
+    //     the patch out rather than leave a broken chat.
+    const faulty = makeHost();
+    const faultyOptions = new Function('valenced', 'plugin', `return ${code}
+//# sourceURL=Valenced:Plugin:${manifest.id}`)(faulty.host, (o) => o)?.default;
+    await faultyOptions.start?.({ jsonStorage: { get: async () => ({ chatButton: true }), set: async () => {}, use: () => ({ chatButton: true }), subscribe: () => () => {} } });
+    await new Promise((resolve) => setTimeout(resolve, 80));
+    check('the faulty host starts hooked', String(faultyOptions.__engine.chatButtonStatus()).startsWith('hooked'), faultyOptions.__engine.chatButtonStatus());
+
+    faulty.RN.View = null; // the wrapper can no longer be built
+    let bare = null;
+    for (let i = 0; i < 3; i++) bare = faulty.row.type({});
+    check('a broken wrapper hands back Discord\'s row unchanged', !!bare && Array.isArray(bare.children) && bare.children.length === 3 && labelsOf(bare) === baselineLabels, labelsOf(bare));
+    const rolledBack = String(faultyOptions.__engine.chatButtonStatus());
+    check('repeated wrapper faults disable the button', rolledBack.includes('auto-disabled'), rolledBack);
+
+    faulty.RN.View = 'View';
+    const recovered = faulty.row.type({});
+    check('after the rollback the row renders bare', recovered?.type === 'View' && recovered.children.length === 3 && buttonsIn(recovered).length === 0, labelsOf(recovered));
+    faultyOptions.stop?.();
 
     // 3. Boot must not replay saved fakes. That replay is what turns one bad
     //    entry into a crash loop that survives reinstalling the plugin.
@@ -323,5 +379,5 @@ const textIn = (tree) => {
 FAKEDM VERIFY FAILED: ${problems.length} problem(s)`);
         process.exit(1);
     }
-    console.log(`FAKEDM VERIFY OK v${manifest.version}: quiet boot, validated restore, batch parser keeps every line and reports unknown senders, edit merges the cached record, chat button opt-in and correct`);
+    console.log(`FAKEDM VERIFY OK v${manifest.version}: quiet boot, validated restore, batch parser keeps every line and reports unknown senders, edit merges the cached record, chat button wraps the row without editing it`);
 })();

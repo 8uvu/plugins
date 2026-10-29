@@ -6,12 +6,15 @@
 // across restarts, and can batch-inject a whole fake conversation from a
 // simple "[14:30] Name: text" script.
 //
-const PLUGIN_VERSION = '1.4.2';
+const PLUGIN_VERSION = '1.5.0';
 
-// Desktop-only pieces (chat-bar button portal, context-menu edit, CSS) have no
-// Revenge equivalent — here everything lives in the plugin's settings page,
-// organized into tabs. Clearing fakes dispatches MESSAGE_DELETE with the
-// mlDeleted marker, which MessageLogger 1.6.2+ understands (no red rows).
+// The chat-bar button is here too, but as a wrapper around Discord's chat row
+// rather than a portal: the row is handed back untouched and the Fake pill is a
+// sibling, because editing that row is what broke the message box on a phone.
+// Context-menu edit and CSS have no Revenge equivalent — everything else lives
+// in the plugin's settings page, organized into tabs. Clearing fakes dispatches
+// MESSAGE_DELETE with the mlDeleted marker, which MessageLogger 1.6.2+
+// understands (no red rows).
 //
 // Host contract (proven in MessageLogger): lazy host lookups only, dual
 // storage generation (jsonStorage on Next / plugin storage on Classic),
@@ -21,7 +24,7 @@ const PLUGIN_VERSION = '1.4.2';
 
 const DEFAULT_SETTINGS = {
     jitterSeconds: true, // randomize seconds like the desktop plugin's randomSeconds
-    chatButton: false, // chat-bar Fake button — opt-in, because it edits Discord's own chat row
+    chatButton: false, // chat-bar Fake button — opt-in, because it wraps Discord's chat row
     quickText: 'hello', // what one tap of the chat-bar button sends
 };
 
@@ -1371,7 +1374,7 @@ function buildSettingsComponent() {
                     : null),
                 el(SwitchRow, {
                     label: 'Chat-bar Fake button',
-                    subLabel: 'Adds a Fake pill to the chat action row',
+                    subLabel: 'Puts a Fake pill beside the chat buttons',
                     value: chatBtn,
                     onValueChange: (val: boolean) => {
                         setChatBtn(val);
@@ -1400,12 +1403,22 @@ function buildSettingsComponent() {
     };
 }
 
-// ---- Chat-bar button (Valenced) --------------------------------------------------
-// Desktop parity: the Equicord version has a chat-bar button. On Valenced the
-// official hook is afterJSX on the chat input component (docs:
-// @valenced/react/jsx-runtime). Component names shift between Discord builds,
-// so try several candidates and degrade to settings-only when none resolve —
-// never crash the chat.
+// ---- Chat button (Valenced) ------------------------------------------------------
+// Desktop parity: Equicord has a chat-bar button. On a phone that row is not ours,
+// and editing Discord's children is what broke the message box last time — the
+// text input lost its width and stopped accepting typing. So the row is WRAPPED,
+// never edited: the row's own element is handed back untouched as the first child
+// of a plain row View, and the Fake pill is a sibling beside it. Nothing inside
+// Discord's subtree changes, so a render can only add a visible pill next to the
+// buttons.
+//
+// Three failure modes stay visible instead of silent:
+//   * the module finders live somewhere else on this build   -> finderApi()
+//   * the row has not been registered when start() runs      -> bounded retry
+//   * the row is a memo object, not a function               -> patch `.type`
+// and if the wrapper itself ever throws or cannot build, the original tree is
+// returned instead and the patch takes itself back out after MAX_RENDER_FAULTS
+// so the chat keeps working.
 function quickFake() {
     try {
         const channelId = currentChannelId();
@@ -1417,21 +1430,28 @@ function quickFake() {
     } catch (e) { hostError('quick fake failed', e); }
 }
 
+const PILL_LABEL = 'FakeDM quick fake';
+const MAX_RENDER_FAULTS = 3;
+
 let buttonStatus = 'not installed yet';
+// True only while a wrapper patch is installed. The hook checks it before doing
+// anything, so after an uninstall a stale render returns Discord's own tree.
+let buttonActive = false;
+let renderFaults = 0;
 
 function chatButtonElement(): any {
     const React = getReact();
     const RN = getRN();
     if (!React?.createElement || !RN?.Pressable || !RN?.Text) return null;
     const el = React.createElement;
-    // A plain text label disappeared into the action row on the phone, so this
-    // is a filled pill: its own background, its own contrast, a fixed height and
-    // a real hit area. If it renders, it is visible.
+    // A filled pill with its own background, contrast, height and hit area: if it
+    // renders at all it is visible, unlike a bare label in a dense icon row.
     return el(RN.Pressable, {
-        accessibilityLabel: 'FakeDM quick fake',
+        accessibilityLabel: PILL_LABEL,
         accessibilityRole: 'button',
         onPress: () => quickFake(),
         style: {
+            flexShrink: 0,
             marginLeft: 6,
             marginRight: 2,
             minWidth: 44,
@@ -1445,60 +1465,43 @@ function chatButtonElement(): any {
     }, el(RN.Text, { style: { color: '#ffffff', fontSize: 12, fontWeight: '700' } }, 'Fake'));
 }
 
-// Push the button into the first row-like container of the rendered tree. The
-// chat action row is a View whose props.children is the array of buttons; the
-// walker prefers a row that already holds something pressable so a nested
-// layout container is not mistaken for it.
-function insertChatButton(tree: any): any {
+// Wrap, never inject: the row element goes in as a child untouched, the pill is
+// its sibling. Returning the row as-is on every bad path means a problem here can
+// cost a button, never the message box.
+function wrapChatRow(tree: any): any {
+    if (!buttonActive) return tree;
+    if (!tree || typeof tree !== 'object' || tree.type === undefined) return tree;
     try {
-        if (!tree || typeof tree !== 'object') return tree;
-        const btn = chatButtonElement();
-        if (!btn) return tree;
-        const find = getValenced()?.utils?.react?.findInReactFiber;
-        const isRow = (n: any) => Array.isArray(n?.props?.children)
-            && n.props.children.length > 0
-            && n.props.children.length < 10
-            && n.props.children.some((k: any) => k && typeof k === 'object');
-        let target: any = null;
-        try {
-            target = find?.(tree, (n: any) => isRow(n) && n.props.children.some((k: any) => k?.props?.onPress || k?.props?.accessibilityLabel));
-        } catch {}
-        if (!target) {
-            try { target = find?.(tree, isRow); } catch {}
-        }
-        if (!target) return tree;
-        const kids = target.props.children;
-        if (!Array.isArray(kids) || Object.isFrozen(kids)) return tree;
-        if (kids.some((k: any) => k?.props?.accessibilityLabel === 'FakeDM quick fake')) return tree;
-        // Every existing child must be a React element; anything else means this
-        // is not the action row and editing it could break Discord's render.
-        if (!kids.every((k: any) => k && typeof k === 'object' && k.type !== undefined)) return tree;
-        if (!Object.isExtensible(kids)) return tree;
-        // Push into the row's own children array: React renders props.children,
-        // which is this same array, so one push is visible on the next render and
-        // a throw here leaves nothing half-written.
-        try {
-            kids.push(btn);
-        } catch {
+        const React = getReact();
+        const RN = getRN();
+        const el = React?.createElement;
+        const pill = chatButtonElement();
+        if (!el || !RN?.View || !pill) {
+            renderFault('wrapper unavailable (react-native view or pill missing)');
             return tree;
         }
-        return tree;
+        return el(RN.View, { style: { flexDirection: 'row', alignItems: 'center' } }, tree, pill);
     } catch (e) {
-        hostError('chat button insert failed', e);
+        renderFault(e);
         return tree;
     }
 }
 
+// A wrapper that cannot build is a feature that should stop, not a client that
+// should degrade render after render. After MAX_RENDER_FAULTS the patch is taken
+// out and the status line says why.
+function renderFault(detail?: unknown) {
+    if (!buttonActive) return;
+    renderFaults++;
+    hostError('chat button render fault ' + renderFaults + '/' + MAX_RENDER_FAULTS, detail);
+    if (renderFaults < MAX_RENDER_FAULTS) return;
+    uninstallChatButton();
+    buttonStatus = 'auto-disabled after ' + renderFaults + ' render faults';
+}
+
 // Valenced's own chat-button plugins patch the memo component's `type` rather
-// than hooking JSX (see the community "Better Chat Buttons" plugin), and the
-// chat action row is the memo component named ChatInputRightActions. Find it by
-// displayName, then append our button to its rendered row.
-//
-// Three things can go wrong on a phone, and each one used to be silent:
-//   * the module finders live somewhere else on this build  -> finderApi()
-//   * the row has not been registered yet when start() runs  -> retry timer
-//   * the row is a memo object, not a function               -> patch `.type`
-// buttonStatus always says which of those actually happened.
+// than hooking JSX (see the community "Better Chat Buttons" plugin), so the row
+// is found by displayName and its render function is patched.
 function finderApi(): { finders: any; filters: any; patcher: any } | null {
     const v = getValenced();
     if (!v) return null;
@@ -1535,9 +1538,10 @@ function memoFilter(filters: any, name: string): any {
     }
 }
 
-// Only the name Valenced's own chat-button plugin targets. Guessing extra names
-// meant patching components we had no proof were rows, which risks the client.
-const CHAT_ROW_NAMES = ['ChatInputRightActions'];
+// Only names whose job is the chat action row. Patching a guessed container was
+// how the pill ended up somewhere it could squeeze the text input; the wrapper is
+// harmless, but a wrong anchor would still be a button in the wrong place.
+const CHAT_ANCHORS = ['ChatInputRightActions', 'ChatInputActions'];
 // Names the build actually exposes, filled in only when the hook misses. This
 // turns "no button" into something the user can paste back.
 let chatRowNames: string[] = [];
@@ -1550,8 +1554,10 @@ let installTries = 0;
 let buttonCleanups: (() => void)[] = [];
 
 function uninstallChatButton() {
+    buttonActive = false;
     if (installTimer) { clearTimeout(installTimer); installTimer = null; }
     installTries = 0;
+    renderFaults = 0;
     while (buttonCleanups.length) {
         try { buttonCleanups.pop()?.(); } catch {}
     }
@@ -1601,8 +1607,10 @@ function scanChatRows() {
 function installChatButton() {
     try {
         if (installTimer) { clearTimeout(installTimer); installTimer = null; }
-        // Re-installing must not stack a second copy on the same row.
+        // Re-installing must not stack a second wrapper on the same row.
+        buttonActive = false;
         while (buttonCleanups.length) { try { buttonCleanups.pop()?.(); } catch {} }
+        renderFaults = 0;
         if ((cfg as any)?.chatButton === false) { buttonStatus = 'off in settings'; return; }
         const host = finderApi();
         if (!host) { buttonStatus = 'host lacks finders/patcher'; return; }
@@ -1622,12 +1630,14 @@ function installChatButton() {
                 : typeof Comp.render === 'function' ? 'render'
                 : null;
             if (!key) return false;
+            buttonActive = true;
             try {
-                const off = patcher.after(Comp, key, (_args: any, tree: any) => insertChatButton(tree));
+                const off = patcher.after(Comp, key, (_args: any, tree: any) => wrapChatRow(tree));
                 if (typeof off === 'function') buttonCleanups.push(off);
                 buttonStatus = 'hooked ' + label + ' (' + key + ')';
                 return true;
             } catch (e) {
+                buttonActive = false;
                 buttonStatus = 'patch failed on ' + label;
                 hostError('chat button patch failed', e);
                 return false;
@@ -1645,7 +1655,7 @@ function installChatButton() {
         };
 
         let installed = false;
-        for (const name of CHAT_ROW_NAMES) {
+        for (const name of CHAT_ANCHORS) {
             const filter = memoFilter(filters, name);
             if (!filter) continue;
             try {
@@ -1654,37 +1664,6 @@ function installChatButton() {
                     if (hook(pick(exports), name)) installed = true;
                 });
                 if (typeof off === 'function') buttonCleanups.push(off);
-            } catch {}
-        }
-
-        // Builds where the memo name moved: JSX hooking, when the runtime has it.
-        if (!installed) {
-            try {
-                const r = (getValenced()?.react ?? {}) as any;
-                const afterJSX = r.jsxRuntime?.afterJSX ?? r.ReactJSXRuntime?.afterJSX ?? null;
-                if (typeof afterJSX === 'function') {
-                    const byName = ['ChatInput', 'ChannelTextArea', 'MessageInput']
-                        .map((n: string) => { try { return filters.withName?.(n) ?? null; } catch { return null; } })
-                        .filter(Boolean);
-                    if (byName.length) {
-                        const filter = byName.length === 1 ? byName[0] : filters.anyOf?.(...byName);
-                        if (filter) {
-                            const off = finders.getModules(filter, (exports: any) => {
-                                if (installed) return;
-                                const Comp = pick(exports);
-                                const render = typeof Comp === 'function' ? Comp : Comp?.type ?? Comp?.render;
-                                if (typeof render !== 'function') return;
-                                try {
-                                    const unpatch = afterJSX(render, (tree: any) => insertChatButton(tree));
-                                    if (typeof unpatch === 'function') buttonCleanups.push(unpatch);
-                                    buttonStatus = 'hooked via jsx';
-                                    installed = true;
-                                } catch {}
-                            });
-                            if (typeof off === 'function') cleanupFns.push(off);
-                        }
-                    }
-                }
             } catch {}
         }
 
@@ -1703,10 +1682,12 @@ function installChatButton() {
             buttonStatus = 'chat row not found — settings page only';
         }
     } catch (e) {
+        buttonActive = false;
         buttonStatus = 'install failed';
         hostError('chat button install failed', e);
     }
 }
+
 
 // ---- Start / stop ---------------------------------------------------------------
 
