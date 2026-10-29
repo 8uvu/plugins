@@ -27,7 +27,7 @@ __export(index_exports, {
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "1.5.1";
+var PLUGIN_VERSION = "1.5.2";
 var DEFAULT_SETTINGS = {
   jitterSeconds: true,
   // randomize seconds like the desktop plugin's randomSeconds
@@ -1394,8 +1394,9 @@ function buildSettingsComponent() {
           Pressable,
           { onPress: () => {
             installTries = 0;
+            anchorCursor = 0;
+            uninstallChatButton();
             installChatButton();
-            toast("Chat button: " + buttonStatus);
           } },
           el(Text, { style: { color: C.blurple, fontSize: 11, marginTop: 2 } }, "Chat button: " + buttonStatus + " \xB7 tap to retry")
         ),
@@ -1470,7 +1471,8 @@ var buttonStatus = "not installed yet";
 var buttonActive = false;
 var renderFaults = 0;
 var rowPatches = [];
-var dedupeTimer = null;
+var fallbackTimer = null;
+var anchorCursor = 0;
 function chatButtonElement() {
   const React = getReact();
   const RN = getRN();
@@ -1541,25 +1543,22 @@ function refreshButtonStatus() {
   const parts = rowPatches.map((p) => p.label + " (" + p.key + (p.wraps ? " \xB7 wrapped " + p.wraps : " \xB7 never rendered") + ")");
   buttonStatus = "hooked: " + parts.join(", ");
 }
-function dedupeRowPatches() {
+function checkFallback() {
   var _a;
+  fallbackTimer = null;
+  if (!buttonActive) return;
+  const current = rowPatches[0];
+  if (!current || current.wraps > 0) return;
+  if (anchorCursor >= CHAT_ANCHORS.length - 1) return;
   try {
-    const live = rowPatches.filter((p) => p.wraps > 0);
-    if (!live.length || live.length === rowPatches.length) return;
-    const keep = live.sort((a, b) => b.wraps - a.wraps)[0];
-    while (rowPatches.length) {
-      const p = rowPatches.pop();
-      if (p !== keep) {
-        try {
-          (_a = p.off) == null ? void 0 : _a.call(p);
-        } catch {
-        }
-      } else rowPatches.push(p);
-    }
-    refreshButtonStatus();
-  } catch (e) {
-    hostError("chat button dedupe failed", e);
+    (_a = current.off) == null ? void 0 : _a.call(current);
+  } catch {
   }
+  rowPatches = [];
+  anchorCursor += 1;
+  buttonStatus = "that chat row never rendered \u2014 trying the next one";
+  hostError("chat button: silent anchor, moving on", current.label);
+  installChatButton();
 }
 function finderApi() {
   var _a, _b, _c;
@@ -1616,12 +1615,13 @@ function uninstallChatButton() {
     clearTimeout(installTimer);
     installTimer = null;
   }
-  if (dedupeTimer) {
-    clearInterval(dedupeTimer);
-    dedupeTimer = null;
+  if (fallbackTimer) {
+    clearTimeout(fallbackTimer);
+    fallbackTimer = null;
   }
   installTries = 0;
   renderFaults = 0;
+  anchorCursor = 0;
   while (buttonCleanups.length) {
     try {
       (_a = buttonCleanups.pop()) == null ? void 0 : _a();
@@ -1675,7 +1675,7 @@ function scanChatRows() {
   }
 }
 function installChatButton() {
-  var _a;
+  var _a, _b;
   try {
     if (installTimer) {
       clearTimeout(installTimer);
@@ -1704,6 +1704,7 @@ function installChatButton() {
       return;
     }
     const hook = (Comp, label) => {
+      var _a2;
       if (!Comp) return false;
       const key = typeof Comp === "function" ? null : typeof Comp.type === "function" ? "type" : typeof Comp.render === "function" ? "render" : null;
       if (!key) return false;
@@ -1720,7 +1721,13 @@ function installChatButton() {
           installTimer = null;
         }
         refreshButtonStatus();
-        if (!dedupeTimer) dedupeTimer = setInterval(dedupeRowPatches, 15e3);
+        if (!fallbackTimer) {
+          fallbackTimer = setTimeout(checkFallback, 15e3);
+          try {
+            (_a2 = fallbackTimer.unref) == null ? void 0 : _a2.call(fallbackTimer);
+          } catch {
+          }
+        }
         return true;
       } catch (e) {
         buttonStatus = "patch failed on " + label;
@@ -1738,40 +1745,37 @@ function installChatButton() {
       }
       return null;
     };
-    const candidates = CHAT_ANCHORS.slice();
     try {
       scanChatRows();
     } catch {
     }
-    for (const extra of chatRowNames) {
-      if (typeof extra === "string" && extra.indexOf("ChatInput") === 0 && candidates.indexOf(extra) === -1) candidates.push(extra);
-    }
-    let hooked = 0;
-    for (const name of candidates) {
-      if (rowPatches.some((p) => p.label === name)) continue;
+    for (const name of CHAT_ANCHORS.slice(anchorCursor)) {
+      if (rowPatches.length) break;
       const filter = memoFilter(filters, name);
       if (!filter) continue;
       try {
         const off = finders.getModules(filter, (exports) => {
-          if (hook(pick(exports), name)) hooked++;
+          if (rowPatches.length) return;
+          hook(pick(exports), name);
         });
         if (typeof off === "function") buttonCleanups.push(off);
       } catch {
       }
     }
-    if (hooked) {
-      installTries = 0;
-      refreshButtonStatus();
-      if (dedupeTimer) clearInterval(dedupeTimer);
-      dedupeTimer = setInterval(dedupeRowPatches, 15e3);
-      return;
-    }
     if (rowPatches.length) {
       buttonActive = true;
       installTries = 0;
       refreshButtonStatus();
-      if (!dedupeTimer) dedupeTimer = setInterval(dedupeRowPatches, 15e3);
-    } else if (installTries < MAX_INSTALL_TRIES) {
+      if (!fallbackTimer) {
+        fallbackTimer = setTimeout(checkFallback, 15e3);
+        try {
+          (_b = fallbackTimer.unref) == null ? void 0 : _b.call(fallbackTimer);
+        } catch {
+        }
+      }
+      return;
+    }
+    if (installTries < MAX_INSTALL_TRIES) {
       installTries++;
       buttonStatus = "chat row not found (try " + installTries + "/" + MAX_INSTALL_TRIES + ")";
       installTimer = setTimeout(() => {
@@ -1902,6 +1906,7 @@ __instance.__engine = {
   memberCandidates,
   getFakes: readFakes,
   chatButtonStatus: () => buttonStatus,
+  forceFallback: checkFallback,
   setChatButton
 };
 if (typeof plugin === "function") {
