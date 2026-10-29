@@ -1,0 +1,30 @@
+{
+    "format": 1,
+    "name": "Message Stats",
+    "description": "Counts messages you send and receive, per channel, server and day.",
+    "plugins": {
+        "dev.8uvu.message-stats": {
+            "name": "Message Stats",
+            "description": "Counts messages you send and receive, per channel, server and day.",
+            "author": "Cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-stats@1.0.0.zip",
+                    "sha256": "655c36fe5f5b2c9af8310f55a63c0f1ca994b033443083dca62707a9cc04f3f9",
+                    "size": 7336,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

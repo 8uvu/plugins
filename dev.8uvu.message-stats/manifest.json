@@ -1,0 +1,29 @@
+{
+    "format": 1,
+    "id": "dev.8uvu.message-stats",
+    "name": "Message Stats",
+    "description": "Counts messages you send and receive, per channel, server and day.",
+    "author": "Cenotaph",
+    "version": "1.0.0",
+    "dependencies": {
+        "valenced.api": {
+            "version": ">=1"
+        },
+        "discord": {
+            "version": "*"
+        }
+    },
+    "dist": {
+        "script": "index.js"
+    },
+    "main": "index.js",
+    "hash": "5c21f9bb465ccebf6d5d50ae89de4a87c0a606854c530ee49c39f6023867d551",
+    "authors": [
+        {
+            "name": "Cenotaph"
+        }
+    ],
+    "vendetta": {
+        "icon": "ic_chat_bubble"
+    }
+}
