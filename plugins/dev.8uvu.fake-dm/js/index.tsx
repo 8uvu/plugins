@@ -6,7 +6,7 @@
 // across restarts, and can batch-inject a whole fake conversation from a
 // simple "[14:30] Name: text" script.
 //
-const PLUGIN_VERSION = '1.2.8';
+const PLUGIN_VERSION = '1.2.9';
 
 // Desktop-only pieces (chat-bar button portal, context-menu edit, CSS) have no
 // Revenge equivalent — here everything lives in the plugin's settings page,
@@ -21,7 +21,7 @@ const PLUGIN_VERSION = '1.2.8';
 
 const DEFAULT_SETTINGS = {
     jitterSeconds: true, // randomize seconds like the desktop plugin's randomSeconds
-    chatButton: true, // chat-bar Fake button (Valenced via afterJSX; reload chat to apply)
+    chatButton: false, // chat-bar Fake button — opt-in, because it edits Discord's own chat row
     quickText: 'hello', // what one tap of the chat-bar button sends
 };
 
@@ -1271,7 +1271,7 @@ function buildSettingsComponent() {
                 el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, 'Injects into: ' + (channelId ? (getChannelStore()?.getChannel?.(channelId)?.name ?? 'DM · ' + channelId.slice(-6)) : 'no channel open — open a DM first')),
                 el(Pressable, { onPress: () => { installTries = 0; installChatButton(); toast('Chat button: ' + buttonStatus); } },
                     el(Text, { style: { color: C.blurple, fontSize: 11, marginTop: 2 } }, 'Chat button: ' + buttonStatus + ' · tap to retry'))),
-                el(SwitchRow, { label: 'Chat-bar Fake button (reload chat to apply)', value: chatBtn, onValueChange: (val: boolean) => { (cfg as any).chatButton = val; setChatBtn(val); savePluginCfg(); toast(val ? 'Fake button on — reload the chat to see it' : 'Fake button off — reload the chat'); } }),
+                el(SwitchRow, { label: 'Chat-bar Fake button (off by default, reload chat after)', value: chatBtn, onValueChange: (val: boolean) => { (cfg as any).chatButton = val; setChatBtn(val); savePluginCfg(); toast(val ? 'Fake button on — reload the chat to see it' : 'Fake button off — reload the chat'); } }),
                 el(Input, { placeholder: 'Quick Fake text (chat-bar button)', value: quickTxt, onChangeText: (t: string) => { (cfg as any).quickText = t; setQuickTxt(t); savePluginCfg(); } }),
             el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginTop: 10, paddingHorizontal: 12 } },
                 ...TABS.map((t) => el(Pressable, {
@@ -1339,8 +1339,20 @@ function insertChatButton(tree: any): any {
         }
         if (!target) return tree;
         const kids = target.props.children;
+        if (!Array.isArray(kids) || Object.isFrozen(kids)) return tree;
         if (kids.some((k: any) => k?.props?.accessibilityLabel === 'FakeDM quick fake')) return tree;
-        kids.push(btn);
+        // Every existing child must be a React element; anything else means this
+        // is not the action row and editing it could break Discord's render.
+        if (!kids.every((k: any) => k && typeof k === 'object' && k.type !== undefined)) return tree;
+        if (!Object.isExtensible(kids)) return tree;
+        // Push into the row's own children array: React renders props.children,
+        // which is this same array, so one push is visible on the next render and
+        // a throw here leaves nothing half-written.
+        try {
+            kids.push(btn);
+        } catch {
+            return tree;
+        }
         return tree;
     } catch (e) {
         hostError('chat button insert failed', e);
@@ -1394,8 +1406,10 @@ function memoFilter(filters: any, name: string): any {
     }
 }
 
-const CHAT_ROW_NAMES = ['ChatInputRightActions', 'ChatInputActions', 'ChatInputButtons', 'ChatInputAppButtons'];
-const MAX_INSTALL_TRIES = 12;
+// Only the name Valenced's own chat-button plugin targets. Guessing extra names
+// meant patching components we had no proof were rows, which risks the client.
+const CHAT_ROW_NAMES = ['ChatInputRightActions'];
+const MAX_INSTALL_TRIES = 4;
 let installTimer: any = null;
 let installTries = 0;
 
@@ -1493,7 +1507,7 @@ function installChatButton() {
         if (installTries < MAX_INSTALL_TRIES) {
             installTries++;
             buttonStatus = 'chat row not found (try ' + installTries + '/' + MAX_INSTALL_TRIES + ')';
-            installTimer = setTimeout(() => { installTimer = null; installChatButton(); }, 3000);
+            installTimer = setTimeout(() => { installTimer = null; installChatButton(); }, 5000);
         } else {
             buttonStatus = 'chat row not found — settings page only';
         }

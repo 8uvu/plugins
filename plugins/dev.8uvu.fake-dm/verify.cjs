@@ -166,49 +166,62 @@ const textIn = (tree) => {
 };
 
 (async () => {
-    const { host, row, events, state } = makeHost();
-    const options = new Function('valenced', 'plugin', `return ${code}\n//# sourceURL=Valenced:Plugin:${manifest.id}`)(host, (o) => o)?.default;
+    // 1. Default: the button must stay OFF. It edits Discord's own tree, so a
+    //    fresh install has to load without patching anything at all.
+    const off = makeHost();
+    const offOptions = new Function('valenced', 'plugin', `return ${code}
+//# sourceURL=Valenced:Plugin:${manifest.id}`)(off.host, (o) => o)?.default;
+    check('the bundle returns plugin options', offOptions && typeof offOptions === 'object');
+    check('the plugin exposes a settings page', typeof offOptions?.SettingsComponent === 'function');
+    const emptyStorage = { get: async () => ({}), set: async () => {}, use: () => ({}), subscribe: () => () => {} };
+    await offOptions.start?.({ jsonStorage: emptyStorage });
+    await new Promise((resolve) => setTimeout(resolve, 80));
+    check('a fresh install leaves the chat row untouched', off.state.patchedKeys.length === 0, off.state.patchedKeys.join(','));
+    check('a fresh install reports the button as off', String(offOptions.__engine?.chatButtonStatus?.()).includes('off in settings'), offOptions.__engine?.chatButtonStatus?.());
+    const untouched = off.row.type({});
+    check('an unpatched row has no Fake button', buttonsIn(untouched).length === 0, String(buttonsIn(untouched).length));
+    offOptions.stop?.();
 
-    check('the bundle returns plugin options', options && typeof options === 'object');
-    check('the plugin exposes a settings page', typeof options?.SettingsComponent === 'function');
-    if (!options) { console.error(problems.join('\n')); process.exit(1); }
-
-    const storage = { get: async () => ({}), set: async () => {}, use: () => ({}), subscribe: () => () => {} };
-    await options.start?.({ jsonStorage: storage });
+    // 2. Opted in: the memo row must be hooked, exactly one button inserted, and
+    //    a tap must produce a real MESSAGE_CREATE.
+    const on = makeHost();
+    const onOptions = new Function('valenced', 'plugin', `return ${code}
+//# sourceURL=Valenced:Plugin:${manifest.id}`)(on.host, (o) => o)?.default;
+    const storage = { get: async () => ({ chatButton: true }), set: async () => {}, use: () => ({ chatButton: true }), subscribe: () => () => {} };
+    await onOptions.start?.({ jsonStorage: storage });
     await new Promise((resolve) => setTimeout(resolve, 80));
 
-    check('the memo chat row was handed over by the finders', state.rowFound);
-    check('the patcher hooked the memo `type`', state.patchedKeys.includes('type'), state.patchedKeys.join(','));
-
-    const status = options.__engine?.chatButtonStatus?.() ?? '';
+    check('the memo chat row was handed over by the finders', on.state.rowFound);
+    check('the patcher hooked the memo `type`', on.state.patchedKeys.includes('type'), on.state.patchedKeys.join(','));
+    const status = onOptions.__engine?.chatButtonStatus?.() ?? '';
     check('the settings status reports the hook', status.startsWith('hooked ChatInputRightActions'), status);
 
-    const first = row.type({});
+    const first = on.row.type({});
     check('the chat row renders one Fake button', buttonsIn(first).length === 1, String(buttonsIn(first).length));
-    const second = row.type({});
+    const second = on.row.type({});
     check('a re-render does not add a second button', buttonsIn(second).length === 1, String(buttonsIn(second).length));
 
     const button = buttonsIn(second)[0];
     if (button) {
         button.props.onPress();
-        const sent = events.filter((event) => event && event.type === 'MESSAGE_CREATE');
+        const sent = on.events.filter((event) => event && event.type === 'MESSAGE_CREATE');
         check('tapping it dispatches a MESSAGE_CREATE', sent.length === 1, String(sent.length));
         check('the dispatched message carries the quick text', sent[0]?.message?.content === 'hello', sent[0]?.message?.content);
     }
 
-    const page = options.SettingsComponent({ api: { jsonStorage: storage } });
+    const page = onOptions.SettingsComponent({ api: { jsonStorage: storage } });
     const text = textIn(page);
     check('the settings page renders text', text.length > 0);
     check('the settings page names its version', text.includes(manifest.version), text.slice(0, 80));
     check('the settings page shows the chat-button state', text.includes('Chat button:'), text.slice(0, 120));
 
-    options.stop?.();
-    check('stop() leaves no throwaway state behind', true);
+    onOptions.stop?.();
 
     if (problems.length) {
         for (const problem of problems) console.error('  - ' + problem);
-        console.error(`\nFAKEDM VERIFY FAILED: ${problems.length} problem(s)`);
+        console.error(`
+FAKEDM VERIFY FAILED: ${problems.length} problem(s)`);
         process.exit(1);
     }
-    console.log(`FAKEDM VERIFY OK: options, memo chat row hooked, one button per render, tap dispatches MESSAGE_CREATE, settings page reports v${manifest.version}`);
+    console.log(`FAKEDM VERIFY OK: off by default (row untouched), opt-in hooks the memo row once, tap dispatches MESSAGE_CREATE, settings page reports v${manifest.version}`);
 })();
