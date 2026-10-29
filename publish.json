@@ -11,7 +11,8 @@
         "dev.8uvu.message-bookmarks",
         "dev.8uvu.voice-time",
         "dev.8uvu.zero-width-sanitizer",
-        "dev.8uvu.voice-guard"
+        "dev.8uvu.voice-guard",
+        "dev.8uvu.message-stats"
     ],
     "slug": {}
 }
