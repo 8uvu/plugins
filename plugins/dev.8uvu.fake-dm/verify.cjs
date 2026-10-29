@@ -225,14 +225,15 @@ const labelsOf = (tree) => {
     check('the memo chat row was handed over by the finders', on.state.rowFound);
     check('the patcher hooked the memo `type`', on.state.patchedKeys.includes('type'), on.state.patchedKeys.join(','));
     const status = onOptions.__engine?.chatButtonStatus?.() ?? '';
-    check('the settings status reports the hook', status.startsWith('hooked ChatInputRightActions'), status);
+    check('the settings status reports the hook', status.startsWith('hooked:') && status.includes('ChatInputRightActions'), status);
 
     const wrapped = on.row.type({});
+    check('the wrapper is tagged so nested patches skip it', wrapped?.props?.testID === 'fakedm-row', String(wrapped?.props?.testID));
     check('the row is wrapped in a plain row view', wrapped?.type === 'View' && wrapped?.props?.style?.flexDirection === 'row', JSON.stringify(wrapped?.props?.style ?? {}));
-    const inner = Array.isArray(wrapped?.children) ? wrapped.children[0] : null;
-    const pill = Array.isArray(wrapped?.children) ? wrapped.children[1] : null;
-    check('Discord\'s row element is the wrapper\'s first child', inner?.type === 'View', String(inner?.type));
+    const pill = Array.isArray(wrapped?.children) ? wrapped.children[0] : null;
+    const inner = Array.isArray(wrapped?.children) ? wrapped.children[1] : null;
     check('the Fake pill is a sibling, not inside the row', pill?.props?.accessibilityLabel === PILL_LABEL, pill?.props?.accessibilityLabel);
+    check('Discord\'s row element is the wrapper\'s second child, untouched', inner?.type === 'View', String(inner?.type));
     check('the row subtree carries no injected button', buttonsIn(inner).length === 0, String(buttonsIn(inner).length));
     check('the row subtree is handed back untouched', labelsOf(inner) === baselineLabels, labelsOf(inner));
     check('the wrapper adds exactly one pill', buttonsIn(wrapped).length === 1, String(buttonsIn(wrapped).length));
@@ -242,7 +243,8 @@ const labelsOf = (tree) => {
     const second = on.row.type({});
     check('a re-render does not add a second pill', buttonsIn(second).length === 1, String(buttonsIn(second).length));
     check('a re-render does not edit the row children', Array.isArray(innerKids) && innerKids.length === 3, String(innerKids?.length));
-    check('the row shape is stable across renders', labelsOf(second.children[0]) === baselineLabels, labelsOf(second.children[0]));
+    check('the row shape is stable across renders', labelsOf(second.children[1]) === baselineLabels, labelsOf(second.children[1]));
+    check('the status counts wrapped renders', String(onOptions.__engine.chatButtonStatus()).includes('wrapped 2'), onOptions.__engine.chatButtonStatus());
 
     if (pill) {
         pill.props.onPress();
@@ -264,7 +266,7 @@ const labelsOf = (tree) => {
     // happens without a reload.
     await new Promise((resolve) => setTimeout(resolve, 80));
     const switchedOn = onOptions.__engine.chatButtonStatus();
-    check('turning the switch on hooks without a reload', String(switchedOn).startsWith('hooked ChatInputRightActions'), switchedOn);
+    check('turning the switch on hooks without a reload', String(switchedOn).startsWith('hooked:'), switchedOn);
     const afterOn = on.row.type({});
     const again = buttonsIn(afterOn)[0];
     check('the button comes back after enabling', !!again);

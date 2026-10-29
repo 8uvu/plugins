@@ -6,7 +6,7 @@
 // across restarts, and can batch-inject a whole fake conversation from a
 // simple "[14:30] Name: text" script.
 //
-const PLUGIN_VERSION = '1.5.0';
+const PLUGIN_VERSION = '1.5.1';
 
 // The chat-bar button is here too, but as a wrapper around Discord's chat row
 // rather than a portal: the row is handed back untouched and the Fake pill is a
@@ -1438,6 +1438,14 @@ let buttonStatus = 'not installed yet';
 // anything, so after an uninstall a stale render returns Discord's own tree.
 let buttonActive = false;
 let renderFaults = 0;
+// "Hooked" is not enough: on the phone the status line said hooked while the pill
+// never appeared, because the hooked component was never rendered (or it is and
+// the appended pill was clipped past the row's edge). Each patch tracks how many
+// renders it actually wrapped and the status line shows that number, so
+// "hooked ... · never rendered" and "wrapped N" are distinguishable rigs.
+interface RowPatch { label: string; key: string; wraps: number; off: () => void }
+let rowPatches: RowPatch[] = [];
+let dedupeTimer: any = null;
 
 function chatButtonElement(): any {
     const React = getReact();
@@ -1465,12 +1473,28 @@ function chatButtonElement(): any {
     }, el(RN.Text, { style: { color: '#ffffff', fontSize: 12, fontWeight: '700' } }, 'Fake'));
 }
 
-// Wrap, never inject: the row element goes in as a child untouched, the pill is
-// its sibling. Returning the row as-is on every bad path means a problem here can
-// cost a button, never the message box.
-function wrapChatRow(tree: any): any {
+// Wrap, never inject: the pill goes FIRST (a patched-on child at the row's end
+// can fall outside an overflow-clipping parent on Android), the row element goes
+// in untouched as the second child.
+const WRAP_MARKER = 'fakedm-row';
+
+// A patch whose component sits INSIDE another patched component would wrap the
+// same tree twice and show two pills. A cheap bounded scan of the tree catches
+// the case where the tree handed over is already one of our wrappers.
+function alreadyWrapped(tree: any, depth = 0): boolean {
+    if (!tree || typeof tree !== 'object' || depth > 3) return false;
+    if (tree.props?.testID === WRAP_MARKER) return true;
+    const kids = tree.children ?? tree.props?.children;
+    if (Array.isArray(kids)) {
+        for (const kid of kids) { if (alreadyWrapped(kid, depth + 1)) return true; }
+    } else if (alreadyWrapped(kids, depth + 1)) return true;
+    return false;
+}
+
+function wrapChatRow(label: string, tree: any): any {
     if (!buttonActive) return tree;
     if (!tree || typeof tree !== 'object' || tree.type === undefined) return tree;
+    if (alreadyWrapped(tree)) return tree;
     try {
         const React = getReact();
         const RN = getRN();
@@ -1480,7 +1504,9 @@ function wrapChatRow(tree: any): any {
             renderFault('wrapper unavailable (react-native view or pill missing)');
             return tree;
         }
-        return el(RN.View, { style: { flexDirection: 'row', alignItems: 'center' } }, tree, pill);
+        for (const p of rowPatches) if (p.label === label) p.wraps += 1;
+        refreshButtonStatus();
+        return el(RN.View, { testID: WRAP_MARKER, style: { flexDirection: 'row', alignItems: 'center', overflow: 'visible' } }, pill, tree);
     } catch (e) {
         renderFault(e);
         return tree;
@@ -1499,9 +1525,32 @@ function renderFault(detail?: unknown) {
     buttonStatus = 'auto-disabled after ' + renderFaults + ' render faults';
 }
 
-// Valenced's own chat-button plugins patch the memo component's `type` rather
-// than hooking JSX (see the community "Better Chat Buttons" plugin), so the row
-// is found by displayName and its render function is patched.
+// One hook can be true and still useless on this phone — the memo exists but
+// never finishes a render. Several hooks are installed at once, and a counter
+// per hook records how many renders it actually wrapped, so the status line can
+// tell "hooked and rendering" from "hooked but never shown".
+function refreshButtonStatus(): void {
+    if (!rowPatches.length) return;
+    const parts = rowPatches.map((p) => p.label + ' (' + p.key + (p.wraps ? ' · wrapped ' + p.wraps : ' · never rendered') + ')');
+    buttonStatus = 'hooked: ' + parts.join(', ');
+}
+
+// When several anchors were hooked and only some actually render, keep the one
+// that has proven it wraps the row and take the silent ones back out, so no host
+// code is touched more than the visible button needs.
+function dedupeRowPatches(): void {
+    try {
+        const live = rowPatches.filter((p) => p.wraps > 0);
+        if (!live.length || live.length === rowPatches.length) return;
+        const keep = live.sort((a, b) => b.wraps - a.wraps)[0];
+        while (rowPatches.length) {
+            const p = rowPatches.pop()!;
+            if (p !== keep) { try { p.off?.(); } catch {} }
+            else rowPatches.push(p);
+        }
+        refreshButtonStatus();
+    } catch (e) { hostError('chat button dedupe failed', e); }
+}
 function finderApi(): { finders: any; filters: any; patcher: any } | null {
     const v = getValenced();
     if (!v) return null;
@@ -1556,11 +1605,13 @@ let buttonCleanups: (() => void)[] = [];
 function uninstallChatButton() {
     buttonActive = false;
     if (installTimer) { clearTimeout(installTimer); installTimer = null; }
+    if (dedupeTimer) { clearInterval(dedupeTimer); dedupeTimer = null; }
     installTries = 0;
     renderFaults = 0;
     while (buttonCleanups.length) {
         try { buttonCleanups.pop()?.(); } catch {}
     }
+    rowPatches = [];
     buttonStatus = 'off in settings';
 }
 
@@ -1630,14 +1681,23 @@ function installChatButton() {
                 : typeof Comp.render === 'function' ? 'render'
                 : null;
             if (!key) return false;
-            buttonActive = true;
+            if (rowPatches.some((p) => p.label === label)) return false;
             try {
-                const off = patcher.after(Comp, key, (_args: any, tree: any) => wrapChatRow(tree));
-                if (typeof off === 'function') buttonCleanups.push(off);
-                buttonStatus = 'hooked ' + label + ' (' + key + ')';
+                const off = patcher.after(Comp, key, (_args: any, tree: any) => wrapChatRow(label, tree));
+                if (typeof off !== 'function') return false;
+                buttonActive = true;
+                rowPatches.push({ label, key: String(key), wraps: 0, off });
+                buttonCleanups.push(off);
+                // The modules are handed over asynchronously (often a moment after
+                // start() or after a retry was scheduled), so the success
+                // bookkeeping lives HERE, not in the synchronous install loop
+                // that fired the request.
+                installTries = 0;
+                if (installTimer) { clearTimeout(installTimer); installTimer = null; }
+                refreshButtonStatus();
+                if (!dedupeTimer) dedupeTimer = setInterval(dedupeRowPatches, 15000);
                 return true;
             } catch (e) {
-                buttonActive = false;
                 buttonStatus = 'patch failed on ' + label;
                 hostError('chat button patch failed', e);
                 return false;
@@ -1645,8 +1705,8 @@ function installChatButton() {
         };
 
         const pick = (exports: any): any => {
-            const candidates = [exports, exports?.default, exports?.default?.default];
-            for (const c of candidates) {
+            const ways = [exports, exports?.default, exports?.default?.default];
+            for (const c of ways) {
                 if (!c) continue;
                 if (typeof c === 'function') return c;
                 if (typeof c === 'object' && (typeof c.type === 'function' || typeof c.render === 'function')) return c;
@@ -1654,27 +1714,45 @@ function installChatButton() {
             return null;
         };
 
-        let installed = false;
-        for (const name of CHAT_ANCHORS) {
+        // Hook every candidate, not the first one: a hooked memo that never
+        // renders is a dead button, and 1.5.0 shipped exactly that on some
+        // builds. The dedupe timer later drops the silent ones.
+        const candidates = CHAT_ANCHORS.slice();
+        try { scanChatRows(); } catch {}
+        for (const extra of chatRowNames) {
+            if (typeof extra === 'string' && extra.indexOf('ChatInput') === 0 && candidates.indexOf(extra) === -1) candidates.push(extra);
+        }
+        let hooked = 0;
+        for (const name of candidates) {
+            if (rowPatches.some((p) => p.label === name)) continue;
             const filter = memoFilter(filters, name);
             if (!filter) continue;
             try {
                 const off = finders.getModules(filter, (exports: any) => {
-                    if (installed) return;
-                    if (hook(pick(exports), name)) installed = true;
+                    if (hook(pick(exports), name)) hooked++;
                 });
                 if (typeof off === 'function') buttonCleanups.push(off);
             } catch {}
         }
 
-        if (installed) { installTries = 0; return; }
+        if (hooked) {
+            installTries = 0;
+            refreshButtonStatus();
+            if (dedupeTimer) clearInterval(dedupeTimer);
+            dedupeTimer = setInterval(dedupeRowPatches, 15000);
+            return;
+        }
 
-        // Nothing matched: ask the module system what chat-input components exist,
-        // so the status line can name them.
-        scanChatRows();
         // The row is often registered a few seconds after start(). Keep asking,
         // cheaply and a bounded number of times, instead of giving up for good.
-        if (installTries < MAX_INSTALL_TRIES) {
+        // If a patch arrived through the asynchronous handover in between, the
+        // button is really installed: reactivate and stop asking.
+        if (rowPatches.length) {
+            buttonActive = true;
+            installTries = 0;
+            refreshButtonStatus();
+            if (!dedupeTimer) dedupeTimer = setInterval(dedupeRowPatches, 15000);
+        } else if (installTries < MAX_INSTALL_TRIES) {
             installTries++;
             buttonStatus = 'chat row not found (try ' + installTries + '/' + MAX_INSTALL_TRIES + ')';
             installTimer = setTimeout(() => { installTimer = null; installChatButton(); }, 5000);
