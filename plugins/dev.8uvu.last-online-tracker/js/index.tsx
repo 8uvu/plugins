@@ -13,7 +13,17 @@
 //   - Toasts via ToastActionCreators.open (+ ToastAndroid fallback).
 //   - Dispatcher subscriptions are removed on stop().
 
-const PLUGIN_VERSION = '1.5.0';
+const PLUGIN_VERSION = '1.5.1';
+
+// Valenced (phone) exposes itself as the `valenced` global / bundle parameter.
+// Prefer it over the revenge/bunny/vendetta globals: on Valenced those don't
+// exist, so without this the lookups below return null and the tracker silently
+// does nothing.
+declare const valenced: any;
+function getValenced(): any {
+    try { if (typeof valenced !== 'undefined' && valenced) return valenced; } catch {}
+    return null;
+}
 
 // ---- Host lookups (lazy) -------------------------------------------------------
 
@@ -36,6 +46,10 @@ function getReact(api?: any): any {
         if (react?.createElement && react?.useState) return react;
     } catch {}
     try {
+        const r = getValenced()?.react?.React;
+        if (r?.createElement && r?.useState) return r;
+    } catch {}
+    try {
         const m = getMetro();
         const r = m?.findByDisplayName?.('React') ?? m?.findByProps?.('createElement', 'cloneElement') ?? null;
         if (r) return r;
@@ -52,6 +66,10 @@ function getRN(api?: any): any {
         if (rn?.View && rn?.Text) return rn;
     } catch {}
     try {
+        const rn = getValenced()?.react?.ReactNative;
+        if (rn?.View && rn?.Text) return rn;
+    } catch {}
+    try {
         const m = getMetro();
         const rn = m?.findByDisplayName?.('ReactNative') ?? m?.findByProps?.('View', 'Text', 'TextInput') ?? null;
         if (rn) return rn;
@@ -65,6 +83,10 @@ function getRN(api?: any): any {
 function findStore(name: string, props: string[], api?: any): any {
     try {
         const s = api?.unscoped?.discord?.flux?.Stores ?? api?.discord?.flux?.Stores;
+        if (s?.[name]) return s[name];
+    } catch {}
+    try {
+        const s = getValenced()?.discord?.flux?.Stores;
         if (s?.[name]) return s[name];
     } catch {}
     try {
@@ -94,6 +116,10 @@ function getFlux(api?: any): any | null {
     try {
         const flux = api?.unscoped?.discord?.flux ?? api?.discord?.flux;
         if (typeof flux?.onFluxEventDispatched === 'function') return flux;
+    } catch {}
+    try {
+        const flux = getValenced()?.discord?.flux;
+        if (flux && typeof flux?.onFluxEventDispatched === 'function') return flux;
     } catch {}
     try {
         if (typeof revenge !== 'undefined') {
@@ -134,6 +160,15 @@ function getDispatcher(): any | null {
         if (fd?.subscribe) return fd;
     } catch {}
     try {
+        const v = getValenced();
+        const finders = v?.modules?.finders;
+        const filters = v?.modules?.finders?.filters;
+        if (finders && filters) {
+            const [mod] = finders.lookupModule(filters.withProps('subscribe', 'dispatch'));
+            if (mod?.subscribe) return mod;
+        }
+    } catch {}
+    try {
         const flux = getFlux();
         const fd = flux?.dispatcher;
         if (fd?.subscribe) return fd;
@@ -149,6 +184,10 @@ function getStorage(): any {
 }
 
 function getActions(): any {
+    try {
+        const a = getValenced()?.discord?.actions;
+        if (a) return a;
+    } catch {}
     try {
         if (typeof revenge !== 'undefined') {
             const a: any = revenge.discord?.actions;
@@ -227,7 +266,10 @@ async function persistConfig() {
 // its whole member list in one burst; a genuine departure never happens
 // within moments of us first seeing the person. (Guard copied concept from
 // Esharq's v3 fix.)
-const MIN_ONLINE_MS = 15_000;
+// Was 15s: anyone going offline sooner after opening the app was silently
+// dropped, which made the tracker look dead. 5s still blocks guild-sync replay
+// spam while recording real departures promptly.
+const MIN_ONLINE_MS = 5_000;
 
 // userId -> timestamp the user was recorded going offline.
 const lastSeenRaw: Record<string, number> = {};
@@ -518,6 +560,17 @@ function readOnlineSet(store: any): Set<string> | null {
             }
             if (ids.size) return ids;
         }
+    } catch {}
+    try {
+        // Other builds keep presences keyed by user id under getState().
+        const presences = (store?.getState?.() as any)?.presences ?? store?.getPresences?.() ?? null;
+        const entries = presences instanceof Map ? Array.from(presences.entries()) : (presences && typeof presences === 'object' ? Object.entries(presences) : []);
+        const ids = new Set<string>();
+        for (const [id, p] of entries as [any, any][]) {
+            const st = typeof p === 'string' ? p : (p?.status ?? p?.presence?.status);
+            if (typeof st === 'string' && ['online', 'idle', 'dnd'].includes(st.toLowerCase())) ids.add(String(id));
+        }
+        if (ids.size) return ids;
     } catch {}
     return null;
 }

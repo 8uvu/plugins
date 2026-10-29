@@ -10,7 +10,7 @@
         "description": "Injects fake messages, calls, system messages, reactions & embeds into any DM or channel. Batch fake conversations. Persists across restarts.",
         "authors": [{ "name": "Cenotaph" }]
     },
-    "version": "1.2.2",
+    "version": "1.2.3",
     "license": "GPL-3.0-or-later",
     "dependencies": {
         "valenced.api": { "version": ">=1" },

@@ -19,6 +19,8 @@
 
 const DEFAULT_SETTINGS = {
     jitterSeconds: true, // randomize seconds like the desktop plugin's randomSeconds
+    chatButton: true, // chat-bar Fake button (Valenced via afterJSX; reload chat to apply)
+    quickText: 'hello', // what one tap of the chat-bar button sends
 };
 
 type FakeEmbed = {
@@ -71,8 +73,19 @@ type BatchLine = { time: string; senderName: string; content: string };
 declare const revenge: any;
 declare const bunny: any;
 declare const vendetta: any;
+declare const valenced: any;
+
+// Valenced (phone) exposes itself as the `valenced` global / bundle parameter.
+// Check it FIRST: on Valenced the revenge/bunny/vendetta globals don't exist,
+// so without this every accessor below returns null (no settings page, no
+// dispatch, no toast) and the plugin looks dead.
+function getValenced(): any {
+    try { if (typeof valenced !== 'undefined' && valenced) return valenced; } catch {}
+    return null;
+}
 
 function getReact(): any {
+    try { const r = getValenced()?.react?.React; if (r?.createElement) return r; } catch {}
     try { if (typeof revenge !== 'undefined') { const r = revenge.react; if (r) return r.React || r; } } catch {}
     try { if (typeof bunny !== 'undefined') { const b = bunny; const r = b.React || b.common?.React || b.metro?.common?.React; if (r) return r; } } catch {}
     try { if (typeof vendetta !== 'undefined') { const v = vendetta; const r = v.common?.React || v.metro?.common?.React || v.React; if (r) return r; } } catch {}
@@ -80,6 +93,7 @@ function getReact(): any {
 }
 
 function getRN(): any {
+    try { const rn = getValenced()?.react?.ReactNative; if (rn?.View && rn?.Text) return rn; } catch {}
     try { if (typeof revenge !== 'undefined') { const rn = revenge.react?.ReactNative; if (rn) return rn; } } catch {}
     try { if (typeof bunny !== 'undefined') { const b = bunny; const rn = b.ReactNative || b.common?.ReactNative || b.metro?.common?.ReactNative; if (rn) return rn; } } catch {}
     try { if (typeof vendetta !== 'undefined') { const v = vendetta; const rn = v.common?.ReactNative || v.metro?.common?.ReactNative; if (rn) return rn; } } catch {}
@@ -95,6 +109,15 @@ function getMetro(): any {
 
 // A real FluxDispatcher with .dispatch — found through metro on every host.
 function getDispatch(): ((ev: any) => void) | null {
+    try {
+        const v = getValenced();
+        const finders = v?.modules?.finders;
+        const filters = v?.modules?.finders?.filters;
+        if (finders && filters) {
+            const [mod] = finders.lookupModule(filters.withProps('dispatch', 'subscribe'));
+            if (mod && typeof mod.dispatch === 'function') return mod.dispatch.bind(mod);
+        }
+    } catch {}
     try {
         const f = (typeof revenge !== 'undefined' && revenge?.discord?.flux?.dispatcher) || null;
         if (f && typeof f.dispatch === 'function') return f.dispatch.bind(f);
@@ -112,6 +135,10 @@ function getDispatch(): ((ev: any) => void) | null {
 }
 
 function findStore(name: string, props: string[]): any {
+    try {
+        const s = getValenced()?.discord?.flux?.Stores;
+        if (s?.[name]) return s[name];
+    } catch {}
     try {
         const s = (typeof revenge !== 'undefined' && revenge?.discord?.flux?.Stores) || null;
         if (s?.[name]) return s[name];
@@ -193,6 +220,10 @@ function persistFakes(list: PersistedFake[]) {
     } catch (e) {
         hostError('could not persist fakes', e);
     }
+}
+
+function savePluginCfg() {
+    try { jsonStorageApi?.set?.({ chatButton: (cfg as any).chatButton, quickText: (cfg as any).quickText }); } catch (e) { hostError('could not save settings', e); }
 }
 
 function refreshConfigFromStorage() {
@@ -762,6 +793,10 @@ function presetDate(key: string): Date {
 
 function getActions(): any {
     try {
+        const a = getValenced()?.discord?.actions;
+        if (a) return a;
+    } catch {}
+    try {
         if (typeof revenge !== 'undefined') {
             const a: any = revenge.discord?.actions;
             if (a) return a;
@@ -811,6 +846,11 @@ function hexToInt(hex: string): number | undefined {
 // Discord's own design components give the settings page Discord's native look.
 // Resolved lazily (never at eval time) so the host cannot kill us.
 function resolveDesign(): any {
+    try {
+        const g = getValenced()?.discord?.design;
+        const d = g?.Design ?? g;
+        if (d && (d.TableRowGroup || d.TableSwitchRow || d.TableRow)) return d;
+    } catch {}
     try {
         const g: any = (globalThis as any).revenge?.discord?.design;
         const d = g?.Design ?? g;
@@ -979,6 +1019,9 @@ function buildSettingsComponent() {
         const [batchDate, setBatchDate] = React.useState('');
         // fakes tab
         const [fakeTick, setFakeTick] = React.useState(0);
+        // chat-bar button
+        const [chatBtn, setChatBtn] = React.useState((cfg as any)?.chatButton !== false);
+        const [quickTxt, setQuickTxt] = React.useState(String((cfg as any)?.quickText ?? 'hello'));
 
         const candidates = memberCandidates();
         const me = getUserStore()?.getCurrentUser?.() ?? null;
@@ -1224,6 +1267,8 @@ function buildSettingsComponent() {
             el(View, { style: { paddingHorizontal: 16, paddingTop: 14 } },
                 el(Text, { style: { color: C.text, fontSize: 18, fontWeight: '800' } }, 'FakeDM'),
                 el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, 'Injects into: ' + (channelId ? (getChannelStore()?.getChannel?.(channelId)?.name ?? 'DM · ' + channelId.slice(-6)) : 'no channel open — open a DM first'))),
+                el(SwitchRow, { label: 'Chat-bar Fake button (reload chat to apply)', value: chatBtn, onValueChange: (val: boolean) => { (cfg as any).chatButton = val; setChatBtn(val); savePluginCfg(); toast(val ? 'Fake button on — reload the chat to see it' : 'Fake button off — reload the chat'); } }),
+                el(Input, { placeholder: 'Quick Fake text (chat-bar button)', value: quickTxt, onChangeText: (t: string) => { (cfg as any).quickText = t; setQuickTxt(t); savePluginCfg(); } }),
             el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginTop: 10, paddingHorizontal: 12 } },
                 ...TABS.map((t) => el(Pressable, {
                     key: t.key,
@@ -1234,6 +1279,94 @@ function buildSettingsComponent() {
             el(View, { style: { height: 30 } }),
         );
     };
+}
+
+// ---- Chat-bar button (Valenced) --------------------------------------------------
+// Desktop parity: the Equicord version has a chat-bar button. On Valenced the
+// official hook is afterJSX on the chat input component (docs:
+// @valenced/react/jsx-runtime). Component names shift between Discord builds,
+// so try several candidates and degrade to settings-only when none resolve —
+// never crash the chat.
+function quickFake() {
+    try {
+        const channelId = currentChannelId();
+        if (!channelId) { toast('Open a chat first, then tap Fake'); return; }
+        const me = getUserStore()?.getCurrentUser?.() ?? null;
+        const text = String((cfg as any)?.quickText ?? 'hello') || 'hello';
+        const id = injectMessage(channelId, me ?? { id: '' }, text, new Date());
+        if (!id) toast('Could not inject — dispatcher not found on this build');
+    } catch (e) { hostError('quick fake failed', e); }
+}
+
+function installChatButton() {
+    try {
+        if ((cfg as any)?.chatButton === false) return;
+        const v = getValenced();
+        if (!v) return;
+        const afterJSX = v?.react?.jsxRuntime?.afterJSX ?? v?.react?.ReactJSXRuntime?.afterJSX ?? null;
+        if (typeof afterJSX !== 'function') return; // old client: settings-only
+        const finders = v?.modules?.finders;
+        const filters = v?.modules?.finders?.filters;
+        if (!finders || !filters) return;
+        const candidates: any[] = [];
+        try {
+            candidates.push(filters.withName('ChatInput'), filters.withName('ChannelTextArea'), filters.withName('MessageInput'), filters.withName('ChatBox'));
+            candidates.push(filters.withProps('channelId', 'onSend'), filters.withProps('sendMessage', 'channelId'), filters.withProps('renderAccessory', 'channelId'));
+        } catch { return; }
+        let filter: any = null;
+        try { filter = candidates.length === 1 ? candidates[0] : filters.anyOf(...candidates); } catch { return; }
+        const React = getReact();
+        const RN = getRN();
+        if (!React || !RN) return;
+        const el = React.createElement;
+        const installed = new Set<any>();
+        const placeButton = (node: any, btn: any, depth: number): boolean => {
+            if (!node || typeof node !== 'object' || depth > 4) return false;
+            try {
+                const props = node.props ?? {};
+                const kids = props.children ?? node.children;
+                if (Array.isArray(kids) && kids.length > 0 && kids.length < 12) {
+                    const row = props?.style;
+                    const styles = Array.isArray(row) ? row : [row];
+                    const horizontal = styles.some((s: any) => s?.flexDirection === 'row');
+                    const hasPressable = kids.some((k: any) => k?.props?.onPress || k?.props?.accessibilityLabel);
+                    if ((horizontal || hasPressable) && !kids.some((k: any) => k?.props?.accessibilityLabel === 'FakeDM quick fake')) {
+                        kids.push(btn);
+                        return true;
+                    }
+                }
+                if (Array.isArray(kids)) { for (const k of kids) if (placeButton(k, btn, depth + 1)) return true; }
+                else if (kids && typeof kids === 'object') return placeButton(kids, btn, depth + 1);
+            } catch {}
+            return false;
+        };
+        const hook = (Comp: any) => {
+            if (!Comp || (typeof Comp !== 'function' && typeof Comp !== 'object') || installed.has(Comp)) return;
+            installed.add(Comp);
+            try {
+                const unpatch = (afterJSX as any)(Comp, (tree: any) => {
+                    try {
+                        const btn = el(RN.Pressable ?? 'view', {
+                            accessibilityLabel: 'FakeDM quick fake',
+                            onPress: () => quickFake(),
+                            style: { paddingHorizontal: 10, paddingVertical: 8, borderRadius: 8, backgroundColor: '#5865F2', marginLeft: 6 },
+                        }, el(RN.Text ?? 'text', { style: { color: '#ffffff', fontWeight: '700', fontSize: 13 } }, 'Fake'));
+                        placeButton(tree, btn, 0);
+                    } catch {}
+                    return tree;
+                });
+                if (typeof unpatch === 'function') cleanupFns.push(unpatch);
+            } catch (e) { hostError('chat button hook failed', e); }
+        };
+        try {
+            const [found] = finders.lookupModule(filter);
+            if (found) hook(found);
+        } catch {}
+        try {
+            const off = finders.getModules?.(filter, (exports: any) => hook(exports?.default ?? exports));
+            if (typeof off === 'function') cleanupFns.push(off);
+        } catch {}
+    } catch (e) { hostError('chat button install failed', e); }
 }
 
 // ---- Start / stop ---------------------------------------------------------------
@@ -1253,6 +1386,7 @@ async function startNext(api: any) {
         if (typeof off === 'function') cleanupFns.push(off);
     }
     scheduleRestore(doRestore);
+    installChatButton();
     toast('FakeDM loaded — open its settings to inject');
 }
 

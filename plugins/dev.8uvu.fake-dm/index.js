@@ -24,11 +24,27 @@ __export(index_exports, {
 });
 module.exports = __toCommonJS(index_exports);
 var DEFAULT_SETTINGS = {
-  jitterSeconds: true
+  jitterSeconds: true,
   // randomize seconds like the desktop plugin's randomSeconds
+  chatButton: true,
+  // chat-bar Fake button (Valenced via afterJSX; reload chat to apply)
+  quickText: "hello"
+  // what one tap of the chat-bar button sends
 };
+function getValenced() {
+  try {
+    if (typeof valenced !== "undefined" && valenced) return valenced;
+  } catch {
+  }
+  return null;
+}
 function getReact() {
-  var _a, _b, _c, _d, _e, _f;
+  var _a, _b, _c, _d, _e, _f, _g, _h;
+  try {
+    const r = (_b = (_a = getValenced()) == null ? void 0 : _a.react) == null ? void 0 : _b.React;
+    if (r == null ? void 0 : r.createElement) return r;
+  } catch {
+  }
   try {
     if (typeof revenge !== "undefined") {
       const r = revenge.react;
@@ -39,7 +55,7 @@ function getReact() {
   try {
     if (typeof bunny !== "undefined") {
       const b = bunny;
-      const r = b.React || ((_a = b.common) == null ? void 0 : _a.React) || ((_c = (_b = b.metro) == null ? void 0 : _b.common) == null ? void 0 : _c.React);
+      const r = b.React || ((_c = b.common) == null ? void 0 : _c.React) || ((_e = (_d = b.metro) == null ? void 0 : _d.common) == null ? void 0 : _e.React);
       if (r) return r;
     }
   } catch {
@@ -47,7 +63,7 @@ function getReact() {
   try {
     if (typeof vendetta !== "undefined") {
       const v = vendetta;
-      const r = ((_d = v.common) == null ? void 0 : _d.React) || ((_f = (_e = v.metro) == null ? void 0 : _e.common) == null ? void 0 : _f.React) || v.React;
+      const r = ((_f = v.common) == null ? void 0 : _f.React) || ((_h = (_g = v.metro) == null ? void 0 : _g.common) == null ? void 0 : _h.React) || v.React;
       if (r) return r;
     }
   } catch {
@@ -55,10 +71,15 @@ function getReact() {
   return null;
 }
 function getRN() {
-  var _a, _b, _c, _d, _e, _f, _g;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i;
+  try {
+    const rn = (_b = (_a = getValenced()) == null ? void 0 : _a.react) == null ? void 0 : _b.ReactNative;
+    if ((rn == null ? void 0 : rn.View) && (rn == null ? void 0 : rn.Text)) return rn;
+  } catch {
+  }
   try {
     if (typeof revenge !== "undefined") {
-      const rn = (_a = revenge.react) == null ? void 0 : _a.ReactNative;
+      const rn = (_c = revenge.react) == null ? void 0 : _c.ReactNative;
       if (rn) return rn;
     }
   } catch {
@@ -66,7 +87,7 @@ function getRN() {
   try {
     if (typeof bunny !== "undefined") {
       const b = bunny;
-      const rn = b.ReactNative || ((_b = b.common) == null ? void 0 : _b.ReactNative) || ((_d = (_c = b.metro) == null ? void 0 : _c.common) == null ? void 0 : _d.ReactNative);
+      const rn = b.ReactNative || ((_d = b.common) == null ? void 0 : _d.ReactNative) || ((_f = (_e = b.metro) == null ? void 0 : _e.common) == null ? void 0 : _f.ReactNative);
       if (rn) return rn;
     }
   } catch {
@@ -74,7 +95,7 @@ function getRN() {
   try {
     if (typeof vendetta !== "undefined") {
       const v = vendetta;
-      const rn = ((_e = v.common) == null ? void 0 : _e.ReactNative) || ((_g = (_f = v.metro) == null ? void 0 : _f.common) == null ? void 0 : _g.ReactNative);
+      const rn = ((_g = v.common) == null ? void 0 : _g.ReactNative) || ((_i = (_h = v.metro) == null ? void 0 : _h.common) == null ? void 0 : _i.ReactNative);
       if (rn) return rn;
     }
   } catch {
@@ -100,38 +121,53 @@ function getMetro() {
   return null;
 }
 function getDispatch() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
   try {
-    const f = typeof revenge !== "undefined" && ((_b = (_a = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _a.flux) == null ? void 0 : _b.dispatcher) || null;
+    const v = getValenced();
+    const finders = (_a = v == null ? void 0 : v.modules) == null ? void 0 : _a.finders;
+    const filters = (_c = (_b = v == null ? void 0 : v.modules) == null ? void 0 : _b.finders) == null ? void 0 : _c.filters;
+    if (finders && filters) {
+      const [mod] = finders.lookupModule(filters.withProps("dispatch", "subscribe"));
+      if (mod && typeof mod.dispatch === "function") return mod.dispatch.bind(mod);
+    }
+  } catch {
+  }
+  try {
+    const f = typeof revenge !== "undefined" && ((_e = (_d = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _d.flux) == null ? void 0 : _e.dispatcher) || null;
     if (f && typeof f.dispatch === "function") return f.dispatch.bind(f);
   } catch {
   }
   try {
     const metro = getMetro();
-    const rd = (_c = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _c.call(metro, "dispatch", "subscribe");
+    const rd = (_f = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _f.call(metro, "dispatch", "subscribe");
     if (rd && typeof rd.dispatch === "function") return rd.dispatch.bind(rd);
-    const rd2 = (_d = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _d.call(metro, "dispatch", "_dispatcher");
+    const rd2 = (_g = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _g.call(metro, "dispatch", "_dispatcher");
     if (rd2 && typeof rd2.dispatch === "function") return rd2.dispatch.bind(rd2);
   } catch {
   }
   try {
     const v = typeof vendetta !== "undefined" ? vendetta : null;
-    const fd = ((_f = (_e = v == null ? void 0 : v.metro) == null ? void 0 : _e.common) == null ? void 0 : _f.FluxDispatcher) || ((_g = v == null ? void 0 : v.common) == null ? void 0 : _g.FluxDispatcher);
+    const fd = ((_i = (_h = v == null ? void 0 : v.metro) == null ? void 0 : _h.common) == null ? void 0 : _i.FluxDispatcher) || ((_j = v == null ? void 0 : v.common) == null ? void 0 : _j.FluxDispatcher);
     if (fd == null ? void 0 : fd.dispatch) return fd.dispatch.bind(fd);
   } catch {
   }
   try {
     const b = typeof bunny !== "undefined" ? bunny : null;
-    const fd = ((_i = (_h = b == null ? void 0 : b.metro) == null ? void 0 : _h.common) == null ? void 0 : _i.FluxDispatcher) || ((_j = b == null ? void 0 : b.common) == null ? void 0 : _j.FluxDispatcher);
+    const fd = ((_l = (_k = b == null ? void 0 : b.metro) == null ? void 0 : _k.common) == null ? void 0 : _l.FluxDispatcher) || ((_m = b == null ? void 0 : b.common) == null ? void 0 : _m.FluxDispatcher);
     if (fd == null ? void 0 : fd.dispatch) return fd.dispatch.bind(fd);
   } catch {
   }
   return null;
 }
 function findStore(name, props) {
-  var _a, _b, _c, _d, _e, _f;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i;
   try {
-    const s = typeof revenge !== "undefined" && ((_b = (_a = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _a.flux) == null ? void 0 : _b.Stores) || null;
+    const s = (_c = (_b = (_a = getValenced()) == null ? void 0 : _a.discord) == null ? void 0 : _b.flux) == null ? void 0 : _c.Stores;
+    if (s == null ? void 0 : s[name]) return s[name];
+  } catch {
+  }
+  try {
+    const s = typeof revenge !== "undefined" && ((_e = (_d = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _d.flux) == null ? void 0 : _e.Stores) || null;
     if (s == null ? void 0 : s[name]) return s[name];
   } catch {
   }
@@ -149,12 +185,12 @@ function findStore(name, props) {
   }
   try {
     const v = typeof vendetta !== "undefined" ? vendetta : null;
-    if ((_d = (_c = v == null ? void 0 : v.metro) == null ? void 0 : _c.common) == null ? void 0 : _d[name]) return v.metro.common[name];
+    if ((_g = (_f = v == null ? void 0 : v.metro) == null ? void 0 : _f.common) == null ? void 0 : _g[name]) return v.metro.common[name];
   } catch {
   }
   try {
     const b = typeof bunny !== "undefined" ? bunny : null;
-    if ((_f = (_e = b == null ? void 0 : b.metro) == null ? void 0 : _e.common) == null ? void 0 : _f[name]) return b.metro.common[name];
+    if ((_i = (_h = b == null ? void 0 : b.metro) == null ? void 0 : _h.common) == null ? void 0 : _i[name]) return b.metro.common[name];
   } catch {
   }
   return null;
@@ -217,6 +253,14 @@ function persistFakes(list) {
     }
   } catch (e) {
     hostError("could not persist fakes", e);
+  }
+}
+function savePluginCfg() {
+  var _a;
+  try {
+    (_a = jsonStorageApi == null ? void 0 : jsonStorageApi.set) == null ? void 0 : _a.call(jsonStorageApi, { chatButton: cfg.chatButton, quickText: cfg.quickText });
+  } catch (e) {
+    hostError("could not save settings", e);
   }
 }
 function refreshConfigFromStorage() {
@@ -755,10 +799,15 @@ function presetDate(key) {
   return new Date(now);
 }
 function getActions() {
-  var _a, _b, _c, _d, _e;
+  var _a, _b, _c, _d, _e, _f, _g;
+  try {
+    const a = (_b = (_a = getValenced()) == null ? void 0 : _a.discord) == null ? void 0 : _b.actions;
+    if (a) return a;
+  } catch {
+  }
   try {
     if (typeof revenge !== "undefined") {
-      const a = (_a = revenge.discord) == null ? void 0 : _a.actions;
+      const a = (_c = revenge.discord) == null ? void 0 : _c.actions;
       if (a) return a;
     }
   } catch {
@@ -766,7 +815,7 @@ function getActions() {
   try {
     if (typeof bunny !== "undefined") {
       const b = bunny;
-      const a = ((_c = (_b = b.metro) == null ? void 0 : _b.common) == null ? void 0 : _c.toasts) || ((_e = (_d = b.api) == null ? void 0 : _d.actions) == null ? void 0 : _e.ToastActionCreators);
+      const a = ((_e = (_d = b.metro) == null ? void 0 : _d.common) == null ? void 0 : _e.toasts) || ((_g = (_f = b.api) == null ? void 0 : _f.actions) == null ? void 0 : _g.ToastActionCreators);
       if (a) return a;
     }
   } catch {
@@ -799,15 +848,21 @@ function hexToInt(hex) {
   return parseInt(m, 16);
 }
 function resolveDesign() {
-  var _a, _b, _c, _d;
+  var _a, _b, _c, _d, _e, _f, _g;
   try {
-    const g = (_b = (_a = globalThis.revenge) == null ? void 0 : _a.discord) == null ? void 0 : _b.design;
+    const g = (_b = (_a = getValenced()) == null ? void 0 : _a.discord) == null ? void 0 : _b.design;
     const d = (_c = g == null ? void 0 : g.Design) != null ? _c : g;
     if (d && (d.TableRowGroup || d.TableSwitchRow || d.TableRow)) return d;
   } catch {
   }
   try {
-    const b = (_d = globalThis.bunny) == null ? void 0 : _d.ui;
+    const g = (_e = (_d = globalThis.revenge) == null ? void 0 : _d.discord) == null ? void 0 : _e.design;
+    const d = (_f = g == null ? void 0 : g.Design) != null ? _f : g;
+    if (d && (d.TableRowGroup || d.TableSwitchRow || d.TableRow)) return d;
+  } catch {
+  }
+  try {
+    const b = (_g = globalThis.bunny) == null ? void 0 : _g.ui;
     if (b == null ? void 0 : b.FormTableRowGroup) return b;
   } catch {
   }
@@ -920,7 +975,7 @@ function buildSettingsComponent() {
     { key: "fakes", label: "Fakes" }
   ];
   return function FakeDMSettings(props) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
     if (jsonStorageApi == null && ((_a = props == null ? void 0 : props.api) == null ? void 0 : _a.jsonStorage)) {
       jsonStorageApi = props.api.jsonStorage;
     }
@@ -959,8 +1014,10 @@ function buildSettingsComponent() {
     const [batchTime, setBatchTime] = React.useState("");
     const [batchDate, setBatchDate] = React.useState("");
     const [fakeTick, setFakeTick] = React.useState(0);
+    const [chatBtn, setChatBtn] = React.useState((cfg == null ? void 0 : cfg.chatButton) !== false);
+    const [quickTxt, setQuickTxt] = React.useState(String((_b = cfg == null ? void 0 : cfg.quickText) != null ? _b : "hello"));
     const candidates = memberCandidates();
-    const me = (_d = (_c = (_b = getUserStore()) == null ? void 0 : _b.getCurrentUser) == null ? void 0 : _c.call(_b)) != null ? _d : null;
+    const me = (_e = (_d = (_c = getUserStore()) == null ? void 0 : _c.getCurrentUser) == null ? void 0 : _d.call(_c)) != null ? _e : null;
     const channelId = currentChannelId();
     const [defaultsInit, setDefaultsInit] = React.useState(0);
     if (!defaultsInit && (me == null ? void 0 : me.id)) {
@@ -1178,7 +1235,7 @@ function buildSettingsComponent() {
         el(MemberChips, { members: candidates, value: batchSenderId, onChange: setBatchSenderId }),
         el(Label, null, "Script \u2014 one message per line, [HH:MM] optional name"),
         el(Input, {
-          placeholder: "[14:30] Me: hey\n[14:31] " + userLabel((_e = candidates[1]) != null ? _e : me) + ": sup\n[14:32] Me: check this out",
+          placeholder: "[14:30] Me: hey\n[14:31] " + userLabel((_f = candidates[1]) != null ? _f : me) + ": sup\n[14:32] Me: check this out",
           value: batchText,
           onChangeText: setBatchText,
           multiline: true,
@@ -1272,8 +1329,19 @@ function buildSettingsComponent() {
         View,
         { style: { paddingHorizontal: 16, paddingTop: 14 } },
         el(Text, { style: { color: C.text, fontSize: 18, fontWeight: "800" } }, "FakeDM"),
-        el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, "Injects into: " + (channelId ? (_i = (_h = (_g = (_f = getChannelStore()) == null ? void 0 : _f.getChannel) == null ? void 0 : _g.call(_f, channelId)) == null ? void 0 : _h.name) != null ? _i : "DM \xB7 " + channelId.slice(-6) : "no channel open \u2014 open a DM first"))
+        el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, "Injects into: " + (channelId ? (_j = (_i = (_h = (_g = getChannelStore()) == null ? void 0 : _g.getChannel) == null ? void 0 : _h.call(_g, channelId)) == null ? void 0 : _i.name) != null ? _j : "DM \xB7 " + channelId.slice(-6) : "no channel open \u2014 open a DM first"))
       ),
+      el(SwitchRow, { label: "Chat-bar Fake button (reload chat to apply)", value: chatBtn, onValueChange: (val) => {
+        cfg.chatButton = val;
+        setChatBtn(val);
+        savePluginCfg();
+        toast(val ? "Fake button on \u2014 reload the chat to see it" : "Fake button off \u2014 reload the chat");
+      } }),
+      el(Input, { placeholder: "Quick Fake text (chat-bar button)", value: quickTxt, onChangeText: (t) => {
+        cfg.quickText = t;
+        setQuickTxt(t);
+        savePluginCfg();
+      } }),
       el(
         ScrollView,
         { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginTop: 10, paddingHorizontal: 12 } },
@@ -1287,6 +1355,119 @@ function buildSettingsComponent() {
       el(View, { style: { height: 30 } })
     );
   };
+}
+function quickFake() {
+  var _a, _b, _c, _d;
+  try {
+    const channelId = currentChannelId();
+    if (!channelId) {
+      toast("Open a chat first, then tap Fake");
+      return;
+    }
+    const me = (_c = (_b = (_a = getUserStore()) == null ? void 0 : _a.getCurrentUser) == null ? void 0 : _b.call(_a)) != null ? _c : null;
+    const text = String((_d = cfg == null ? void 0 : cfg.quickText) != null ? _d : "hello") || "hello";
+    const id = injectMessage(channelId, me != null ? me : { id: "" }, text, /* @__PURE__ */ new Date());
+    if (!id) toast("Could not inject \u2014 dispatcher not found on this build");
+  } catch (e) {
+    hostError("quick fake failed", e);
+  }
+}
+function installChatButton() {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+  try {
+    if ((cfg == null ? void 0 : cfg.chatButton) === false) return;
+    const v = getValenced();
+    if (!v) return;
+    const afterJSX = (_f = (_e = (_b = (_a = v == null ? void 0 : v.react) == null ? void 0 : _a.jsxRuntime) == null ? void 0 : _b.afterJSX) != null ? _e : (_d = (_c = v == null ? void 0 : v.react) == null ? void 0 : _c.ReactJSXRuntime) == null ? void 0 : _d.afterJSX) != null ? _f : null;
+    if (typeof afterJSX !== "function") return;
+    const finders = (_g = v == null ? void 0 : v.modules) == null ? void 0 : _g.finders;
+    const filters = (_i = (_h = v == null ? void 0 : v.modules) == null ? void 0 : _h.finders) == null ? void 0 : _i.filters;
+    if (!finders || !filters) return;
+    const candidates = [];
+    try {
+      candidates.push(filters.withName("ChatInput"), filters.withName("ChannelTextArea"), filters.withName("MessageInput"), filters.withName("ChatBox"));
+      candidates.push(filters.withProps("channelId", "onSend"), filters.withProps("sendMessage", "channelId"), filters.withProps("renderAccessory", "channelId"));
+    } catch {
+      return;
+    }
+    let filter = null;
+    try {
+      filter = candidates.length === 1 ? candidates[0] : filters.anyOf(...candidates);
+    } catch {
+      return;
+    }
+    const React = getReact();
+    const RN = getRN();
+    if (!React || !RN) return;
+    const el = React.createElement;
+    const installed = /* @__PURE__ */ new Set();
+    const placeButton = (node, btn, depth) => {
+      var _a2, _b2;
+      if (!node || typeof node !== "object" || depth > 4) return false;
+      try {
+        const props = (_a2 = node.props) != null ? _a2 : {};
+        const kids = (_b2 = props.children) != null ? _b2 : node.children;
+        if (Array.isArray(kids) && kids.length > 0 && kids.length < 12) {
+          const row = props == null ? void 0 : props.style;
+          const styles = Array.isArray(row) ? row : [row];
+          const horizontal = styles.some((s) => (s == null ? void 0 : s.flexDirection) === "row");
+          const hasPressable = kids.some((k) => {
+            var _a3, _b3;
+            return ((_a3 = k == null ? void 0 : k.props) == null ? void 0 : _a3.onPress) || ((_b3 = k == null ? void 0 : k.props) == null ? void 0 : _b3.accessibilityLabel);
+          });
+          if ((horizontal || hasPressable) && !kids.some((k) => {
+            var _a3;
+            return ((_a3 = k == null ? void 0 : k.props) == null ? void 0 : _a3.accessibilityLabel) === "FakeDM quick fake";
+          })) {
+            kids.push(btn);
+            return true;
+          }
+        }
+        if (Array.isArray(kids)) {
+          for (const k of kids) if (placeButton(k, btn, depth + 1)) return true;
+        } else if (kids && typeof kids === "object") return placeButton(kids, btn, depth + 1);
+      } catch {
+      }
+      return false;
+    };
+    const hook = (Comp) => {
+      if (!Comp || typeof Comp !== "function" && typeof Comp !== "object" || installed.has(Comp)) return;
+      installed.add(Comp);
+      try {
+        const unpatch = afterJSX(Comp, (tree) => {
+          var _a2, _b2;
+          try {
+            const btn = el((_a2 = RN.Pressable) != null ? _a2 : "view", {
+              accessibilityLabel: "FakeDM quick fake",
+              onPress: () => quickFake(),
+              style: { paddingHorizontal: 10, paddingVertical: 8, borderRadius: 8, backgroundColor: "#5865F2", marginLeft: 6 }
+            }, el((_b2 = RN.Text) != null ? _b2 : "text", { style: { color: "#ffffff", fontWeight: "700", fontSize: 13 } }, "Fake"));
+            placeButton(tree, btn, 0);
+          } catch {
+          }
+          return tree;
+        });
+        if (typeof unpatch === "function") cleanupFns.push(unpatch);
+      } catch (e) {
+        hostError("chat button hook failed", e);
+      }
+    };
+    try {
+      const [found] = finders.lookupModule(filter);
+      if (found) hook(found);
+    } catch {
+    }
+    try {
+      const off = (_j = finders.getModules) == null ? void 0 : _j.call(finders, filter, (exports) => {
+        var _a2;
+        return hook((_a2 = exports == null ? void 0 : exports.default) != null ? _a2 : exports);
+      });
+      if (typeof off === "function") cleanupFns.push(off);
+    } catch {
+    }
+  } catch (e) {
+    hostError("chat button install failed", e);
+  }
 }
 var cleanupFns = [];
 async function startNext(api) {
@@ -1308,6 +1489,7 @@ async function startNext(api) {
     if (typeof off === "function") cleanupFns.push(off);
   }
   scheduleRestore(doRestore);
+  installChatButton();
   toast("FakeDM loaded \u2014 open its settings to inject");
 }
 async function startClassic() {
