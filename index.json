@@ -28,16 +28,16 @@
         },
         "dev.8uvu.fake-dm": {
             "name": "FakeDM",
-            "description": "Fake messages and calls in any chat.",
+            "description": "Fake messages, calls, events, reactions and embeds in any chat — full 2.0 UI.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.5.2"
+                "latest": "2.0.0"
             },
             "versions": {
-                "1.5.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.5.2.zip",
-                    "sha256": "7967658a24f74d2ca3c5179019c88552b7b3a7527a670322c0a09273ab2a6f27",
-                    "size": 19483,
+                "2.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@2.0.0.zip",
+                    "sha256": "179522089af8ab044b446ea88e7f4e6e0e679583e0981163774cc7f694692df5",
+                    "size": 20602,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
