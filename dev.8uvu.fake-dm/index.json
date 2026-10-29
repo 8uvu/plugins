@@ -8,13 +8,13 @@
             "description": "Injects fake messages, calls, system messages, reactions & embeds into any DM or channel. Batch fake conversations. Persists across restarts. Mobile port of your Equicord plugin.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.2.7"
+                "latest": "1.2.8"
             },
             "versions": {
-                "1.2.7": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.2.7.zip",
-                    "sha256": "01e08d2d32bef37004ccdee3c14ccd8743eb052d27e638936359d9b2e6a9e066",
-                    "size": 17545,
+                "1.2.8": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.2.8.zip",
+                    "sha256": "d6a351ccf051d03ef1d1a200f907e4a6ca8df88079c91890c814db5ea49699e6",
+                    "size": 17854,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

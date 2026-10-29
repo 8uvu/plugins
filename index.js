@@ -20,60 +20,36 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// plugins/dev.8uvu.message-logger/js/index.tsx
+// plugins/dev.8uvu.fake-dm/js/index.tsx
 var index_exports = {};
 __export(index_exports, {
+  SYSTEM_TYPES: () => SYSTEM_TYPES,
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
-var hostKind = "next";
-var startedAt = null;
-var lastStartError = null;
-var handlersRegistered = 0;
-var PLUGIN_VERSION = "1.7.4";
-var deletedMessageMap = /* @__PURE__ */ new Map();
-var editedMessageMap = /* @__PURE__ */ new Map();
-var manualDeletes = /* @__PURE__ */ new Set();
-var HIGHLIGHT_MAX = 500;
-var LOG_FILE = "message-logger.json";
+var PLUGIN_VERSION = "1.2.8";
 var DEFAULT_SETTINGS = {
-  enabled: true,
-  logDeletes: true,
-  logEdits: true,
-  restoreDeletedInChat: true,
-  keepSelfDeletes: true,
-  deletedInfo: true,
-  inlineEdits: true,
-  deleteStyle: "text",
-  showEditDiffs: false,
-  separatedDiffs: false,
-  logDeletedAttachments: true,
-  ghostPings: true,
-  colorHighlights: true,
-  ignoreBots: true,
-  ignoreWebhooks: false,
-  ignoreSelf: false,
-  ignoreSelfEdits: false,
-  alwaysLogDirectMessages: true,
-  alwaysLogCurrentChannel: true,
-  ignoreMutedGuilds: false,
-  ignoreMutedCategories: false,
-  ignoreMutedChannels: false,
-  saveImages: true,
-  imageQuotaGB: 2,
-  attachmentSizeLimitMB: 100,
-  attachmentExtensions: "png,jpg,jpeg,gif,webp",
-  timeBasedCleanupMinutes: 0,
-  maxStored: 300,
-  sortNewest: true,
-  logsPerPage: 100,
-  ignoredChannels: "",
-  ignoredUsers: "",
-  ignoredGuilds: "",
-  whitelistedIds: ""
+  jitterSeconds: true,
+  // randomize seconds like the desktop plugin's randomSeconds
+  chatButton: true,
+  // chat-bar Fake button (Valenced via afterJSX; reload chat to apply)
+  quickText: "hello"
+  // what one tap of the chat-bar button sends
 };
+function getValenced() {
+  try {
+    if (typeof valenced !== "undefined" && valenced) return valenced;
+  } catch {
+  }
+  return null;
+}
 function getReact() {
   var _a, _b, _c, _d, _e, _f, _g, _h;
+  try {
+    const r = (_b = (_a = getValenced()) == null ? void 0 : _a.react) == null ? void 0 : _b.React;
+    if (r == null ? void 0 : r.createElement) return r;
+  } catch {
+  }
   try {
     if (typeof revenge !== "undefined") {
       const r = revenge.react;
@@ -84,7 +60,7 @@ function getReact() {
   try {
     if (typeof bunny !== "undefined") {
       const b = bunny;
-      const r = b.React || ((_a = b.common) == null ? void 0 : _a.React) || ((_c = (_b = b.metro) == null ? void 0 : _b.common) == null ? void 0 : _c.React) || ((_e = (_d = b.api) == null ? void 0 : _d.react) == null ? void 0 : _e.React);
+      const r = b.React || ((_c = b.common) == null ? void 0 : _c.React) || ((_e = (_d = b.metro) == null ? void 0 : _d.common) == null ? void 0 : _e.React);
       if (r) return r;
     }
   } catch {
@@ -102,8 +78,13 @@ function getReact() {
 function getRN() {
   var _a, _b, _c, _d, _e, _f, _g, _h, _i;
   try {
+    const rn = (_b = (_a = getValenced()) == null ? void 0 : _a.react) == null ? void 0 : _b.ReactNative;
+    if ((rn == null ? void 0 : rn.View) && (rn == null ? void 0 : rn.Text)) return rn;
+  } catch {
+  }
+  try {
     if (typeof revenge !== "undefined") {
-      const rn = (_a = revenge.react) == null ? void 0 : _a.ReactNative;
+      const rn = (_c = revenge.react) == null ? void 0 : _c.ReactNative;
       if (rn) return rn;
     }
   } catch {
@@ -111,7 +92,7 @@ function getRN() {
   try {
     if (typeof bunny !== "undefined") {
       const b = bunny;
-      const rn = b.ReactNative || ((_b = b.common) == null ? void 0 : _b.ReactNative) || ((_d = (_c = b.metro) == null ? void 0 : _c.common) == null ? void 0 : _d.ReactNative) || ((_f = (_e = b.api) == null ? void 0 : _e.react) == null ? void 0 : _f.ReactNative);
+      const rn = b.ReactNative || ((_d = b.common) == null ? void 0 : _d.ReactNative) || ((_f = (_e = b.metro) == null ? void 0 : _e.common) == null ? void 0 : _f.ReactNative);
       if (rn) return rn;
     }
   } catch {
@@ -122,81 +103,6 @@ function getRN() {
       const rn = ((_g = v.common) == null ? void 0 : _g.ReactNative) || ((_i = (_h = v.metro) == null ? void 0 : _h.common) == null ? void 0 : _i.ReactNative);
       if (rn) return rn;
     }
-  } catch {
-  }
-  return null;
-}
-function getFlux() {
-  var _a, _b, _c, _d, _e, _f;
-  try {
-    if (typeof revenge !== "undefined") {
-      const f = (_a = revenge.discord) == null ? void 0 : _a.flux;
-      if (f && typeof f.onFluxEventDispatched === "function") return f;
-    }
-  } catch {
-  }
-  try {
-    if (typeof bunny !== "undefined") {
-      const f = (_b = bunny.api) == null ? void 0 : _b.flux;
-      if (f && typeof f.intercept === "function") {
-        return {
-          onFluxEventDispatched: (type, patch) => f.intercept((payload) => {
-            if ((payload == null ? void 0 : payload.type) !== type) return;
-            return patch(payload);
-          })
-        };
-      }
-    }
-  } catch {
-  }
-  try {
-    if (typeof vendetta !== "undefined") {
-      const v = vendetta;
-      const fd = (_f = (_c = v == null ? void 0 : v.common) == null ? void 0 : _c.FluxDispatcher) != null ? _f : (_e = (_d = v == null ? void 0 : v.metro) == null ? void 0 : _d.common) == null ? void 0 : _e.FluxDispatcher;
-      if (fd && typeof fd.addInterceptor === "function") {
-        return {
-          onFluxEventDispatched: (type, patch) => fd.addInterceptor((payload) => {
-            if ((payload == null ? void 0 : payload.type) !== type) return;
-            return patch(payload);
-          })
-        };
-      }
-    }
-  } catch {
-  }
-  return null;
-}
-function getRawFluxDispatcher() {
-  var _a, _b, _c, _d, _e, _f, _g;
-  try {
-    if (typeof revenge !== "undefined") {
-      const f = (_a = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _a.flux;
-      if (f && typeof f.onAnyFluxEventDispatched === "function") {
-        return { addInterceptor: (cb) => f.onAnyFluxEventDispatched(cb) };
-      }
-      if ((f == null ? void 0 : f.dispatcher) && typeof f.dispatcher.addInterceptor === "function") {
-        return f.dispatcher;
-      }
-    }
-  } catch {
-  }
-  try {
-    const b = typeof bunny !== "undefined" ? bunny : null;
-    if (((_b = b == null ? void 0 : b.api) == null ? void 0 : _b.flux) && typeof b.api.flux.intercept === "function") {
-      return { addInterceptor: (cb) => b.api.flux.intercept(cb) };
-    }
-  } catch {
-  }
-  try {
-    const b = typeof bunny !== "undefined" ? bunny : null;
-    const fdB = (_d = (_c = b == null ? void 0 : b.metro) == null ? void 0 : _c.common) == null ? void 0 : _d.FluxDispatcher;
-    if (fdB && typeof fdB.addInterceptor === "function") return fdB;
-  } catch {
-  }
-  try {
-    const v = typeof vendetta !== "undefined" ? vendetta : null;
-    const fdV = ((_f = (_e = v == null ? void 0 : v.metro) == null ? void 0 : _e.common) == null ? void 0 : _f.FluxDispatcher) || ((_g = v == null ? void 0 : v.common) == null ? void 0 : _g.FluxDispatcher);
-    if (fdV && typeof fdV.addInterceptor === "function") return fdV;
   } catch {
   }
   return null;
@@ -219,1497 +125,806 @@ function getMetro() {
   }
   return null;
 }
-function getActions() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
+function getDispatch() {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
   try {
-    if (typeof revenge !== "undefined") {
-      const a = (_a = revenge.discord) == null ? void 0 : _a.actions;
-      if (a) return a;
+    const v = getValenced();
+    const finders = (_a = v == null ? void 0 : v.modules) == null ? void 0 : _a.finders;
+    const filters = (_c = (_b = v == null ? void 0 : v.modules) == null ? void 0 : _b.finders) == null ? void 0 : _c.filters;
+    if (finders && filters) {
+      const [mod] = finders.lookupModule(filters.withProps("dispatch", "subscribe"));
+      if (mod && typeof mod.dispatch === "function") return mod.dispatch.bind(mod);
     }
   } catch {
   }
   try {
-    if (typeof bunny !== "undefined") {
-      const b = bunny;
-      const a = ((_c = (_b = b.metro) == null ? void 0 : _b.common) == null ? void 0 : _c.toasts) || ((_e = (_d = b.api) == null ? void 0 : _d.actions) == null ? void 0 : _e.ToastActionCreators);
-      if (a) return a;
-    }
+    const f = typeof revenge !== "undefined" && ((_e = (_d = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _d.flux) == null ? void 0 : _e.dispatcher) || null;
+    if (f && typeof f.dispatch === "function") return f.dispatch.bind(f);
   } catch {
   }
   try {
-    if (typeof vendetta !== "undefined") {
-      const v = vendetta;
-      const show = (_k = (_g = (_f = v == null ? void 0 : v.ui) == null ? void 0 : _f.toasts) == null ? void 0 : _g.showToast) != null ? _k : (_j = (_i = (_h = v == null ? void 0 : v.metro) == null ? void 0 : _h.common) == null ? void 0 : _i.toasts) == null ? void 0 : _j.open;
-      if (typeof show === "function") {
-        return { ToastActionCreators: { open: (t) => {
-          var _a2;
-          return show(String((_a2 = t == null ? void 0 : t.content) != null ? _a2 : ""));
-        } } };
-      }
-    }
-  } catch {
-  }
-  return null;
-}
-function getFileModule() {
-  var _a, _b, _c, _d, _e;
-  try {
-    if (typeof revenge !== "undefined") {
-      const fm = (_b = (_a = revenge.discord) == null ? void 0 : _a.native) == null ? void 0 : _b.FileModule;
-      if (fm) return fm;
-    }
+    const metro = getMetro();
+    const rd = (_f = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _f.call(metro, "dispatch", "subscribe");
+    if (rd && typeof rd.dispatch === "function") return rd.dispatch.bind(rd);
+    const rd2 = (_g = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _g.call(metro, "dispatch", "_dispatcher");
+    if (rd2 && typeof rd2.dispatch === "function") return rd2.dispatch.bind(rd2);
   } catch {
   }
   try {
-    if (typeof bunny !== "undefined") {
-      const b = bunny;
-      return ((_d = (_c = b.api) == null ? void 0 : _c.native) == null ? void 0 : _d.FileModule) || ((_e = b.native) == null ? void 0 : _e.FileModule) || null;
-    }
-  } catch {
-  }
-  return null;
-}
-function getDesign() {
-  var _a;
-  try {
-    const d = (_a = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _a.design;
-    const design = d && (d.Design || d);
-    if (design) return design;
-  } catch {
-  }
-  try {
-    const ui = bunny == null ? void 0 : bunny.ui;
-    if (ui) return ui.FormTableRowGroup ? ui : ui.components || ui;
-  } catch {
-  }
-  return null;
-}
-function getClipboard() {
-  var _a, _b, _c, _d, _e, _f, _g, _h;
-  try {
-    if (typeof revenge !== "undefined") {
-      const c = (_b = (_a = revenge == null ? void 0 : revenge.externals) == null ? void 0 : _a.ReactNativeClipboard) == null ? void 0 : _b.Clipboard;
-      if (c) return c;
-    }
-  } catch {
-  }
-  try {
-    if (typeof bunny !== "undefined") {
-      const c = (_d = (_c = bunny == null ? void 0 : bunny.metro) == null ? void 0 : _c.common) == null ? void 0 : _d.clipboard;
-      if (c) return c;
-    }
-  } catch {
-  }
-  try {
-    if (typeof vendetta !== "undefined") {
-      const v = vendetta;
-      const c = (_h = (_f = (_e = v == null ? void 0 : v.metro) == null ? void 0 : _e.common) == null ? void 0 : _f.clipboard) != null ? _h : (_g = v == null ? void 0 : v.common) == null ? void 0 : _g.clipboard;
-      if (c) return c;
-    }
-  } catch {
-  }
-  return null;
-}
-var log = {};
-var docRoot = "";
-var flushTimer = null;
-var apiRef = null;
-var cfg = { ...DEFAULT_SETTINGS };
-var cfgStorage = null;
-function logPath() {
-  return (docRoot.length ? docRoot.replace(/\/+$/, "") + "/" : "") + LOG_FILE;
-}
-function coerceSettings(raw) {
-  const c = raw && typeof raw === "object" ? raw : {};
-  return {
-    enabled: c.enabled !== false,
-    logDeletes: c.logDeletes !== false,
-    logEdits: c.logEdits !== false,
-    restoreDeletedInChat: c.restoreDeletedInChat !== false,
-    keepSelfDeletes: c.keepSelfDeletes !== false,
-    deletedInfo: c.deletedInfo !== false,
-    ghostPings: c.ghostPings !== false,
-    colorHighlights: c.colorHighlights !== false,
-    inlineEdits: c.inlineEdits !== false,
-    deleteStyle: c.deleteStyle === "overlay" ? "overlay" : "text",
-    showEditDiffs: !!c.showEditDiffs,
-    separatedDiffs: !!c.separatedDiffs,
-    logDeletedAttachments: c.logDeletedAttachments !== false,
-    saveImages: c.saveImages !== false,
-    imageQuotaGB: typeof c.imageQuotaGB === "number" && c.imageQuotaGB >= 0.1 && c.imageQuotaGB <= 100 ? c.imageQuotaGB : DEFAULT_SETTINGS.imageQuotaGB,
-    attachmentSizeLimitMB: typeof c.attachmentSizeLimitMB === "number" && c.attachmentSizeLimitMB >= 1 && c.attachmentSizeLimitMB <= 1024 ? c.attachmentSizeLimitMB : DEFAULT_SETTINGS.attachmentSizeLimitMB,
-    attachmentExtensions: typeof c.attachmentExtensions === "string" ? c.attachmentExtensions : DEFAULT_SETTINGS.attachmentExtensions,
-    timeBasedCleanupMinutes: typeof c.timeBasedCleanupMinutes === "number" && c.timeBasedCleanupMinutes >= 0 && c.timeBasedCleanupMinutes <= 525600 ? Math.floor(c.timeBasedCleanupMinutes) : 0,
-    ignoreBots: c.ignoreBots !== false,
-    ignoreWebhooks: !!c.ignoreWebhooks,
-    ignoreSelf: !!c.ignoreSelf,
-    ignoreSelfEdits: !!c.ignoreSelfEdits,
-    alwaysLogDirectMessages: c.alwaysLogDirectMessages !== false,
-    alwaysLogCurrentChannel: c.alwaysLogCurrentChannel !== false,
-    ignoreMutedGuilds: !!c.ignoreMutedGuilds,
-    ignoreMutedCategories: !!c.ignoreMutedCategories,
-    ignoreMutedChannels: !!c.ignoreMutedChannels,
-    sortNewest: c.sortNewest !== false,
-    logsPerPage: typeof c.logsPerPage === "number" && c.logsPerPage >= 10 && c.logsPerPage <= 1e3 ? Math.floor(c.logsPerPage) : DEFAULT_SETTINGS.logsPerPage,
-    maxStored: typeof c.maxStored === "number" && c.maxStored >= 10 && c.maxStored <= 1e4 ? Math.floor(c.maxStored) : DEFAULT_SETTINGS.maxStored,
-    ignoredChannels: typeof c.ignoredChannels === "string" ? c.ignoredChannels : "",
-    ignoredUsers: typeof c.ignoredUsers === "string" ? c.ignoredUsers : "",
-    ignoredGuilds: typeof c.ignoredGuilds === "string" ? c.ignoredGuilds : "",
-    whitelistedIds: typeof c.whitelistedIds === "string" ? c.whitelistedIds : ""
-  };
-}
-function refreshConfigFromStorage() {
-  try {
-    if (cfgStorage && cfgStorage.cache && typeof cfgStorage.cache === "object") {
-      cfg = coerceSettings(cfgStorage.cache);
-    }
-  } catch {
-  }
-}
-function hostLog(msg) {
-  var _a, _b;
-  try {
-    (_b = (_a = apiRef == null ? void 0 : apiRef.logger) == null ? void 0 : _a.log) == null ? void 0 : _b.call(_a, "[MessageLogger] " + msg);
-  } catch {
-  }
-}
-function hostError(msg, e) {
-  var _a, _b;
-  lastStartError = msg + (e ? " \u2014 " + (e instanceof Error ? e.message : String(e)) : "");
-  try {
-    (_b = (_a = apiRef == null ? void 0 : apiRef.logger) == null ? void 0 : _a.error) == null ? void 0 : _b.call(
-      _a,
-      "[MessageLogger] " + msg,
-      e instanceof Error ? e.message : e
-    );
-  } catch {
-  }
-}
-var storageProxy = null;
-var storageKind = null;
-var classicDisposers = [];
-function hostData() {
-  try {
-    if (!storageProxy) return null;
-    if (storageKind === "bunny") {
-      return storageProxy.data && typeof storageProxy.data === "object" ? storageProxy.data : {};
-    }
-    if (storageKind === "vendetta") {
-      return { settings: storageProxy.settings, log: storageProxy.log };
-    }
-  } catch {
-  }
-  return null;
-}
-function refreshClassicConfig() {
-  try {
-    const data = hostData();
-    if ((data == null ? void 0 : data.settings) && typeof data.settings === "object") cfg = coerceSettings(data.settings);
-  } catch {
-  }
-}
-async function loadLog() {
-  var _a;
-  if (hostKind !== "next") {
-    try {
-      const data = hostData();
-      if ((data == null ? void 0 : data.settings) && typeof data.settings === "object") {
-        cfg = coerceSettings(data.settings);
-      }
-      if ((data == null ? void 0 : data.log) && typeof data.log === "object") log = data.log;
-      hostLog("loaded " + Object.keys(log).length + " entries (plugin storage)");
-      restoreHighlightsFromLog();
-    } catch (e) {
-      hostError("failed to read plugin storage", e);
-    }
-    return;
-  }
-  const fm = getFileModule();
-  if (!fm) {
-    hostError("FileModule unavailable \u2014 log cannot be loaded or saved");
-    return;
-  }
-  try {
-    docRoot = String((_a = fm.getConstants().DocumentsDirPath) != null ? _a : "");
-  } catch {
-    docRoot = "";
-  }
-  try {
-    const raw = await fm.readFile(logPath(), "utf8");
-    const parsed = JSON.parse(raw);
-    if (parsed && typeof parsed === "object") log = parsed;
-    hostLog("loaded " + Object.keys(log).length + " entries");
-    restoreHighlightsFromLog();
-  } catch {
-    log = {};
-    hostLog("starting with an empty log");
-  }
-}
-async function persistLog() {
-  if (hostKind !== "next") {
-    try {
-      if (storageProxy && typeof storageProxy === "object") {
-        if (storageKind === "bunny") {
-          const data = storageProxy.data && typeof storageProxy.data === "object" ? storageProxy.data : {};
-          storageProxy.data = { ...data, log };
-        } else {
-          storageProxy.log = { ...log };
-        }
-      }
-    } catch (e) {
-      hostError("failed to write plugin storage", e);
-    }
-    return;
-  }
-  const fm = getFileModule();
-  if (!fm) return;
-  try {
-    await fm.writeFile("documents", LOG_FILE, JSON.stringify(log), "utf8");
-  } catch (e) {
-    hostError("failed to write log file", e);
-  }
-}
-function prune(max) {
-  const ids = Object.keys(log);
-  if (ids.length <= max) return;
-  ids.map((id) => log[id]).sort((a, b) => a.timestamp - b.timestamp).slice(0, ids.length - max).forEach((m) => {
-    delete log[m.id];
-  });
-}
-function inList(id, raw) {
-  if (!raw) return false;
-  return raw.split(/[\s,]+/).map((s) => s.trim()).filter(Boolean).includes(String(id));
-}
-function getUserStore() {
-  var _a, _b, _c, _d, _e, _f, _g;
-  try {
-    if (typeof revenge !== "undefined") {
-      const s = (_b = (_a = revenge.discord) == null ? void 0 : _a.flux) == null ? void 0 : _b.Stores;
-      if (s == null ? void 0 : s.UserStore) return s.UserStore;
-    }
+    const v = typeof vendetta !== "undefined" ? vendetta : null;
+    const fd = ((_i = (_h = v == null ? void 0 : v.metro) == null ? void 0 : _h.common) == null ? void 0 : _i.FluxDispatcher) || ((_j = v == null ? void 0 : v.common) == null ? void 0 : _j.FluxDispatcher);
+    if (fd == null ? void 0 : fd.dispatch) return fd.dispatch.bind(fd);
   } catch {
   }
   try {
     const b = typeof bunny !== "undefined" ? bunny : null;
-    const metro = b == null ? void 0 : b.metro;
-    for (const c of [(_c = b == null ? void 0 : b.common) == null ? void 0 : _c.UserStore, (_f = (_e = (_d = b == null ? void 0 : b.api) == null ? void 0 : _d.flux) == null ? void 0 : _e.stores) == null ? void 0 : _f.UserStore, (_g = metro == null ? void 0 : metro.common) == null ? void 0 : _g.UserStore]) {
-      if (c) return c;
-    }
+    const fd = ((_l = (_k = b == null ? void 0 : b.metro) == null ? void 0 : _k.common) == null ? void 0 : _l.FluxDispatcher) || ((_m = b == null ? void 0 : b.common) == null ? void 0 : _m.FluxDispatcher);
+    if (fd == null ? void 0 : fd.dispatch) return fd.dispatch.bind(fd);
+  } catch {
+  }
+  return null;
+}
+function findStore(name, props) {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i;
+  try {
+    const s = (_c = (_b = (_a = getValenced()) == null ? void 0 : _a.discord) == null ? void 0 : _b.flux) == null ? void 0 : _c.Stores;
+    if (s == null ? void 0 : s[name]) return s[name];
+  } catch {
+  }
+  try {
+    const s = typeof revenge !== "undefined" && ((_e = (_d = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _d.flux) == null ? void 0 : _e.Stores) || null;
+    if (s == null ? void 0 : s[name]) return s[name];
+  } catch {
+  }
+  try {
+    const metro = getMetro();
     if (metro == null ? void 0 : metro.findByStoreName) {
-      const m = metro.findByStoreName("UserStore");
-      if (m == null ? void 0 : m.getCurrentUser) return m;
+      const m = metro.findByStoreName(name);
+      if (m) return m;
     }
     if (metro == null ? void 0 : metro.findByProps) {
-      const m = metro.findByProps("getCurrentUser");
-      if (m == null ? void 0 : m.getCurrentUser) return m;
-    }
-    if (metro == null ? void 0 : metro.find) {
-      const m = metro.find((x) => x && typeof x.getCurrentUser === "function");
+      const m = metro.findByProps(...props);
       if (m) return m;
     }
   } catch {
   }
   try {
     const v = typeof vendetta !== "undefined" ? vendetta : null;
-    const metro = v == null ? void 0 : v.metro;
-    if (metro == null ? void 0 : metro.findByStoreName) {
-      const m = metro.findByStoreName("UserStore");
-      if (m == null ? void 0 : m.getCurrentUser) return m;
-    }
-    if (metro == null ? void 0 : metro.findByProps) {
-      const m = metro.findByProps("getCurrentUser");
-      if (m == null ? void 0 : m.getCurrentUser) return m;
-    }
-  } catch {
-  }
-  return null;
-}
-function currentUserId() {
-  var _a, _b, _c;
-  try {
-    return String((_c = (_b = (_a = getUserStore()) == null ? void 0 : _a.getCurrentUser) == null ? void 0 : _b.call(_a).id) != null ? _c : "");
-  } catch {
-    return "";
-  }
-}
-function mentionsOf(message) {
-  const out = [];
-  const raw = message == null ? void 0 : message.mentions;
-  if (Array.isArray(raw)) {
-    for (const m of raw) {
-      if (typeof m === "string") out.push(m);
-      else if (m && typeof m.id !== "undefined") out.push(String(m.id));
-    }
-  }
-  return out;
-}
-function snapshotOf(message, me) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
-  const author = (_a = message == null ? void 0 : message.author) != null ? _a : {};
-  return {
-    id: String((_b = message == null ? void 0 : message.id) != null ? _b : ""),
-    channelId: String((_d = (_c = message == null ? void 0 : message.channelId) != null ? _c : message == null ? void 0 : message.channel_id) != null ? _d : ""),
-    guildId: String((_j = (_i = (_e = message == null ? void 0 : message.guildId) != null ? _e : message == null ? void 0 : message.guild_id) != null ? _i : (_h = (_g = (_f = message == null ? void 0 : message.messageSnapshots) == null ? void 0 : _f[0]) == null ? void 0 : _g.message) == null ? void 0 : _h.guildId) != null ? _j : ""),
-    webhook: !!(author == null ? void 0 : author.webhook) || (message == null ? void 0 : message.webhookId) != null,
-    authorId: String((_k = author.id) != null ? _k : ""),
-    authorTag: author.globalName || author.username || "Unknown",
-    bot: !!author.bot,
-    content: String((_l = message == null ? void 0 : message.content) != null ? _l : ""),
-    editHistory: [],
-    attachments: Array.isArray(message == null ? void 0 : message.attachments) ? message.attachments.map((a) => {
-      var _a2, _b2;
-      return String((_b2 = (_a2 = a == null ? void 0 : a.url) != null ? _a2 : a == null ? void 0 : a.proxy_url) != null ? _b2 : "");
-    }).filter(Boolean).slice(0, 10) : [],
-    timestamp: Date.parse(message == null ? void 0 : message.timestamp) || Date.now(),
-    mentionsMe: me !== "" && mentionsOf(message).includes(me)
-  };
-}
-var seen = /* @__PURE__ */ new Map();
-var skippedIds = /* @__PURE__ */ new Set();
-function rememberSkipped(id) {
-  if (!id) return;
-  skippedIds.add(id);
-  if (skippedIds.size > 500) {
-    const first = skippedIds.values().next();
-    if (!first.done) skippedIds.delete(first.value);
-  }
-}
-function takeSkipped(id) {
-  if (!skippedIds.has(id)) return false;
-  skippedIds.delete(id);
-  return true;
-}
-function gateMessage(_message, snap) {
-  var _a, _b, _c;
-  const userId = String((_a = snap == null ? void 0 : snap.authorId) != null ? _a : "");
-  const channelId = String((_b = snap == null ? void 0 : snap.channelId) != null ? _b : "");
-  const guildId = String((_c = snap == null ? void 0 : snap.guildId) != null ? _c : "") || channelGuildIdFor(channelId);
-  if (inList(userId, cfg.ignoredUsers) || inList(channelId, cfg.ignoredChannels) || inList(guildId, cfg.ignoredGuilds))
-    return false;
-  if (inList(userId, cfg.whitelistedIds) || inList(channelId, cfg.whitelistedIds) || inList(guildId, cfg.whitelistedIds))
-    return true;
-  if (cfg.alwaysLogDirectMessages && channelId && isDmChannel(channelId)) return true;
-  if (cfg.alwaysLogCurrentChannel && channelId && channelId === currentChannelId()) return true;
-  if (cfg.ignoreMutedChannels && isChannelMuted(channelId)) return false;
-  if (cfg.ignoreMutedCategories && isCategoryMuted(channelId)) return false;
-  if (cfg.ignoreMutedGuilds && isGuildMuted(guildId)) return false;
-  return true;
-}
-function toast(content, key) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p;
-  try {
-    const actions = getActions();
-    const open = (_b = (_a = actions == null ? void 0 : actions.ToastActionCreators) == null ? void 0 : _a.open) != null ? _b : actions == null ? void 0 : actions.open;
-    if (typeof open === "function") {
-      open({ key, content });
-      return;
-    }
-  } catch {
-  }
-  try {
-    const v = typeof vendetta !== "undefined" ? vendetta : null;
-    const show = (_k = (_h = (_d = (_c = v == null ? void 0 : v.ui) == null ? void 0 : _c.toasts) == null ? void 0 : _d.showToast) != null ? _h : (_g = (_f = (_e = v == null ? void 0 : v.metro) == null ? void 0 : _e.common) == null ? void 0 : _f.toasts) == null ? void 0 : _g.open) != null ? _k : (_j = (_i = v == null ? void 0 : v.common) == null ? void 0 : _i.toasts) == null ? void 0 : _j.showToast;
-    if (typeof show === "function") {
-      try {
-        show({ key, content });
-        return;
-      } catch {
-      }
-      try {
-        show(content);
-        return;
-      } catch {
-      }
-    }
+    if ((_g = (_f = v == null ? void 0 : v.metro) == null ? void 0 : _f.common) == null ? void 0 : _g[name]) return v.metro.common[name];
   } catch {
   }
   try {
     const b = typeof bunny !== "undefined" ? bunny : null;
-    const show = (_m = (_l = b == null ? void 0 : b.ui) == null ? void 0 : _l.toasts) == null ? void 0 : _m.showToast;
-    if (typeof show === "function") {
-      show(content);
-      return;
-    }
+    if ((_i = (_h = b == null ? void 0 : b.metro) == null ? void 0 : _h.common) == null ? void 0 : _i[name]) return b.metro.common[name];
   } catch {
   }
-  try {
-    const ta = (_n = getRN()) == null ? void 0 : _n.ToastAndroid;
-    (_p = ta == null ? void 0 : ta.show) == null ? void 0 : _p.call(ta, content, (_o = ta == null ? void 0 : ta.SHORT) != null ? _o : 0);
-  } catch {
-  }
+  return null;
 }
-function alertBox(title, msg) {
-  var _a, _b, _c;
-  try {
-    const Alert = (_a = getRN()) == null ? void 0 : _a.Alert;
-    if (Alert == null ? void 0 : Alert.alert) {
-      Alert.alert(title, msg);
-      return;
-    }
-  } catch {
-  }
-  try {
-    const v = typeof vendetta !== "undefined" ? vendetta : null;
-    const alertApi = (_c = (_b = v == null ? void 0 : v.ui) == null ? void 0 : _b.alerts) == null ? void 0 : _c.showConfirmationAlert;
-    if (typeof alertApi === "function") {
-      alertApi({ title, content: msg, confirmText: "OK", cancelText: "Close", onConfirm: () => {
-      }, onCancel: () => {
-      } });
-    }
-  } catch {
-  }
+function getUserStore() {
+  return findStore("UserStore", ["getCurrentUser"]);
 }
 function getChannelStore() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i;
-  const found = getStore("ChannelStore");
-  if (found == null ? void 0 : found.getChannel) return found;
-  try {
-    const b = typeof bunny !== "undefined" ? bunny : null;
-    const metro = b == null ? void 0 : b.metro;
-    for (const c of [(_a = b == null ? void 0 : b.common) == null ? void 0 : _a.ChannelStore, (_b = metro == null ? void 0 : metro.common) == null ? void 0 : _b.ChannelStore]) {
-      if (c == null ? void 0 : c.getChannel) return c;
-    }
-    const m = (_c = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _c.call(metro, "getChannel");
-    if (m == null ? void 0 : m.getChannel) return m;
-  } catch {
-  }
-  try {
-    const v = typeof vendetta !== "undefined" ? vendetta : null;
-    const m = (_i = (_e = (_d = v == null ? void 0 : v.metro) == null ? void 0 : _d.findByProps) == null ? void 0 : _e.call(_d, "getChannel")) != null ? _i : (_h = (_g = (_f = v == null ? void 0 : v.common) == null ? void 0 : _f.metro) == null ? void 0 : _g.findByProps) == null ? void 0 : _h.call(_g, "getChannel");
-    if (m == null ? void 0 : m.getChannel) return m;
-  } catch {
-  }
-  return null;
+  return findStore("ChannelStore", ["getChannel"]);
 }
-function toastGhostPing(entry) {
-  var _a, _b;
-  let where = "a channel";
-  try {
-    const ch = (_b = (_a = getChannelStore()) == null ? void 0 : _a.getChannel) == null ? void 0 : _b.call(_a, entry.channelId);
-    if (ch == null ? void 0 : ch.name) where = "#" + ch.name;
-  } catch {
-  }
-  toast(
-    "Ghost ping by " + entry.authorTag + " in " + where + ": " + entry.content.slice(0, 120),
-    "msglogger-ghostping-" + entry.id
-  );
+function getMessageStore() {
+  return findStore("MessageStore", ["getMessage", "getMessages"]);
 }
-function getStore(name) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
-  try {
-    const s = typeof revenge !== "undefined" && ((_b = (_a = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _a.flux) == null ? void 0 : _b.Stores) || null;
-    if (s == null ? void 0 : s[name]) return s[name];
-  } catch {
-  }
-  try {
-    const b = typeof bunny !== "undefined" ? bunny : null;
-    const s = (_h = (_g = (_d = (_c = b == null ? void 0 : b.api) == null ? void 0 : _c.flux) == null ? void 0 : _d.stores) != null ? _g : (_f = (_e = b == null ? void 0 : b.metro) == null ? void 0 : _e.common) == null ? void 0 : _f.Stores) != null ? _h : null;
-    if (s == null ? void 0 : s[name]) return s[name];
-  } catch {
-  }
-  try {
-    const v = typeof vendetta !== "undefined" ? vendetta : null;
-    const s = (_m = (_l = (_j = (_i = v == null ? void 0 : v.metro) == null ? void 0 : _i.common) == null ? void 0 : _j.Stores) != null ? _l : (_k = v == null ? void 0 : v.common) == null ? void 0 : _k.Stores) != null ? _m : null;
-    if (s == null ? void 0 : s[name]) return s[name];
-  } catch {
-  }
-  try {
-    const metro = getMetro();
-    const m = (_n = metro == null ? void 0 : metro.findByStoreName) == null ? void 0 : _n.call(metro, name);
-    if (m) return m;
-  } catch {
-  }
-  return null;
+function getSelectedChannelStore() {
+  return findStore("SelectedChannelStore", ["getChannelId", "getSelectedChannelId"]);
 }
-function storeMessage(channelId, id) {
-  var _a, _b, _c;
-  if (!channelId || !id) return null;
-  try {
-    return (_c = (_b = (_a = getMessageStore()) == null ? void 0 : _a.getMessage) == null ? void 0 : _b.call(_a, channelId, id)) != null ? _c : null;
-  } catch {
-  }
-  return null;
-}
-function recordFromMessage(message) {
-  var _a, _b, _c, _d;
-  if (!message) return void 0;
-  const author = (_a = message.author) != null ? _a : {};
-  return {
-    content: typeof message.content === "string" ? message.content : "",
-    authorTag: (_d = (_c = (_b = author.globalName) != null ? _b : author.global_name) != null ? _c : author.username) != null ? _d : "Unknown",
-    bot: !!author.bot
-  };
-}
-var pendingMessages = /* @__PURE__ */ new Map();
-function rememberPendingMessage(id, message) {
-  if (!id || !(message == null ? void 0 : message.id)) return;
-  pendingMessages.set(id, message);
-  if (pendingMessages.size > 200) {
-    const oldest = pendingMessages.keys().next();
-    if (!oldest.done) pendingMessages.delete(oldest.value);
-  }
-}
-function takePendingMessage(id) {
-  const found = pendingMessages.get(id);
-  if (found === void 0) return null;
-  pendingMessages.delete(id);
-  return found;
-}
-function channelGuildIdFor(channelId) {
-  var _a, _b, _c, _d;
-  try {
-    const ch = (_b = (_a = getChannelStore()) == null ? void 0 : _a.getChannel) == null ? void 0 : _b.call(_a, channelId);
-    return String((_d = (_c = ch == null ? void 0 : ch.guild_id) != null ? _c : ch == null ? void 0 : ch.guildId) != null ? _d : "");
-  } catch {
-  }
-  return "";
-}
-function isDmChannel(channelId) {
-  var _a, _b, _c;
-  if (!channelId) return false;
-  try {
-    const type = (_c = (_b = (_a = getChannelStore()) == null ? void 0 : _a.getChannel) == null ? void 0 : _b.call(_a, channelId)) == null ? void 0 : _c.type;
-    return type === 1 || type === 3;
-  } catch {
-  }
-  return false;
+function getGuildMemberStore() {
+  return findStore("GuildMemberStore", ["getMembers", "getMember"]);
 }
 function currentChannelId() {
   var _a, _b, _c, _d;
   try {
-    const s = getStore("SelectedChannelStore");
-    return String((_d = (_c = (_a = s == null ? void 0 : s.getChannelId) == null ? void 0 : _a.call(s)) != null ? _c : (_b = s == null ? void 0 : s.getMostRecentSelectedTextChannelId) == null ? void 0 : _b.call(s)) != null ? _d : "");
+    const s = getSelectedChannelStore();
+    return String((_d = (_c = (_a = s == null ? void 0 : s.getChannelId) == null ? void 0 : _a.call(s)) != null ? _c : (_b = s == null ? void 0 : s.getSelectedChannelId) == null ? void 0 : _b.call(s)) != null ? _d : "");
   } catch {
+    return "";
   }
-  return "";
 }
-function isChannelMuted(channelId) {
-  var _a, _b;
-  if (!channelId) return false;
+function hostError(msg, e) {
+  var _a, _b, _c;
   try {
-    return !!((_b = (_a = getStore("UserGuildSettingsStore")) == null ? void 0 : _a.isChannelMuted) == null ? void 0 : _b.call(_a, channelId));
+    const logger = typeof revenge !== "undefined" && (revenge == null ? void 0 : revenge.logger) || typeof bunny !== "undefined" && ((_a = bunny == null ? void 0 : bunny.plugin) == null ? void 0 : _a.logger) || typeof vendetta !== "undefined" && (vendetta == null ? void 0 : vendetta.logger) || console;
+    ((_c = (_b = logger == null ? void 0 : logger.error) != null ? _b : logger == null ? void 0 : logger.log) != null ? _c : (() => {
+    })).call(logger, "[FakeDM] " + msg, e != null ? e : "");
   } catch {
   }
-  return false;
 }
-function isCategoryMuted(channelId) {
-  var _a, _b;
-  if (!channelId) return false;
-  try {
-    return !!((_b = (_a = getStore("UserGuildSettingsStore")) == null ? void 0 : _a.isCategoryMuted) == null ? void 0 : _b.call(_a, channelId));
-  } catch {
-  }
-  return false;
+var jsonStorageApi = null;
+var storageProxy = null;
+var storageKind = "";
+var cfg = { ...DEFAULT_SETTINGS };
+var fakesCache = [];
+function readFakes() {
+  return Array.isArray(fakesCache) ? fakesCache : [];
 }
-function isGuildMuted(guildId) {
-  var _a, _b;
-  if (!guildId) return false;
-  try {
-    return !!((_b = (_a = getStore("UserGuildSettingsStore")) == null ? void 0 : _a.isGuildMuted) == null ? void 0 : _b.call(_a, guildId));
-  } catch {
-  }
-  return false;
-}
-function tokenize(text) {
+function persistFakes(list) {
   var _a;
-  return (_a = String(text != null ? text : "").match(/\s+|[^\s]+/g)) != null ? _a : [];
-}
-function diffWords(before, after) {
-  const a = tokenize(before);
-  const b = tokenize(after);
-  if (!a.length || !b.length || a.length * b.length > 4e4) {
-    if (String(before != null ? before : "") === String(after != null ? after : "")) return [{ type: "same", text: String(after != null ? after : "") }];
-    return [
-      { type: "removed", text: String(before != null ? before : "") },
-      { type: "added", text: String(after != null ? after : "") }
-    ];
-  }
-  const rows = [];
-  for (let i2 = 0; i2 <= a.length; i2++) rows.push(new Uint32Array(b.length + 1));
-  for (let i2 = a.length - 1; i2 >= 0; i2--) {
-    for (let j2 = b.length - 1; j2 >= 0; j2--) {
-      rows[i2][j2] = a[i2] === b[j2] ? rows[i2 + 1][j2 + 1] + 1 : Math.max(rows[i2 + 1][j2], rows[i2][j2 + 1]);
-    }
-  }
-  const parts = [];
-  const push = (type, text) => {
-    if (!text) return;
-    const last = parts[parts.length - 1];
-    if (last && last.type === type) last.text += text;
-    else parts.push({ type, text });
-  };
-  let i = 0;
-  let j = 0;
-  while (i < a.length && j < b.length) {
-    if (a[i] === b[j]) {
-      push("same", a[i]);
-      i++;
-      j++;
-    } else if (rows[i + 1][j] >= rows[i][j + 1]) {
-      push("removed", a[i]);
-      i++;
-    } else {
-      push("added", b[j]);
-      j++;
-    }
-  }
-  while (i < a.length) {
-    push("removed", a[i]);
-    i++;
-  }
-  while (j < b.length) {
-    push("added", b[j]);
-    j++;
-  }
-  return parts;
-}
-function diffToMarkdown(parts) {
-  let out = "";
-  for (const part of parts) {
-    if (part.type === "same") {
-      out += part.text;
-      continue;
-    }
-    const text = part.text.replace(/\s+/g, " ").trim();
-    if (!text) continue;
-    out += (part.type === "removed" ? "~~" + text + "~~" : "__" + text + "__") + " ";
-  }
-  return out.replace(/ {2,}/g, " ").trim();
-}
-function diffToSeparatedMarkdown(parts) {
-  const join = (type) => parts.filter((p) => p.type === type).map((p) => p.text).join("").replace(/\s+/g, " ").trim();
-  const removed = join("removed");
-  const added = join("added");
-  const lines = [];
-  if (removed) lines.push("~~" + removed + "~~");
-  if (added) lines.push("__" + added + "__");
-  return lines.join("\n") || "(no text change)";
-}
-function changeLine(before, after) {
-  if (!cfg.showEditDiffs) return before;
-  const parts = diffWords(before, after);
-  return cfg.separatedDiffs ? diffToSeparatedMarkdown(parts) : diffToMarkdown(parts);
-}
-var IMG_DIR_NAME = "message-logger/images";
-var IMG_INDEX_FILE = "message-logger/images-index.json";
-var imageIndex = {};
-var imageQueue = [];
-var imageBusy = false;
-var imageIndexDirty = false;
-function getFetch() {
+  fakesCache = list;
   try {
-    if (typeof fetch === "function") return fetch.bind(globalThis);
-  } catch {
-  }
-  return null;
-}
-function getBlobReader() {
-  try {
-    if (typeof FileReader === "function") {
-      return (blob) => new Promise((resolve, reject) => {
-        try {
-          const fr = new FileReader();
-          fr.onload = () => resolve(String(fr.result));
-          fr.onerror = () => reject(fr.error);
-          fr.readAsDataURL(blob);
-        } catch (e) {
-          reject(e);
-        }
-      });
+    if (jsonStorageApi) {
+      void ((_a = jsonStorageApi.set) == null ? void 0 : _a.call(jsonStorageApi, { fakes: list }));
+      return;
     }
-    if (typeof Blob === "function" && typeof Blob.prototype.arrayBuffer === "function") {
-      return async (blob) => {
-        const buf = await blob.arrayBuffer();
-        let s = "";
-        const bytes = new Uint8Array(buf);
-        for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
-        return "data:application/octet-stream;base64," + btoa(s);
-      };
-    }
-  } catch {
-  }
-  return null;
-}
-function getNormalizedFs() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i;
-  const fm = getFileModule();
-  let modern = null;
-  try {
-    if (typeof revenge !== "undefined") {
-      modern = (_c = (_b = revenge == null ? void 0 : revenge.fs) != null ? _b : (_a = revenge == null ? void 0 : revenge.native) == null ? void 0 : _a.fs) != null ? _c : null;
-    }
-  } catch {
-  }
-  try {
-    const b = typeof bunny !== "undefined" ? bunny : null;
-    modern = modern || (b == null ? void 0 : b.fs) || ((_d = b == null ? void 0 : b.native) == null ? void 0 : _d.fs) || null;
-  } catch {
-  }
-  if (modern && typeof modern.writeFile === "function" && typeof modern.readFile === "function") {
-    let root = "";
-    try {
-      if (typeof modern.getConstants === "function") {
-        const c = modern.getConstants();
-        root = String((_f = (_e = c == null ? void 0 : c.files) != null ? _e : c == null ? void 0 : c.data) != null ? _f : "");
+    if (storageProxy) {
+      if (storageKind === "bunny" && storageProxy.data) {
+        storageProxy.data = { ...storageProxy.data, fakes: list };
+      } else {
+        storageProxy.fakes = list;
       }
-    } catch {
     }
-    const abs = (p) => root ? root + "/" + p : p;
-    return {
-      dirPath: root ? root + "/" + IMG_DIR_NAME : null,
-      writeImage: async (name, dataB64) => {
-        await modern.writeFile(abs(IMG_DIR_NAME + "/" + name), dataB64);
-      },
-      writeText: async (path, data) => {
-        await modern.writeFile(abs(path), data);
-      },
-      readText: async (path) => String(await modern.readFile(abs(path))),
-      remove: async (path) => {
-        try {
-          if (typeof modern.rm === "function") return !!await modern.rm(path);
-          if (typeof modern.deleteFileSync === "function") return !!modern.deleteFileSync(path);
-          if (typeof modern.unlink === "function") {
-            await modern.unlink(path);
-            return true;
-          }
-        } catch {
-        }
-        return false;
-      }
-    };
-  }
-  if (fm && typeof fm.writeFile === "function") {
-    let docs = "";
-    try {
-      docs = String((_i = (_h = (_g = fm.getConstants) == null ? void 0 : _g.call(fm)) == null ? void 0 : _h.DocumentsDirPath) != null ? _i : "/docs");
-    } catch {
-    }
-    return {
-      dirPath: docs + "/" + IMG_DIR_NAME,
-      writeImage: async (name, dataB64) => {
-        await fm.writeFile("documents", IMG_DIR_NAME + "/" + name, dataB64, "base64");
-      },
-      writeText: async (_path, data) => {
-        await fm.writeFile("documents", IMG_INDEX_FILE, data, "utf8");
-      },
-      readText: async (_path) => String(await fm.readFile(docs + "/" + IMG_INDEX_FILE, "utf8")),
-      remove: async (_path) => false
-      // legacy FileModule has no delete primitive
-    };
-  }
-  return null;
-}
-async function loadImageIndex() {
-  const fs = getNormalizedFs();
-  if (!fs) return;
-  try {
-    const raw = await fs.readText(IMG_INDEX_FILE);
-    const parsed = JSON.parse(raw);
-    if (parsed && typeof parsed === "object") imageIndex = parsed;
-  } catch {
-  }
-}
-async function saveImageIndex(fs) {
-  if (!imageIndexDirty) return;
-  try {
-    await fs.writeText(IMG_INDEX_FILE, JSON.stringify(imageIndex));
-    imageIndexDirty = false;
   } catch (e) {
-    hostError("failed to write image index", e);
+    hostError("could not persist fakes", e);
   }
 }
-function imageQuotaBytes() {
-  return Math.max(0, cfg.imageQuotaGB) * 1024 * 1024 * 1024;
-}
-function totalSavedBytes() {
+function savePluginCfg() {
   var _a;
-  let sum = 0;
-  for (const id of Object.keys(imageIndex)) {
-    for (const img of (_a = imageIndex[id]) != null ? _a : []) sum += img.bytes || 0;
+  try {
+    (_a = jsonStorageApi == null ? void 0 : jsonStorageApi.set) == null ? void 0 : _a.call(jsonStorageApi, { chatButton: cfg.chatButton, quickText: cfg.quickText });
+  } catch (e) {
+    hostError("could not save settings", e);
   }
-  return sum;
 }
-async function evictOverQuota(fs, extraBytes) {
+function refreshConfigFromStorage() {
   var _a, _b, _c, _d;
-  let total = totalSavedBytes() + extraBytes;
-  const quota = imageQuotaBytes();
-  if (total <= quota) return;
-  const entries = [];
-  for (const id of Object.keys(imageIndex)) {
-    ((_a = imageIndex[id]) != null ? _a : []).forEach((img, i) => entries.push({ id, img, i }));
+  try {
+    if (jsonStorageApi) {
+      const s = (_b = (_a = jsonStorageApi.use) == null ? void 0 : _a.call(jsonStorageApi)) != null ? _b : null;
+      if (s && typeof s === "object") cfg = { ...DEFAULT_SETTINGS, ...s };
+      const f = s == null ? void 0 : s.fakes;
+      if (Array.isArray(f)) fakesCache = f;
+      return;
+    }
+    if (storageProxy) {
+      const s = storageKind === "bunny" ? (_c = storageProxy == null ? void 0 : storageProxy.data) == null ? void 0 : _c.settings : storageProxy == null ? void 0 : storageProxy.settings;
+      if (s && typeof s === "object") cfg = { ...DEFAULT_SETTINGS, ...s };
+      const f = storageKind === "bunny" ? (_d = storageProxy == null ? void 0 : storageProxy.data) == null ? void 0 : _d.fakes : storageProxy == null ? void 0 : storageProxy.fakes;
+      if (Array.isArray(f)) fakesCache = f;
+    }
+  } catch (e) {
+    hostError("could not read settings", e);
   }
-  entries.sort((a, b) => a.img.time - b.img.time);
-  for (const e of entries) {
-    if (total <= quota) break;
-    const ok = await fs.remove(((_b = fs.dirPath) != null ? _b : "") + "/" + e.img.file);
-    if (ok || !fs.dirPath) {
-      imageIndex[e.id] = ((_c = imageIndex[e.id]) != null ? _c : []).filter((_, i) => i !== e.i);
-      if (!((_d = imageIndex[e.id]) == null ? void 0 : _d.length)) delete imageIndex[e.id];
-      total -= e.img.bytes || 0;
-      imageIndexDirty = true;
-    } else {
+}
+var _idCounter = 0;
+function uniqueSnowflake(date) {
+  try {
+    const offset = _idCounter++ % 4096;
+    const ms = Math.max(0, date.getTime() - 14200704e5);
+    return (BigInt(ms) << /* @__PURE__ */ BigInt("22") | BigInt(offset)).toString();
+  } catch {
+    return String(date.getTime()) + String(_idCounter++ % 4096).padStart(4, "0");
+  }
+}
+function randomSeconds(date) {
+  if (!cfg.jitterSeconds) return new Date(Math.floor(date.getTime() / 1e3) * 1e3);
+  const sec = 1 + Math.floor(Math.random() * 59);
+  return new Date(date.getTime() + sec * 1e3);
+}
+function buildAuthor(user) {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i;
+  return {
+    id: String(user.id),
+    username: (_a = user.username) != null ? _a : "unknown",
+    discriminator: (_b = user.discriminator) != null ? _b : "0",
+    avatar: (_c = user.avatar) != null ? _c : null,
+    public_flags: (_e = (_d = user.publicFlags) != null ? _d : user.public_flags) != null ? _e : 0,
+    flags: (_f = user.flags) != null ? _f : 0,
+    banner: (_g = user.banner) != null ? _g : null,
+    accent_color: null,
+    global_name: (_i = (_h = user.globalName) != null ? _h : user.global_name) != null ? _i : user.username,
+    bot: !!user.bot
+  };
+}
+function toDiscordEmbed(embed) {
+  var _a, _b, _c;
+  const d = {};
+  if (embed.title) d.title = embed.title;
+  if (embed.description) d.description = embed.description;
+  if (embed.url) d.url = embed.url;
+  if (embed.color !== void 0) d.color = embed.color;
+  if ((_a = embed.image) == null ? void 0 : _a.url) d.image = { url: embed.image.url, proxy_url: embed.image.url };
+  if ((_b = embed.thumbnail) == null ? void 0 : _b.url) d.thumbnail = { url: embed.thumbnail.url, proxy_url: embed.thumbnail.url };
+  if ((_c = embed.fields) == null ? void 0 : _c.length) d.fields = embed.fields.map((f) => ({ name: f.name, value: f.value, inline: !!f.inline }));
+  return d;
+}
+var _attachIdCounter = 0;
+function injectMessage(channelId, author, content, date, persistedId, attachments, replyTo, embeds) {
+  const dispatch = getDispatch();
+  if (!dispatch || !(author == null ? void 0 : author.id)) return null;
+  const actualDate = persistedId ? date : randomSeconds(date);
+  const id = persistedId != null ? persistedId : uniqueSnowflake(actualDate);
+  const attach = (attachments != null ? attachments : []).map((a, i) => {
+    var _a, _b, _c, _d, _e, _f, _g;
+    return {
+      id: (_a = a.id) != null ? _a : String(++_attachIdCounter),
+      filename: (_b = a.filename) != null ? _b : "image.png",
+      size: (_c = a.size) != null ? _c : 0,
+      url: a.url,
+      proxy_url: (_d = a.proxy_url) != null ? _d : a.url,
+      width: (_e = a.width) != null ? _e : 0,
+      height: (_f = a.height) != null ? _f : 0,
+      content_type: (_g = a.content_type) != null ? _g : "image/png"
+    };
+  });
+  const message = {
+    attachments: attach,
+    components: [],
+    embeds: [],
+    mention_roles: [],
+    mentions: [],
+    author: buildAuthor(author),
+    channel_id: channelId,
+    content: String(content != null ? content : ""),
+    edited_timestamp: null,
+    flags: 0,
+    id,
+    mention_everyone: false,
+    nonce: id,
+    pinned: false,
+    timestamp: actualDate.toISOString(),
+    tts: false,
+    type: 0
+  };
+  if (replyTo == null ? void 0 : replyTo.messageId) {
+    message.message_reference = { channel_id: channelId, message_id: replyTo.messageId };
+  }
+  if (embeds && embeds.length > 0) {
+    message.embeds = embeds.map(toDiscordEmbed);
+  }
+  try {
+    dispatch({ type: "MESSAGE_CREATE", channelId, message, optimistic: false, isPushNotification: false });
+  } catch (e) {
+    hostError("injectMessage dispatch failed", e);
+    return null;
+  }
+  if (!persistedId) {
+    const list = readFakes().slice();
+    list.push({
+      type: "message",
+      channelId,
+      authorId: String(author.id),
+      content: String(content != null ? content : ""),
+      attachments: attach,
+      timestamp: actualDate.toISOString(),
+      snowflakeId: id,
+      replyToId: replyTo == null ? void 0 : replyTo.messageId,
+      embeds
+    });
+    persistFakes(list);
+  }
+  return id;
+}
+function injectCall(channelId, caller, other, missed, durationSec, date, persistedId, persistedEndedTs) {
+  var _a, _b;
+  const dispatch = getDispatch();
+  if (!dispatch || !(caller == null ? void 0 : caller.id)) return null;
+  const actualDate = persistedId ? date : randomSeconds(date);
+  const id = persistedId != null ? persistedId : uniqueSnowflake(actualDate);
+  const participants = missed ? [String(caller.id)] : [String(caller.id), String((_a = other == null ? void 0 : other.id) != null ? _a : caller.id)];
+  const endedDate = missed ? actualDate : persistedEndedTs ? new Date(persistedEndedTs) : new Date(actualDate.getTime() + durationSec * 1e3);
+  try {
+    dispatch({
+      type: "MESSAGE_CREATE",
+      channelId,
+      message: {
+        attachments: [],
+        components: [],
+        embeds: [],
+        mention_roles: [],
+        mentions: [],
+        author: buildAuthor(caller),
+        channel_id: channelId,
+        content: "",
+        edited_timestamp: null,
+        flags: 0,
+        id,
+        mention_everyone: false,
+        nonce: id,
+        pinned: false,
+        timestamp: actualDate.toISOString(),
+        tts: false,
+        type: 3,
+        call: {
+          participants,
+          ended_timestamp: endedDate.toISOString(),
+          duration: missed ? void 0 : durationSec
+        }
+      },
+      optimistic: false,
+      isPushNotification: false
+    });
+  } catch (e) {
+    hostError("injectCall dispatch failed", e);
+    return null;
+  }
+  if (!persistedId) {
+    const list = readFakes().slice();
+    list.push({
+      type: "call",
+      channelId,
+      callerId: String(caller.id),
+      otherId: String((_b = other == null ? void 0 : other.id) != null ? _b : ""),
+      missed,
+      durationSec,
+      timestamp: actualDate.toISOString(),
+      endedTimestamp: endedDate.toISOString(),
+      snowflakeId: id
+    });
+    persistFakes(list);
+  }
+  return id;
+}
+var SYSTEM_TYPES = [
+  { value: 1, label: "User joined" },
+  { value: 2, label: "User left" },
+  { value: 4, label: "Name change" },
+  { value: 5, label: "Icon change" },
+  { value: 6, label: "Pinned a message" },
+  { value: 7, label: "Joined server" }
+];
+function injectSystemMessage(channelId, author, systemType, content, date) {
+  const dispatch = getDispatch();
+  if (!dispatch || !(author == null ? void 0 : author.id)) return null;
+  const actualDate = randomSeconds(date);
+  const id = uniqueSnowflake(actualDate);
+  try {
+    dispatch({
+      type: "MESSAGE_CREATE",
+      channelId,
+      message: {
+        attachments: [],
+        components: [],
+        embeds: [],
+        mention_roles: [],
+        mentions: [],
+        author: buildAuthor(author),
+        channel_id: channelId,
+        content: String(content != null ? content : ""),
+        edited_timestamp: null,
+        flags: 0,
+        id,
+        mention_everyone: false,
+        nonce: id,
+        pinned: false,
+        timestamp: actualDate.toISOString(),
+        tts: false,
+        type: systemType
+      },
+      optimistic: false,
+      isPushNotification: false
+    });
+  } catch (e) {
+    hostError("injectSystemMessage dispatch failed", e);
+    return null;
+  }
+  const list = readFakes().slice();
+  list.push({
+    type: "message",
+    channelId,
+    authorId: String(author.id),
+    content: String(content != null ? content : ""),
+    timestamp: actualDate.toISOString(),
+    snowflakeId: id,
+    systemType
+  });
+  persistFakes(list);
+  return id;
+}
+function injectReaction(channelId, messageId, userId, emoji) {
+  const dispatch = getDispatch();
+  if (!dispatch || !channelId || !messageId || !emoji) return false;
+  try {
+    dispatch({
+      type: "MESSAGE_REACTION_ADD",
+      channelId,
+      messageId,
+      userId,
+      emoji: { name: emoji, id: null, animated: false }
+    });
+  } catch (e) {
+    hostError("injectReaction dispatch failed", e);
+    return false;
+  }
+  const list = readFakes().slice();
+  list.push({ type: "reaction", channelId, messageId, userId, emoji, snowflakeId: uniqueSnowflake(/* @__PURE__ */ new Date()) });
+  persistFakes(list);
+  return true;
+}
+function editFakeMessage(channelId, messageId, newContent, newTimestamp) {
+  var _a, _b;
+  const dispatch = getDispatch();
+  if (!dispatch) return false;
+  const cached = (_b = (_a = getMessageStore()) == null ? void 0 : _a.getMessage) == null ? void 0 : _b.call(_a, channelId, messageId);
+  if (!cached) {
+    hostError("editFakeMessage: message not in cache, cannot edit safely");
+    return false;
+  }
+  const ts = newTimestamp ? new Date(newTimestamp).toISOString() : (/* @__PURE__ */ new Date()).toISOString();
+  const updated = { ...cached, content: newContent, edited_timestamp: ts };
+  try {
+    dispatch({ type: "MESSAGE_UPDATE", channelId, message: updated });
+  } catch (e) {
+    hostError("editFakeMessage dispatch failed", e);
+    return false;
+  }
+  const list = readFakes();
+  for (const f of list) {
+    if (f.type === "message" && f.snowflakeId === messageId) {
+      f.content = newContent;
       break;
     }
   }
-}
-function enqueueImageSave(messageId, url) {
-  if (!cfg.saveImages || imageQuotaBytes() <= 0) return;
-  if (!getFetch() || !getBlobReader()) return;
-  imageQueue.push({ id: messageId, url });
-  if (imageQueue.length > 100) imageQueue.shift();
-  void pumpImageQueue();
-}
-async function pumpImageQueue() {
-  if (imageBusy) return;
-  imageBusy = true;
-  try {
-    while (imageQueue.length > 0) {
-      const job = imageQueue.shift();
-      try {
-        await saveOneImage(job.id, job.url);
-      } catch (e) {
-        hostError("image save failed", e);
-      }
-    }
-  } finally {
-    imageBusy = false;
-  }
-}
-async function saveOneImage(messageId, url) {
-  var _a, _b, _c;
-  const fs = getNormalizedFs();
-  if (!fs) return;
-  const fetchFn = getFetch();
-  const readBlob = getBlobReader();
-  if (!fetchFn || !readBlob) return;
-  const res = await fetchFn(url, { method: "GET" });
-  if (!res || !res.ok) return;
-  const blob = await res.blob();
-  const dataUrl = await readBlob(blob);
-  const comma = dataUrl.indexOf(",");
-  if (comma < 0) return;
-  const mime = dataUrl.slice(5, dataUrl.indexOf(";")) || "image/png";
-  const b64 = dataUrl.slice(comma + 1);
-  const bytes = Math.floor(b64.length * 3 / 4);
-  if (bytes > cfg.attachmentSizeLimitMB * 1024 * 1024) return;
-  if (bytes > imageQuotaBytes()) return;
-  await evictOverQuota(fs, bytes);
-  const stamp = Date.now();
-  const name = messageId + "-" + stamp + "-" + ((_b = (_a = imageIndex[messageId]) == null ? void 0 : _a.length) != null ? _b : 0) + ".b64";
-  await fs.writeImage(name, b64);
-  imageIndex[messageId] = [
-    ...(_c = imageIndex[messageId]) != null ? _c : [],
-    { file: name, bytes, time: stamp, mime }
-  ];
-  imageIndexDirty = true;
-  await saveImageIndex(fs);
-  const entry = log[messageId];
-  if (entry) {
-    entry.savedImages = imageIndex[messageId].length;
-    void persistLog();
-  }
-}
-function allowedExtensions() {
-  return cfg.attachmentExtensions.split(/[\s,]+/).map((s) => s.trim().toLowerCase().replace(/^\./, "")).filter(Boolean);
-}
-function readSavedImageB64(file) {
-  var _a;
-  try {
-    const fm = getFileModule();
-    if (fm && typeof fm.readFileSync === "function") {
-      return String((_a = fm.readFileSync(docRoot + "/" + IMG_DIR_NAME + "/" + file, "base64")) != null ? _a : "");
-    }
-  } catch {
-  }
-  return "";
-}
-function isCacheableImageUrl(url) {
-  if (/(^|\/)(cdn\.discordapp\.com|media\.discordapp\.net)\//.test(url) === false) return false;
-  const exts = allowedExtensions();
-  if (!exts.length) return false;
-  return exts.some((ext) => new RegExp("\\." + ext + "(\\?|$)", "i").test(url));
-}
-function queueImagesForEntry(entry) {
-  if (!cfg.saveImages) return;
-  const urls = entry.attachments.filter(isCacheableImageUrl).slice(0, 5);
-  for (const url of urls) enqueueImageSave(entry.id, url);
-}
-var cleanupTimer = null;
-function runTimeBasedCleanup() {
-  const mins = cfg.timeBasedCleanupMinutes;
-  if (!mins) return;
-  const cutoff = Date.now() - mins * 6e4;
-  let removed = 0;
-  for (const id of Object.keys(log)) {
-    if (log[id].timestamp < cutoff) {
-      delete log[id];
-      removed++;
-    }
-  }
-  if (removed > 0) {
-    void persistLog();
-    hostLog("time-based cleanup removed " + removed + " old entries");
-  }
-}
-function startCleanupInterval() {
-  stopCleanupInterval();
-  if (!cfg.timeBasedCleanupMinutes) return;
-  cleanupTimer = setInterval(runTimeBasedCleanup, Math.max(5, Math.min(cfg.timeBasedCleanupMinutes, 60)) * 6e4);
-  if (typeof (cleanupTimer == null ? void 0 : cleanupTimer.unref) === "function") cleanupTimer.unref();
-}
-function stopCleanupInterval() {
-  if (cleanupTimer) {
-    try {
-      clearInterval(cleanupTimer);
-    } catch {
-    }
-    cleanupTimer = null;
-  }
-}
-function handleCreate(payload) {
-  if (!cfg.enabled) return;
-  const message = payload == null ? void 0 : payload.message;
-  if (!(message == null ? void 0 : message.id)) return;
-  rememberForHighlight(payload);
-  const snap = snapshotOf(message, currentUserId());
-  if (!gateMessage(message, snap)) return;
-  const self = snap.authorId && snap.authorId === currentUserId();
-  if (cfg.ignoreBots && snap.bot || cfg.ignoreWebhooks && snap.webhook || cfg.ignoreSelf && self || inList(snap.authorId, cfg.ignoredUsers)) {
-    rememberSkipped(snap.id);
-    return;
-  }
-  seen.set(snap.id, snap);
-  if (seen.size > cfg.maxStored * 4) {
-    const first = seen.keys().next();
-    if (!first.done) seen.delete(first.value);
-  }
-}
-function handleDelete(payload) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
-  if (!cfg.enabled || !cfg.logDeletes) return;
-  if (payload == null ? void 0 : payload.mlDeleted) return;
-  const id = String((_c = (_b = (_a = payload == null ? void 0 : payload.message) == null ? void 0 : _a.id) != null ? _b : payload == null ? void 0 : payload.id) != null ? _c : "");
-  const channelId = String((_f = (_e = (_d = payload == null ? void 0 : payload.message) == null ? void 0 : _d.channelId) != null ? _e : payload == null ? void 0 : payload.channelId) != null ? _f : "");
-  if (!id || inList(channelId, cfg.ignoredChannels)) return;
-  if (!gateMessage((_g = payload == null ? void 0 : payload.message) != null ? _g : { id, channelId }, { id, channelId, guildId: String((_h = payload == null ? void 0 : payload.guildId) != null ? _h : "") })) return;
-  if (((_i = log[id]) == null ? void 0 : _i.status) === "deleted") return;
-  if (takeSkipped(id)) {
-    seen.delete(id);
-    return;
-  }
-  const rescued = (_j = takePendingMessage(id)) != null ? _j : storeMessage(channelId, id);
-  const fallback = (rescued == null ? void 0 : rescued.id) ? rescued : payload == null ? void 0 : payload.message;
-  const snap = (_k = seen.get(id)) != null ? _k : snapshotOf((fallback == null ? void 0 : fallback.id) ? fallback : { id, channelId }, currentUserId());
-  if (snap.attachments.length === 0 && Array.isArray((_l = payload == null ? void 0 : payload.message) == null ? void 0 : _l.embeds) && payload.message.embeds.length > 0) {
-    snap.attachments = payload.message.embeds.map((e) => {
-      var _a2, _b2, _c2, _d2, _e2, _f2;
-      return String((_f2 = (_e2 = (_c2 = (_a2 = e == null ? void 0 : e.image) == null ? void 0 : _a2.url) != null ? _c2 : (_b2 = e == null ? void 0 : e.image) == null ? void 0 : _b2.proxy_url) != null ? _e2 : (_d2 = e == null ? void 0 : e.thumbnail) == null ? void 0 : _d2.url) != null ? _f2 : "");
-    }).filter(Boolean).slice(0, 5);
-  }
-  if (cfg.ignoreBots && snap.bot) {
-    seen.delete(id);
-    return;
-  }
-  if (cfg.ignoreWebhooks && snap.webhook) {
-    seen.delete(id);
-    return;
-  }
-  if (cfg.ignoreSelf && snap.authorId && snap.authorId === currentUserId()) {
-    seen.delete(id);
-    return;
-  }
-  if (inList(snap.authorId, cfg.ignoredUsers)) {
-    seen.delete(id);
-    return;
-  }
-  seen.delete(id);
-  const ghost = cfg.ghostPings && snap.mentionsMe;
-  log[id] = {
-    ...snap,
-    status: "deleted",
-    edits: (_n = (_m = log[id]) == null ? void 0 : _m.edits) != null ? _n : [],
-    mentionsMe: snap.mentionsMe,
-    ghostPing: ghost
-  };
-  prune(cfg.maxStored);
-  void persistLog();
-  queueImagesForEntry(log[id]);
-  if (ghost) toastGhostPing(log[id]);
-}
-function handleDeleteBulk(payload) {
-  const ids = Array.isArray(payload == null ? void 0 : payload.ids) ? payload.ids : [];
-  for (const id of ids) {
-    handleDelete({ message: { id, channelId: payload == null ? void 0 : payload.channelId } });
-  }
-}
-function handleUpdate(payload) {
-  var _a, _b, _c, _d, _e, _f, _g, _h;
-  if (!cfg.enabled || !cfg.logEdits) return;
-  const message = payload == null ? void 0 : payload.message;
-  if (!(message == null ? void 0 : message.id)) return;
-  rememberForHighlight(payload);
-  if (typeof message.content !== "string") return;
-  const id = String(message.id);
-  const channelId = String((_b = (_a = message.channelId) != null ? _a : message.channel_id) != null ? _b : "");
-  const prev = seen.get(id);
-  const prior = (_c = takePendingMessage(id)) != null ? _c : storeMessage(channelId, id);
-  const snap = snapshotOf(message, currentUserId());
-  if (!gateMessage(message, snap)) return;
-  if (cfg.ignoreBots && snap.bot) return;
-  if (cfg.ignoreWebhooks && snap.webhook) return;
-  const self = snap.authorId && snap.authorId === currentUserId();
-  if (cfg.ignoreSelf && self) return;
-  if (cfg.ignoreSelfEdits && self) return;
-  if (inList(snap.authorId, cfg.ignoredUsers)) return;
-  seen.set(id, snap);
-  const prevContent = prev && typeof prev.content === "string" ? prev.content : null;
-  const known = prevContent !== null ? prevContent : typeof (prior == null ? void 0 : prior.content) === "string" ? prior.content : null;
-  const isRealEdit = known !== null && known !== snap.content;
-  const existing = log[id];
-  const flagged = !!((_e = (_d = message.editedTimestamp) != null ? _d : message.edited_timestamp) != null ? _e : message.edited === true);
-  const unknownPriorEdit = known === null && flagged && !existing;
-  if (!isRealEdit && !unknownPriorEdit && !existing) return;
-  const priorHistory = (_f = prev == null ? void 0 : prev.editHistory) != null ? _f : [];
-  if (isRealEdit) priorHistory.push(String(known));
-  if (priorHistory.length) snap.editHistory = priorHistory.slice(-10);
-  const edits = [...(_g = existing == null ? void 0 : existing.edits) != null ? _g : [], ...isRealEdit ? [String(known)] : []].slice(-10);
-  log[id] = {
-    ...snap,
-    status: "edited",
-    edits,
-    mentionsMe: snap.mentionsMe,
-    ghostPing: (_h = existing == null ? void 0 : existing.ghostPing) != null ? _h : false,
-    priorUnknown: edits.length === 0 && known === null ? true : void 0
-  };
-  prune(cfg.maxStored);
-  void persistLog();
-}
-function restoreHighlightsFromLog() {
-  var _a, _b;
-  try {
-    let restored = 0;
-    for (const id of Object.keys(log)) {
-      const entry = log[id];
-      if (!(entry == null ? void 0 : entry.channelId)) continue;
-      if (entry.status === "deleted") {
-        if (!deletedMessageMap.has(id)) {
-          deletedMessageMap.set(id, { channelId: entry.channelId, timestamp: (_a = entry.timestamp) != null ? _a : Date.now() });
-          restored++;
-        }
-      } else if (entry.status === "edited" && !editedMessageMap.has(id)) {
-        editedMessageMap.set(id, { channelId: entry.channelId, timestamp: (_b = entry.timestamp) != null ? _b : Date.now() });
-        restored++;
-      }
-    }
-    if (restored > 0) hostLog("restored " + restored + " highlight(s) from saved log");
-  } catch (e) {
-    hostError("highlight restore failed", e);
-  }
-}
-function rememberForHighlight(payload) {
-  var _a, _b, _c, _d, _e;
-  try {
-    const message = payload == null ? void 0 : payload.message;
-    if (!(message == null ? void 0 : message.id)) return;
-    const channelId = String((_b = (_a = message.channelId) != null ? _a : message.channel_id) != null ? _b : "");
-    const content = typeof message.content === "string" ? message.content : "";
-    const author = (_c = message.author) != null ? _c : {};
-    const rec = {
-      channelId,
-      timestamp: Date.now(),
-      content,
-      authorTag: (_e = (_d = author.global_name) != null ? _d : author.username) != null ? _e : "Unknown",
-      bot: !!author.bot
-    };
-    const isEdit = deletedMessageMap.has(String(message.id));
-    if (content) (isEdit ? highlightEdits : highlightCreates).set(String(message.id), rec);
-    if (isEdit) deletedMessageMap.delete(String(message.id));
-  } catch {
-  }
-}
-function trimHighlightCache(map) {
-  if (map.size <= HIGHLIGHT_MAX) return;
-  const oldest = map.keys().next();
-  if (!oldest.done) map.delete(oldest.value);
-}
-function isSelfDelete(id) {
-  if (!manualDeletes.has(id)) return false;
-  manualDeletes.delete(id);
+  persistFakes(list);
   return true;
 }
-function markHighlightDeleted(id, channelId) {
-  deletedMessageMap.set(id, { channelId, timestamp: Date.now() });
-  trimHighlightCache(deletedMessageMap);
-}
-function markHighlightEdited(id, channelId) {
-  if (deletedMessageMap.has(id)) return;
-  editedMessageMap.set(id, { channelId, timestamp: Date.now() });
-  trimHighlightCache(editedMessageMap);
-}
-var highlightCreates = /* @__PURE__ */ new Map();
-var highlightEdits = /* @__PURE__ */ new Map();
-function cachedRecordFor(id) {
-  var _a;
-  return (_a = highlightCreates.get(id)) != null ? _a : highlightEdits.get(id);
-}
-function buildAutomodEvent(id, channelId, record) {
-  return {
-    type: "MESSAGE_EDIT_FAILED_AUTOMOD",
-    messageData: {
-      type: 1,
-      message: {
-        channelId,
-        messageId: id
-      }
-    },
-    errorResponseBody: {
-      code: 2e5,
-      message: (record == null ? void 0 : record.content) || "(deleted)"
-    }
-  };
-}
-function installDeleteRewrite(dispatcher, addCleanup) {
-  if (!dispatcher || typeof dispatcher.addInterceptor !== "function") return false;
-  const dispatch = typeof dispatcher.dispatch === "function" ? dispatcher.dispatch.bind(dispatcher) : null;
-  try {
-    const interceptor = (payload) => {
-      var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s;
+function clearFakesInChannel(channelId, ids) {
+  const dispatch = getDispatch();
+  const list = readFakes();
+  const target = ids != null ? ids : new Set(list.filter((f) => f.type !== "reaction" && f.channelId === channelId).map((f) => f.snowflakeId));
+  let n = 0;
+  for (const f of list) {
+    if (f.type === "reaction") continue;
+    if (f.channelId !== channelId || !target.has(f.snowflakeId)) continue;
+    if (dispatch) {
       try {
-        const type = payload == null ? void 0 : payload.type;
-        if (type === "MESSAGE_DELETE" && cfg.logDeletes) {
-          if (payload == null ? void 0 : payload.mlDeleted) return void 0;
-          const id = String((_d = (_c = (_a = payload == null ? void 0 : payload.id) != null ? _a : payload == null ? void 0 : payload.messageId) != null ? _c : (_b = payload == null ? void 0 : payload.message) == null ? void 0 : _b.id) != null ? _d : "");
-          const channelId = String((_j = (_i = (_g = (_e = payload == null ? void 0 : payload.channelId) != null ? _e : payload == null ? void 0 : payload.channel_id) != null ? _g : (_f = payload == null ? void 0 : payload.message) == null ? void 0 : _f.channelId) != null ? _i : (_h = payload == null ? void 0 : payload.message) == null ? void 0 : _h.channel_id) != null ? _j : "");
-          if (!id || !channelId) return;
-          if (isSelfDelete(id)) {
-            if (!cfg.keepSelfDeletes) return void 0;
-          }
-          if (inList(channelId, cfg.ignoredChannels)) return;
-          const stored = storeMessage(channelId, id);
-          rememberPendingMessage(id, stored);
-          const record = (_k = cachedRecordFor(id)) != null ? _k : recordFromMessage(stored);
-          if (cfg.ignoreBots && (record == null ? void 0 : record.bot)) return;
-          const authorId = (_n = (_l = seen.get(id)) == null ? void 0 : _l.authorId) != null ? _n : (_m = log[id]) == null ? void 0 : _m.authorId;
-          if (cfg.ignoreSelf && authorId && authorId === currentUserId()) return;
-          if (inList(authorId, cfg.ignoredUsers)) return;
-          handleDelete(payload);
-          markHighlightDeleted(id, channelId);
-          return buildAutomodEvent(id, channelId, record);
-        }
-        if (type === "MESSAGE_DELETE_BULK" && cfg.logDeletes) {
-          const ids = Array.isArray(payload == null ? void 0 : payload.ids) ? payload.ids.map(String) : [];
-          const channelId = String((_p = (_o = payload == null ? void 0 : payload.channelId) != null ? _o : payload == null ? void 0 : payload.channel_id) != null ? _p : "");
-          if (!ids.length || !channelId) return;
-          const kept = ids.filter((id) => {
-            var _a2;
-            if (isSelfDelete(id)) return false;
-            if (inList(channelId, cfg.ignoredChannels)) return false;
-            if (cfg.ignoreBots && ((_a2 = cachedRecordFor(id)) == null ? void 0 : _a2.bot)) return false;
-            return true;
-          });
-          if (!kept.length) return;
-          for (const id of kept) {
-            rememberPendingMessage(id, storeMessage(channelId, id));
-            markHighlightDeleted(id, channelId);
-            handleDeleteBulk({ ids: [id], channelId });
-          }
-          if (dispatch) {
-            setTimeout(() => {
-              for (const id of kept) {
-                try {
-                  dispatch(buildAutomodEvent(id, channelId, cachedRecordFor(id)));
-                } catch {
-                }
-              }
-            }, 0);
-            return false;
-          }
-          return;
-        }
-        if (type === "MESSAGE_UPDATE") {
-          const raw = payload == null ? void 0 : payload.message;
-          const id = String((_q = raw == null ? void 0 : raw.id) != null ? _q : "");
-          const channelId = String((_s = (_r = raw == null ? void 0 : raw.channelId) != null ? _r : raw == null ? void 0 : raw.channel_id) != null ? _s : "");
-          if (id && channelId && cfg.logEdits && !inList(channelId, cfg.ignoredChannels)) {
-            if (typeof (raw == null ? void 0 : raw.content) === "string") {
-              const stored = storeMessage(channelId, id);
-              if (stored && typeof stored.content === "string" && stored.content !== raw.content) {
-                rememberPendingMessage(id, stored);
-              }
-            }
-            markHighlightEdited(id, channelId);
-          }
-          return;
-        }
-      } catch (e) {
-        hostError("rewrite interceptor failed", e);
-      }
-      return;
-    };
-    const off = dispatcher.addInterceptor(interceptor);
-    addCleanup(typeof off === "function" ? off : () => {
-      var _a;
-      try {
-        const list = (_a = dispatcher._interceptors) != null ? _a : dispatcher._dependencies;
-        if (Array.isArray(list)) {
-          const i = list.indexOf(interceptor);
-          if (i >= 0) list.splice(i, 1);
-        }
+        dispatch({ type: "MESSAGE_DELETE", channelId, id: f.snowflakeId, mlDeleted: true });
       } catch {
       }
-    });
-    return true;
-  } catch (e) {
-    hostError("could not install delete rewrite", e);
+    }
+    n++;
+  }
+  persistFakes(list.filter((f) => !(f.type !== "reaction" && f.channelId === channelId && target.has(f.snowflakeId))));
+  return n;
+}
+function removeFakeById(id) {
+  const f = readFakes().find((x) => x.snowflakeId === id);
+  if (!f || f.type === "reaction") return false;
+  return clearFakesInChannel(f.channelId, /* @__PURE__ */ new Set([f.snowflakeId])) > 0;
+}
+var restoredThisSession = false;
+function messageInCache(channelId, messageId) {
+  var _a, _b;
+  try {
+    return !!((_b = (_a = getMessageStore()) == null ? void 0 : _a.getMessage) == null ? void 0 : _b.call(_a, channelId, messageId));
+  } catch {
     return false;
   }
 }
-function paintRow(row, processColor) {
-  var _a, _b, _c, _d;
-  const msg = row == null ? void 0 : row.message;
-  if (!(msg == null ? void 0 : msg.id)) return;
-  const id = String(msg.id);
-  const isDel = deletedMessageMap.has(id);
-  const isEd = editedMessageMap.has(id);
-  if (!isDel && !isEd) return;
-  if (isDel) {
-    const entry = log[id];
-    const who = cfg.deletedInfo && (entry == null ? void 0 : entry.authorTag) ? " by " + entry.authorTag : "";
-    const when = cfg.deletedInfo && (entry == null ? void 0 : entry.timestamp) ? " at " + new Date(entry.timestamp).toLocaleString() : "";
-    msg.edited = "(deleted" + who + when + ")";
-    const red = processColor("#f04747");
-    if (cfg.deleteStyle === "overlay") {
-      delete msg.textColor;
-      row.backgroundHighlight = { backgroundColor: processColor("#f0474740") };
-    } else {
-      msg.textColor = red;
-      row.backgroundHighlight = {
-        backgroundColor: processColor("#f047471f"),
-        gutterColor: red
-      };
-    }
-    const taken = (_b = (_a = entry == null ? void 0 : entry.attachments) == null ? void 0 : _a.length) != null ? _b : 0;
-    if (cfg.logDeletedAttachments && taken > 0 && typeof msg.content === "string") {
-      const marker = "*(" + (taken === 1 ? "deleted attachment" : taken + " deleted attachments") + ")*";
-      if (!msg.content.includes(marker)) msg.content = msg.content + "\n" + marker;
-    }
-  } else {
-    delete row.backgroundHighlight;
-    delete row.highlight;
-    delete row.highlightColor;
-    delete row.highlightBackgroundColor;
-    delete msg.textColor;
-    delete msg.backgroundColor;
-  }
-  if (cfg.inlineEdits && typeof msg.content === "string") {
-    const history = (_d = (_c = log[id]) == null ? void 0 : _c.edits) != null ? _d : [];
-    if (history.length) {
-      const current = msg.content;
-      const versions = [...history, current];
-      const block = history.map((h, i) => {
-        var _a2;
-        return changeLine(String(h), String((_a2 = versions[i + 1]) != null ? _a2 : current)) + " (edited)";
-      }).join("\n");
-      const lines = msg.content.split("\n");
-      let start = 0;
-      while (start < history.length && start < lines.length - 1 && / \(edited\)$/.test(lines[start])) start++;
-      const body = lines.slice(start).join("\n");
-      const painted = body ? block + "\n" + body : block;
-      if (block && painted !== msg.content) msg.content = painted;
-    }
-  }
-}
-var rowPaintersInstalled = 0;
-function installRowPainters(addCleanup) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
-  const React = getReact();
-  const RN = getRN();
-  const processColor = (_a = RN == null ? void 0 : RN.processColor) != null ? _a : ((c) => c);
-  if (!cfg.colorHighlights) {
-    rowPaintersInstalled = 0;
-    return;
-  }
-  let installed = 0;
-  const patchBefore = (target, method, fn) => {
-    try {
-      const original = target == null ? void 0 : target[method];
-      if (typeof original !== "function") return false;
-      target[method] = function(...args) {
-        try {
-          fn(args);
-        } catch {
-        }
-        return original.apply(this, args);
-      };
-      addCleanup(() => {
-        try {
-          target[method] = original;
-        } catch {
-        }
-      });
-      return true;
-    } catch {
-      return false;
-    }
-  };
-  const paintArgs = (args) => {
-    var _a2;
-    const raw = args[1];
-    if (!raw) return;
-    const handleRow = (row) => {
-      if (!row || row.type !== 1) return;
-      paintRow(row, processColor);
-    };
-    if (typeof raw === "string") {
-      try {
-        const rows = JSON.parse(raw);
-        if (Array.isArray(rows)) {
-          let mutated = false;
-          for (const row of rows) {
-            if (((_a2 = row == null ? void 0 : row.message) == null ? void 0 : _a2.id) && (deletedMessageMap.has(String(row.message.id)) || editedMessageMap.has(String(row.message.id)))) {
-              handleRow(row);
-              mutated = true;
-            }
-          }
-          if (mutated) args[1] = JSON.stringify(rows);
-        }
-      } catch {
-      }
-    } else if (Array.isArray(raw)) {
-      for (const row of raw) handleRow(row);
-    } else if (Array.isArray(raw == null ? void 0 : raw.rows)) {
-      for (const row of raw.rows) handleRow(row);
-    }
-  };
-  void React;
-  const chatManager = (_b = RN == null ? void 0 : RN.NativeModules) == null ? void 0 : _b.DCDChatManager;
-  if (chatManager && patchBefore(chatManager, "updateRows", paintArgs)) installed++;
-  const metro = getMetro();
-  const jsChat = (_e = (_c = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _c.call(metro, "updateRows", "getConstants")) != null ? _e : (_d = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _d.call(metro, "updateRows");
-  if (jsChat && jsChat !== chatManager && patchBefore(jsChat, "updateRows", paintArgs)) installed++;
-  let rowManager = null;
-  try {
-    rowManager = (_j = (_i = (_f = metro == null ? void 0 : metro.findByName) == null ? void 0 : _f.call(metro, "RowManager", false)) != null ? _i : (_h = (_g = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _g.call(metro, "RowManager")) == null ? void 0 : _h.RowManager) != null ? _j : null;
-  } catch {
-  }
-  if ((_k = rowManager == null ? void 0 : rowManager.prototype) == null ? void 0 : _k.generate) {
-    try {
-      const proto = rowManager.prototype;
-      const original = proto.generate;
-      proto.generate = function(...args) {
-        var _a2;
-        const row = original.apply(this, args);
-        try {
-          const target = row && row.row || row;
-          if ((_a2 = target == null ? void 0 : target.message) == null ? void 0 : _a2.id) {
-            paintRow(target, processColor);
-          }
-        } catch {
-        }
-        return row;
-      };
-      addCleanup(() => {
-        try {
-          proto.generate = original;
-        } catch {
-        }
-      });
-      installed++;
-    } catch {
-    }
-  }
-  rowPaintersInstalled = installed;
-  hostLog("row painters installed: " + installed);
-}
-function installSelfDeleteBypass(addCleanup) {
+function doRestore() {
   var _a, _b, _c;
+  if (restoredThisSession) return 0;
+  restoredThisSession = true;
+  const userStore = getUserStore();
+  let n = 0;
+  for (const f of readFakes()) {
+    try {
+      if (f.type === "message") {
+        if (messageInCache(f.channelId, f.snowflakeId)) continue;
+        const author = (_a = userStore == null ? void 0 : userStore.getUser) == null ? void 0 : _a.call(userStore, f.authorId);
+        if (!author) continue;
+        injectMessage(f.channelId, author, f.content, new Date(f.timestamp), f.snowflakeId, f.attachments, f.replyToId ? { messageId: f.replyToId } : void 0, f.embeds);
+        n++;
+      } else if (f.type === "call") {
+        if (messageInCache(f.channelId, f.snowflakeId)) continue;
+        const caller = (_b = userStore == null ? void 0 : userStore.getUser) == null ? void 0 : _b.call(userStore, f.callerId);
+        const other = (_c = userStore == null ? void 0 : userStore.getUser) == null ? void 0 : _c.call(userStore, f.otherId);
+        if (!caller) continue;
+        injectCall(f.channelId, caller, other != null ? other : caller, f.missed, f.durationSec, new Date(f.timestamp), f.snowflakeId, f.endedTimestamp);
+        n++;
+      }
+    } catch (e) {
+      hostError("restore failed for a fake", e);
+    }
+  }
+  return n;
+}
+function scheduleRestore(onConnectionOpen) {
+  var _a;
   try {
+    const dispatch = getDispatch();
+    const rawDispatcher = null;
+    void rawDispatcher;
     const metro = getMetro();
-    const actions = (_c = (_a = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _a.call(metro, "deleteMessage", "startEditMessage")) != null ? _c : (_b = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _b.call(metro, "deleteMessage");
-    const del = actions == null ? void 0 : actions.deleteMessage;
-    if (typeof del !== "function") return false;
-    actions.deleteMessage = function(...args) {
-      var _a2, _b2;
-      try {
-        const id = String((_b2 = (_a2 = args == null ? void 0 : args[1]) != null ? _a2 : args == null ? void 0 : args[0]) != null ? _b2 : "");
-        if (id) manualDeletes.add(id);
-      } catch {
-      }
-      return del.apply(this, args);
-    };
-    addCleanup(() => {
-      try {
-        actions.deleteMessage = del;
-      } catch {
-      }
+    const fd = (_a = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _a.call(metro, "dispatch", "subscribe");
+    if (fd && typeof fd.subscribe === "function" && typeof onConnectionOpen === "function") {
+      const handler = () => {
+        try {
+          fd.unsubscribe("CONNECTION_OPEN", handler);
+        } catch {
+        }
+        setTimeout(onConnectionOpen, 1200);
+      };
+      fd.subscribe("CONNECTION_OPEN", handler);
+      void dispatch;
+    }
+  } catch (e) {
+    hostError("could not subscribe CONNECTION_OPEN", e);
+  }
+  setTimeout(() => {
+    try {
+      doRestore();
+    } catch (e) {
+      hostError("timed restore failed", e);
+    }
+  }, 2e3);
+}
+function parseBatchScript(text) {
+  var _a;
+  const lines = [];
+  for (const raw of String(text != null ? text : "").split("\n")) {
+    const line = raw.trim();
+    if (!line) continue;
+    const m = line.match(/^\[?(\d{1,2}):(\d{2})\]?\s*(?:([^:]+?):)?\s*(.+)$/);
+    if (!m) continue;
+    lines.push({
+      time: String(Math.min(23, parseInt(m[1], 10))).padStart(2, "0") + ":" + m[2],
+      senderName: ((_a = m[3]) != null ? _a : "").trim(),
+      content: m[4].trim()
     });
-    return true;
-  } catch {
-    return false;
   }
+  return lines;
 }
-function resolveThemeMeta() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i;
+function resolveBatchAuthor(name, candidates, me) {
+  var _a, _b, _c, _d, _e, _f;
+  if (!name) return me;
+  const lower = name.toLowerCase();
+  if (lower === "me") return me;
+  for (const u of candidates) {
+    const uname = String((_c = (_b = (_a = u.globalName) != null ? _a : u.global_name) != null ? _b : u.username) != null ? _c : "").toLowerCase();
+    if (uname === lower || String((_d = u.username) != null ? _d : "").toLowerCase() === lower) return u;
+  }
+  if (/^\d{5,}$/.test(name)) {
+    const byId = (_f = (_e = getUserStore()) == null ? void 0 : _e.getUser) == null ? void 0 : _f.call(_e, name);
+    if (byId) return byId;
+  }
+  return null;
+}
+function injectBatch(channelId, lines, candidates, me, baseDate) {
+  let n = 0;
+  for (const line of lines) {
+    const author = resolveBatchAuthor(line.senderName, candidates, me);
+    if (!author) continue;
+    const [h, m] = line.time.split(":").map(Number);
+    const msgDate = new Date(baseDate);
+    msgDate.setHours(h, m, 0, 0);
+    if (injectMessage(channelId, author, line.content, msgDate)) n++;
+  }
+  return n;
+}
+function memberCandidates() {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q;
+  const out = [];
+  const me = (_b = (_a = getUserStore()) == null ? void 0 : _a.getCurrentUser) == null ? void 0 : _b.call(_a);
+  if (me) out.push(me);
   try {
-    const metro = getMetro();
-    const themeStore = (_f = (_e = (_a = metro == null ? void 0 : metro.findByStoreName) == null ? void 0 : _a.call(metro, "ThemeStore")) != null ? _e : (_d = (_c = (_b = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _b.flux) == null ? void 0 : _c.Stores) == null ? void 0 : _d.ThemeStore) != null ? _f : null;
-    const theme = (_i = themeStore == null ? void 0 : themeStore.theme) != null ? _i : (_h = (_g = themeStore == null ? void 0 : themeStore.getState) == null ? void 0 : _g.call(themeStore)) == null ? void 0 : _h.theme;
-    if (theme === "light") return "light";
+    const chId = currentChannelId();
+    const ch = (_d = (_c = getChannelStore()) == null ? void 0 : _c.getChannel) == null ? void 0 : _d.call(_c, chId);
+    const ids = (_g = (_f = ch == null ? void 0 : ch.recipients) != null ? _f : (_e = ch == null ? void 0 : ch.rawRecipients) == null ? void 0 : _e.map((r) => r.id)) != null ? _g : [];
+    for (const id of ids) {
+      const u = (_i = (_h = getUserStore()) == null ? void 0 : _h.getUser) == null ? void 0 : _i.call(_h, id);
+      if (u) out.push(u);
+    }
+    const guildId = (_j = ch == null ? void 0 : ch.guild_id) != null ? _j : ch == null ? void 0 : ch.guildId;
+    if (guildId) {
+      const members = (_m = (_l = (_k = getGuildMemberStore()) == null ? void 0 : _k.getMembers) == null ? void 0 : _l.call(_k, guildId)) != null ? _m : [];
+      for (const m of members.slice(0, 40)) {
+        const u = (_q = (_n = getUserStore()) == null ? void 0 : _n.getUser) == null ? void 0 : _q.call(_n, (_p = m.userId) != null ? _p : (_o = m == null ? void 0 : m.user) == null ? void 0 : _o.id);
+        if (u && !out.some((x) => String(x.id) === String(u.id))) out.push(u);
+      }
+    }
   } catch {
   }
-  return "dark";
+  return out.slice(0, 45);
 }
-function viewerColors() {
-  const theme = resolveThemeMeta();
-  if (theme === "light") {
-    return {
-      bg: "rgba(0,0,0,0.04)",
-      card: "rgba(0,0,0,0.05)",
-      text: "#060607",
-      sub: "#4e5058",
-      deleted: "#d83c3e",
-      deletedBg: "rgba(216,60,62,0.10)",
-      added: "#1a7f37",
-      edited: "#4e5058",
-      editedBg: "transparent"
-    };
+function userLabel(u) {
+  var _a, _b, _c;
+  if (!u) return "Unknown";
+  return String((_c = (_b = (_a = u.globalName) != null ? _a : u.global_name) != null ? _b : u.username) != null ? _c : u.id);
+}
+function memberById(id) {
+  var _a, _b, _c;
+  if (!id) return null;
+  return (_c = (_b = (_a = getUserStore()) == null ? void 0 : _a.getUser) == null ? void 0 : _b.call(_a, id)) != null ? _c : { id, username: "ID " + id };
+}
+function recentMessages(channelId) {
+  var _a, _b, _c, _d, _e;
+  try {
+    let list = (_b = (_a = getMessageStore()) == null ? void 0 : _a.getMessages) == null ? void 0 : _b.call(_a, channelId);
+    if (Array.isArray(list)) return list.filter((m) => m == null ? void 0 : m.id).slice(-12).reverse();
+    const arr = Array.from((_e = (_d = (_c = list == null ? void 0 : list._map) == null ? void 0 : _c.values) == null ? void 0 : _d.call(_c)) != null ? _e : []);
+    if (arr.length) return arr.filter((m) => m == null ? void 0 : m.id).slice(-12).reverse();
+  } catch {
   }
-  return {
-    bg: "rgba(255,255,255,0.06)",
-    card: "rgba(255,255,255,0.08)",
-    text: "#dbdee1",
-    sub: "#949ba4",
-    deleted: "#f23f43",
-    deletedBg: "rgba(242,63,67,0.14)",
-    added: "#3ba55d",
-    edited: "#949ba4",
-    editedBg: "transparent"
-  };
+  return [];
+}
+async function pickImageFromGallery() {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
+  const metro = getMetro();
+  try {
+    const p = (_a = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _a.call(metro, "openMediaPicker");
+    if (typeof (p == null ? void 0 : p.openMediaPicker) === "function") {
+      const res = await new Promise((resolve) => {
+        try {
+          p.openMediaPicker({ type: "image", multiple: false, onMediaSelected: (r) => resolve(r), onCanceled: () => resolve(null), onCancel: () => resolve(null) });
+        } catch (e) {
+          resolve(null);
+        }
+      });
+      const uri = (_g = (_f = (_c = res == null ? void 0 : res.uri) != null ? _c : (_b = res == null ? void 0 : res[0]) == null ? void 0 : _b.uri) != null ? _f : (_e = (_d = res == null ? void 0 : res.assets) == null ? void 0 : _d[0]) == null ? void 0 : _e.uri) != null ? _g : typeof res === "string" ? res : null;
+      if (uri) return String(uri);
+    }
+  } catch {
+  }
+  try {
+    const p = (_h = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _h.call(metro, "launchImageLibrary");
+    if (typeof (p == null ? void 0 : p.launchImageLibrary) === "function") {
+      const res = await new Promise((resolve) => {
+        try {
+          p.launchImageLibrary({ mediaType: "photo", selectionLimit: 1 }, (r) => resolve(r));
+        } catch {
+          resolve(null);
+        }
+      });
+      const uri = (_l = (_k = (_j = (_i = res == null ? void 0 : res.assets) == null ? void 0 : _i[0]) == null ? void 0 : _j.uri) != null ? _k : res == null ? void 0 : res.uri) != null ? _l : null;
+      if (uri) return String(uri);
+    }
+  } catch {
+  }
+  return null;
+}
+function resolveQuickUser(text, candidates) {
+  var _a, _b, _c;
+  const q = String(text != null ? text : "").trim();
+  if (!q) return null;
+  if (/^\d{5,}$/.test(q)) return (_c = (_b = (_a = getUserStore()) == null ? void 0 : _a.getUser) == null ? void 0 : _b.call(_a, q)) != null ? _c : null;
+  const lower = q.toLowerCase().replace(/^@/, "");
+  for (const u of candidates) {
+    const names = [u.username, u.globalName, u.global_name].filter(Boolean).map((s) => String(s).toLowerCase());
+    if (names.some((n) => n === lower)) return u;
+  }
+  for (const u of candidates) {
+    const names = [u.username, u.globalName, u.global_name].filter(Boolean).map((s) => String(s).toLowerCase());
+    if (names.some((n) => n.includes(lower))) return u;
+  }
+  return null;
+}
+function presetDate(key) {
+  const now = Date.now();
+  if (key === "now") return new Date(now);
+  const m = key.match(/^m(\d+)$/);
+  if (m) return new Date(now - parseInt(m[1], 10) * 6e4);
+  if (key === "yesterday-evening") {
+    const d = new Date(now - 864e5);
+    d.setHours(20, 34, 0, 0);
+    return d;
+  }
+  return new Date(now);
+}
+function getActions() {
+  var _a, _b, _c, _d, _e, _f, _g;
+  try {
+    const a = (_b = (_a = getValenced()) == null ? void 0 : _a.discord) == null ? void 0 : _b.actions;
+    if (a) return a;
+  } catch {
+  }
+  try {
+    if (typeof revenge !== "undefined") {
+      const a = (_c = revenge.discord) == null ? void 0 : _c.actions;
+      if (a) return a;
+    }
+  } catch {
+  }
+  try {
+    if (typeof bunny !== "undefined") {
+      const b = bunny;
+      const a = ((_e = (_d = b.metro) == null ? void 0 : _d.common) == null ? void 0 : _e.toasts) || ((_g = (_f = b.api) == null ? void 0 : _f.actions) == null ? void 0 : _g.ToastActionCreators);
+      if (a) return a;
+    }
+  } catch {
+  }
+  return null;
+}
+function toast(content) {
+  var _a, _b, _c, _d, _e, _f;
+  const text = String(content != null ? content : "");
+  try {
+    const actions = getActions();
+    const open = (_b = (_a = actions == null ? void 0 : actions.ToastActionCreators) == null ? void 0 : _a.open) != null ? _b : actions == null ? void 0 : actions.open;
+    if (typeof open === "function") {
+      open({ key: "fakedm-" + Date.now(), content: text });
+      return;
+    }
+  } catch {
+  }
+  try {
+    const RN = getRN();
+    (_f = (_c = RN == null ? void 0 : RN.ToastAndroid) == null ? void 0 : _c.show) == null ? void 0 : _f.call(_c, text, (_e = (_d = RN == null ? void 0 : RN.ToastAndroid) == null ? void 0 : _d.SHORT) != null ? _e : 0);
+    return;
+  } catch {
+  }
+  hostError("no toast channel available");
+}
+function hexToInt(hex) {
+  const m = String(hex != null ? hex : "").trim().replace("#", "");
+  if (!/^[0-9a-fA-F]{6}$/.test(m)) return void 0;
+  return parseInt(m, 16);
 }
 function resolveDesign() {
-  var _a, _b, _c, _d;
+  var _a, _b, _c, _d, _e, _f, _g;
   try {
-    const g = (_b = (_a = globalThis.revenge) == null ? void 0 : _a.discord) == null ? void 0 : _b.design;
+    const g = (_b = (_a = getValenced()) == null ? void 0 : _a.discord) == null ? void 0 : _b.design;
     const d = (_c = g == null ? void 0 : g.Design) != null ? _c : g;
     if (d && (d.TableRowGroup || d.TableSwitchRow || d.TableRow)) return d;
   } catch {
   }
   try {
-    const b = (_d = globalThis.bunny) == null ? void 0 : _d.ui;
+    const g = (_e = (_d = globalThis.revenge) == null ? void 0 : _d.discord) == null ? void 0 : _e.design;
+    const d = (_f = g == null ? void 0 : g.Design) != null ? _f : g;
+    if (d && (d.TableRowGroup || d.TableSwitchRow || d.TableRow)) return d;
+  } catch {
+  }
+  try {
+    const b = (_g = globalThis.bunny) == null ? void 0 : _g.ui;
     if (b == null ? void 0 : b.FormTableRowGroup) return b;
   } catch {
   }
   return null;
 }
-function makeSettingsComponent() {
-  var _a, _b;
+function buildSettingsComponent() {
   const React = getReact();
-  if (!React) return () => null;
-  const el = React.createElement.bind(React);
-  const RN = getRN() || {};
-  const { View = "view", Text = "text", TextInput = "input", Pressable = View, ScrollView = View, Switch = null, Image = null } = RN;
+  const RN = getRN();
+  if (!React || !RN) return null;
+  const el = React.createElement;
   const D = resolveDesign();
-  const DInput = (_b = (_a = D == null ? void 0 : D.TextInput) != null ? _a : D == null ? void 0 : D.TextField) != null ? _b : TextInput;
+  const { View = "view", Text = "text", TextInput = "input", Pressable = View, ScrollView = View, Switch = null } = RN;
+  const isDark = (() => {
+    var _a, _b, _c, _d, _e;
+    try {
+      const tm = (_c = findStore("ThemeManager", ["theme", "resolvedTheme"])) != null ? _c : (_b = (_a = getMetro()) == null ? void 0 : _a.findByProps) == null ? void 0 : _b.call(_a, "theme", "setTheme");
+      const t = (_e = (_d = tm == null ? void 0 : tm.theme) != null ? _d : tm == null ? void 0 : tm.resolvedTheme) != null ? _e : tm == null ? void 0 : tm.currentTheme;
+      if (t) return String(t).toLowerCase().includes("dark");
+    } catch {
+    }
+    return true;
+  })();
+  const C = isDark ? { bg: "#111214", card: "#1a1b1e", text: "#ffffff", sub: "#9ba0a8", input: "#232428", chip: "#2b2d31", blurple: "#5865F2", danger: "#f04747", ok: "#23a55a", amber: "#faa61a" } : { bg: "#f2f3f5", card: "#ffffff", text: "#060607", sub: "#5c5e66", input: "#ebedef", chip: "#e3e5e8", blurple: "#5865F2", danger: "#d83c3e", ok: "#248046", amber: "#c28516" };
+  function Card(props) {
+    const kids = Array.isArray(props.children) ? props.children : props.children == null ? [] : [props.children];
+    if (D == null ? void 0 : D.TableRowGroup) return el(D.TableRowGroup, { title: props.title }, ...kids);
+    return el(View, { style: { backgroundColor: C.card, borderRadius: 12, marginHorizontal: 12, paddingVertical: 6, marginTop: 8 } }, ...kids);
+  }
+  function Row(props) {
+    return el(View, { style: { paddingHorizontal: 14, paddingVertical: 8 } }, props.children);
+  }
+  function Label(props) {
+    return el(Text, { style: { color: C.sub, fontSize: 12, fontWeight: "700", marginBottom: 4 } }, props.children);
+  }
+  function Input(props) {
+    var _a, _b;
+    const NativeInput = (_b = (_a = D == null ? void 0 : D.TextInput) != null ? _a : D == null ? void 0 : D.TextField) != null ? _b : null;
+    if (NativeInput) {
+      return el(NativeInput, {
+        placeholderTextColor: C.sub,
+        ...props,
+        style: [{ color: C.text, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 8, fontSize: 14, marginBottom: 8 }, props.style]
+      });
+    }
+    return el(TextInput, {
+      placeholderTextColor: C.sub,
+      ...props,
+      style: [{ backgroundColor: C.input, color: C.text, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 8, fontSize: 14, marginBottom: 8 }, props.style]
+    });
+  }
+  function Btn(props) {
+    return el(
+      Pressable,
+      { onPress: props.onPress, style: [{ backgroundColor: props.danger ? C.danger : props.ok ? C.ok : C.blurple, borderRadius: 10, paddingVertical: 10, alignItems: "center", marginTop: 2 }, props.style] },
+      el(Text, { style: { color: "#ffffff", fontWeight: "700", fontSize: 14 } }, props.label)
+    );
+  }
   function SwitchRow(props) {
     if (D == null ? void 0 : D.TableSwitchRow) {
       return el(D.TableSwitchRow, {
@@ -1719,952 +934,726 @@ function makeSettingsComponent() {
         onValueChange: props.onValueChange
       });
     }
-    const c = viewerColors();
-    const toggle = Switch ? el(Switch, {
-      value: !!props.value,
-      onValueChange: props.onValueChange,
-      trackColor: { false: "rgba(128,128,128,0.35)", true: "#5865F2" },
-      thumbColor: "#ffffff"
-    }) : el(
-      Text,
-      { style: { color: c.sub }, onPress: () => props.onValueChange(!props.value) },
-      props.value ? "On" : "Off"
-    );
+    const toggle = Switch ? el(Switch, { value: !!props.value, onValueChange: props.onValueChange, trackColor: { false: "rgba(128,128,128,0.35)", true: C.blurple }, thumbColor: "#ffffff" }) : el(Text, { style: { color: C.sub }, onPress: () => props.onValueChange(!props.value) }, props.value ? "On" : "Off");
     return el(
       View,
-      { style: { paddingHorizontal: 16, paddingVertical: 10 } },
-      el(
-        View,
-        { style: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" } },
-        el(Text, { style: { color: c.text, fontSize: 16, flex: 1, paddingRight: 12 } }, props.label),
-        toggle
-      ),
-      props.subLabel ? el(Text, { style: { color: c.sub, fontSize: 13, marginTop: 2 } }, props.subLabel) : null
+      { style: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 14, paddingVertical: 10 } },
+      el(Text, { style: { color: C.text, fontSize: 15, flex: 1, paddingRight: 12 } }, props.label),
+      toggle
     );
   }
-  function RowGroup(props) {
-    const c = viewerColors();
-    const kids = Array.isArray(props.children) ? props.children : props.children == null ? [] : [props.children];
-    if (D == null ? void 0 : D.TableRowGroup) return el(D.TableRowGroup, { title: props.title }, ...kids);
-    return el(
-      View,
-      { style: { marginTop: 16 } },
-      el(Text, { style: { color: c.text, fontSize: 15, fontWeight: "600", paddingHorizontal: 16, marginBottom: 6 } }, props.title),
-      el(
-        View,
-        { style: { backgroundColor: c.card, borderRadius: 12, marginHorizontal: 12, paddingVertical: 4 } },
-        ...kids
-      )
-    );
+  function MemberChips(props) {
+    const kids = props.members.map((u) => el(Pressable, {
+      key: String(u.id),
+      onPress: () => props.value === String(u.id) ? props.onChange("") : props.onChange(String(u.id)),
+      style: { backgroundColor: props.value === String(u.id) ? C.blurple : C.chip, borderRadius: 16, paddingHorizontal: 12, paddingVertical: 6, marginRight: 8 }
+    }, el(Text, { style: { color: props.value === String(u.id) ? "#ffffff" : C.text, fontSize: 13 } }, userLabel(u))));
+    return el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginBottom: 6 } }, ...kids);
   }
-  const DText = (props) => {
-    var _a2;
-    const design = getDesign();
-    const T = design == null ? void 0 : design.Text;
-    const style = { color: viewerColors().text, ...(_a2 = props == null ? void 0 : props.style) != null ? _a2 : {} };
-    return el(T || Text, { ...props, style }, ...Array.isArray(props == null ? void 0 : props.children) ? props.children : [props == null ? void 0 : props.children]);
-  };
-  return function SettingsComponent2(props) {
-    var _a2, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o;
-    const api = (_a2 = props == null ? void 0 : props.api) != null ? _a2 : classicSettingsApi();
-    const settings = (_d = (_c = (_b2 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _b2.use) == null ? void 0 : _c.call(_b2)) != null ? _d : cfg;
-    const C = viewerColors();
-    const [entries, setEntries] = React.useState([]);
-    const [filter, setFilter] = React.useState("all");
-    const [query, setQuery] = React.useState("");
-    const [refreshTick, setRefreshTick] = React.useState(0);
-    const [selectedUser, setSelectedUser] = React.useState(null);
-    const [limit, setLimit] = React.useState(0);
-    const S = (key) => (settings == null ? void 0 : settings[key]) === void 0 ? DEFAULT_SETTINGS[key] : settings[key];
-    React.useEffect(() => {
-      settingsChangedCb = () => setRefreshTick((t) => t + 1);
-      return () => {
-        settingsChangedCb = null;
-      };
-    }, []);
-    const reload = async () => {
-      var _a3;
-      const merged = {};
-      try {
-        const raw = await ((_a3 = getFileModule()) == null ? void 0 : _a3.readFile(logPath(), "utf8"));
-        const parsed = JSON.parse(raw);
-        if (parsed && typeof parsed === "object") Object.assign(merged, parsed);
-      } catch {
-      }
-      Object.assign(merged, log);
-      const list = Object.values(merged).sort((a, b) => b.timestamp - a.timestamp);
-      setEntries(list.slice(0, 300));
-    };
-    React.useEffect(() => {
-      void reload();
-    }, [refreshTick]);
-    React.useEffect(() => {
-      setLimit(0);
-    }, [filter, query]);
-    const sortNewest = S("sortNewest") !== false;
-    const ordered = sortNewest ? entries : [...entries].reverse();
-    const pageSize = Math.max(10, Math.min(1e3, Number(S("logsPerPage")) || 100));
-    const visible = ordered.filter((m) => {
-      if (filter === "deleted" && m.status !== "deleted") return false;
-      if (filter === "edited" && m.status !== "edited") return false;
-      if (filter === "ghost" && !m.ghostPing) return false;
-      const q = query.trim().toLowerCase();
-      if (q && !(m.content.toLowerCase().includes(q) || m.authorTag.toLowerCase().includes(q)))
-        return false;
-      return true;
-    });
-    const shown = visible.slice(0, limit || pageSize);
-    const removeEntry = async (id) => {
-      try {
-        delete log[id];
-        await persistLog();
-        void reload();
-      } catch {
-      }
-    };
-    const exportLog = async () => {
-      try {
-        const clip = getClipboard();
-        if (!(clip == null ? void 0 : clip.setString)) throw new Error("clipboard unavailable");
-        clip.setString(JSON.stringify(Object.values(log), null, 2));
-        toast("Log copied to clipboard", "msglogger-export");
-      } catch {
-        toast("Export failed \u2014 clipboard unavailable", "msglogger-export-fail");
-      }
-    };
-    const importLog = async () => {
-      var _a3;
-      try {
-        const clip = getClipboard();
-        const raw = await ((_a3 = clip == null ? void 0 : clip.getString) == null ? void 0 : _a3.call(clip));
-        if (typeof raw !== "string" || !raw.trim()) throw new Error("clipboard empty");
-        const parsed = JSON.parse(raw);
-        const incoming = Array.isArray(parsed) ? parsed.reduce((acc, m) => {
-          if (m == null ? void 0 : m.id) acc[String(m.id)] = m;
-          return acc;
-        }, {}) : parsed && typeof parsed === "object" ? parsed : {};
-        let added = 0;
-        for (const id of Object.keys(incoming)) {
-          const entry = incoming[id];
-          if (!entry || typeof entry !== "object" || !entry.id && !entry.content) continue;
-          if (log[id]) continue;
-          log[id] = entry;
-          added++;
-        }
-        prune(cfg.maxStored);
-        await persistLog();
-        restoreHighlightsFromLog();
-        void reload();
-        notifySettingsChanged();
-        toast("Imported " + added + " new entr" + (added === 1 ? "y" : "ies"), "msglogger-import");
-      } catch {
-        toast("Import failed \u2014 clipboard must hold log JSON", "msglogger-import-fail");
-      }
-    };
-    const clearLog = async () => {
-      var _a3;
-      log = {};
-      try {
-        await ((_a3 = getFileModule()) == null ? void 0 : _a3.writeFile("documents", LOG_FILE, "{}", "utf8"));
-      } catch {
-      }
-      void reload();
-    };
-    const clearImageCache = async () => {
-      var _a3, _b3;
-      try {
-        const fs = getNormalizedFs();
-        const base = (_a3 = fs == null ? void 0 : fs.dirPath) != null ? _a3 : "";
-        for (const id of Object.keys(imageIndex)) {
-          for (const img of (_b3 = imageIndex[id]) != null ? _b3 : []) {
-            try {
-              await (fs == null ? void 0 : fs.remove(base + "/" + img.file));
-            } catch {
-            }
-          }
-        }
-        imageIndex = {};
-        imageIndexDirty = true;
-        if (fs) await saveImageIndex(fs);
-        toast("Saved images cleared", "msglogger-img-clear");
-      } catch {
-        toast("Could not clear saved images", "msglogger-img-clear-fail");
-      }
-    };
-    const byUser = {};
-    for (const m of entries) {
-      const key = m.authorId || m.authorTag || "unknown";
-      const u = (_e = byUser[key]) != null ? _e : byUser[key] = { name: m.authorTag || "Unknown", deleted: 0, edited: 0, ghosts: 0, total: 0 };
-      if (m.status === "deleted") u.deleted++;
-      else if (m.status === "edited") u.edited++;
-      if (m.ghostPing) u.ghosts++;
-      u.total++;
+  function TypeChips(props) {
+    const kids = props.options.map((o) => el(Pressable, {
+      key: String(o.value),
+      onPress: () => props.value === o.value ? props.onChange(null) : props.onChange(o.value),
+      style: { backgroundColor: props.value === o.value ? C.blurple : C.chip, borderRadius: 16, paddingHorizontal: 12, paddingVertical: 6, marginRight: 8 }
+    }, el(Text, { style: { color: props.value === o.value ? "#ffffff" : C.text, fontSize: 13 } }, o.label)));
+    return el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginBottom: 6 } }, ...kids);
+  }
+  function MsgPicker(props) {
+    const msgs = recentMessages(props.channelId);
+    if (!msgs.length) {
+      return el(Text, { style: { color: C.sub, fontSize: 12 } }, "Open the chat, then come back here to pick a message.");
     }
-    const userStats = Object.entries(byUser).map(([id, s]) => ({ id, ...s })).sort((a, b) => b.total - a.total).slice(0, 15);
-    const userEntries = selectedUser ? entries.filter((m) => (m.authorId || m.authorTag || "unknown") === selectedUser) : [];
-    const selectedName = selectedUser ? (_g = (_f = byUser[selectedUser]) == null ? void 0 : _f.name) != null ? _g : "" : "";
-    const tab = (key, label) => el(
-      Pressable,
-      {
-        key,
-        onPress: () => setFilter(key),
-        style: { paddingVertical: 8, paddingHorizontal: 10 }
-      },
-      el(
-        Text,
-        { style: { fontWeight: filter === key ? "bold" : "normal", color: filter === key ? C.text : C.sub } },
-        label
-      )
-    );
-    const sw = (key, label, subLabel) => el(SwitchRow, {
-      key,
-      label,
-      subLabel,
-      value: !!S(key),
-      onValueChange: (v) => {
-        var _a3, _b3;
-        return (_b3 = (_a3 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a3.set) == null ? void 0 : _b3.call(_a3, { [key]: v });
-      }
-    });
-    const choice = (key, label, subLabel, options) => el(
+    const kids = msgs.map((m) => el(Pressable, {
+      key: String(m.id),
+      onPress: () => props.value === String(m.id) ? props.onChange("") : props.onChange(String(m.id)),
+      style: { backgroundColor: props.value === String(m.id) ? C.blurple : C.chip, borderRadius: 10, paddingHorizontal: 10, paddingVertical: 6, marginRight: 8, maxWidth: 240 }
+    }, el(Text, { numberOfLines: 1, style: { color: props.value === String(m.id) ? "#ffffff" : C.text, fontSize: 12 } }, String(m.content || "(attachment/embed)") + " \u2014 " + userLabel(m.author))));
+    return el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginBottom: 6 } }, ...kids);
+  }
+  const TABS = [
+    { key: "quick", label: "\u2605 Quick" },
+    { key: "message", label: "Message" },
+    { key: "call", label: "Call" },
+    { key: "system", label: "System" },
+    { key: "react", label: "React" },
+    { key: "batch", label: "Batch" },
+    { key: "fakes", label: "Fakes" }
+  ];
+  return function FakeDMSettings(props) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+    if (jsonStorageApi == null && ((_a = props == null ? void 0 : props.api) == null ? void 0 : _a.jsonStorage)) {
+      jsonStorageApi = props.api.jsonStorage;
+    }
+    refreshConfigFromStorage();
+    const [tab, setTab] = React.useState("quick");
+    const [qUser, setQUser] = React.useState("");
+    const [qUserId, setQUserId] = React.useState("");
+    const [qText, setQText] = React.useState("");
+    const [qPreset, setQPreset] = React.useState("now");
+    const [qReply, setQReply] = React.useState("");
+    const [qImage, setQImage] = React.useState("");
+    const [qPicking, setQPicking] = React.useState(false);
+    const [senderId, setSenderId] = React.useState("");
+    const [content, setContent] = React.useState("");
+    const [timeText, setTimeText] = React.useState("");
+    const [dateText, setDateText] = React.useState("");
+    const [replyId, setReplyId] = React.useState("");
+    const [imageUrl, setImageUrl] = React.useState("");
+    const [embedOn, setEmbedOn] = React.useState(false);
+    const [embedTitle, setEmbedTitle] = React.useState("");
+    const [embedDesc, setEmbedDesc] = React.useState("");
+    const [embedColor, setEmbedColor] = React.useState("#5865F2");
+    const [embedImage, setEmbedImage] = React.useState("");
+    const [callerId, setCallerId] = React.useState("");
+    const [receiverId, setReceiverId] = React.useState("");
+    const [missed, setMissed] = React.useState(false);
+    const [durationMin, setDurationMin] = React.useState("2");
+    const [sysSenderId, setSysSenderId] = React.useState("");
+    const [sysType, setSysType] = React.useState(6);
+    const [sysContent, setSysContent] = React.useState("");
+    const [reactMsgId, setReactMsgId] = React.useState("");
+    const [reactEmoji, setReactEmoji] = React.useState("");
+    const [reactUserId, setReactUserId] = React.useState("");
+    const [batchText, setBatchText] = React.useState("");
+    const [batchSenderId, setBatchSenderId] = React.useState("");
+    const [batchTime, setBatchTime] = React.useState("");
+    const [batchDate, setBatchDate] = React.useState("");
+    const [fakeTick, setFakeTick] = React.useState(0);
+    const [chatBtn, setChatBtn] = React.useState((cfg == null ? void 0 : cfg.chatButton) !== false);
+    const [quickTxt, setQuickTxt] = React.useState(String((_b = cfg == null ? void 0 : cfg.quickText) != null ? _b : "hello"));
+    const candidates = memberCandidates();
+    const me = (_e = (_d = (_c = getUserStore()) == null ? void 0 : _c.getCurrentUser) == null ? void 0 : _d.call(_c)) != null ? _e : null;
+    const channelId = currentChannelId();
+    const [defaultsInit, setDefaultsInit] = React.useState(0);
+    if (!defaultsInit && (me == null ? void 0 : me.id)) {
+      setDefaultsInit(1);
+      setSenderId(String(me.id));
+      setBatchSenderId(String(me.id));
+      setReactUserId(String(me.id));
+    }
+    function parseWhen(timeText2, dateText2) {
+      const d = /* @__PURE__ */ new Date();
+      const dm = String(dateText2 != null ? dateText2 : "").trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (dm) d.setFullYear(parseInt(dm[1], 10), parseInt(dm[2], 10) - 1, parseInt(dm[3], 10));
+      const tm = String(timeText2 != null ? timeText2 : "").trim().match(/^(\d{1,2}):(\d{2})$/);
+      if (tm) d.setHours(Math.min(23, parseInt(tm[1], 10)), parseInt(tm[2], 10), 0, 0);
+      return d;
+    }
+    const sendAs = () => el(
       View,
-      { key, style: { paddingHorizontal: 16, paddingVertical: 10 } },
-      el(Text, { style: { color: C.text, fontSize: 15, fontWeight: "600" } }, label),
-      el(Text, { style: { color: C.sub, fontSize: 13, marginTop: 2 } }, subLabel),
-      el(
-        View,
-        { style: { flexDirection: "row", flexWrap: "wrap", marginTop: 6 } },
-        ...options.map(
-          (o) => el(
-            Pressable,
-            {
-              key: o.value,
-              onPress: () => {
-                var _a3, _b3;
-                return (_b3 = (_a3 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a3.set) == null ? void 0 : _b3.call(_a3, { [key]: o.value });
-              },
-              style: {
-                paddingVertical: 6,
-                paddingHorizontal: 12,
-                borderRadius: 8,
-                marginRight: 8,
-                marginBottom: 6,
-                backgroundColor: S(key) === o.value ? "#5865F2" : C.card
-              }
-            },
-            el(
-              Text,
-              {
-                style: {
-                  color: S(key) === o.value ? "#ffffff" : C.sub,
-                  fontWeight: "700",
-                  fontSize: 13
-                }
-              },
-              o.label
-            )
-          )
-        )
-      )
+      null,
+      el(Label, null, "Send as \u2014 tap a person (you is pre-picked)"),
+      el(MemberChips, { members: candidates, value: senderId, onChange: setSenderId }),
+      el(Input, { placeholder: "...or paste a user ID", value: senderId, onChangeText: (t) => setSenderId(t.replace(/[^0-9]/g, "")) })
     );
-    const diffLine = (before, after, key = "diff") => {
-      if (!cfg.showEditDiffs) return null;
-      const parts = diffWords(before, after);
-      if (cfg.separatedDiffs) {
-        const removed = parts.filter((p) => p.type === "removed").map((p) => p.text).join("").trim();
-        const added = parts.filter((p) => p.type === "added").map((p) => p.text).join("").trim();
-        const rows = [];
-        if (removed)
-          rows.push(
-            el(
-              Text,
-              { key: "removed", style: { color: C.deleted, fontSize: 12, textDecorationLine: "line-through" } },
-              removed
-            )
-          );
-        if (added)
-          rows.push(el(Text, { key: "added", style: { color: C.added, fontSize: 12 } }, added));
-        return el(View, { key, style: { marginTop: 4 } }, ...rows);
-      }
-      return el(
+    const whenInputs = () => el(
+      View,
+      null,
+      el(Label, null, "Time (HH:MM, optional \u2014 default now)"),
+      el(Input, { placeholder: "14:30", value: timeText, onChangeText: setTimeText }),
+      el(Label, null, "Date (YYYY-MM-DD, optional)"),
+      el(Input, { placeholder: "2026-09-26", value: dateText, onChangeText: setDateText })
+    );
+    let body = null;
+    if (tab === "quick") {
+      const quickUser = qUserId ? memberById(qUserId) : resolveQuickUser(qUser, candidates);
+      const PRESETS = [
+        { key: "now", label: "Now" },
+        { key: "m5", label: "5m ago" },
+        { key: "m30", label: "30m ago" },
+        { key: "m120", label: "2h ago" },
+        { key: "yesterday-evening", label: "Yesterday 8:34 PM" }
+      ];
+      body = el(
         View,
-        { key, style: { flexDirection: "row", flexWrap: "wrap", marginTop: 4 } },
-        ...parts.filter((p) => p.text.trim().length > 0).map(
-          (p, i) => el(
-            Text,
-            {
-              key: i,
-              style: {
-                fontSize: 12,
-                color: p.type === "removed" ? C.deleted : p.type === "added" ? C.added : C.sub,
-                textDecorationLine: p.type === "removed" ? "line-through" : "none"
+        null,
+        el(Label, null, "1. Who says it? Tap a friend or type their name"),
+        el(MemberChips, { members: candidates, value: quickUser ? String(quickUser.id) : "", onChange: (id) => {
+          setQUserId(id);
+          setQUser(id ? userLabel(memberById(id)) : "");
+        } }),
+        el(Input, { placeholder: "@username (or leave empty = you)", value: qUser, onChangeText: (t) => {
+          setQUser(t);
+          setQUserId("");
+        } }),
+        quickUser ? el(Text, { style: { color: C.ok, fontSize: 12, marginBottom: 6 } }, "\u2713 " + userLabel(quickUser)) : el(Text, { style: { color: C.sub, fontSize: 12, marginBottom: 6 } }, "Empty = sent by you"),
+        el(Label, null, "2. What do they say?"),
+        el(Input, { placeholder: "Type the message\u2026", value: qText, onChangeText: setQText, multiline: true, style: { minHeight: 56, textAlignVertical: "top" } }),
+        el(Label, null, "3. When? (optional)"),
+        el(TypeChips, { options: PRESETS, value: qPreset, onChange: setQPreset }),
+        el(Label, null, "Reply to one of YOUR messages (optional)"),
+        el(MsgPicker, { channelId, value: qReply, onChange: setQReply }),
+        el(
+          View,
+          { style: { flexDirection: "row", alignItems: "center", marginBottom: 8 } },
+          el(Pressable, {
+            disabled: qPicking,
+            onPress: async () => {
+              setQPicking(true);
+              try {
+                const uri = await pickImageFromGallery();
+                if (uri) {
+                  setQImage(uri);
+                  toast("Photo attached");
+                } else toast("Gallery picker not available on this build \u2014 use the Message tab for image URLs");
+              } finally {
+                setQPicking(false);
               }
             },
-            p.text
-          )
-        )
+            style: { backgroundColor: C.chip, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8, marginRight: 10 }
+          }, el(Text, { style: { color: C.text, fontSize: 13, fontWeight: "700" } }, qPicking ? "Opening\u2026" : "\u{1F4F7} Pick photo")),
+          qImage ? el(Text, { numberOfLines: 1, style: { color: C.ok, fontSize: 12, flex: 1 } }, "\u2713 photo attached") : null
+        ),
+        qImage ? el(Pressable, { onPress: () => setQImage(""), style: { marginBottom: 8 } }, el(Text, { style: { color: C.danger, fontSize: 12 } }, "\u2715 Remove photo")) : null,
+        el(Btn, {
+          label: "Inject",
+          onPress: () => {
+            const author = quickUser != null ? quickUser : me;
+            if (!author) return toast("Could not find that user");
+            const when = presetDate(qPreset);
+            const attachments = qImage ? [{ url: qImage, filename: "image.png", local: true }] : void 0;
+            const id = injectMessage(channelId, author, qText, when, void 0, attachments, qReply ? { messageId: qReply } : void 0, void 0);
+            toast(id ? "Fake sent \u2713" : "Inject failed");
+            if (id) {
+              setQText("");
+              setQReply("");
+              setQImage("");
+              setQPreset("now");
+            }
+            setFakeTick((n) => n + 1);
+          }
+        })
       );
-    };
-    const deletedCount = entries.filter((m) => m.status === "deleted").length;
-    const editedCount = entries.filter((m) => m.status === "edited").length;
-    const ghostCount = entries.filter((m) => m.ghostPing).length;
-    return el(
-      ScrollView,
-      { style: { flexGrow: 1, backgroundColor: C.bg }, contentContainerStyle: { paddingBottom: 24 } },
-      el(
+    } else if (tab === "message") {
+      body = el(
         View,
-        { style: { paddingHorizontal: 14, paddingTop: 12, paddingBottom: 4 } },
-        el(Text, { style: { color: C.text, fontSize: 22, fontWeight: "800" } }, "MessageLogger"),
-        el(Text, { style: { color: C.sub, fontSize: 13, marginTop: 3 } }, "Your saved message history and capture settings")
-      ),
-      el(
-        View,
-        { style: { flexDirection: "row", marginHorizontal: 12, marginTop: 8 } },
-        ...[
-          { label: "SAVED", value: String(entries.length), color: C.text },
-          { label: "DELETED", value: String(deletedCount), color: C.deleted },
-          { label: "EDITED", value: String(editedCount), color: C.edited },
-          { label: "GHOSTS", value: String(ghostCount), color: C.sub }
-        ].map((stat) => el(
+        null,
+        sendAs(),
+        el(Label, null, "Message"),
+        el(Input, { placeholder: "Message text\u2026", value: content, onChangeText: setContent, multiline: true, style: { minHeight: 60, textAlignVertical: "top" } }),
+        whenInputs(),
+        el(Label, null, "Reply to \u2014 tap a message from the chat"),
+        el(MsgPicker, { channelId, value: replyId, onChange: setReplyId }),
+        el(Input, { placeholder: "...or paste a message ID", value: replyId, onChangeText: (t) => setReplyId(t.replace(/[^0-9]/g, "")) }),
+        el(Label, null, "Image URL (optional attachment)"),
+        el(Input, { placeholder: "https://\u2026/image.png", value: imageUrl, onChangeText: setImageUrl }),
+        el(SwitchRow, { label: "Attach an embed", value: embedOn, onValueChange: setEmbedOn }),
+        embedOn ? el(
           View,
-          { key: stat.label, style: { flex: 1, backgroundColor: C.card, borderRadius: 10, paddingVertical: 10, marginHorizontal: 3, alignItems: "center" } },
-          el(Text, { style: { color: stat.color, fontSize: 17, fontWeight: "800" } }, stat.value),
-          el(Text, { style: { color: C.sub, fontSize: 9, fontWeight: "700", marginTop: 2 } }, stat.label)
-        ))
-      ),
-      el(
-        RowGroup,
-        { title: "Status" },
-        el(DText, null, "Host: " + (hostKind === "next" ? "Revenge (Next API)" : "Classic / vendetta") + (storageKind ? " \xB7 storage: " + storageKind : "")),
-        el(DText, null, startedAt ? "Running since " + new Date(startedAt).toLocaleTimeString() : "Not started \u2014 toggle the plugin off and on"),
-        el(DText, null, "Flux handlers: " + handlersRegistered + "/5 \xB7 row painters: " + rowPaintersInstalled),
-        lastStartError ? el(DText, null, "Last error: " + lastStartError) : null
-      ),
-      el(
-        RowGroup,
-        { title: "MessageLogger" },
-        sw("enabled", "Enabled"),
-        sw("logDeletes", "Log deleted messages"),
-        sw("restoreDeletedInChat", "Restore deleted in chat", "Re-inject logged deleted messages when you open their channel"),
-        sw("keepSelfDeletes", "Keep my own deletes visible", "Off: your own deleted messages vanish like normal"),
-        sw("deletedInfo", "Show deleted info", 'Red rows show "[deleted by X at \u2026]"'),
-        sw("logEdits", "Log edited messages"),
-        sw("ghostPings", "Ghost ping toasts", "Toast when a message mentioning you is deleted"),
-        sw("colorHighlights", "Red highlight in chat", "Deleted messages stay visible with red text (Vencord style)"),
-        choice("deleteStyle", "Deleted message style", "Red text, or a red row overlay with normal text.", [
-          { value: "text", label: "Red text" },
-          { value: "overlay", label: "Red overlay" }
-        ]),
-        sw("logDeletedAttachments", "Log deleted attachments", "Mark attachments the delete removed on the kept row"),
-        sw("showEditDiffs", "Show edit diffs", "Previous versions read as a real diff: strikethrough removed, underline added"),
-        sw("separatedDiffs", "Separated diffs", "Show removals and additions on their own lines"),
-        sw("saveImages", "Save deleted images", "Downloads images from deleted messages into device storage"),
-        el(DText, null, "Attachment size limit (MB) \u2014 larger files are not saved."),
-        el(DInput, {
-          placeholder: "100",
-          placeholderTextColor: C.sub,
-          defaultValue: String((_h = settings == null ? void 0 : settings.attachmentSizeLimitMB) != null ? _h : 100),
-          onChangeText: (t) => {
-            var _a3, _b3;
-            const n = parseFloat(t);
-            if (!isNaN(n) && n >= 1 && n <= 1024) (_b3 = (_a3 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a3.set) == null ? void 0 : _b3.call(_a3, { attachmentSizeLimitMB: n });
-          },
-          style: { padding: 8, color: C.text, backgroundColor: C.bg, borderRadius: 6 }
-        }),
-        el(DText, null, "Attachment file extensions \u2014 comma-separated allowlist."),
-        el(DInput, {
-          placeholder: "png,jpg,jpeg,gif,webp",
-          placeholderTextColor: C.sub,
-          defaultValue: (_i = settings == null ? void 0 : settings.attachmentExtensions) != null ? _i : "png,jpg,jpeg,gif,webp",
-          onChangeText: (t) => {
-            var _a3, _b3;
-            return (_b3 = (_a3 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a3.set) == null ? void 0 : _b3.call(_a3, { attachmentExtensions: t });
-          },
-          style: { padding: 8, color: C.text, backgroundColor: C.bg, borderRadius: 6 }
-        }),
-        el(DText, null, "Image storage quota (GB)"),
-        el(DInput, {
-          placeholder: "2",
-          placeholderTextColor: C.sub,
-          defaultValue: String((_j = settings == null ? void 0 : settings.imageQuotaGB) != null ? _j : 2),
-          onChangeText: (t) => {
-            var _a3, _b3;
-            const n = parseFloat(t);
-            if (!isNaN(n) && n >= 0.1 && n <= 100) (_b3 = (_a3 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a3.set) == null ? void 0 : _b3.call(_a3, { imageQuotaGB: n });
-          },
-          style: { padding: 8, color: C.text, backgroundColor: C.bg, borderRadius: 6 }
-        }),
-        el(DText, null, "Used: " + (totalSavedBytes() / 1073741824).toFixed(2) + " GB \xB7 " + Object.keys(imageIndex).length + " messages with saved images"),
-        sw("ignoreBots", "Ignore bot messages"),
-        sw("ignoreWebhooks", "Ignore webhooks"),
-        sw("ignoreSelf", "Ignore your own messages"),
-        sw("ignoreSelfEdits", "Ignore your own edits"),
-        sw("inlineEdits", "Inline edit history", "Show previous versions inside the message (Equicord Inline Edits)")
-      ),
-      el(
-        RowGroup,
-        { title: "Filters" },
-        el(DText, null, "Whitelisted IDs \u2014 comma-separated user/channel/server IDs that always get logged, overriding muted servers, categories and channels."),
-        el(DInput, {
-          placeholder: "e.g. 123456789012345678",
-          placeholderTextColor: C.sub,
-          defaultValue: (_k = settings == null ? void 0 : settings.whitelistedIds) != null ? _k : "",
-          onChangeText: (t) => {
-            var _a3, _b3;
-            return (_b3 = (_a3 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a3.set) == null ? void 0 : _b3.call(_a3, { whitelistedIds: t });
-          },
-          style: { padding: 8, color: C.text, backgroundColor: C.bg, borderRadius: 6 }
-        }),
-        el(DText, null, "Ignored guilds \u2014 comma-separated server IDs never logged."),
-        el(DInput, {
-          placeholder: "Server IDs",
-          placeholderTextColor: C.sub,
-          defaultValue: (_l = settings == null ? void 0 : settings.ignoredGuilds) != null ? _l : "",
-          onChangeText: (t) => {
-            var _a3, _b3;
-            return (_b3 = (_a3 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a3.set) == null ? void 0 : _b3.call(_a3, { ignoredGuilds: t });
-          },
-          style: { padding: 8, color: C.text, backgroundColor: C.bg, borderRadius: 6 }
-        }),
-        el(DText, null, "Time-based cleanup \u2014 remove entries older than this many minutes (0 = off)."),
-        el(DInput, {
-          placeholder: "0",
-          placeholderTextColor: C.sub,
-          defaultValue: String((_m = settings == null ? void 0 : settings.timeBasedCleanupMinutes) != null ? _m : 0),
-          onChangeText: (t) => {
-            var _a3, _b3;
-            const n = parseInt(t, 10);
-            if (!isNaN(n) && n >= 0) (_b3 = (_a3 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a3.set) == null ? void 0 : _b3.call(_a3, { timeBasedCleanupMinutes: n });
-          },
-          style: { padding: 8, color: C.text, backgroundColor: C.bg, borderRadius: 6 }
-        }),
-        el(DText, null, "Maximum stored messages \u2014 the oldest are dropped first. This is the size of your archive."),
-        el(DInput, {
-          placeholder: "300",
-          placeholderTextColor: C.sub,
-          defaultValue: String(S("maxStored")),
-          onChangeText: (t) => {
-            var _a3, _b3;
-            const n = parseInt(t, 10);
-            if (!isNaN(n) && n >= 10 && n <= 1e4) (_b3 = (_a3 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a3.set) == null ? void 0 : _b3.call(_a3, { maxStored: n });
-          },
-          style: { padding: 8, color: C.text, backgroundColor: C.bg, borderRadius: 6 }
-        }),
-        el(DText, null, "Entries shown at once in the log below \u2014 \u201CLoad more\u201D adds this many."),
-        el(DInput, {
-          placeholder: "100",
-          placeholderTextColor: C.sub,
-          defaultValue: String(S("logsPerPage")),
-          onChangeText: (t) => {
-            var _a3, _b3;
-            const n = parseInt(t, 10);
-            if (!isNaN(n) && n >= 10 && n <= 1e3) (_b3 = (_a3 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a3.set) == null ? void 0 : _b3.call(_a3, { logsPerPage: n });
-          },
-          style: { padding: 8, color: C.text, backgroundColor: C.bg, borderRadius: 6 }
+          null,
+          el(Input, { placeholder: "Embed title", value: embedTitle, onChangeText: setEmbedTitle }),
+          el(Input, { placeholder: "Embed description", value: embedDesc, onChangeText: setEmbedDesc, multiline: true }),
+          el(Input, { placeholder: "#5865F2", value: embedColor, onChangeText: setEmbedColor }),
+          el(Input, { placeholder: "Embed image URL", value: embedImage, onChangeText: setEmbedImage })
+        ) : null,
+        el(Btn, {
+          label: "Inject message",
+          onPress: () => {
+            var _a2, _b2;
+            const author = memberById(senderId || ((_b2 = (_a2 = candidates[0]) == null ? void 0 : _a2.id) != null ? _b2 : ""));
+            if (!author) return toast("Pick who sends it first");
+            const embeds = embedOn ? [{ title: embedTitle || void 0, description: embedDesc || void 0, color: hexToInt(embedColor), image: embedImage ? { url: embedImage } : void 0 }] : void 0;
+            const attachments = imageUrl ? [{ url: imageUrl, filename: imageUrl.split("/").pop() || "image.png" }] : void 0;
+            const id = injectMessage(channelId, author, content, parseWhen(timeText, dateText), void 0, attachments, replyId ? { messageId: replyId } : void 0, embeds);
+            toast(id ? "Fake message injected" : "Inject failed (no dispatcher?)");
+            setFakeTick((n) => n + 1);
+          }
         })
-      ),
-      el(
-        RowGroup,
-        { title: "Muted and DMs" },
-        sw("ignoreMutedChannels", "Ignore muted channels", "Overridden by the two always-log rules below"),
-        sw("ignoreMutedCategories", "Ignore muted categories"),
-        sw("ignoreMutedGuilds", "Ignore muted servers"),
-        sw("alwaysLogDirectMessages", "Always log DMs", "Direct messages are logged unless their ID is blacklisted"),
-        sw("alwaysLogCurrentChannel", "Always log the open channel", "Turn off if you want muted channels to stay silent")
-      ),
-      el(
-        RowGroup,
-        { title: "Ignored IDs" },
-        el(DText, null, "Comma-separated channel IDs never get logged."),
-        el(DInput, {
-          placeholder: "Channel IDs",
-          placeholderTextColor: C.sub,
-          defaultValue: (_n = settings == null ? void 0 : settings.ignoredChannels) != null ? _n : "",
-          onChangeText: (t) => {
-            var _a3, _b3;
-            return (_b3 = (_a3 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a3.set) == null ? void 0 : _b3.call(_a3, { ignoredChannels: t });
-          },
-          style: { padding: 8, color: C.text, backgroundColor: C.bg, borderRadius: 6 }
-        }),
-        el(DText, null, "Comma-separated user IDs never get logged."),
-        el(DInput, {
-          placeholder: "User IDs",
-          placeholderTextColor: C.sub,
-          defaultValue: (_o = settings == null ? void 0 : settings.ignoredUsers) != null ? _o : "",
-          onChangeText: (t) => {
-            var _a3, _b3;
-            return (_b3 = (_a3 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a3.set) == null ? void 0 : _b3.call(_a3, { ignoredUsers: t });
-          },
-          style: { padding: 8, color: C.text, backgroundColor: C.bg, borderRadius: 6 }
+      );
+    } else if (tab === "call") {
+      body = el(
+        View,
+        null,
+        el(Label, null, "Caller"),
+        el(MemberChips, { members: candidates, value: callerId, onChange: setCallerId }),
+        el(Label, null, "Receiver"),
+        el(MemberChips, { members: candidates, value: receiverId, onChange: setReceiverId }),
+        el(SwitchRow, { label: "Missed call", value: missed, onValueChange: setMissed }),
+        el(Label, null, "Duration (minutes, ignored when missed)"),
+        el(Input, { placeholder: "2", value: durationMin, onChangeText: (t) => setDurationMin(t.replace(/[^0-9]/g, "")) }),
+        whenInputs(),
+        el(Btn, {
+          label: "Inject call",
+          onPress: () => {
+            var _a2, _b2, _c2, _d2;
+            const caller = memberById(callerId || ((_b2 = (_a2 = candidates[0]) == null ? void 0 : _a2.id) != null ? _b2 : ""));
+            if (!caller) return toast("Pick a caller first");
+            const other = memberById(receiverId || ((_d2 = (_c2 = candidates.find((u) => String(u.id) !== String(caller.id))) == null ? void 0 : _c2.id) != null ? _d2 : caller.id));
+            const sec = Math.max(0, parseInt(durationMin || "0", 10) || 0) * 60;
+            const id = injectCall(channelId, caller, other, missed, sec, parseWhen(timeText, dateText));
+            toast(id ? "Fake call injected" : "Inject failed");
+            setFakeTick((n) => n + 1);
+          }
         })
-      ),
-      selectedUser ? el(
-        RowGroup,
-        { title: selectedName + " \u2014 " + userEntries.length + " entries (tap to go back)" },
-        el(
-          Pressable,
-          { onPress: () => setSelectedUser(null), style: { padding: 10 } },
-          el(Text, { style: { color: C.sub } }, "\u2190 Back to all users")
-        ),
-        ...userEntries.slice(0, 30).map(
-          (m) => el(
-            View,
-            { key: m.id, style: { paddingHorizontal: 12, paddingVertical: 6, borderTopWidth: 1, borderTopColor: C.bg } },
-            el(Text, { style: { color: m.status === "deleted" ? C.deleted : C.edited, fontWeight: "bold", fontSize: 12 } }, (m.status === "deleted" ? "DELETED" : "EDITED") + (m.ghostPing ? " \xB7 GHOST PING" : "") + " \u2014 " + new Date(m.timestamp).toLocaleString()),
-            el(Text, { style: { color: C.text } }, m.content || "(no text content)"),
-            m.edits.length > 0 && el(Text, { style: { color: C.sub, fontSize: 12 } }, "Before: " + m.edits.join("  |  "))
-          )
-        )
-      ) : el(
-        RowGroup,
-        { title: "Users (" + userStats.length + ")" },
-        userStats.length === 0 ? el(DText, null, "No logged users yet.") : userStats.map(
-          (u) => el(
-            Pressable,
-            {
-              key: u.id,
-              onPress: () => setSelectedUser(u.id),
-              style: { flexDirection: "row", alignItems: "center", paddingHorizontal: 16, paddingVertical: 10, borderTopWidth: 1, borderTopColor: C.bg }
-            },
-            el(
-              View,
-              { style: { flex: 1 } },
-              el(Text, { style: { color: C.text, fontSize: 15 } }, u.name),
-              el(Text, { style: { color: C.sub, fontSize: 12 } }, u.deleted + " deleted \xB7 " + u.edited + " edited" + (u.ghosts > 0 ? " \xB7 " + u.ghosts + " ghost pings" : ""))
-            ),
-            el(Text, { style: { color: u.deleted > 0 ? C.deleted : C.sub, fontWeight: "bold" } }, String(u.total))
-          )
-        )
-      ),
-      el(
-        RowGroup,
-        { title: "Saved log (" + Math.min(visible.length, limit || pageSize) + " of " + visible.length + ")" },
-        el(
-          ScrollView,
-          { horizontal: true, showsHorizontalScrollIndicator: false, contentContainerStyle: { paddingHorizontal: 4, flexDirection: "row", alignItems: "center" } },
-          tab("all", "All"),
-          tab("deleted", "Deleted"),
-          tab("edited", "Edited"),
-          tab("ghost", "Ghost pings"),
-          el(
-            Pressable,
-            {
-              onPress: () => {
-                var _a3, _b3;
-                return (_b3 = (_a3 = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a3.set) == null ? void 0 : _b3.call(_a3, { sortNewest: !sortNewest });
-              },
-              style: { paddingVertical: 8, paddingHorizontal: 10 }
-            },
-            el(
-              Text,
-              { style: { color: C.sub, fontWeight: "700" } },
-              sortNewest ? "Newest \u2193" : "Oldest \u2191"
-            )
-          )
-        ),
-        el(DInput, {
-          placeholder: "Search author or text\u2026",
-          placeholderTextColor: C.sub,
-          value: query,
-          onChangeText: setQuery,
-          style: { padding: 8, color: C.text, backgroundColor: C.bg, borderRadius: 6 }
+      );
+    } else if (tab === "system") {
+      body = el(
+        View,
+        null,
+        el(Label, null, "Actor (who did it)"),
+        el(MemberChips, { members: candidates, value: sysSenderId, onChange: setSysSenderId }),
+        el(Label, null, "Type"),
+        el(TypeChips, { options: SYSTEM_TYPES, value: sysType, onChange: setSysType }),
+        el(Label, null, "Custom text (optional)"),
+        el(Input, { placeholder: "Usually empty", value: sysContent, onChangeText: setSysContent, multiline: true }),
+        whenInputs(),
+        el(Btn, {
+          label: "Inject system message",
+          onPress: () => {
+            var _a2, _b2;
+            const author = memberById(sysSenderId || ((_b2 = (_a2 = candidates[0]) == null ? void 0 : _a2.id) != null ? _b2 : ""));
+            if (!author) return toast("Pick an actor first");
+            const id = injectSystemMessage(channelId, author, sysType != null ? sysType : 6, sysContent, parseWhen(timeText, dateText));
+            toast(id ? "System message injected" : "Inject failed");
+            setFakeTick((n) => n + 1);
+          }
+        })
+      );
+    } else if (tab === "react") {
+      body = el(
+        View,
+        null,
+        el(Label, null, "Message \u2014 tap one from the chat"),
+        el(MsgPicker, { channelId, value: reactMsgId, onChange: setReactMsgId }),
+        el(Label, null, "Emoji"),
+        el(Input, { placeholder: "\u{1F600}", value: reactEmoji, onChangeText: setReactEmoji }),
+        el(Label, null, "React as (you is pre-picked)"),
+        el(MemberChips, { members: candidates, value: reactUserId, onChange: setReactUserId }),
+        el(Btn, {
+          label: "Inject reaction",
+          onPress: () => {
+            var _a2;
+            const uid = reactUserId || String((_a2 = me == null ? void 0 : me.id) != null ? _a2 : "");
+            if (!reactMsgId || !reactEmoji) return toast("Pick a message and an emoji first");
+            const ok = injectReaction(channelId, reactMsgId, uid, reactEmoji);
+            toast(ok ? "Reaction added" : "Inject failed");
+            setFakeTick((n) => n + 1);
+          }
+        })
+      );
+    } else if (tab === "batch") {
+      const parsed = parseBatchScript(batchText);
+      body = el(
+        View,
+        null,
+        el(Label, null, "Default sender (lines without a name)"),
+        el(MemberChips, { members: candidates, value: batchSenderId, onChange: setBatchSenderId }),
+        el(Label, null, "Script \u2014 one message per line, [HH:MM] optional name"),
+        el(Input, {
+          placeholder: "[14:30] Me: hey\n[14:31] " + userLabel((_f = candidates[1]) != null ? _f : me) + ": sup\n[14:32] Me: check this out",
+          value: batchText,
+          onChangeText: setBatchText,
+          multiline: true,
+          style: { minHeight: 100, textAlignVertical: "top" }
         }),
-        visible.length === 0 ? el(DText, null, "Nothing logged yet. Deleted and edited messages will appear here.") : shown.map((m) => {
-          var _a3;
-          const isDel = m.ghostPing || m.status === "deleted";
-          const statusColor = isDel ? C.deleted : C.edited;
+        el(Text, { style: { color: C.sub, fontSize: 12, marginBottom: 6 } }, parsed.length + " message(s) parsed"),
+        el(Label, null, "Base date (YYYY-MM-DD, optional \u2014 times come from the script)"),
+        el(Input, { placeholder: "2026-09-26", value: batchDate, onChangeText: setBatchDate }),
+        el(Btn, {
+          label: "Inject " + parsed.length + " messages",
+          onPress: () => {
+            var _a2;
+            if (!parsed.length) return toast("Nothing parsed \u2014 check the format");
+            const base = parseWhen(batchTime, batchDate);
+            const n = injectBatch(channelId, parsed, candidates, memberById(batchSenderId || ((_a2 = me == null ? void 0 : me.id) != null ? _a2 : "")), base);
+            toast(n + " fake message(s) injected" + (n < parsed.length ? " \u2014 some names unknown" : ""));
+            setFakeTick((nn) => nn + 1);
+          }
+        })
+      );
+    } else {
+      void fakeTick;
+      const all = readFakes();
+      const inChannel = all.filter((f) => f.type !== "reaction" && f.channelId === channelId);
+      const shown = inChannel.length ? inChannel : all;
+      body = el(
+        View,
+        null,
+        el(
+          Text,
+          { style: { color: C.sub, fontSize: 12, paddingHorizontal: 14, paddingTop: 6 } },
+          inChannel.length ? "Fakes in this channel: " + inChannel.length : "No fakes in this channel \u2014 showing all " + all.length
+        ),
+        el(Btn, {
+          label: "Clear all fakes in this channel",
+          danger: true,
+          onPress: () => {
+            const n = clearFakesInChannel(channelId);
+            toast(n + " fake(s) cleared");
+            setFakeTick((x) => x + 1);
+          }
+        }),
+        ...shown.slice().reverse().slice(0, 60).map((f, i) => {
+          const isMsg = f.type === "message";
+          const label = isMsg ? f.systemType ? "SYSTEM" : "MESSAGE" : f.type === "call" ? "CALL" : "REACT";
+          const color = isMsg ? C.blurple : f.type === "call" ? C.ok : C.amber;
+          const authorName = userLabel(memberById(isMsg ? f.authorId : f.type === "call" ? f.callerId : f.userId));
           return el(
             View,
-            {
-              key: m.id,
-              style: {
-                borderLeftWidth: 3,
-                borderColor: statusColor,
-                backgroundColor: isDel ? C.deletedBg : C.editedBg,
-                borderRadius: 6,
-                padding: 10,
-                marginBottom: 8
-              }
-            },
+            { key: String(f.snowflakeId) + ":" + i, style: { paddingHorizontal: 14, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: C.input } },
+            el(
+              View,
+              { style: { flexDirection: "row", justifyContent: "space-between" } },
+              el(Text, { style: { color, fontSize: 11, fontWeight: "800" } }, label + " \xB7 " + authorName),
+              el(Text, { style: { color: C.sub, fontSize: 11 } }, new Date(isMsg || f.type === "call" ? f.timestamp : Date.now()).toLocaleString())
+            ),
             el(
               Text,
-              { style: { color: statusColor, fontWeight: "bold", fontSize: 12, marginBottom: 2 } },
-              "[" + (m.ghostPing ? "GHOST PING" : m.status === "deleted" ? "DELETED" : "EDITED") + "] " + m.authorTag + " \u2014 " + new Date(m.timestamp).toLocaleString()
+              { style: { color: C.text, fontSize: 13, marginTop: 2 } },
+              isMsg ? String(f.content || "(no text)") : f.type === "call" ? f.missed ? "Missed call" : "Call \xB7 " + Math.round(f.durationSec / 60) + " min" : ":" + f.emoji + ":"
             ),
-            el(Text, { style: { color: C.text } }, m.content || "(no text content)"),
-            m.attachments.length > 0 && cfg.logDeletedAttachments ? el(Text, { style: { color: C.sub, fontSize: 12 } }, m.attachments.length + " deleted attachment(s)") : null,
-            m.savedImages ? el(Text, { style: { color: C.sub, fontSize: 12 } }, m.savedImages + " image(s) saved to device") : null,
-            ...m.savedImages && Image ? [
-              el(
-                View,
-                { key: m.id + ":imgs", style: { flexDirection: "row", flexWrap: "wrap", marginTop: 4 } },
-                ((_a3 = imageIndex[m.id]) != null ? _a3 : []).slice(0, 4).map(
-                  (img, i) => {
-                    var _a4;
-                    return el(Image, {
-                      key: i,
-                      source: { uri: "data:" + ((_a4 = img.mime) != null ? _a4 : "image/png") + ";base64," + readSavedImageB64(img.file) },
-                      style: { width: 72, height: 72, borderRadius: 6, marginRight: 6, marginBottom: 6, backgroundColor: C.bg },
-                      resizeMode: "cover"
-                    });
-                  }
-                )
-              )
-            ] : [],
-            ...m.edits.length > 0 && cfg.showEditDiffs ? m.edits.map(
-              (h, i) => {
-                var _a4;
-                return diffLine(String(h), String((_a4 = m.edits[i + 1]) != null ? _a4 : m.content), "diff-" + i);
-              }
-            ).filter(Boolean) : [],
-            m.edits.length > 0 && !cfg.showEditDiffs && el(Text, { style: { color: C.sub, fontSize: 12 } }, "Previous versions: " + m.edits.join("  |  ")),
-            m.status === "edited" && m.edits.length === 0 ? el(Text, { style: { color: C.sub, fontSize: 12 } }, "Edited \u2014 previous version not recorded") : null,
-            el(
-              Pressable,
-              { onPress: () => void removeEntry(m.id), style: { paddingVertical: 4 } },
-              el(Text, { style: { color: C.sub, fontSize: 12 } }, "Delete entry")
-            )
+            isMsg ? el(
+              View,
+              { style: { flexDirection: "row", marginTop: 6 } },
+              el(Pressable, {
+                onPress: () => {
+                  var _a2;
+                  const next = String((_a2 = f.content) != null ? _a2 : "");
+                  const ok = editFakeMessage(f.channelId, f.snowflakeId, next + " ");
+                  toast(ok ? "Edited (added a space \u2014 full inline editor coming)" : "Not in cache \u2014 open the channel first");
+                },
+                style: { backgroundColor: C.chip, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, marginRight: 8 }
+              }, el(Text, { style: { color: C.text, fontSize: 12 } }, "Edit (cache)")),
+              el(Pressable, {
+                onPress: () => {
+                  const ok = removeFakeById(f.snowflakeId);
+                  toast(ok ? "Removed" : "Remove failed");
+                  setFakeTick((x) => x + 1);
+                },
+                style: { backgroundColor: C.danger, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4 }
+              }, el(Text, { style: { color: "#ffffff", fontSize: 12 } }, "Delete"))
+            ) : null
           );
-        }),
-        visible.length > shown.length ? el(
-          Pressable,
-          {
-            onPress: () => setLimit((limit || pageSize) + pageSize),
-            style: { padding: 10, alignItems: "center" }
-          },
-          el(
-            Text,
-            { style: { color: C.text, fontWeight: "700" } },
-            "Load " + pageSize + " more (" + (visible.length - shown.length) + " remaining)"
-          )
-        ) : null
-      ),
+        })
+      );
+    }
+    return el(
+      ScrollView,
+      { style: { flex: 1, backgroundColor: C.bg } },
       el(
         View,
-        { style: { padding: 12 } },
+        { style: { paddingHorizontal: 16, paddingTop: 14 } },
+        el(Text, { style: { color: C.text, fontSize: 18, fontWeight: "800" } }, "FakeDM " + PLUGIN_VERSION),
+        el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, "Injects into: " + (channelId ? (_j = (_i = (_h = (_g = getChannelStore()) == null ? void 0 : _g.getChannel) == null ? void 0 : _h.call(_g, channelId)) == null ? void 0 : _i.name) != null ? _j : "DM \xB7 " + channelId.slice(-6) : "no channel open \u2014 open a DM first")),
         el(
           Pressable,
-          { onPress: () => void exportLog(), style: { padding: 12, alignItems: "center" } },
-          el(Text, { style: { fontWeight: "bold", color: C.text } }, "Copy log JSON to clipboard")
-        ),
-        el(
-          Pressable,
-          { onPress: () => void importLog(), style: { padding: 12, alignItems: "center" } },
-          el(Text, { style: { fontWeight: "bold", color: C.text } }, "Import log JSON from clipboard (merges)")
-        ),
-        el(
-          Pressable,
-          { onPress: () => void clearLog(), style: { padding: 12, alignItems: "center" } },
-          el(Text, { style: { fontWeight: "bold", color: C.deleted } }, "Clear saved log")
-        ),
-        el(
-          Pressable,
-          { onPress: () => void clearImageCache(), style: { padding: 12, alignItems: "center" } },
-          el(Text, { style: { color: C.deleted } }, "Clear saved images")
-        ),
-        el(
-          Pressable,
-          { onPress: () => void reload(), style: { padding: 12, alignItems: "center" } },
-          el(Text, { style: { color: C.sub } }, "Refresh list")
+          { onPress: () => {
+            installTries = 0;
+            installChatButton();
+            toast("Chat button: " + buttonStatus);
+          } },
+          el(Text, { style: { color: C.blurple, fontSize: 11, marginTop: 2 } }, "Chat button: " + buttonStatus + " \xB7 tap to retry")
         )
-      )
+      ),
+      el(SwitchRow, { label: "Chat-bar Fake button (reload chat to apply)", value: chatBtn, onValueChange: (val) => {
+        cfg.chatButton = val;
+        setChatBtn(val);
+        savePluginCfg();
+        toast(val ? "Fake button on \u2014 reload the chat to see it" : "Fake button off \u2014 reload the chat");
+      } }),
+      el(Input, { placeholder: "Quick Fake text (chat-bar button)", value: quickTxt, onChangeText: (t) => {
+        cfg.quickText = t;
+        setQuickTxt(t);
+        savePluginCfg();
+      } }),
+      el(
+        ScrollView,
+        { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginTop: 10, paddingHorizontal: 12 } },
+        ...TABS.map((t) => el(Pressable, {
+          key: t.key,
+          onPress: () => setTab(t.key),
+          style: { backgroundColor: tab === t.key ? C.blurple : C.chip, borderRadius: 16, paddingHorizontal: 14, paddingVertical: 7, marginRight: 8 }
+        }, el(Text, { style: { color: tab === t.key ? "#ffffff" : C.text, fontSize: 13, fontWeight: "700" } }, t.label)))
+      ),
+      body,
+      el(View, { style: { height: 30 } })
     );
   };
 }
-var settingsChangedCb = null;
-function notifySettingsChanged() {
+function quickFake() {
+  var _a, _b, _c, _d;
   try {
-    settingsChangedCb == null ? void 0 : settingsChangedCb();
-  } catch {
-  }
-}
-function classicSettingsApi() {
-  return {
-    use: () => ({ ...cfg }),
-    set: (update) => {
-      var _a;
-      try {
-        if (!storageProxy || typeof storageProxy !== "object") return;
-        const data = (_a = hostData()) != null ? _a : {};
-        const settings = { ...coerceSettings(data.settings), ...update };
-        if (storageKind === "bunny") {
-          storageProxy.data = { ...data, settings };
-        } else {
-          storageProxy.settings = settings;
-        }
-        refreshClassicConfig();
-        notifySettingsChanged();
-      } catch {
-      }
-    }
-  };
-}
-function registerFluxHandlers(flux, addCleanup) {
-  const register = (event, handler) => {
-    try {
-      const off = flux.onFluxEventDispatched(event, (payload) => {
-        try {
-          handler(payload);
-        } catch (e) {
-          hostError(event + " handler failed", e);
-        }
-        return payload;
-      });
-      if (typeof off === "function") addCleanup(off);
-      handlersRegistered++;
-      hostLog("registered " + event);
-    } catch (e) {
-      hostError("could not register " + event, e);
-    }
-  };
-  register("MESSAGE_CREATE", handleCreate);
-  register("MESSAGE_DELETE", handleDelete);
-  register("MESSAGE_DELETE_BULK", handleDeleteBulk);
-  register("MESSAGE_UPDATE", handleUpdate);
-  register("CHANNEL_SELECT", handleChannelSelect);
-}
-var lastInjectedChannel = "";
-var lastInjectedAt = 0;
-function handleChannelSelect(payload) {
-  var _a;
-  if (!cfg.enabled || !cfg.restoreDeletedInChat) return;
-  const channelId = String((_a = payload == null ? void 0 : payload.channelId) != null ? _a : "");
-  if (!channelId) return;
-  const now = Date.now();
-  if (channelId === lastInjectedChannel && now - lastInjectedAt < 1500) return;
-  lastInjectedChannel = channelId;
-  lastInjectedAt = now;
-  setTimeout(() => void reinjectChannel(channelId), 350);
-}
-async function reinjectChannel(channelId) {
-  var _a, _b;
-  try {
-    let dispatch = null;
-    const raw = getRawFluxDispatcher();
-    if (typeof (raw == null ? void 0 : raw.dispatch) === "function") dispatch = raw.dispatch.bind(raw);
-    if (!dispatch) {
-      try {
-        const metro = getMetro();
-        const rd = (_a = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _a.call(metro, "dispatch", "subscribe");
-        if (typeof (rd == null ? void 0 : rd.dispatch) === "function") dispatch = rd.dispatch.bind(rd);
-      } catch {
-      }
-    }
-    if (!dispatch) {
-      hostError("no raw dispatcher available for re-injection");
+    const channelId = currentChannelId();
+    if (!channelId) {
+      toast("Open a chat first, then tap Fake");
       return;
     }
-    const entries = Object.values(log).filter(
-      (m) => m.status === "deleted" && m.channelId === channelId
-    );
-    if (!entries.length) return;
-    const alreadyIn = getMessageIdsInChannel(channelId);
-    let injected = 0;
-    for (const entry of entries) {
-      if (alreadyIn.has(entry.id)) continue;
-      dispatch({
-        type: "MESSAGE_CREATE",
-        message: {
-          id: entry.id,
-          channel_id: channelId,
-          content: entry.content,
-          timestamp: new Date(entry.timestamp).toISOString(),
-          author: { id: entry.authorId, username: entry.authorTag, bot: !!entry.bot },
-          attachments: ((_b = entry.attachments) != null ? _b : []).map((u) => ({ url: u, proxy_url: u })),
-          mentions: [],
-          mention_everyone: false,
-          mention_roles: [],
-          pinned: false,
-          tts: false,
-          type: 0
-        },
-        optimisticallyPerformed: true,
-        mlReinjected: true
-      });
-      markHighlightDeleted(entry.id, channelId);
-      injected++;
-    }
-    if (injected > 0) hostLog("re-injected " + injected + " deleted message(s) into channel " + channelId);
+    const me = (_c = (_b = (_a = getUserStore()) == null ? void 0 : _a.getCurrentUser) == null ? void 0 : _b.call(_a)) != null ? _c : null;
+    const text = String((_d = cfg == null ? void 0 : cfg.quickText) != null ? _d : "hello") || "hello";
+    const id = injectMessage(channelId, me != null ? me : { id: "" }, text, /* @__PURE__ */ new Date());
+    if (!id) toast("Could not inject \u2014 dispatcher not found on this build");
   } catch (e) {
-    hostError("channel re-injection failed", e);
+    hostError("quick fake failed", e);
   }
 }
-function getMessageIdsInChannel(channelId) {
-  var _a, _b;
-  const ids = /* @__PURE__ */ new Set();
-  try {
-    const store = getMessageStore();
-    const messages = (_a = store == null ? void 0 : store.getMessages) == null ? void 0 : _a.call(store, channelId);
-    const arr = typeof (messages == null ? void 0 : messages.array) === "function" ? messages.array() : (_b = messages == null ? void 0 : messages._array) != null ? _b : [];
-    for (const m of arr) if (m == null ? void 0 : m.id) ids.add(String(m.id));
-  } catch {
-  }
-  return ids;
+var buttonStatus = "not installed yet";
+function chatButtonElement() {
+  const React = getReact();
+  const RN = getRN();
+  if (!(React == null ? void 0 : React.createElement) || !(RN == null ? void 0 : RN.Pressable) || !(RN == null ? void 0 : RN.Text)) return null;
+  const el = React.createElement;
+  return el(RN.Pressable, {
+    accessibilityLabel: "FakeDM quick fake",
+    onPress: () => quickFake(),
+    style: { marginLeft: 6, paddingHorizontal: 8, paddingVertical: 4, justifyContent: "center", alignItems: "center" }
+  }, el(RN.Text, { style: { color: "#ffffff", fontSize: 13, fontWeight: "700" } }, "Fake"));
 }
-function getMessageStore() {
-  var _a, _b;
+function insertChatButton(tree) {
+  var _a, _b, _c;
   try {
-    const s = getStore("MessageStore");
-    if (s == null ? void 0 : s.getMessage) return s;
+    if (!tree || typeof tree !== "object") return tree;
+    const btn = chatButtonElement();
+    if (!btn) return tree;
+    const find = (_c = (_b = (_a = getValenced()) == null ? void 0 : _a.utils) == null ? void 0 : _b.react) == null ? void 0 : _c.findInReactFiber;
+    const isRow = (n) => {
+      var _a2;
+      return Array.isArray((_a2 = n == null ? void 0 : n.props) == null ? void 0 : _a2.children) && n.props.children.length > 0 && n.props.children.length < 10 && n.props.children.some((k) => k && typeof k === "object");
+    };
+    let target = null;
+    try {
+      target = find == null ? void 0 : find(tree, (n) => isRow(n) && n.props.children.some((k) => {
+        var _a2, _b2;
+        return ((_a2 = k == null ? void 0 : k.props) == null ? void 0 : _a2.onPress) || ((_b2 = k == null ? void 0 : k.props) == null ? void 0 : _b2.accessibilityLabel);
+      }));
+    } catch {
+    }
+    if (!target) {
+      try {
+        target = find == null ? void 0 : find(tree, isRow);
+      } catch {
+      }
+    }
+    if (!target) return tree;
+    const kids = target.props.children;
+    if (kids.some((k) => {
+      var _a2;
+      return ((_a2 = k == null ? void 0 : k.props) == null ? void 0 : _a2.accessibilityLabel) === "FakeDM quick fake";
+    })) return tree;
+    kids.push(btn);
+    return tree;
+  } catch (e) {
+    hostError("chat button insert failed", e);
+    return tree;
+  }
+}
+function finderApi() {
+  var _a, _b, _c;
+  const v = getValenced();
+  if (!v) return null;
+  const holders = [v];
+  try {
+    holders.push(v.discord);
   } catch {
   }
   try {
-    const metro = getMetro();
-    const byName = (_a = metro == null ? void 0 : metro.findByStoreName) == null ? void 0 : _a.call(metro, "MessageStore");
-    if (byName == null ? void 0 : byName.getMessage) return byName;
-    const byProps = (_b = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _b.call(metro, "getMessage", "getMessages");
-    if (byProps == null ? void 0 : byProps.getMessage) return byProps;
+    holders.push(v.unscoped);
   } catch {
+  }
+  for (const holder of holders) {
+    try {
+      const finders = (_b = (_a = holder == null ? void 0 : holder.modules) == null ? void 0 : _a.finders) != null ? _b : holder == null ? void 0 : holder.finders;
+      const filters = finders == null ? void 0 : finders.filters;
+      const patcher = (_c = holder == null ? void 0 : holder.patcher) != null ? _c : v == null ? void 0 : v.patcher;
+      if (finders && filters && patcher && typeof patcher.after === "function") {
+        return { finders, filters, patcher };
+      }
+    } catch {
+    }
   }
   return null;
 }
-async function startNext({ cleanup, jsonStorage, logger }) {
-  apiRef = { logger };
-  cfgStorage = jsonStorage != null ? jsonStorage : null;
+function memoFilter(filters, name) {
+  try {
+    return filters.createFilterGenerator(
+      ([n], _id, exports) => {
+        const t = exports == null ? void 0 : exports.type;
+        if (t && typeof t === "function" && (t.displayName === n || t.name === n)) return true;
+        const r = exports == null ? void 0 : exports.render;
+        if (r && typeof r === "function" && (r.displayName === n || r.name === n)) return true;
+        return (exports == null ? void 0 : exports.displayName) === n || (exports == null ? void 0 : exports.name) === n;
+      },
+      ([n]) => "cenotaph.fakedm.memo(" + n + ")"
+    )(name);
+  } catch {
+    return null;
+  }
+}
+var CHAT_ROW_NAMES = ["ChatInputRightActions", "ChatInputActions", "ChatInputButtons", "ChatInputAppButtons"];
+var MAX_INSTALL_TRIES = 12;
+var installTimer = null;
+var installTries = 0;
+function installChatButton() {
+  var _a, _b, _c, _d, _e, _f, _g;
+  try {
+    if (installTimer) {
+      clearTimeout(installTimer);
+      installTimer = null;
+    }
+    if ((cfg == null ? void 0 : cfg.chatButton) === false) {
+      buttonStatus = "off in settings";
+      return;
+    }
+    const host = finderApi();
+    if (!host) {
+      buttonStatus = "host lacks finders/patcher";
+      return;
+    }
+    const { finders, filters, patcher } = host;
+    if (typeof finders.getModules !== "function") {
+      buttonStatus = "host has no getModules";
+      return;
+    }
+    const hook = (Comp, label) => {
+      if (!Comp) return false;
+      const key = typeof Comp === "function" ? null : typeof Comp.type === "function" ? "type" : typeof Comp.render === "function" ? "render" : null;
+      if (!key) return false;
+      try {
+        const off = patcher.after(Comp, key, (_args, tree) => insertChatButton(tree));
+        if (typeof off === "function") cleanupFns.push(off);
+        buttonStatus = "hooked " + label + " (" + key + ")";
+        return true;
+      } catch (e) {
+        buttonStatus = "patch failed on " + label;
+        hostError("chat button patch failed", e);
+        return false;
+      }
+    };
+    const pick = (exports) => {
+      var _a2;
+      const candidates = [exports, exports == null ? void 0 : exports.default, (_a2 = exports == null ? void 0 : exports.default) == null ? void 0 : _a2.default];
+      for (const c of candidates) {
+        if (!c) continue;
+        if (typeof c === "function") return c;
+        if (typeof c === "object" && (typeof c.type === "function" || typeof c.render === "function")) return c;
+      }
+      return null;
+    };
+    let installed = false;
+    for (const name of CHAT_ROW_NAMES) {
+      const filter = memoFilter(filters, name);
+      if (!filter) continue;
+      try {
+        const off = finders.getModules(filter, (exports) => {
+          if (installed) return;
+          if (hook(pick(exports), name)) installed = true;
+        });
+        if (typeof off === "function") cleanupFns.push(off);
+      } catch {
+      }
+    }
+    if (!installed) {
+      try {
+        const r = (_b = (_a = getValenced()) == null ? void 0 : _a.react) != null ? _b : {};
+        const afterJSX = (_f = (_e = (_c = r.jsxRuntime) == null ? void 0 : _c.afterJSX) != null ? _e : (_d = r.ReactJSXRuntime) == null ? void 0 : _d.afterJSX) != null ? _f : null;
+        if (typeof afterJSX === "function") {
+          const byName = ["ChatInput", "ChannelTextArea", "MessageInput"].map((n) => {
+            var _a2, _b2;
+            try {
+              return (_b2 = (_a2 = filters.withName) == null ? void 0 : _a2.call(filters, n)) != null ? _b2 : null;
+            } catch {
+              return null;
+            }
+          }).filter(Boolean);
+          if (byName.length) {
+            const filter = byName.length === 1 ? byName[0] : (_g = filters.anyOf) == null ? void 0 : _g.call(filters, ...byName);
+            if (filter) {
+              const off = finders.getModules(filter, (exports) => {
+                var _a2;
+                if (installed) return;
+                const Comp = pick(exports);
+                const render = typeof Comp === "function" ? Comp : (_a2 = Comp == null ? void 0 : Comp.type) != null ? _a2 : Comp == null ? void 0 : Comp.render;
+                if (typeof render !== "function") return;
+                try {
+                  const unpatch = afterJSX(render, (tree) => insertChatButton(tree));
+                  if (typeof unpatch === "function") cleanupFns.push(unpatch);
+                  buttonStatus = "hooked via jsx";
+                  installed = true;
+                } catch {
+                }
+              });
+              if (typeof off === "function") cleanupFns.push(off);
+            }
+          }
+        }
+      } catch {
+      }
+    }
+    if (installed) {
+      installTries = 0;
+      return;
+    }
+    if (installTries < MAX_INSTALL_TRIES) {
+      installTries++;
+      buttonStatus = "chat row not found (try " + installTries + "/" + MAX_INSTALL_TRIES + ")";
+      installTimer = setTimeout(() => {
+        installTimer = null;
+        installChatButton();
+      }, 3e3);
+    } else {
+      buttonStatus = "chat row not found \u2014 settings page only";
+    }
+  } catch (e) {
+    buttonStatus = "install failed";
+    hostError("chat button install failed", e);
+  }
+}
+var cleanupFns = [];
+async function startNext(api) {
+  var _a, _b;
+  jsonStorageApi = (_a = api == null ? void 0 : api.jsonStorage) != null ? _a : null;
+  try {
+    await ((_b = jsonStorageApi == null ? void 0 : jsonStorageApi.get) == null ? void 0 : _b.call(jsonStorageApi));
+  } catch (e) {
+    hostError("jsonStorage unavailable", e);
+  }
   refreshConfigFromStorage();
-  if (jsonStorage) {
-    try {
-      await jsonStorage.get();
-      refreshConfigFromStorage();
-      cleanup(
-        jsonStorage.subscribe(() => {
-          refreshConfigFromStorage();
-        })
-      );
-    } catch (e) {
-      hostError("jsonStorage unavailable, using default settings", e);
-    }
+  if (jsonStorageApi == null ? void 0 : jsonStorageApi.subscribe) {
+    const off = jsonStorageApi.subscribe(() => {
+      try {
+        refreshConfigFromStorage();
+      } catch {
+      }
+    });
+    if (typeof off === "function") cleanupFns.push(off);
   }
-  await loadLog();
-  void loadImageIndex();
-  runTimeBasedCleanup();
-  startCleanupInterval();
-  const flux = getFlux();
-  if (!flux || typeof flux.onFluxEventDispatched !== "function") {
-    hostError("flux API unavailable \u2014 capture disabled this session");
-    toast("MessageLogger: flux unavailable", "msglogger-start-fail");
-    return;
-  }
-  handlersRegistered = 0;
-  registerFluxHandlers(flux, cleanup);
-  if (!installDeleteRewrite(getRawFluxDispatcher(), cleanup)) {
-    hostError("delete rewrite unavailable \u2014 deleted messages will not stay visible");
-  }
-  installRowPainters(cleanup);
-  installSelfDeleteBypass(cleanup);
-  cleanup(() => {
-    if (flushTimer) {
-      clearTimeout(flushTimer);
-      flushTimer = null;
-    }
-    void persistLog();
-    seen.clear();
-    handlersRegistered = 0;
-    startedAt = null;
-    apiRef = null;
-  });
-  startedAt = Date.now();
-  lastStartError = null;
-  hostLog("started (Revenge Next)");
-  toast("MessageLogger " + PLUGIN_VERSION + " started", "msglogger-started");
-  alertBox("MessageLogger " + PLUGIN_VERSION, "Host: Revenge (Next)\nFlux handlers: " + handlersRegistered + "/4\nRed highlights: " + (rowPaintersInstalled + " painter(s)") + "\nImages cached: " + Object.keys(imageIndex).length + "\nIf you can read this, the new build is running.");
+  scheduleRestore(doRestore);
+  installChatButton();
+  toast("FakeDM loaded \u2014 open its settings to inject");
 }
 async function startClassic() {
-  var _a, _b, _c, _d, _e, _f;
-  const b = typeof bunny !== "undefined" && bunny || {};
+  var _a, _b;
+  const b = typeof bunny !== "undefined" ? bunny : {};
   const v = typeof vendetta !== "undefined" ? vendetta : null;
-  apiRef = { logger: (_c = (_b = (_a = b.plugin) == null ? void 0 : _a.logger) != null ? _b : v == null ? void 0 : v.logger) != null ? _c : null };
   try {
-    if ((_d = b.plugin) == null ? void 0 : _d.createStorage) {
+    if ((_a = b.plugin) == null ? void 0 : _a.createStorage) {
       const store = b.plugin.createStorage();
       const promise = store == null ? void 0 : store[Symbol.for("bunny.storage.promise")];
       if (promise && typeof promise.then === "function") await promise.catch(() => {
       });
-      if (store && typeof store === "object") {
-        storageProxy = store;
-        storageKind = "bunny";
-        const data = store.data && typeof store.data === "object" ? store.data : {};
-        if (!data.settings) store.data = { ...data, settings: { ...DEFAULT_SETTINGS } };
-        const emitter = store[Symbol.for("vendetta.storage.emitter")];
-        const off = (_e = emitter == null ? void 0 : emitter.on) == null ? void 0 : _e.call(emitter, "SET", () => {
-          try {
-            refreshClassicConfig();
-          } catch {
-          }
-        });
-        if (typeof off === "function") classicDisposers.push(off);
-      }
-    } else if (typeof vendetta !== "undefined" && ((_f = vendetta == null ? void 0 : vendetta.plugin) == null ? void 0 : _f.storage)) {
-      const store = vendetta.plugin.storage;
-      if (store && typeof store === "object") {
-        storageProxy = store;
-        storageKind = "vendetta";
-        if (!store.settings || typeof store.settings !== "object") {
-          store.settings = { ...DEFAULT_SETTINGS };
-        }
-      }
+      storageProxy = store;
+      storageKind = "bunny";
+    } else if ((_b = v == null ? void 0 : v.plugin) == null ? void 0 : _b.storage) {
+      storageProxy = v.plugin.storage;
+      storageKind = "vendetta";
     }
   } catch (e) {
-    hostError("plugin storage unavailable, using default settings", e);
+    hostError("plugin storage unavailable", e);
   }
-  refreshClassicConfig();
-  await loadLog();
-  void loadImageIndex();
-  runTimeBasedCleanup();
-  startCleanupInterval();
-  const flux = getFlux();
-  if (!flux || typeof flux.onFluxEventDispatched !== "function") {
-    hostError("flux API unavailable \u2014 capture disabled this session");
-    toast("MessageLogger: flux unavailable", "msglogger-start-fail");
-    return;
-  }
-  handlersRegistered = 0;
-  registerFluxHandlers(flux, (off) => classicDisposers.push(off));
-  if (!installDeleteRewrite(getRawFluxDispatcher(), (off) => classicDisposers.push(off))) {
-    hostError("delete rewrite unavailable \u2014 deleted messages will not stay visible");
-  }
-  installRowPainters((off) => classicDisposers.push(off));
-  installSelfDeleteBypass((off) => classicDisposers.push(off));
-  startedAt = Date.now();
-  lastStartError = null;
-  hostLog("started (Revenge Classic / vendetta host)");
-  toast("MessageLogger " + PLUGIN_VERSION + " started", "msglogger-started");
-  alertBox("MessageLogger " + PLUGIN_VERSION, "Host: Classic / vendetta\nStorage: " + (storageKind != null ? storageKind : "none") + "\nFlux handlers: " + handlersRegistered + "/4\nRed highlights: " + (rowPaintersInstalled + " painter(s)") + "\nImages cached: " + Object.keys(imageIndex).length + "\nIf you can read this, the new build is running.");
-}
-var _SettingsComponent = null;
-function SettingsComponent(props) {
-  if (hostKind !== "next") refreshClassicConfig();
-  try {
-    if (!_SettingsComponent) _SettingsComponent = makeSettingsComponent();
-    return _SettingsComponent(props);
-  } catch (e) {
-    try {
-      const RN = getRN();
-      const React = getReact();
-      if (React && (RN == null ? void 0 : RN.Text)) {
-        return React.createElement(
-          RN.Text,
-          { style: { padding: 12 } },
-          "MessageLogger settings crashed: " + (e instanceof Error ? e.message : String(e))
-        );
-      }
-    } catch {
-    }
-    return null;
-  }
+  refreshConfigFromStorage();
+  scheduleRestore(doRestore);
 }
 var __instance = {
   jsonStorage: {
     load: true,
-    default: DEFAULT_SETTINGS
+    default: { ...DEFAULT_SETTINGS, fakes: [] }
   },
   async start(api) {
     try {
       if (api && typeof api === "object" && (api.cleanup || api.jsonStorage)) {
-        hostKind = "next";
+        if (api.cleanup && typeof api.cleanup === "function") api.cleanup(() => {
+        });
         await startNext(api);
       } else {
-        hostKind = "classic";
         await startClassic();
       }
     } catch (e) {
@@ -2673,24 +1662,59 @@ var __instance = {
   },
   stop() {
     var _a;
-    while (classicDisposers.length) {
+    if (installTimer) {
+      clearTimeout(installTimer);
+      installTimer = null;
+    }
+    installTries = 0;
+    while (cleanupFns.length) {
       try {
-        (_a = classicDisposers.pop()) == null ? void 0 : _a();
+        (_a = cleanupFns.pop()) == null ? void 0 : _a();
       } catch {
       }
     }
-    deletedMessageMap.clear();
-    editedMessageMap.clear();
-    highlightCreates.clear();
-    highlightEdits.clear();
-    manualDeletes.clear();
-    imageQueue.length = 0;
-    stopCleanupInterval();
-    rowPaintersInstalled = 0;
-    handlersRegistered = 0;
-    startedAt = null;
+    restoredThisSession = false;
+    fakesCache = [];
+    jsonStorageApi = null;
+    storageProxy = null;
+    storageKind = "";
   },
-  SettingsComponent
+  SettingsComponent: null
+};
+var __builtSettings = null;
+function settingsComponentLazy(props) {
+  var _a, _b;
+  if (!__builtSettings) {
+    try {
+      __builtSettings = buildSettingsComponent();
+    } catch (e) {
+      hostError("settings component build failed", e);
+    }
+  }
+  if (!__builtSettings) {
+    const React = getReact();
+    const RN = getRN();
+    const el = React == null ? void 0 : React.createElement;
+    if (el && RN) return el((_a = RN.View) != null ? _a : "view", null, el((_b = RN.Text) != null ? _b : "text", null, "FakeDM: UI unavailable on this host"));
+    return null;
+  }
+  return __builtSettings(props);
+}
+__instance.SettingsComponent = settingsComponentLazy;
+__instance.__engine = {
+  injectMessage,
+  injectCall,
+  injectSystemMessage,
+  injectReaction,
+  injectBatch,
+  parseBatchScript,
+  editFakeMessage,
+  clearFakesInChannel,
+  removeFakeById,
+  doRestore,
+  memberCandidates,
+  getFakes: readFakes,
+  chatButtonStatus: () => buttonStatus
 };
 if (typeof plugin === "function") {
   __instance = plugin(__instance);
@@ -2705,7 +1729,7 @@ __instance.onUnload = function() {
   return (_a = __instance.stop) == null ? void 0 : _a.call(__instance);
 };
 __instance.settings = __instance.SettingsComponent;
-var index_default = globalThis.plugin;
+var index_default = __instance;
 ;
         const exported = (module.exports && module.exports.default) || module.exports;
         if (!exported || typeof exported !== 'object') throw new Error('bundle exported ' + typeof exported + ' instead of a plugin object');
@@ -2721,7 +1745,7 @@ var index_default = globalThis.plugin;
         return exported;
     } catch (error) {
         const message = String((error && (error.stack || error.message)) || error);
-        try { console.error('[dev.8uvu.message-logger] bundle failed to evaluate', error); } catch (ignored) {}
+        try { console.error('[dev.8uvu.fake-dm] bundle failed to evaluate', error); } catch (ignored) {}
         const fallback = {
             jsonStorage: { load: true, default: {} },
             start() {},
@@ -2733,7 +1757,7 @@ var index_default = globalThis.plugin;
                     if (!R || !N || typeof R.createElement !== 'function') return null;
                     const el = R.createElement;
                     return el(N.ScrollView, { style: { padding: 16 } },
-                        el(N.Text, { style: { color: '#f04747', fontSize: 16, fontWeight: '700', marginBottom: 8 } }, "MessageLogger" + ' failed to load'),
+                        el(N.Text, { style: { color: '#f04747', fontSize: 16, fontWeight: '700', marginBottom: 8 } }, "FakeDM" + ' failed to load'),
                         el(N.Text, { style: { color: '#9ba0a8', fontSize: 12, marginBottom: 8 } }, 'Copy this text to the plugin author — it is the exact error:'),
                         el(N.Text, { style: { color: '#ffffff', fontSize: 11 } }, message));
                 } catch (uiError) {

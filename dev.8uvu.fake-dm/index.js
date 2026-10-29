@@ -27,7 +27,7 @@ __export(index_exports, {
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "1.2.7";
+var PLUGIN_VERSION = "1.2.8";
 var DEFAULT_SETTINGS = {
   jitterSeconds: true,
   // randomize seconds like the desktop plugin's randomSeconds
@@ -1335,7 +1335,15 @@ function buildSettingsComponent() {
         { style: { paddingHorizontal: 16, paddingTop: 14 } },
         el(Text, { style: { color: C.text, fontSize: 18, fontWeight: "800" } }, "FakeDM " + PLUGIN_VERSION),
         el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, "Injects into: " + (channelId ? (_j = (_i = (_h = (_g = getChannelStore()) == null ? void 0 : _g.getChannel) == null ? void 0 : _h.call(_g, channelId)) == null ? void 0 : _i.name) != null ? _j : "DM \xB7 " + channelId.slice(-6) : "no channel open \u2014 open a DM first")),
-        el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 2 } }, "Chat button: " + buttonStatus)
+        el(
+          Pressable,
+          { onPress: () => {
+            installTries = 0;
+            installChatButton();
+            toast("Chat button: " + buttonStatus);
+          } },
+          el(Text, { style: { color: C.blurple, fontSize: 11, marginTop: 2 } }, "Chat button: " + buttonStatus + " \xB7 tap to retry")
+        )
       ),
       el(SwitchRow, { label: "Chat-bar Fake button (reload chat to apply)", value: chatBtn, onValueChange: (val) => {
         cfg.chatButton = val;
@@ -1428,108 +1436,162 @@ function insertChatButton(tree) {
     return tree;
   }
 }
-function installChatButton() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
+function finderApi() {
+  var _a, _b, _c;
+  const v = getValenced();
+  if (!v) return null;
+  const holders = [v];
   try {
+    holders.push(v.discord);
+  } catch {
+  }
+  try {
+    holders.push(v.unscoped);
+  } catch {
+  }
+  for (const holder of holders) {
+    try {
+      const finders = (_b = (_a = holder == null ? void 0 : holder.modules) == null ? void 0 : _a.finders) != null ? _b : holder == null ? void 0 : holder.finders;
+      const filters = finders == null ? void 0 : finders.filters;
+      const patcher = (_c = holder == null ? void 0 : holder.patcher) != null ? _c : v == null ? void 0 : v.patcher;
+      if (finders && filters && patcher && typeof patcher.after === "function") {
+        return { finders, filters, patcher };
+      }
+    } catch {
+    }
+  }
+  return null;
+}
+function memoFilter(filters, name) {
+  try {
+    return filters.createFilterGenerator(
+      ([n], _id, exports) => {
+        const t = exports == null ? void 0 : exports.type;
+        if (t && typeof t === "function" && (t.displayName === n || t.name === n)) return true;
+        const r = exports == null ? void 0 : exports.render;
+        if (r && typeof r === "function" && (r.displayName === n || r.name === n)) return true;
+        return (exports == null ? void 0 : exports.displayName) === n || (exports == null ? void 0 : exports.name) === n;
+      },
+      ([n]) => "cenotaph.fakedm.memo(" + n + ")"
+    )(name);
+  } catch {
+    return null;
+  }
+}
+var CHAT_ROW_NAMES = ["ChatInputRightActions", "ChatInputActions", "ChatInputButtons", "ChatInputAppButtons"];
+var MAX_INSTALL_TRIES = 12;
+var installTimer = null;
+var installTries = 0;
+function installChatButton() {
+  var _a, _b, _c, _d, _e, _f, _g;
+  try {
+    if (installTimer) {
+      clearTimeout(installTimer);
+      installTimer = null;
+    }
     if ((cfg == null ? void 0 : cfg.chatButton) === false) {
       buttonStatus = "off in settings";
       return;
     }
-    const v = getValenced();
-    if (!v) {
-      buttonStatus = "no valenced host";
-      return;
-    }
-    const finders = (_a = v == null ? void 0 : v.modules) == null ? void 0 : _a.finders;
-    const filters = (_c = (_b = v == null ? void 0 : v.modules) == null ? void 0 : _b.finders) == null ? void 0 : _c.filters;
-    const patcher = v == null ? void 0 : v.patcher;
-    if (!(finders == null ? void 0 : finders.getModules) || !(filters == null ? void 0 : filters.createFilterGenerator) || typeof (patcher == null ? void 0 : patcher.after) !== "function") {
+    const host = finderApi();
+    if (!host) {
       buttonStatus = "host lacks finders/patcher";
       return;
     }
-    const hookComponent = (Comp, label) => {
+    const { finders, filters, patcher } = host;
+    if (typeof finders.getModules !== "function") {
+      buttonStatus = "host has no getModules";
+      return;
+    }
+    const hook = (Comp, label) => {
       if (!Comp) return false;
-      if (typeof Comp === "object") {
-        const key = typeof Comp.type === "function" ? "type" : typeof Comp.render === "function" ? "render" : null;
-        if (!key) return false;
-        try {
-          const unpatch = patcher.after(Comp, key, (_args, tree) => insertChatButton(tree));
-          if (typeof unpatch === "function") cleanupFns.push(unpatch);
-          buttonStatus = "hooked " + label + " (" + key + ")";
-          return true;
-        } catch (e) {
-          buttonStatus = "patch failed on " + label;
-          hostError("chat button patch failed", e);
-          return false;
-        }
-      }
-      return false;
-    };
-    const memoNamed = (name) => {
+      const key = typeof Comp === "function" ? null : typeof Comp.type === "function" ? "type" : typeof Comp.render === "function" ? "render" : null;
+      if (!key) return false;
       try {
-        return filters.createFilterGenerator(
-          ([n], _id, exports) => {
-            const t = exports == null ? void 0 : exports.type;
-            if (t && typeof t === "function" && (t.displayName === n || t.name === n)) return true;
-            if ((exports == null ? void 0 : exports.displayName) === n || (exports == null ? void 0 : exports.name) === n) return true;
-            const r = exports == null ? void 0 : exports.render;
-            return !!r && typeof r === "function" && (r.displayName === n || r.name === n);
-          },
-          ([n]) => "cenotaph.fakedm.memo(" + n + ")"
-        )(name);
-      } catch {
-        return null;
+        const off = patcher.after(Comp, key, (_args, tree) => insertChatButton(tree));
+        if (typeof off === "function") cleanupFns.push(off);
+        buttonStatus = "hooked " + label + " (" + key + ")";
+        return true;
+      } catch (e) {
+        buttonStatus = "patch failed on " + label;
+        hostError("chat button patch failed", e);
+        return false;
       }
     };
-    const isComponentLike = (x) => !!x && (typeof x === "function" || typeof x === "object" && (typeof x.type === "function" || typeof x.render === "function"));
-    const names = ["ChatInputRightActions", "ChatInputActions", "ChatInputButtons", "ChatInputAppButtons"];
+    const pick = (exports) => {
+      var _a2;
+      const candidates = [exports, exports == null ? void 0 : exports.default, (_a2 = exports == null ? void 0 : exports.default) == null ? void 0 : _a2.default];
+      for (const c of candidates) {
+        if (!c) continue;
+        if (typeof c === "function") return c;
+        if (typeof c === "object" && (typeof c.type === "function" || typeof c.render === "function")) return c;
+      }
+      return null;
+    };
     let installed = false;
-    for (const name of names) {
-      const filter = memoNamed(name);
+    for (const name of CHAT_ROW_NAMES) {
+      const filter = memoFilter(filters, name);
       if (!filter) continue;
       try {
         const off = finders.getModules(filter, (exports) => {
-          var _a2;
           if (installed) return;
-          const Comp = isComponentLike(exports) ? exports : (_a2 = exports == null ? void 0 : exports.default) != null ? _a2 : exports;
-          if (hookComponent(Comp, name)) installed = true;
+          if (hook(pick(exports), name)) installed = true;
         });
         if (typeof off === "function") cleanupFns.push(off);
       } catch {
       }
     }
-    try {
-      const afterJSX = (_i = (_h = (_e = (_d = v == null ? void 0 : v.react) == null ? void 0 : _d.jsxRuntime) == null ? void 0 : _e.afterJSX) != null ? _h : (_g = (_f = v == null ? void 0 : v.react) == null ? void 0 : _f.ReactJSXRuntime) == null ? void 0 : _g.afterJSX) != null ? _i : null;
-      if (typeof afterJSX === "function" && !installed) {
-        const byName = [
-          (_j = filters.withName) == null ? void 0 : _j.call(filters, "ChatInput"),
-          (_k = filters.withName) == null ? void 0 : _k.call(filters, "ChannelTextArea"),
-          (_l = filters.withName) == null ? void 0 : _l.call(filters, "MessageInput")
-        ].filter(Boolean);
-        if (byName.length) {
-          const filter = byName.length === 1 ? byName[0] : (_m = filters.anyOf) == null ? void 0 : _m.call(filters, ...byName);
-          if (filter) {
-            const off = finders.getModules(filter, (exports) => {
-              var _a2, _b2;
-              if (installed) return;
-              const Comp = isComponentLike(exports) ? exports : (_a2 = exports == null ? void 0 : exports.default) != null ? _a2 : exports;
-              const render = typeof Comp === "function" ? Comp : (_b2 = Comp == null ? void 0 : Comp.type) != null ? _b2 : Comp == null ? void 0 : Comp.render;
-              if (!render) return;
-              try {
-                const unpatch = afterJSX(render, (tree) => insertChatButton(tree));
-                if (typeof unpatch === "function") cleanupFns.push(unpatch);
-                buttonStatus = "hooked via jsx";
-                installed = true;
-              } catch {
-              }
-            });
-            if (typeof off === "function") cleanupFns.push(off);
+    if (!installed) {
+      try {
+        const r = (_b = (_a = getValenced()) == null ? void 0 : _a.react) != null ? _b : {};
+        const afterJSX = (_f = (_e = (_c = r.jsxRuntime) == null ? void 0 : _c.afterJSX) != null ? _e : (_d = r.ReactJSXRuntime) == null ? void 0 : _d.afterJSX) != null ? _f : null;
+        if (typeof afterJSX === "function") {
+          const byName = ["ChatInput", "ChannelTextArea", "MessageInput"].map((n) => {
+            var _a2, _b2;
+            try {
+              return (_b2 = (_a2 = filters.withName) == null ? void 0 : _a2.call(filters, n)) != null ? _b2 : null;
+            } catch {
+              return null;
+            }
+          }).filter(Boolean);
+          if (byName.length) {
+            const filter = byName.length === 1 ? byName[0] : (_g = filters.anyOf) == null ? void 0 : _g.call(filters, ...byName);
+            if (filter) {
+              const off = finders.getModules(filter, (exports) => {
+                var _a2;
+                if (installed) return;
+                const Comp = pick(exports);
+                const render = typeof Comp === "function" ? Comp : (_a2 = Comp == null ? void 0 : Comp.type) != null ? _a2 : Comp == null ? void 0 : Comp.render;
+                if (typeof render !== "function") return;
+                try {
+                  const unpatch = afterJSX(render, (tree) => insertChatButton(tree));
+                  if (typeof unpatch === "function") cleanupFns.push(unpatch);
+                  buttonStatus = "hooked via jsx";
+                  installed = true;
+                } catch {
+                }
+              });
+              if (typeof off === "function") cleanupFns.push(off);
+            }
           }
         }
+      } catch {
       }
-    } catch {
     }
-    if (!installed) buttonStatus = "chat row not found (yet)";
+    if (installed) {
+      installTries = 0;
+      return;
+    }
+    if (installTries < MAX_INSTALL_TRIES) {
+      installTries++;
+      buttonStatus = "chat row not found (try " + installTries + "/" + MAX_INSTALL_TRIES + ")";
+      installTimer = setTimeout(() => {
+        installTimer = null;
+        installChatButton();
+      }, 3e3);
+    } else {
+      buttonStatus = "chat row not found \u2014 settings page only";
+    }
   } catch (e) {
     buttonStatus = "install failed";
     hostError("chat button install failed", e);
@@ -1600,6 +1662,11 @@ var __instance = {
   },
   stop() {
     var _a;
+    if (installTimer) {
+      clearTimeout(installTimer);
+      installTimer = null;
+    }
+    installTries = 0;
     while (cleanupFns.length) {
       try {
         (_a = cleanupFns.pop()) == null ? void 0 : _a();

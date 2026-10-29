@@ -1,20 +1,21 @@
 {
     "format": 1,
-    "id": "dev.8uvu.message-logger",
-    "name": "MessageLogger",
-    "description": "Message logger with searchable deleted/edited history, edit diffs, ghost pings, muted-channel filters, image caching and import/export",
+    "id": "dev.8uvu.fake-dm",
+    "name": "FakeDM",
+    "description": "Injects fake messages, calls, system messages, reactions & embeds into any DM or channel. Batch fake conversations. Persists across restarts. Mobile port of your Equicord plugin.",
     "author": "Cenotaph",
     "main": "index.js",
     "display": {
-        "name": "MessageLogger",
-        "description": "Message logger with searchable deleted/edited history, edit diffs, ghost pings, muted-channel filters, image caching and import/export",
+        "name": "FakeDM",
+        "description": "Injects fake messages, calls, system messages, reactions & embeds into any DM or channel. Batch fake conversations. Persists across restarts.",
         "authors": [
             {
                 "name": "Cenotaph"
             }
         ]
     },
-    "version": "1.7.4",
+    "version": "1.2.8",
+    "license": "GPL-3.0-or-later",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"
@@ -26,7 +27,7 @@
     "dist": {
         "script": "index.js"
     },
-    "hash": "3dfd876f38c4073f1d70744d5365aaba7c5f5348c718bb68a3b5ad60119c4a8f",
+    "hash": "0b9c2eb859e8d900711a369026cd9ce9800f59d3f65cd66025e189f896bfd171",
     "authors": [
         {
             "name": "Cenotaph"

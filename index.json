@@ -31,13 +31,13 @@
             "description": "Injects fake messages, calls, system messages, reactions & embeds into any DM or channel. Batch fake conversations. Persists across restarts. Mobile port of your Equicord plugin.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.2.7"
+                "latest": "1.2.8"
             },
             "versions": {
-                "1.2.7": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.2.7.zip",
-                    "sha256": "01e08d2d32bef37004ccdee3c14ccd8743eb052d27e638936359d9b2e6a9e066",
-                    "size": 17545,
+                "1.2.8": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.2.8.zip",
+                    "sha256": "d6a351ccf051d03ef1d1a200f907e4a6ca8df88079c91890c814db5ea49699e6",
+                    "size": 17854,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
@@ -118,29 +118,6 @@
                 }
             }
         },
-        "dev.8uvu.message-logger": {
-            "name": "MessageLogger",
-            "description": "Message logger with searchable deleted/edited history, edit diffs, ghost pings, muted-channel filters, image caching and import/export",
-            "author": "Cenotaph",
-            "channels": {
-                "latest": "1.7.4"
-            },
-            "versions": {
-                "1.7.4": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.7.4.zip",
-                    "sha256": "d66eee534be82940ef9bb306e671d0482bac5473a0a8144a39cea459224a5ef7",
-                    "size": 24986,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                }
-            }
-        },
         "dev.8uvu.platform-spoofer": {
             "name": "PlatformSpoofer",
             "description": "Spoof what platform you're on — Discord shows the matching platform icon (desktop, web, iOS, Xbox…) next to your name. Mobile port of Equicord's platformSpoofer.",
@@ -210,6 +187,29 @@
                 }
             }
         },
+        "dev.8uvu.voice-guard": {
+            "name": "Voice Guard",
+            "description": "Undoes server deafen and mute, and rejoins the voice channel you were dropped from.",
+            "author": "Cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.voice-guard@1.0.0.zip",
+                    "sha256": "d3cc64e4a6a2ca53787f4374cafdf907c3221f702b0a226b6a3616ec19ff7f0a",
+                    "size": 5775,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        },
         "dev.8uvu.voice-time": {
             "name": "VoiceTime",
             "description": "Counts how long you spent in voice calls, per day and per server.",
@@ -222,6 +222,29 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.voice-time@1.0.1.zip",
                     "sha256": "5828dac8a7ab5c8f77676399a97d84c275b8cd6871cd6f97552934803dfbfaef",
                     "size": 5277,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        },
+        "dev.8uvu.zero-width-sanitizer": {
+            "name": "ZeroWidthSanitizer",
+            "description": "Strips invisible zero-width tracking characters out of your messages before they are sent.",
+            "author": "Cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.zero-width-sanitizer@1.0.0.zip",
+                    "sha256": "25906b12e55f72caee29cd2c5b8ff689666ec4463e1ba45e06632862df96f1f8",
+                    "size": 5980,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

@@ -1,0 +1,29 @@
+{
+    "format": 1,
+    "id": "dev.8uvu.voice-guard",
+    "name": "Voice Guard",
+    "description": "Undoes server deafen and mute, and rejoins the voice channel you were dropped from.",
+    "author": "Cenotaph",
+    "version": "1.0.0",
+    "dependencies": {
+        "valenced.api": {
+            "version": ">=1"
+        },
+        "discord": {
+            "version": "*"
+        }
+    },
+    "dist": {
+        "script": "index.js"
+    },
+    "main": "index.js",
+    "hash": "80bdcd0d06f283c909f90117abed6b96688f6231a418d381b26bd76430c5926d",
+    "authors": [
+        {
+            "name": "Cenotaph"
+        }
+    ],
+    "vendetta": {
+        "icon": "ic_chat_bubble"
+    }
+}
