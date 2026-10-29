@@ -2,19 +2,19 @@
     "format": 1,
     "id": "dev.8uvu.fake-dm",
     "name": "FakeDM",
-    "description": "Fake messages and calls in any chat.",
+        "description": "Fake messages, calls, events, reactions and embeds in any chat — full 2.0 UI.",
     "author": "Cenotaph",
     "main": "index.js",
     "display": {
         "name": "FakeDM",
-        "description": "Fake messages and calls in any chat.",
+        "description": "Fake messages, calls, events, reactions and embeds in any chat — full 2.0 UI.",
         "authors": [
             {
                 "name": "Cenotaph"
             }
         ]
     },
-    "version": "1.5.2",
+    "version": "2.0.0",
     "license": "GPL-3.0-or-later",
     "dependencies": {
         "valenced.api": {

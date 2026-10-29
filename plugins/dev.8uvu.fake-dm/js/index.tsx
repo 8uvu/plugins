@@ -6,7 +6,7 @@
 // across restarts, and can batch-inject a whole fake conversation from a
 // simple "[14:30] Name: text" script.
 //
-const PLUGIN_VERSION = '1.5.2';
+const PLUGIN_VERSION = '2.0.0';
 
 // The chat-bar button is here too, but as a wrapper around Discord's chat row
 // rather than a portal: the row is handed back untouched and the Fake pill is a
@@ -897,7 +897,17 @@ function toast(content: string) {
     hostError('no notification channel available: ' + text);
 }
 
-// ---- Settings UI ---------------------------------------------------------------
+// ---- Settings UI (2.0 — rebuilt from scratch) ----------------------------------
+// Every screen below is ours and ours alone: plain React Native primitives,
+// dressed up and tinted (and Discord's own design components used whenever the
+// host offers them). Not one line here touches a stock component, so the UI can
+// degrade a render at worst — it can never take the client down with it.
+//
+//   * one design language: flat canvas, elevated cards, accent pills
+//   * six screens: Compose · Batch · Call & System · React · Saved · Setup
+//   * destructive actions are two-tap confirms inside their own chip
+//   * the engine underneath is unchanged — injection, batch, edit, restore and
+//     the single-anchor chat-bar pill are the code the phone already lived with
 
 function hexToInt(hex: string): number | undefined {
     const m = String(hex ?? '').trim().replace('#', '');
@@ -905,8 +915,8 @@ function hexToInt(hex: string): number | undefined {
     return parseInt(m, 16);
 }
 
-// Discord's own design components give the settings page Discord's native look.
-// Resolved lazily (never at eval time) so the host cannot kill us.
+// Discord's own design components give the settings page a native look when the
+// host offers them. Resolved lazily (never at eval time) so the host cannot kill us.
 function resolveDesign(): any {
     try {
         const g = getValenced()?.discord?.design;
@@ -941,97 +951,179 @@ function buildSettingsComponent() {
         } catch {}
         return true;
     })();
-    const C = isDark
-        ? { bg: '#111214', card: '#1a1b1e', text: '#ffffff', sub: '#9ba0a8', input: '#232428', chip: '#2b2d31', blurple: '#5865F2', danger: '#f04747', ok: '#23a55a', amber: '#faa61a' }
-        : { bg: '#f2f3f5', card: '#ffffff', text: '#060607', sub: '#5c5e66', input: '#ebedef', chip: '#e3e5e8', blurple: '#5865F2', danger: '#d83c3e', ok: '#248046', amber: '#c28516' };
 
-    function Card(props: any) {
-        const kids = Array.isArray(props.children) ? props.children : props.children == null ? [] : [props.children];
-        if (D?.TableRowGroup) return el(D.TableRowGroup, { title: props.title }, ...kids);
-        return el(View, { style: { backgroundColor: C.card, borderRadius: 12, marginHorizontal: 12, paddingVertical: 6, marginTop: 8 } }, ...kids);
+    const C = isDark ? {
+        // Dark: flat near-black canvas, raised cards, one accent.
+        bg: '#0c0d10', card: '#17181a', cardAlt: '#1e2023', line: '#282a30',
+        text: '#f2f3f5', sub: '#8f95a3', input: '#232529', chip: '#27292f',
+        accent: '#5865F2', accentSoft: 'rgba(88,101,242,0.16)',
+        danger: '#f04747', ok: '#23a55a', amber: '#faa61a',
+    } : {
+        bg: '#eceef2', card: '#ffffff', cardAlt: '#f6f7f9', line: '#dcdee4',
+        text: '#060607', sub: '#5c5e66', input: '#e7e9ee', chip: '#e3e5e9',
+        accent: '#5865F2', accentSoft: 'rgba(88,101,242,0.12)',
+        danger: '#d83c3e', ok: '#248046', amber: '#c28516',
+    };
+
+    // ---- primitives (plain builders; Confirm is the only hooked component) ----
+
+    function Card(props: any): any {
+        const title = props?.title ?? '';
+        return el(View, { style: { backgroundColor: C.card, borderRadius: 14, borderWidth: 1, borderColor: C.line, marginHorizontal: 14, marginTop: 10, overflow: 'hidden' } },
+            title ? el(View, { style: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingTop: 11, paddingBottom: 1 } },
+                props.dot ? el(View, { style: { width: 7, height: 7, borderRadius: 4, backgroundColor: props.dot, marginRight: 7 } }) : null,
+                el(Text, { style: { color: C.text, fontSize: 14, fontWeight: '800', flex: 1 } }, title),
+                props.meta ? el(Text, { style: { color: C.sub, fontSize: 11 } }, String(props.meta)) : null)
+                : null,
+            el(View, { style: { paddingHorizontal: 14, paddingVertical: 10 } }, props.children));
     }
-    function Row(props: any) {
-        return el(View, { style: { paddingHorizontal: 14, paddingVertical: 8 } }, props.children);
+
+    function Lbl(props: any): any {
+        return el(View, { style: { marginTop: props.first ? 0 : 10, marginBottom: 3 } },
+            el(Text, { style: { color: C.sub, fontSize: 11, fontWeight: '800', letterSpacing: 0.4 } }, String(props.text ?? '').toUpperCase()),
+            props.hint ? el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 1 } }, props.hint) : null);
     }
-    function Label(props: any) {
-        return el(Text, { style: { color: C.sub, fontSize: 12, fontWeight: '700', marginBottom: 4 } }, props.children);
-    }
-    function Input(props: any) {
+
+    function Input(props: any): any {
         const NativeInput = D?.TextInput ?? D?.TextField ?? null;
-        if (NativeInput) {
-            return el(NativeInput, {
-                placeholderTextColor: C.sub,
-                ...props,
-                style: [{ color: C.text, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 8, fontSize: 14, marginBottom: 8 }, props.style],
-            });
-        }
-        return el(TextInput, {
-            placeholderTextColor: C.sub,
-            ...props,
-            style: [{ backgroundColor: C.input, color: C.text, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 8, fontSize: 14, marginBottom: 8 }, props.style],
-        });
+        const base: any = {
+            placeholderTextColor: C.sub, ...props,
+            style: [{ color: C.text, backgroundColor: C.input, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 9, fontSize: 14, marginBottom: 4 }, props.style],
+        };
+        if (NativeInput) return el(NativeInput, base);
+        return el(TextInput, base);
     }
-    function Btn(props: any) {
-        return el(Pressable, { onPress: props.onPress, style: [{ backgroundColor: props.danger ? C.danger : props.ok ? C.ok : C.blurple, borderRadius: 10, paddingVertical: 10, alignItems: 'center', marginTop: 2 }, props.style] },
-            el(Text, { style: { color: '#ffffff', fontWeight: '700', fontSize: 14 } }, props.label));
+
+    function BigBtn(props: any): any {
+        return el(Pressable, {
+            accessibilityLabel: props.label,
+            onPress: props.onPress,
+            disabled: !!props.disabled,
+            style: {
+                backgroundColor: props.danger ? C.danger : props.ok ? C.ok : C.accent,
+                borderRadius: 12, paddingVertical: 12, alignItems: 'center', marginTop: 6,
+                opacity: props.disabled ? 0.5 : 1,
+            },
+        }, el(Text, { style: { color: '#ffffff', fontWeight: '800', fontSize: 15 } }, props.label));
     }
-    function SwitchRow(props: any) {
+
+    function MiniBtn(props: any): any {
+        return el(Pressable, {
+            accessibilityLabel: props.label,
+            onPress: props.onPress,
+            style: {
+                backgroundColor: props.active ? C.accent : props.danger ? 'rgba(240,71,71,0.14)' : C.chip,
+                borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8, marginRight: 8, marginTop: 4,
+            },
+        }, el(Text, { style: { color: props.active ? '#ffffff' : props.danger ? C.danger : C.text, fontSize: 12, fontWeight: '700' } }, props.label));
+    }
+
+    // Two-tap confirm. State lives in the screen (armedConfirm) because this is a
+    // plain builder called inline — a tracking-state-of-its-own hook component
+    // here would leak into whatever screen happens to render it and break when
+    // the tab switches. Each Confirm passes a unique id.
+    function Confirm(props: any): any {
+        const armed = props.armed === true;
+        return el(Pressable, {
+            accessibilityLabel: String(props.label),
+            onPress: () => { if (armed) { props.setArmed?.(''); props.onConfirm?.(); } else props.setArmed?.(props.id); },
+            style: {
+                backgroundColor: armed ? C.danger : 'rgba(240,71,71,0.14)',
+                borderRadius: 12, paddingVertical: 10, paddingHorizontal: 14, marginTop: 6, borderWidth: 1, borderColor: armed ? C.danger : C.line,
+            },
+        }, el(Text, { style: { color: armed ? '#ffffff' : C.danger, fontSize: 13, fontWeight: '700' } }, armed ? 'Tap again to confirm — ' + String(props.label) : String(props.label)));
+    }
+
+    function ChipRow(props: any): any {
+        const items = Array.isArray(props?.items) ? props.items : [];
+        if (!items.length) return null;
+        return el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false },
+            ...items.map((item: any) => el(Pressable, {
+                key: String(item.key),
+                accessibilityLabel: String(item.label),
+                onPress: () => props.onChange?.(props.value === item.key ? '' : item.key),
+                style: { backgroundColor: props.value === item.key ? C.accent : C.chip, borderRadius: 16, paddingHorizontal: 13, paddingVertical: 7, marginRight: 8, marginBottom: 4 },
+            }, el(Text, { style: { color: props.value === item.key ? '#ffffff' : C.text, fontSize: 12, fontWeight: '700' } }, String(item.label)))));
+    }
+
+    function SwitchRow(props: any): any {
         if (D?.TableSwitchRow) {
-            return el(D.TableSwitchRow, {
-                label: props.label,
-                subLabel: props.subLabel,
-                value: !!props.value,
-                onValueChange: props.onValueChange,
-            });
+            return el(D.TableSwitchRow, { label: props.label, subLabel: props.subLabel, value: !!props.value, onValueChange: props.onValueChange });
         }
         const toggle = Switch
-            ? el(Switch, { value: !!props.value, onValueChange: props.onValueChange, trackColor: { false: 'rgba(128,128,128,0.35)', true: C.blurple }, thumbColor: '#ffffff' })
-            : el(Text, { style: { color: C.sub }, onPress: () => props.onValueChange(!props.value) }, props.value ? 'On' : 'Off');
-        return el(View, { style: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, paddingVertical: 10 } },
-            el(Text, { style: { color: C.text, fontSize: 15, flex: 1, paddingRight: 12 } }, props.label),
+            ? el(Switch, { value: !!props.value, onValueChange: props.onValueChange, trackColor: { false: 'rgba(128,128,128,0.35)', true: C.accent }, thumbColor: '#ffffff' })
+            : el(Text, { onPress: () => props.onValueChange(!props.value), style: { color: C.accent, fontWeight: '800' } }, props.value ? 'On' : 'Off');
+        return el(View, { style: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 6 } },
+            el(View, { style: { flex: 1, paddingRight: 12 } },
+                el(Text, { style: { color: C.text, fontSize: 15 } }, props.label),
+                props.subLabel ? el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 1 } }, props.subLabel) : null),
             toggle);
     }
-    function MemberChips(props: any) {
-        const kids = props.members.map((u: any) =>
-            el(Pressable, {
+
+    function MemberChips(props: any): any {
+        const kids = (props.members ?? []).map((u: any) => {
+            const active = props.value === String(u.id);
+            return el(Pressable, {
                 key: String(u.id),
-                onPress: () => props.value === String(u.id) ? props.onChange('') : props.onChange(String(u.id)),
-                style: { backgroundColor: props.value === String(u.id) ? C.blurple : C.chip, borderRadius: 16, paddingHorizontal: 12, paddingVertical: 6, marginRight: 8 },
-            }, el(Text, { style: { color: props.value === String(u.id) ? '#ffffff' : C.text, fontSize: 13 } }, userLabel(u))));
-        return el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginBottom: 6 } }, ...kids);
+                accessibilityLabel: userLabel(u),
+                onPress: () => props.onChange?.(active ? '' : String(u.id)),
+                style: { backgroundColor: active ? C.accent : C.chip, borderRadius: 16, paddingHorizontal: 13, paddingVertical: 7, marginRight: 8, marginBottom: 4 },
+            }, el(Text, { style: { color: active ? '#ffffff' : C.text, fontSize: 13 } }, userLabel(u)));
+        });
+        return el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false }, ...kids);
     }
-    function TypeChips(props: any) {
-        const kids = props.options.map((o: any) =>
-            el(Pressable, {
-                key: String(o.value),
-                onPress: () => props.value === o.value ? props.onChange(null) : props.onChange(o.value),
-                style: { backgroundColor: props.value === o.value ? C.blurple : C.chip, borderRadius: 16, paddingHorizontal: 12, paddingVertical: 6, marginRight: 8 },
-            }, el(Text, { style: { color: props.value === o.value ? '#ffffff' : C.text, fontSize: 13 } }, o.label)));
-        return el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginBottom: 6 } }, ...kids);
-    }
-    // Tap-to-pick a recent message from the open chat — no more copying IDs.
-    function MsgPicker(props: any) {
+
+    // Tap-to-pick a recent message from the open chat — no copying IDs by hand.
+    function MsgPicker(props: any): any {
         const msgs = recentMessages(props.channelId);
         if (!msgs.length) {
             return el(Text, { style: { color: C.sub, fontSize: 12 } }, 'Open the chat, then come back here to pick a message.');
         }
-        const kids = msgs.map((m: any) =>
-            el(Pressable, {
+        const kids = msgs.map((m: any) => {
+            const active = props.value === String(m.id);
+            return el(Pressable, {
                 key: String(m.id),
-                onPress: () => props.value === String(m.id) ? props.onChange('') : props.onChange(String(m.id)),
-                style: { backgroundColor: props.value === String(m.id) ? C.blurple : C.chip, borderRadius: 10, paddingHorizontal: 10, paddingVertical: 6, marginRight: 8, maxWidth: 240 },
-            }, el(Text, { numberOfLines: 1, style: { color: props.value === String(m.id) ? '#ffffff' : C.text, fontSize: 12 } }, String(m.content || '(attachment/embed)') + ' — ' + userLabel(m.author))));
-        return el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginBottom: 6 } }, ...kids);
+                onPress: () => props.onChange?.(active ? '' : String(m.id)),
+                style: { backgroundColor: active ? C.accent : C.chip, borderRadius: 10, paddingHorizontal: 10, paddingVertical: 6, marginRight: 8, maxWidth: 250 },
+            }, el(Text, { numberOfLines: 1, style: { color: active ? '#ffffff' : C.text, fontSize: 12 } }, String(m.content || '(attachment/embed)') + ' — ' + userLabel(m.author)));
+        });
+        return el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false }, ...kids);
     }
 
-    const TABS = [
-        { key: 'quick', label: '★ Quick' },
-        { key: 'message', label: 'Message' },
-        { key: 'call', label: 'Call' },
-        { key: 'system', label: 'System' },
-        { key: 'react', label: 'React' },
+    // One saved fake presented as a mail card: kind dot, author, stamp, actions.
+    function FakeCard(props: any): any {
+        const f = props.fake;
+        const isMsg = f.type === 'message';
+        const kind = isMsg ? ((f as PersistedMessage).systemType ? 'SYSTEM' : 'MESSAGE')
+            : f.type === 'call' ? 'CALL' : 'REACT';
+        const color = isMsg ? C.accent : f.type === 'call' ? C.ok : C.amber;
+        const authorName = userLabel(memberById(
+            isMsg ? (f as PersistedMessage).authorId
+                : f.type === 'call' ? (f as PersistedCall).callerId
+                    : (f as PersistedReaction).userId));
+        const summary = isMsg
+            ? String((f as PersistedMessage).content || '(no text)')
+            : f.type === 'call' ? ((f as PersistedCall).missed ? 'Missed call' : 'Call · ' + Math.round((f as PersistedCall).durationSec / 60) + ' min')
+                : ':' + (f as PersistedReaction).emoji + ':';
+        const when = (isMsg || f.type === 'call') ? new Date((f as any).timestamp).toLocaleString() : 'just now';
+        return el(View, { key: props.k ?? String(f.snowflakeId), style: { backgroundColor: C.cardAlt, borderRadius: 12, borderWidth: 1, borderColor: C.line, paddingHorizontal: 12, paddingVertical: 10, marginTop: 8 } },
+            el(View, { style: { flexDirection: 'row', alignItems: 'center' } },
+                el(View, { style: { width: 6, height: 6, borderRadius: 3, backgroundColor: color, marginRight: 7 } }),
+                el(Text, { style: { color, fontSize: 10, fontWeight: '800', letterSpacing: 0.5, flex: 1 } }, kind + ' · ' + authorName),
+                el(Text, { style: { color: C.sub, fontSize: 10 } }, when),
+                props.onEdit ? el(MiniBtn, { label: 'Edit', onPress: props.onEdit }) : null,
+                el(MiniBtn, { label: 'Delete', danger: true, onPress: props.onDelete })),
+            props.editing ? null : el(Text, { style: { color: C.text, fontSize: 14, marginTop: 4, lineHeight: 19 } }, summary),
+            props.children ?? null);
+    }
+
+    const TAB_DEFS = [
+        { key: 'compose', label: 'Compose' },
         { key: 'batch', label: 'Batch' },
-        { key: 'fakes', label: 'Fakes' },
+        { key: 'callsys', label: 'Call & System' },
+        { key: 'react', label: 'React' },
+        { key: 'saved', label: 'Saved' },
+        { key: 'setup', label: 'Setup' },
     ];
 
     return function FakeDMSettings(props: any) {
@@ -1040,37 +1132,35 @@ function buildSettingsComponent() {
         }
         refreshConfigFromStorage();
 
-        const [tab, setTab] = React.useState('quick');
-        // Inline editor for one saved fake (desktop's Edit Fake Message modal).
-        const [editingId, setEditingId] = React.useState('');
-        const [editText, setEditText] = React.useState('');
-        const [editWhen, setEditWhen] = React.useState('');
-        // quick tab
-        const [qUser, setQUser] = React.useState('');
-        const [qUserId, setQUserId] = React.useState('');
-        const [qText, setQText] = React.useState('');
-        const [qPreset, setQPreset] = React.useState('now');
-        const [qReply, setQReply] = React.useState('');
-        const [qImage, setQImage] = React.useState('');
-        const [qPicking, setQPicking] = React.useState(false);
-        // message tab
+        const [tab, setTab] = React.useState('compose');
+        const [armedConfirm, setArmedConfirm] = React.useState('');
+        const [fakeTick, setFakeTick] = React.useState(0);
+
+        // compose
         const [senderId, setSenderId] = React.useState('');
         const [content, setContent] = React.useState('');
         const [timeText, setTimeText] = React.useState('');
         const [dateText, setDateText] = React.useState('');
+        const [preset, setPreset] = React.useState('now');
         const [replyId, setReplyId] = React.useState('');
         const [imageUrl, setImageUrl] = React.useState('');
+        const [galleryImage, setGalleryImage] = React.useState('');
+        const [picking, setPicking] = React.useState(false);
         const [embedOn, setEmbedOn] = React.useState(false);
         const [embedTitle, setEmbedTitle] = React.useState('');
         const [embedDesc, setEmbedDesc] = React.useState('');
-        const [embedColor, setEmbedColor] = React.useState('#5865F2');
+        const [embeddingColor, setEmbeddingColor] = React.useState('#5865F2');
         const [embedImage, setEmbedImage] = React.useState('');
-        // call tab
+        // batch
+        const [batchText, setBatchText] = React.useState('');
+        const [batchSenderId, setBatchSenderId] = React.useState('');
+        const [batchTime, setBatchTime] = React.useState('');
+        const [batchDate, setBatchDate] = React.useState('');
+        // call & system
         const [callerId, setCallerId] = React.useState('');
         const [receiverId, setReceiverId] = React.useState('');
         const [missed, setMissed] = React.useState(false);
         const [durationMin, setDurationMin] = React.useState('2');
-        // system tab
         const [sysSenderId, setSysSenderId] = React.useState('');
         const [sysType, setSysType] = React.useState(6 as number | null);
         const [sysContent, setSysContent] = React.useState('');
@@ -1078,21 +1168,18 @@ function buildSettingsComponent() {
         const [reactMsgId, setReactMsgId] = React.useState('');
         const [reactEmoji, setReactEmoji] = React.useState('');
         const [reactUserId, setReactUserId] = React.useState('');
-        // batch tab
-        const [batchText, setBatchText] = React.useState('');
-        const [batchSenderId, setBatchSenderId] = React.useState('');
-        const [batchTime, setBatchTime] = React.useState('');
-        const [batchDate, setBatchDate] = React.useState('');
-        // fakes tab
-        const [fakeTick, setFakeTick] = React.useState(0);
-        // chat-bar button
+        // saved tab: inline editor for one fake (desktop's Edit Fake Message)
+        const [editingId, setEditingId] = React.useState('');
+        const [editText, setEditText] = React.useState('');
+        const [editWhen, setEditWhen] = React.useState('');
+        // setup
         const [chatBtn, setChatBtn] = React.useState((cfg as any)?.chatButton !== false);
         const [quickTxt, setQuickTxt] = React.useState(String((cfg as any)?.quickText ?? 'hello'));
 
         const candidates = memberCandidates();
         const me = getUserStore()?.getCurrentUser?.() ?? null;
         const channelId = currentChannelId();
-        // Sensible defaults: sender starts as YOU, caller defaults handled per tab.
+        // Sensible defaults: sender starts as YOU.
         const [defaultsInit, setDefaultsInit] = React.useState(0);
         if (!defaultsInit && me?.id) {
             setDefaultsInit(1);
@@ -1101,117 +1188,155 @@ function buildSettingsComponent() {
             setReactUserId(String(me.id));
         }
 
-        function parseWhen(timeText: string, dateText: string): Date {
-            const d = new Date();
-            const dm = String(dateText ?? '').trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
-            if (dm) d.setFullYear(parseInt(dm[1], 10), parseInt(dm[2], 10) - 1, parseInt(dm[3], 10));
-            const tm = String(timeText ?? '').trim().match(/^(\d{1,2}):(\d{2})$/);
-            if (tm) d.setHours(Math.min(23, parseInt(tm[1], 10)), parseInt(tm[2], 10), 0, 0);
-            return d;
+        function parseWhen(t: string, d: string): Date {
+            const date = new Date();
+            const dm = String(d ?? '').trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            if (dm) date.setFullYear(parseInt(dm[1], 10), parseInt(dm[2], 10) - 1, parseInt(dm[3], 10));
+            const tm = String(t ?? '').trim().match(/^(\d{1,2}):(\d{2})$/);
+            if (tm) date.setHours(Math.min(23, parseInt(tm[1], 10)), parseInt(tm[2], 10), 0, 0);
+            return date;
         }
 
-        const sendAs = () => el(View, null,
-            el(Label, null, 'Send as — tap a person (you is pre-picked)'),
-            el(MemberChips, { members: candidates, value: senderId, onChange: setSenderId }),
-            el(Input, { placeholder: '...or paste a user ID', value: senderId, onChangeText: (t: string) => setSenderId(t.replace(/[^0-9]/g, '')) }));
+        const manualWhen = String(timeText).trim() !== '' || String(dateText).trim() !== '';
+        const PRESETS = [
+            { key: 'now', label: 'Now' },
+            { key: 'm5', label: '5m ago' },
+            { key: 'm30', label: '30m ago' },
+            { key: 'm120', label: '2h ago' },
+            { key: 'yesterday-evening', label: 'Yesterday 8:34 PM' },
+        ];
 
-        const whenInputs = () => el(View, null,
-            el(Label, null, 'Time (HH:MM, optional — default now)'),
-            el(Input, { placeholder: '14:30', value: timeText, onChangeText: setTimeText }),
-            el(Label, null, 'Date (YYYY-MM-DD, optional)'),
-            el(Input, { placeholder: '2026-09-26', value: dateText, onChangeText: setDateText }));
+        // ---- screen builders (each returns a plain View tree) -------------------
 
-        let body: any = null;
-        if (tab === 'quick') {
-            const quickUser = qUserId ? memberById(qUserId) : resolveQuickUser(qUser, candidates);
-            const PRESETS = [
-                { key: 'now', label: 'Now' },
-                { key: 'm5', label: '5m ago' },
-                { key: 'm30', label: '30m ago' },
-                { key: 'm120', label: '2h ago' },
-                { key: 'yesterday-evening', label: 'Yesterday 8:34 PM' },
-            ];
-            body = el(View, null,
-                el(Label, null, '1. Who says it? Tap a friend or type their name'),
-                el(MemberChips, { members: candidates, value: quickUser ? String(quickUser.id) : '', onChange: (id: string) => { setQUserId(id); setQUser(id ? userLabel(memberById(id)) : ''); } }),
-                el(Input, { placeholder: '@username (or leave empty = you)', value: qUser, onChangeText: (t: string) => { setQUser(t); setQUserId(''); } }),
-                quickUser ? el(Text, { style: { color: C.ok, fontSize: 12, marginBottom: 6 } }, '✓ ' + userLabel(quickUser)) : el(Text, { style: { color: C.sub, fontSize: 12, marginBottom: 6 } }, 'Empty = sent by you'),
-                el(Label, null, '2. What do they say?'),
-                el(Input, { placeholder: 'Type the message…', value: qText, onChangeText: setQText, multiline: true, style: { minHeight: 56, textAlignVertical: 'top' } }),
-                el(Label, null, '3. When? (optional)'),
-                el(TypeChips, { options: PRESETS, value: qPreset, onChange: setQPreset }),
-                el(Label, null, 'Reply to one of YOUR messages (optional)'),
-                el(MsgPicker, { channelId, value: qReply, onChange: setQReply }),
-                el(View, { style: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 } },
-                    el(Pressable, {
-                        disabled: qPicking,
-                        onPress: async () => {
-                            setQPicking(true);
-                            try {
-                                const uri = await pickImageFromGallery();
-                                if (uri) { setQImage(uri); toast('Photo attached'); }
-                                else toast('Gallery picker not available on this build — use the Message tab for image URLs');
-                            } finally {
-                                setQPicking(false);
-                            }
-                        },
-                        style: { backgroundColor: C.chip, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8, marginRight: 10 },
-                    }, el(Text, { style: { color: C.text, fontSize: 13, fontWeight: '700' } }, qPicking ? 'Opening…' : '📷 Pick photo')),
-                    qImage ? el(Text, { numberOfLines: 1, style: { color: C.ok, fontSize: 12, flex: 1 } }, '✓ photo attached') : null),
-                qImage ? el(Pressable, { onPress: () => setQImage(''), style: { marginBottom: 8 } }, el(Text, { style: { color: C.danger, fontSize: 12 } }, '✕ Remove photo')) : null,
-                el(Btn, {
-                    label: 'Inject', onPress: () => {
-                        const author = quickUser ?? me;
-                        if (!author) return toast('Could not find that user');
-                        const when = presetDate(qPreset);
-                        const attachments = qImage ? [{ url: qImage, filename: 'image.png', local: true }] : undefined;
-                        const id = injectMessage(channelId, author, qText, when, undefined, attachments, qReply ? { messageId: qReply } : undefined, undefined);
-                        toast(id ? 'Fake sent ✓' : 'Inject failed');
-                        if (id) { setQText(''); setQReply(''); setQImage(''); setQPreset('now'); }
-                        setFakeTick((n: number) => n + 1);
-                    },
-                }));
-        } else if (tab === 'message') {
-            body = el(View, null,
-                sendAs(),
-                el(Label, null, 'Message'),
-                el(Input, { placeholder: 'Message text…', value: content, onChangeText: setContent, multiline: true, style: { minHeight: 60, textAlignVertical: 'top' } }),
-                whenInputs(),
-                el(Label, null, 'Reply to — tap a message from the chat'),
-                el(MsgPicker, { channelId, value: replyId, onChange: setReplyId }),
-                el(Input, { placeholder: '...or paste a message ID', value: replyId, onChangeText: (t: string) => setReplyId(t.replace(/[^0-9]/g, '')) }),
-                el(Label, null, 'Image URL (optional attachment)'),
-                el(Input, { placeholder: 'https://…/image.png', value: imageUrl, onChangeText: setImageUrl }),
-                el(SwitchRow, { label: 'Attach an embed', value: embedOn, onValueChange: setEmbedOn }),
-                embedOn ? el(View, null,
-                    el(Input, { placeholder: 'Embed title', value: embedTitle, onChangeText: setEmbedTitle }),
-                    el(Input, { placeholder: 'Embed description', value: embedDesc, onChangeText: setEmbedDesc, multiline: true }),
-                    el(Input, { placeholder: '#5865F2', value: embedColor, onChangeText: setEmbedColor }),
-                    el(Input, { placeholder: 'Embed image URL', value: embedImage, onChangeText: setEmbedImage }),
-                ) : null,
-                el(Btn, {
-                    label: 'Inject message', onPress: () => {
-                        const author = memberById(senderId || (candidates[0]?.id ?? ''));
+        function composeScreen(): any {
+            const photoSource = galleryImage || String(imageUrl).trim();
+            const author = memberById(senderId || (candidates[0]?.id ?? ''));
+            return el(View, null,
+                Card({ title: 'Who says it', dot: C.accent, meta: author ? userLabel(author) : 'you', children: [
+                    Lbl({ text: 'Tap a person — you is pre-picked', first: true }),
+                    MemberChips({ members: candidates, value: senderId, onChange: setSenderId }),
+                    Input({ placeholder: '...or paste a user ID', value: senderId, onChangeText: (t: string) => setSenderId(t.replace(/[^0-9]/g, '')) }),
+                ] }),
+                Card({ title: 'The message', dot: C.accent, children: [
+                    Input({ placeholder: 'Type the message…', value: content, onChangeText: setContent, multiline: true, style: { minHeight: 64, textAlignVertical: 'top', marginTop: 2 } }),
+                ] }),
+                Card({ title: 'When', dot: C.accent, meta: manualWhen ? 'manual' : 'preset', children: [
+                    Lbl({ text: 'Preset — used while the fields below are empty', first: true }),
+                    ChipRow({ items: PRESETS, value: preset, onChange: setPreset }),
+                    Lbl({ text: 'Time (HH:MM) and date (YYYY-MM-DD) override the preset' }),
+                    Input({ placeholder: '14:30', value: timeText, onChangeText: setTimeText }),
+                    Input({ placeholder: '2026-10-29', value: dateText, onChangeText: setDateText }),
+                ] }),
+                Card({ title: 'Reply & photo', dot: C.accent, children: [
+                    Lbl({ text: 'Reply to a message from this chat', first: true }),
+                    MsgPicker({ channelId, value: replyId, onChange: setReplyId }),
+                    Input({ placeholder: '...or paste a message ID', value: replyId, onChangeText: (t: string) => setReplyId(t.replace(/[^0-9]/g, '')) }),
+                    Lbl({ text: 'Photo — gallery pick or URL' }),
+                    el(View, { style: { flexDirection: 'row', alignItems: 'center' } },
+                        el(Pressable, {
+                            accessibilityLabel: 'Pick photo from gallery',
+                            disabled: picking,
+                            onPress: async () => {
+                                setPicking(true);
+                                try {
+                                    const uri = await pickImageFromGallery();
+                                    if (uri) { setGalleryImage(uri); toast('Photo attached'); }
+                                    else toast('Gallery picker not available on this build — use the URL field below');
+                                } finally {
+                                    setPicking(false);
+                                }
+                            },
+                            style: { backgroundColor: C.chip, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8, marginRight: 10, marginTop: 4 },
+                        }, el(Text, { style: { color: C.text, fontSize: 13, fontWeight: '700' } }, picking ? 'Opening…' : '📷 Gallery')),
+                        galleryImage ? el(MiniBtn, { label: 'Remove photo', danger: true, onPress: () => setGalleryImage('') }) : null),
+                    galleryImage ? el(Text, { numberOfLines: 1, style: { color: C.ok, fontSize: 12, marginTop: 2 } }, '✓ gallery photo attached') : null,
+                    Input({ placeholder: 'https://…/image.png', value: imageUrl, onChangeText: setImageUrl, style: { marginTop: 6 } }),
+                    Lbl({ text: 'Embed (optional)' }),
+                    SwitchRow({ label: 'Attach an embed', value: embedOn, onValueChange: setEmbedOn }),
+                    embedOn ? el(View, null,
+                        Input({ placeholder: 'Embed title', value: embedTitle, onChangeText: setEmbedTitle }),
+                        Input({ placeholder: 'Embed description', value: embedDesc, onChangeText: setEmbedDesc, multiline: true }),
+                        Input({ placeholder: '#5865F2', value: embeddingColor, onChangeText: setEmbeddingColor }),
+                        Input({ placeholder: 'Embed image URL', value: embedImage, onChangeText: setEmbedImage })) : null,
+                ] }),
+                el(View, { style: { marginHorizontal: 14 } }, BigBtn({
+                    label: 'Fake send',
+                    onPress: () => {
                         if (!author) return toast('Pick who sends it first');
-                        const embeds: FakeEmbed[] | undefined = embedOn ? [{ title: embedTitle || undefined, description: embedDesc || undefined, color: hexToInt(embedColor), image: embedImage ? { url: embedImage } : undefined }] : undefined;
-                        const attachments = imageUrl ? [{ url: imageUrl, filename: imageUrl.split('/').pop() || 'image.png' }] : undefined;
-                        const id = injectMessage(channelId, author, content, parseWhen(timeText, dateText), undefined, attachments, replyId ? { messageId: replyId } : undefined, embeds);
-                        toast(id ? 'Fake message injected' : 'Inject failed (no dispatcher?)');
+                        if (!String(content).trim()) return toast('Write the message text first');
+                        const when = manualWhen ? parseWhen(timeText, dateText) : presetDate(preset);
+                        const embeds: FakeEmbed[] | undefined = embedOn
+                            ? [{ title: embedTitle || undefined, description: embedDesc || undefined, color: hexToInt(embeddingColor), image: embedImage ? { url: embedImage } : undefined }]
+                            : undefined;
+                        const attachments = photoSource
+                            ? [{ url: photoSource, filename: photoSource.split('/').pop() || 'image.png', ...(galleryImage ? { local: true } : {}) }]
+                            : undefined;
+                        const id = injectMessage(channelId, author, content, when, undefined, attachments, replyId ? { messageId: replyId } : undefined, embeds);
+                        toast(id ? 'Fake sent ✓' : 'Inject failed (no dispatcher?)');
+                        if (id) { setContent(''); setReplyId(''); setGalleryImage(''); setImageUrl(''); }
                         setFakeTick((n: number) => n + 1);
                     },
-                }));
-        } else if (tab === 'call') {
-            body = el(View, null,
-                el(Label, null, 'Caller'),
-                el(MemberChips, { members: candidates, value: callerId, onChange: setCallerId }),
-                el(Label, null, 'Receiver'),
-                el(MemberChips, { members: candidates, value: receiverId, onChange: setReceiverId }),
-                el(SwitchRow, { label: 'Missed call', value: missed, onValueChange: setMissed }),
-                el(Label, null, 'Duration (minutes, ignored when missed)'),
-                el(Input, { placeholder: '2', value: durationMin, onChangeText: (t: string) => setDurationMin(t.replace(/[^0-9]/g, '')) }),
-                whenInputs(),
-                el(Btn, {
-                    label: 'Inject call', onPress: () => {
+                })));
+        }
+
+        function batchScreen(): any {
+            const base = parseWhen(batchTime, batchDate);
+            const parsed = parseBatchScript(batchText, base);
+            const defaultSender = memberById(batchSenderId || (me?.id ?? ''));
+            const unresolvedCount = parsed.filter((l) => !resolveBatchAuthor(l.senderName, candidates, defaultSender)).length;
+            return el(View, null,
+                Card({ title: 'Default sender', dot: C.accent, meta: batchSenderId ? userLabel(memberById(batchSenderId)) : 'you', children: [
+                    Lbl({ text: 'Lines with no name speak as this person', first: true }),
+                    MemberChips({ members: candidates, value: batchSenderId, onChange: setBatchSenderId }),
+                    Input({ placeholder: '...or paste a user ID', value: batchSenderId, onChangeText: (t: string) => setBatchSenderId(t.replace(/[^0-9]/g, '')) }),
+                ] }),
+                Card({ title: 'Script', dot: C.accent, meta: parsed.length ? String(parsed.length) + ' ready' : 'empty', children: [
+                    Lbl({ text: 'One per line — [HH:MM] and name both optional', first: true }),
+                    Input({
+                        placeholder: '[14:30] me: hey\n[14:31] somebody: sup\njust text = default sender, base time',
+                        value: batchText, onChangeText: setBatchText, multiline: true, style: { minHeight: 120, textAlignVertical: 'top' },
+                    }),
+                    parsed.length ? el(View, { style: { backgroundColor: C.cardAlt, borderRadius: 10, borderWidth: 1, borderColor: C.line, padding: 10, marginTop: 4 } },
+                        el(Text, { style: { color: unresolvedCount ? C.amber : C.ok, fontSize: 12, fontWeight: '800', marginBottom: 2 } },
+                            parsed.length + ' message(s) ready' + (unresolvedCount ? ' · ' + unresolvedCount + ' unknown name(s)' : ' ✓')),
+                        ...parsed.slice(0, 8).map((l, i) => el(Text, { key: 'bp-' + i, numberOfLines: 1, style: { color: C.sub, fontSize: 11, marginTop: 1 } },
+                            l.time + ' · ' + (l.senderName || userLabel(defaultSender ?? {})) + ': ' + l.content)),
+                        parsed.length > 8 ? el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 2 } }, '…and ' + (parsed.length - 8) + ' more') : null) : null,
+                    Lbl({ text: 'Base time (HH:MM)' }),
+                    Input({ placeholder: '14:30', value: batchTime, onChangeText: setBatchTime }),
+                    Lbl({ text: 'Base date (YYYY-MM-DD)' }),
+                    Input({ placeholder: '2026-10-29', value: batchDate, onChangeText: setBatchDate }),
+                ] }),
+                el(View, { style: { marginHorizontal: 14 } }, BigBtn({
+                    label: 'Inject ' + parsed.length + ' message(s)',
+                    disabled: !parsed.length,
+                    onPress: () => {
+                        if (!channelId) return toast('Open a chat first');
+                        const r = injectBatch(channelId, parsed, candidates, defaultSender, base);
+                        const names = r.unknown.length ? ' (' + r.unknown.join(', ') + ')' : '';
+                        toast(r.injected + ' injected' + (r.skipped ? ' · ' + r.skipped + ' skipped' + names : ''));
+                        if (r.injected) setBatchText('');
+                        setFakeTick((n: number) => n + 1);
+                    },
+                }))
+                , el(View, { style: { marginHorizontal: 14 } }, MiniBtn({ label: 'Clear script', danger: true, onPress: () => setBatchText('') })));
+        }
+
+        function callCard(): any {
+            return Card({ title: 'Fake call', dot: C.ok, children: [
+                Lbl({ text: 'Caller', first: true }),
+                MemberChips({ members: candidates, value: callerId, onChange: setCallerId }),
+                Lbl({ text: 'Receiver' }),
+                MemberChips({ members: candidates, value: receiverId, onChange: setReceiverId }),
+                SwitchRow({ label: 'Missed call', value: missed, onValueChange: setMissed }),
+                Lbl({ text: 'Duration in minutes (ignored when missed)' }),
+                Input({ placeholder: '2', value: durationMin, onChangeText: (t: string) => setDurationMin(t.replace(/[^0-9]/g, '')) }),
+                Lbl({ text: 'Time (HH:MM) · date (YYYY-MM-DD)' }),
+                Input({ placeholder: '14:30', value: timeText, onChangeText: setTimeText }),
+                Input({ placeholder: '2026-10-29', value: dateText, onChangeText: setDateText }),
+                BigBtn({
+                    label: 'Inject call',
+                    onPress: () => {
                         const caller = memberById(callerId || (candidates[0]?.id ?? ''));
                         if (!caller) return toast('Pick a caller first');
                         const other = memberById(receiverId || (candidates.find((u: any) => String(u.id) !== String(caller.id))?.id ?? caller.id));
@@ -1220,205 +1345,175 @@ function buildSettingsComponent() {
                         toast(id ? 'Fake call injected' : 'Inject failed');
                         setFakeTick((n: number) => n + 1);
                     },
-                }));
-        } else if (tab === 'system') {
-            body = el(View, null,
-                el(Label, null, 'Actor (who did it)'),
-                el(MemberChips, { members: candidates, value: sysSenderId, onChange: setSysSenderId }),
-                el(Label, null, 'Type'),
-                el(TypeChips, { options: SYSTEM_TYPES, value: sysType, onChange: setSysType }),
-                el(Label, null, 'Custom text (optional)'),
-                el(Input, { placeholder: 'Usually empty', value: sysContent, onChangeText: setSysContent, multiline: true }),
-                whenInputs(),
-                el(Btn, {
-                    label: 'Inject system message', onPress: () => {
+                }),
+            ] });
+        }
+
+        function sysCard(): any {
+            return Card({ title: 'System event', dot: C.amber, children: [
+                Lbl({ text: 'Actor (who did it)', first: true }),
+                MemberChips({ members: candidates, value: sysSenderId, onChange: setSysSenderId }),
+                Lbl({ text: 'Event type' }),
+                ChipRow({
+                    items: SYSTEM_TYPES.map((t: any) => ({ key: t.value, label: t.label })),
+                    value: sysType,
+                    onChange: setSysType,
+                }),
+                Lbl({ text: 'Custom text (optional)' }),
+                Input({ placeholder: 'Usually empty', value: sysContent, onChangeText: setSysContent, multiline: true }),
+                BigBtn({
+                    label: 'Inject system message',
+                    onPress: () => {
                         const author = memberById(sysSenderId || (candidates[0]?.id ?? ''));
                         if (!author) return toast('Pick an actor first');
                         const id = injectSystemMessage(channelId, author, sysType ?? 6, sysContent, parseWhen(timeText, dateText));
                         toast(id ? 'System message injected' : 'Inject failed');
                         setFakeTick((n: number) => n + 1);
                     },
-                }));
-        } else if (tab === 'react') {
-            body = el(View, null,
-                el(Label, null, 'Message — tap one from the chat'),
-                el(MsgPicker, { channelId, value: reactMsgId, onChange: setReactMsgId }),
-                el(Label, null, 'Emoji'),
-                el(Input, { placeholder: '😀', value: reactEmoji, onChangeText: setReactEmoji }),
-                el(Label, null, 'React as (you is pre-picked)'),
-                el(MemberChips, { members: candidates, value: reactUserId, onChange: setReactUserId }),
-                el(Btn, {
-                    label: 'Inject reaction', onPress: () => {
-                        const uid = reactUserId || String(me?.id ?? '');
-                        if (!reactMsgId || !reactEmoji) return toast('Pick a message and an emoji first');
-                        const ok = injectReaction(channelId, reactMsgId, uid, reactEmoji);
-                        toast(ok ? 'Reaction added' : 'Inject failed');
-                        setFakeTick((n: number) => n + 1);
-                    },
-                }));
-        } else if (tab === 'batch') {
-            const base = parseWhen(batchTime, batchDate);
-            const parsed = parseBatchScript(batchText, base);
-            const defaultSender = memberById(batchSenderId || (me?.id ?? ''));
-            const unresolved = parsed.filter((l) => !resolveBatchAuthor(l.senderName, candidates, defaultSender)).length;
-            body = el(View, null,
-                el(Label, null, 'Default sender (lines with no name)'),
-                el(MemberChips, { members: candidates, value: batchSenderId, onChange: setBatchSenderId }),
-                el(Label, null, 'Script — one message per line'),
-                el(Input, {
-                    placeholder: '[14:30] me: hey\n[14:31] somebody: sup\njust text = default sender, base time',
-                    value: batchText, onChangeText: setBatchText, multiline: true, style: { minHeight: 110, textAlignVertical: 'top' },
                 }),
-                el(Text, { style: { color: parsed.length ? C.ok : C.sub, fontSize: 12, marginBottom: 6 } },
-                    parsed.length + ' message(s) ready' + (unresolved ? ' · ' + unresolved + ' unknown name(s)' : '')),
-                ...parsed.slice(0, 6).map((l, i) => el(Text, { key: 'batch-' + i, numberOfLines: 1, style: { color: C.sub, fontSize: 11, marginBottom: 1 } },
-                    l.time + ' · ' + (l.senderName || userLabel(defaultSender ?? {})) + ': ' + l.content)),
-                parsed.length > 6 ? el(Text, { style: { color: C.sub, fontSize: 11, marginBottom: 4 } }, '…and ' + (parsed.length - 6) + ' more') : null,
-                el(Label, null, 'Start time (HH:MM, used by lines without one)'),
-                el(Input, { placeholder: '14:30', value: batchTime, onChangeText: setBatchTime }),
-                el(Label, null, 'Date (YYYY-MM-DD, optional)'),
-                el(Input, { placeholder: '2026-09-26', value: batchDate, onChangeText: setBatchDate }),
-                el(Btn, {
-                    label: 'Inject ' + parsed.length + ' message(s)', onPress: () => {
-                        if (!parsed.length) return toast('Nothing parsed — one message per line');
-                        if (!channelId) return toast('Open a chat first');
-                        const r = injectBatch(channelId, parsed, candidates, defaultSender, base);
-                        const names = r.unknown.length ? ' (' + r.unknown.join(', ') + ')' : '';
-                        toast(r.injected + ' injected' + (r.skipped ? ' · ' + r.skipped + ' skipped' + names : ''));
-                        if (r.injected) setBatchText('');
-                        setFakeTick((n2: number) => n2 + 1);
-                    },
-                }),
-                el(Pressable, { onPress: () => setBatchText(''), style: { marginTop: 10 } },
-                    el(Text, { style: { color: C.danger, fontSize: 12 } }, 'Clear script')));
-        } else {
-            // Fakes tab: what this channel remembers, newest first, with a real
-            // editor per message (desktop's Edit Fake Message modal).
+            ] });
+        }
+
+        function reactScreen(): any {
+            return el(View, null,
+                Card({ title: 'Reaction', dot: C.amber, children: [
+                    Lbl({ text: 'Message — tap one from the chat', first: true }),
+                    MsgPicker({ channelId, value: reactMsgId, onChange: setReactMsgId }),
+                    Lbl({ text: 'Emoji' }),
+                    Input({ placeholder: '😀', value: reactEmoji, onChangeText: setReactEmoji }),
+                    Lbl({ text: 'React as (you is pre-picked)' }),
+                    MemberChips({ members: candidates, value: reactUserId, onChange: setReactUserId }),
+                    BigBtn({
+                        label: 'Inject reaction',
+                        onPress: () => {
+                            if (!reactMsgId || !reactEmoji) return toast('Pick a message and an emoji first');
+                            const uid = reactUserId || String(me?.id ?? '');
+                            const ok = injectReaction(channelId, reactMsgId, uid, reactEmoji);
+                            toast(ok ? 'Reaction added' : 'Inject failed');
+                            setFakeTick((n: number) => n + 1);
+                        },
+                    }),
+                ] }));
+        }
+
+        function savedScreen(): any {
             void fakeTick;
             const all = readFakes();
             const inChannel = all.filter((f) => f.type !== 'reaction' && f.channelId === channelId);
-            const shown = inChannel.length ? inChannel : all;
-            body = el(View, null,
-                el(Text, { style: { color: C.sub, fontSize: 12, paddingHorizontal: 14, paddingTop: 6 } },
-                    inChannel.length ? 'Fakes in this channel: ' + inChannel.length : 'No fakes in this channel — showing all ' + all.length),
-                el(Btn, {
-                    label: 'Clear all fakes in this channel', danger: true, onPress: () => {
+            const shown = (inChannel.length ? inChannel : all).slice().reverse().slice(0, 60);
+            return el(View, null,
+                Card({ title: 'This channel', dot: C.accent, meta: inChannel.length + ' fake(s)', children: [
+                    inChannel.length
+                        ? el(Text, { style: { color: C.sub, fontSize: 12 } }, 'What this channel remembers, newest first.')
+                        : el(Text, { style: { color: C.sub, fontSize: 12 } }, 'No fakes in this channel — showing all ' + all.length + '.'),
+                    Confirm({ id: 'clearchannel', label: 'Clear fakes in this channel', armed: armedConfirm === 'clearchannel', setArmed: setArmedConfirm, onConfirm: () => {
                         const n = clearFakesInChannel(channelId);
-                        toast(n + ' fake(s) cleared');
+                        toast(n + ' fake(s) cleared in this channel');
+                        setFakeTick((x: number) => x + 1);
+                    } }),
+                ] }),
+                ...shown.map((f, i) => FakeCard({
+                    k: String(f.snowflakeId) + ':' + i,
+                    fake: f,
+                    editing: editingId === f.snowflakeId,
+                    onEdit: isMsg(f) ? () => {
+                        setEditingId(String(f.snowflakeId));
+                        setEditText(String((f as PersistedMessage).content ?? ''));
+                        setEditWhen('');
+                    } : undefined,
+                    onDelete: () => {
+                        const ok = removeFakeById(f.snowflakeId);
+                        toast(ok ? 'Removed' : 'Remove failed');
                         setFakeTick((x: number) => x + 1);
                     },
-                }),
-                ...shown.slice().reverse().slice(0, 60).map((f, i) => {
-                    const isMsg = f.type === 'message';
-                    const label = isMsg
-                        ? ((f as PersistedMessage).systemType ? 'SYSTEM' : 'MESSAGE')
-                        : f.type === 'call' ? 'CALL' : 'REACT';
-                    const color = isMsg ? C.blurple : f.type === 'call' ? C.ok : C.amber;
-                    const authorName = userLabel(memberById(isMsg ? (f as PersistedMessage).authorId : f.type === 'call' ? (f as PersistedCall).callerId : (f as PersistedReaction).userId));
-                    const editing = editingId === f.snowflakeId;
-                    return el(View, { key: String(f.snowflakeId) + ':' + i, style: { paddingHorizontal: 14, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: C.input } },
-                        el(View, { style: { flexDirection: 'row', justifyContent: 'space-between' } },
-                            el(Text, { style: { color, fontSize: 11, fontWeight: '800' } }, label + ' · ' + authorName),
-                            el(Text, { style: { color: C.sub, fontSize: 11 } }, new Date(isMsg || f.type === 'call' ? (f as any).timestamp : Date.now()).toLocaleString())),
-                        editing
-                            ? null
-                            : el(Text, { style: { color: C.text, fontSize: 13, marginTop: 2 } },
-                                isMsg ? String((f as PersistedMessage).content || '(no text)') : f.type === 'call' ? ((f as PersistedCall).missed ? 'Missed call' : 'Call · ' + Math.round((f as PersistedCall).durationSec / 60) + ' min') : ':' + (f as PersistedReaction).emoji + ':'),
-                        isMsg ? (editing
-                            ? el(View, { style: { marginTop: 6 } },
-                                el(Input, { placeholder: 'New text', value: editText, onChangeText: setEditText, multiline: true, style: { minHeight: 48, textAlignVertical: 'top' } }),
-                                el(Input, { placeholder: 'New time (optional, YYYY-MM-DD HH:MM)', value: editWhen, onChangeText: setEditWhen }),
-                                el(View, { style: { flexDirection: 'row' } },
-                                    el(Pressable, {
-                                        onPress: () => {
-                                            const res = editFakeMessage(f.channelId, f.snowflakeId, editText, editWhen.trim() || undefined);
-                                            toast(res.reason);
-                                            if (res.ok) { setEditingId(''); setFakeTick((x: number) => x + 1); }
-                                        },
-                                        style: { backgroundColor: C.blurple, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 6, marginRight: 8 },
-                                    }, el(Text, { style: { color: '#ffffff', fontSize: 12, fontWeight: '700' } }, 'Save')),
-                                    el(Pressable, {
-                                        onPress: () => setEditingId(''),
-                                        style: { backgroundColor: C.chip, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 6 },
-                                    }, el(Text, { style: { color: C.text, fontSize: 12 } }, 'Cancel'))))
-                            : el(View, { style: { flexDirection: 'row', marginTop: 6 } },
-                                el(Pressable, {
-                                    onPress: () => {
-                                        setEditingId(f.snowflakeId);
-                                        setEditText(String((f as PersistedMessage).content ?? ''));
-                                        setEditWhen('');
-                                    },
-                                    style: { backgroundColor: C.chip, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, marginRight: 8 },
-                                }, el(Text, { style: { color: C.text, fontSize: 12 } }, 'Edit')),
-                                el(Pressable, {
-                                    onPress: () => {
-                                        const ok = removeFakeById(f.snowflakeId);
-                                        toast(ok ? 'Removed' : 'Remove failed');
-                                        setFakeTick((x: number) => x + 1);
-                                    },
-                                    style: { backgroundColor: C.danger, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4 },
-                                }, el(Text, { style: { color: '#ffffff', fontSize: 12 } }, 'Delete'))))
-                            : null,
-                    );
-                }));
+                    children: editingId === f.snowflakeId && isMsg(f) ? el(View, { style: { marginTop: 6 } },
+                        Input({ placeholder: 'New text', value: editText, onChangeText: setEditText, multiline: true, style: { minHeight: 48, textAlignVertical: 'top' } }),
+                        Input({ placeholder: 'New time (optional, YYYY-MM-DD HH:MM)', value: editWhen, onChangeText: setEditWhen }),
+                        el(View, { style: { flexDirection: 'row' } },
+                            MiniBtn({ label: 'Save', onPress: () => {
+                                const res = editFakeMessage(f.channelId, f.snowflakeId, editText, editWhen.trim() || undefined);
+                                toast(res.reason);
+                                if (res.ok) { setEditingId(''); setFakeTick((x: number) => x + 1); }
+                            } }),
+                            MiniBtn({ label: 'Cancel', onPress: () => setEditingId('') }))) : null,
+                })),
+                Card({ title: 'Recovery', children: [
+                    BigBtn({
+                        label: 'Show saved fakes again (' + all.length + ')',
+                        ok: true,
+                        onPress: () => {
+                            const r = restoreSaved();
+                            toast(r.restored ? 'Restored ' + r.restored + (r.skipped ? ' · skipped ' + r.skipped : '') : 'Nothing restorable · skipped ' + r.skipped);
+                            setFakeTick((x: number) => x + 1);
+                        },
+                    }),
+                    Confirm({ id: 'deletesaved', label: 'Delete saved fakes (recovery — kills a crash loop)', armed: armedConfirm === 'deletesaved', setArmed: setArmedConfirm, onConfirm: () => {
+                        const n = deleteSavedFakes();
+                        toast(n ? 'Deleted ' + n + ' saved fake' + (n === 1 ? '' : 's') : 'Nothing saved');
+                        setFakeTick((x: number) => x + 1);
+                    } }),
+                ] }));
         }
 
-        return el(ScrollView, { style: { flex: 1, backgroundColor: C.bg } },
-            el(View, { style: { paddingHorizontal: 16, paddingTop: 14 } },
-                el(Text, { style: { color: C.text, fontSize: 18, fontWeight: '800' } }, 'FakeDM ' + PLUGIN_VERSION),
-                el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, 'Injects into: ' + (channelId ? (getChannelStore()?.getChannel?.(channelId)?.name ?? 'DM · ' + channelId.slice(-6)) : 'no channel open — open a DM first')),
-                el(Pressable, { onPress: () => { installTries = 0; anchorCursor = 0; uninstallChatButton(); installChatButton(); } },
-                    el(Text, { style: { color: C.blurple, fontSize: 11, marginTop: 2 } }, 'Chat button: ' + buttonStatus + ' · tap to retry')),
-                chatRowNames.length && buttonStatus.indexOf('hooked') !== 0
-                    ? el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 2 } }, 'Chat components on this build: ' + chatRowNames.join(', '))
-                    : null),
-                el(SwitchRow, {
-                    label: 'Chat-bar Fake button',
-                    subLabel: 'Puts a Fake pill beside the chat buttons',
-                    value: chatBtn,
-                    onValueChange: (val: boolean) => {
-                        setChatBtn(val);
-                        // Applies immediately; the status line under the header
-                        // shows whether the row was found (it can land a moment
-                        // later on a cold chat).
-                        setChatButton(val);
-                        toast(val ? 'Fake button on' : 'Fake button off');
-                    },
-                }),
-                el(Input, { placeholder: 'Quick Fake text (chat-bar button)', value: quickTxt, onChangeText: (t: string) => { (cfg as any).quickText = t; setQuickTxt(t); savePluginCfg(); } }),
-                el(Pressable, { onPress: () => { const r = restoreSaved(); toast(r.restored ? 'Restored ' + r.restored + (r.skipped ? ' · skipped ' + r.skipped : '') : 'Nothing restorable · skipped ' + r.skipped); setFakeTick((x2: number) => x2 + 1); } },
-                    el(Text, { style: { color: C.blurple, fontSize: 12, marginTop: 6 } }, 'Show saved fakes again (' + readFakes().length + ')')),
-                el(Pressable, { onPress: () => { const n = deleteSavedFakes(); toast(n ? 'Deleted ' + n + ' saved fake' + (n === 1 ? '' : 's') : 'Nothing saved'); setFakeTick((x2: number) => x2 + 1); } },
-                    el(Text, { style: { color: C.danger, fontSize: 12, marginTop: 4 } }, 'Delete saved fakes (recovery — kills a crash loop)')),
+        function isMsg(f: PersistedFake): boolean { return f.type === 'message'; }
 
-            el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginTop: 10, paddingHorizontal: 12 } },
-                ...TABS.map((t) => el(Pressable, {
-                    key: t.key,
-                    onPress: () => setTab(t.key),
-                    style: { backgroundColor: tab === t.key ? C.blurple : C.chip, borderRadius: 16, paddingHorizontal: 14, paddingVertical: 7, marginRight: 8 },
-                }, el(Text, { style: { color: tab === t.key ? '#ffffff' : C.text, fontSize: 13, fontWeight: '700' } }, t.label)))),
+        function setupScreen(): any {
+            return el(View, null,
+                Card({ title: 'Chat bar', dot: C.accent, children: [
+                    SwitchRow({
+                        label: 'Chat-bar Fake button',
+                        subLabel: 'Puts a Fake pill beside the chat buttons',
+                        value: chatBtn,
+                        onValueChange: (val: boolean) => {
+                            setChatBtn(val);
+                            setChatButton(val);
+                            toast(val ? 'Fake button on' : 'Fake button off');
+                        },
+                    }),
+                    Lbl({ text: 'Quick Fake text (chat-bar button)' }),
+                    Input({ placeholder: 'hello', value: quickTxt, onChangeText: (t: string) => { (cfg as any).quickText = t; setQuickTxt(t); savePluginCfg(); } }),
+                    el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 2 } }, 'Chat button: ' + buttonStatus),
+                ] }),
+                Card({ title: 'About', children: [
+                    el(Text, { style: { color: C.text, fontSize: 13 } }, 'FakeDM ' + PLUGIN_VERSION + ' — by Cenotaph (ported from the Equicord plugin).'),
+                    el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 4, lineHeight: 18 } },
+                        'Fake messages, calls, events and reactions are injected as real client events — nothing here patches Discord\'s own screens, so nothing here can crash them.'),
+                ] }));
+        }
+
+        const body = tab === 'compose' ? composeScreen()
+            : tab === 'batch' ? batchScreen()
+            : tab === 'callsys' ? el(View, null, callCard(), sysCard())
+            : tab === 'react' ? reactScreen()
+            : tab === 'saved' ? savedScreen()
+            : setupScreen();
+
+        const channel = channelId ? getChannelStore()?.getChannel?.(channelId) ?? null : null;
+        const targetText = channelId
+            ? ((channel?.guild_id ? '#' : 'DM · ') + (channel?.name ?? channelId.slice(-6)))
+            : 'no channel open — open a chat first';
+
+        return el(ScrollView, { style: { flex: 1, backgroundColor: C.bg } },
+            el(View, { style: { paddingHorizontal: 14, paddingTop: 16, paddingBottom: 2 } },
+                el(View, { style: { flexDirection: 'row', alignItems: 'center' } },
+                    el(View, { style: { width: 40, height: 40, borderRadius: 12, backgroundColor: C.accent, alignItems: 'center', justifyContent: 'center', marginRight: 10 } },
+                        el(Text, { style: { color: '#ffffff', fontSize: 18, fontWeight: '900' } }, 'F')),
+                    el(View, { style: { flex: 1 } },
+                        el(Text, { style: { color: C.text, fontSize: 18, fontWeight: '900' } }, 'FakeDM ' + PLUGIN_VERSION),
+                        el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 1 } }, 'Injects into: ' + targetText))),
+                el(View, { style: { marginTop: 10, flexDirection: 'row', flexWrap: 'wrap' } },
+                    TAB_DEFS.map((t) => MiniBtn({ key: t.key, label: t.label, active: tab === t.key, onPress: () => setTab(t.key) }))),
+                el(Pressable, {
+                    accessibilityLabel: 'Retry chat button install',
+                    onPress: () => { installTries = 0; anchorCursor = 0; uninstallChatButton(); installChatButton(); },
+                    style: { marginTop: 6, backgroundColor: C.chip, borderRadius: 10, paddingVertical: 7, paddingHorizontal: 10, alignSelf: 'flex-start' },
+                }, el(Text, { style: { color: C.sub, fontSize: 11 } }, 'Chat button: ' + buttonStatus + ' · tap to retry')),
+            ),
             body,
-            el(View, { style: { height: 30 } }),
-        );
+            el(View, { style: { height: 44 } }));
     };
 }
 
-// ---- Chat button (Valenced) ------------------------------------------------------
-// Desktop parity: Equicord has a chat-bar button. On a phone that row is not ours,
-// and editing Discord's children is what broke the message box last time — the
-// text input lost its width and stopped accepting typing. So the row is WRAPPED,
-// never edited: the row's own element is handed back untouched as the first child
-// of a plain row View, and the Fake pill is a sibling beside it. Nothing inside
-// Discord's subtree changes, so a render can only add a visible pill next to the
-// buttons.
-//
-// Three failure modes stay visible instead of silent:
-//   * the module finders live somewhere else on this build   -> finderApi()
-//   * the row has not been registered when start() runs      -> bounded retry
-//   * the row is a memo object, not a function               -> patch `.type`
-// and if the wrapper itself ever throws or cannot build, the original tree is
-// returned instead and the patch takes itself back out after MAX_RENDER_FAULTS
-// so the chat keeps working.
 function quickFake() {
     try {
         const channelId = currentChannelId();
