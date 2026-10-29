@@ -6,6 +6,8 @@
 // across restarts, and can batch-inject a whole fake conversation from a
 // simple "[14:30] Name: text" script.
 //
+const PLUGIN_VERSION = '1.2.4';
+
 // Desktop-only pieces (chat-bar button portal, context-menu edit, CSS) have no
 // Revenge equivalent — here everything lives in the plugin's settings page,
 // organized into tabs. Clearing fakes dispatches MESSAGE_DELETE with the
@@ -1265,7 +1267,7 @@ function buildSettingsComponent() {
 
         return el(ScrollView, { style: { flex: 1, backgroundColor: C.bg } },
             el(View, { style: { paddingHorizontal: 16, paddingTop: 14 } },
-                el(Text, { style: { color: C.text, fontSize: 18, fontWeight: '800' } }, 'FakeDM'),
+                el(Text, { style: { color: C.text, fontSize: 18, fontWeight: '800' } }, 'FakeDM ' + PLUGIN_VERSION),
                 el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, 'Injects into: ' + (channelId ? (getChannelStore()?.getChannel?.(channelId)?.name ?? 'DM · ' + channelId.slice(-6)) : 'no channel open — open a DM first'))),
                 el(SwitchRow, { label: 'Chat-bar Fake button (reload chat to apply)', value: chatBtn, onValueChange: (val: boolean) => { (cfg as any).chatButton = val; setChatBtn(val); savePluginCfg(); toast(val ? 'Fake button on — reload the chat to see it' : 'Fake button off — reload the chat'); } }),
                 el(Input, { placeholder: 'Quick Fake text (chat-bar button)', value: quickTxt, onChangeText: (t: string) => { (cfg as any).quickText = t; setQuickTxt(t); savePluginCfg(); } }),

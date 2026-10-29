@@ -24,6 +24,7 @@ function probeGlobals(): string[] {
     try { if (typeof revenge !== 'undefined' && (revenge as any)) present.push('revenge'); } catch {}
     try { if (typeof bunny !== 'undefined' && (bunny as any)) present.push('bunny'); } catch {}
     try { if (typeof vendetta !== 'undefined' && (vendetta as any)) present.push('vendetta'); } catch {}
+    try { if (typeof valenced !== 'undefined' && (valenced as any)) present.push('valenced'); } catch {}
     try { if (typeof plugin !== 'undefined' && typeof (plugin as any) === 'function') present.push('plugin(factory)'); } catch {}
     return present;
 }
@@ -84,6 +85,89 @@ function probeVendetta(): void {
     }
 }
 
+function probeValenced(): void {
+    let v: any = null;
+    try { v = typeof valenced !== 'undefined' ? valenced : null; } catch {}
+    if (!v) { push('valenced global', 'absent'); return; }
+    push('valenced global', 'present');
+    try {
+        push('valenced.react', !!v?.react);
+        push('react.React.createElement', typeof v?.react?.React?.createElement);
+        push('react.ReactNative.View', !!v?.react?.ReactNative?.View);
+        push('react.jsxRuntime.afterJSX', typeof v?.react?.jsxRuntime?.afterJSX);
+        push('react.ReactJSXRuntime.afterJSX', typeof v?.react?.ReactJSXRuntime?.afterJSX);
+    } catch (e) { push('react probe error', e instanceof Error ? e.message : String(e)); }
+    try {
+        push('discord.flux', !!v?.discord?.flux);
+        push('flux.onFluxEventDispatched', typeof v?.discord?.flux?.onFluxEventDispatched);
+        const stores = v?.discord?.flux?.Stores;
+        let names = '';
+        try {
+            const keys: string[] = [];
+            if (stores) for (const k in stores) { keys.push(k); if (keys.length >= 12) break; }
+            names = keys.join(',') || 'empty';
+        } catch { names = 'unreadable'; }
+        push('flux.Stores sample', names);
+        push('UserStore present', !!stores?.UserStore);
+        push('PresenceStore present', !!stores?.PresenceStore);
+        push('ChannelStore present', !!stores?.ChannelStore);
+        push('SelectedChannelStore present', !!stores?.SelectedChannelStore);
+        push('discord.actions.ToastActionCreators.open', typeof v?.discord?.actions?.ToastActionCreators?.open);
+        const d = v?.discord?.design?.Design ?? v?.discord?.design;
+        push('design TableRowGroup', !!(d?.TableRowGroup));
+        push('discord.native.FileModule', !!v?.discord?.native?.FileModule);
+    } catch (e) { push('discord probe error', e instanceof Error ? e.message : String(e)); }
+    try {
+        const finders = v?.modules?.finders;
+        const filters = v?.modules?.finders?.filters;
+        push('modules.finders.lookupModule', typeof finders?.lookupModule);
+        push('modules.finders.getModules', typeof finders?.getModules);
+        push('filters.withProps', typeof filters?.withProps);
+        push('filters.withName', typeof filters?.withName);
+        push('filters.anyOf', typeof filters?.anyOf);
+        if (finders && filters) {
+            try {
+                const [mod] = finders.lookupModule(filters.withProps('dispatch', 'subscribe'));
+                push('dispatcher via finders', mod && typeof mod.dispatch === 'function' ? 'FOUND' : 'not found');
+            } catch { push('dispatcher via finders', 'threw'); }
+            const named: Array<[string, any]> = [];
+            try { named.push(['ChatInput', filters.withName('ChatInput')]); } catch {}
+            try { named.push(['ChannelTextArea', filters.withName('ChannelTextArea')]); } catch {}
+            try { named.push(['MessageInput', filters.withName('MessageInput')]); } catch {}
+            try { named.push(['ChatBox', filters.withName('ChatBox')]); } catch {}
+            const byProps: Array<[string, any]> = [];
+            try { byProps.push(['channelId+onSend', filters.withProps('channelId', 'onSend')]); } catch {}
+            try { byProps.push(['sendMessage+channelId', filters.withProps('sendMessage', 'channelId')]); } catch {}
+            try { byProps.push(['renderAccessory+channelId', filters.withProps('renderAccessory', 'channelId')]); } catch {}
+            let combined: any = null;
+            try { combined = filters.anyOf(...named.map((n) => n[1]), ...byProps.map((b) => b[1])); } catch {}
+            const seen: string[] = [];
+            const describe = (m: any): string => {
+                if (!m) return 'miss';
+                const c = m?.default ?? m;
+                return 'HIT:' + String(c?.displayName ?? c?.name ?? typeof c);
+            };
+            const runFilter = (label: string, f: any): void => {
+                try {
+                    const [m] = finders.lookupModule(f);
+                    push('chat candidate ' + label, describe(m));
+                    if (m) seen.push(label);
+                } catch { push('chat candidate ' + label, 'threw'); }
+            };
+            for (const [label, f] of named) runFilter(label, f);
+            for (const [label, f] of byProps) runFilter(label, f);
+            if (combined) {
+                try {
+                    const [m] = finders.lookupModule(combined);
+                    push('chat candidate COMBINED', describe(m));
+                } catch { push('chat candidate COMBINED', 'threw'); }
+            }
+            push('chat candidates hit', seen.join(',') || 'NONE');
+        }
+        push('patcher.after', typeof v?.patcher?.after);
+    } catch (e) { push('modules probe error', e instanceof Error ? e.message : String(e)); }
+}
+
 function probeStorageApi(api: any): void {
     push('jsonStorage passed to start', !!api?.jsonStorage);
     if (api?.jsonStorage) {
@@ -96,7 +180,8 @@ function summary(): string {
     const globals = probeGlobals();
     let kind = 'unknown host';
     try {
-        if (typeof revenge !== 'undefined') kind = 'Revenge (Next API)';
+        if (typeof valenced !== 'undefined' && (valenced as any)) kind = 'Valenced';
+        else if (typeof revenge !== 'undefined') kind = 'Revenge (Next API)';
         else if (typeof bunny !== 'undefined') kind = 'Revenge Classic (bunny)';
         else if (typeof vendetta !== 'undefined') kind = 'Vendetta-compat manager';
     } catch {}
@@ -108,6 +193,7 @@ function summary(): string {
 let _React: any = null;
 function react(): any {
     if (_React) return _React;
+    try { const v: any = typeof valenced !== 'undefined' ? valenced : null; const r = v?.react?.React; if (r?.createElement) _React = r; } catch {}
     try { if (typeof revenge !== 'undefined') { const r: any = (revenge as any).react; if (r) _React = r.React || r; } } catch {}
     try { if (!_React && typeof bunny !== 'undefined') { const b: any = bunny; _React = b.React || b.common?.React || b.metro?.common?.React; } } catch {}
     try { if (!_React && typeof vendetta !== 'undefined') _React = (vendetta as any)?.common?.React ?? (vendetta as any)?.metro?.common?.React; } catch {}
@@ -117,6 +203,7 @@ function react(): any {
 let _RN: any = null;
 function reactNative(): any {
     if (_RN) return _RN;
+    try { const v: any = typeof valenced !== 'undefined' ? valenced : null; const rn = v?.react?.ReactNative; if (rn?.View && rn?.Text) _RN = rn; } catch {}
     try { if (typeof revenge !== 'undefined') _RN = (revenge as any)?.react?.ReactNative; } catch {}
     try { if (!_RN && typeof bunny !== 'undefined') { const b: any = bunny; _RN = b.ReactNative || b.common?.ReactNative || b.metro?.common?.ReactNative; } } catch {}
     try { if (!_RN && typeof vendetta !== 'undefined') _RN = (vendetta as any)?.common?.ReactNative ?? (vendetta as any)?.metro?.common?.ReactNative; } catch {}
@@ -138,6 +225,11 @@ function settingsInk(): { text: string; sub: string } {
 // Discord's own design components give the settings page Discord's native look.
 // Resolved lazily (never at eval time) so the host cannot kill us.
 function resolveDesign(): any {
+    try {
+        const v: any = typeof valenced !== 'undefined' ? valenced : null;
+        const d = v?.discord?.design?.Design ?? v?.discord?.design;
+        if (d && (d.TableRowGroup || d.TableSwitchRow || d.TableRow)) return d;
+    } catch {}
     try {
         const g: any = (globalThis as any).revenge?.discord?.design;
         const d = g?.Design ?? g;
@@ -200,6 +292,11 @@ function showToastEverywhere(content: string, key: string): void {
         }
     };
     try {
+        const v: any = typeof valenced !== 'undefined' ? valenced : null;
+        const open = v?.discord?.actions?.ToastActionCreators?.open;
+        if (show(open, { key, content })) return;
+    } catch {}
+    try {
         const a: any = typeof revenge !== 'undefined' ? (revenge as any)?.discord?.actions : null;
         const open = a?.ToastActionCreators?.open ?? a?.open;
         if (show(open, { key, content })) return;
@@ -228,6 +325,7 @@ function runProbe(startApi: any): void {
     probeRevenge();
     probeBunny();
     probeVendetta();
+    probeValenced();
 
     const oneLine = summary();
     showToastEverywhere('Host Probe: ' + oneLine, 'hostprobe-summary');
