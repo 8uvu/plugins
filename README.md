@@ -6,24 +6,28 @@ Custom Revenge plugins by 8uvu.
 
 | Plugin | What it does | Install URL |
 | --- | --- | --- |
-| **MessageLogger** | Saves deleted and edited messages to a persistent on-device log, flags ghost pings, and ships a searchable viewer with edit diffs, image caching and import/export. | `https://8uvu.github.io/msglog/dev.8uvu.message-logger/` |
-
-The other plugins in this repository are deliberately unlisted. They are still
-built and still installable, but only at the opaque paths recorded in
-`publish.json`, so neither the site nor this README names them. `node build.mjs`
-prints every install URL, including theirs — that is the only place to get them
-from.
+| **FakeDM** | Fake messages, calls, reactions and embeds in any chat, from a chat-bar button or its own settings page. | `https://8uvu.github.io/plugins/dev.8uvu.fake-dm/` |
+| **Last Online Tracker** | Remembers when people went offline, so you can see how long someone has been away. | `https://8uvu.github.io/plugins/dev.8uvu.last-online-tracker/` |
+| **User Change Alerts** | Toasts when a tracked user changes name, avatar, status or activity. | `https://8uvu.github.io/plugins/dev.8uvu.user-change-alerts/` |
+| **Message Bookmarks** | Saves message links with their text and author, and opens them from one list. | `https://8uvu.github.io/plugins/dev.8uvu.message-bookmarks/` |
+| **Voice Time** | Counts how long you spent in voice, per day and per server. | `https://8uvu.github.io/plugins/dev.8uvu.voice-time/` |
+| **Voice Guard** | Undoes server-side mute/deafen and reconnects you after a drop. | `https://8uvu.github.io/plugins/dev.8uvu.voice-guard/` |
+| **Zero Width Sanitizer** | Strips invisible zero-width characters from what you send and edit. | `https://8uvu.github.io/plugins/dev.8uvu.zero-width-sanitizer/` |
+| **Clean URLs** | Strips tracking parameters from links in messages. | `https://8uvu.github.io/plugins/dev.8uvu.clean-urls/` |
+| **Platform Spoofer** | Reports a different platform than the one you are on. | `https://8uvu.github.io/plugins/dev.8uvu.platform-spoofer/` |
+| **Quick Check** | Shows which host APIs your install actually exposes. | `https://8uvu.github.io/plugins/dev.8uvu.quick-check/` |
+| **Host Probe** | Diagnostics for which loader and API surface the running build exposes. | `https://8uvu.github.io/plugins/dev.8uvu.host-probe/` |
 
 Add a single plugin by pasting its install URL in Revenge (Settings > Revenge >
 Plugins), or add the whole repository:
 
 ```
-https://8uvu.github.io/msglog/
+https://8uvu.github.io/plugins/
 ```
 
-The bare repository URL installs **MessageLogger** (`publish.json` pins the root
-plugin to `dev.8uvu.message-logger`). Only the ids in that file's `published`
-list are advertised there — see *What gets published* below.
+The bare repository URL installs **FakeDM** (`publish.json` pins the root plugin
+to `dev.8uvu.fake-dm`). Clicking the repository URL in a plugin manager lists
+every id in that file's `published` array — see *What gets published* below.
 
 ## Development
 
@@ -87,7 +91,7 @@ unlisted plugin, and `scripts/verify-live.cjs` fails if the deployed site still
 serves one at its real id, or if an install URL does not answer with JSON.
 
 This hides plugins from the **site**. It does not hide them from the
-**repository**: `https://github.com/8uvu/msglog` is public, so `plugins/` and
+**repository**: `https://github.com/8uvu/plugins` is public, so `plugins/` and
 `publish.json` are readable there — and anyone who reads them can work out every
 slug. Making the repository private — or keeping unlisted plugin sources out of
 it and publishing only their built artifacts — is the step that closes that one.
@@ -95,7 +99,7 @@ it and publishing only their built artifacts — is the step that closes that on
 ## Releasing
 
 ```bash
-node scripts/release.mjs dev.8uvu.message-logger patch "Fix unseen-message edits"
+node scripts/release.mjs dev.8uvu.fake-dm patch "Fix the chat-bar button"
 ```
 
 That bumps the manifest and `PLUGIN_VERSION`, rebuilds, runs every check,

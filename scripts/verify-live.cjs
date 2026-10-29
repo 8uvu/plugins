@@ -27,7 +27,7 @@ const arg = (name, fallback = null) => {
 const has = (name) => argv.includes('--' + name);
 
 const DIST = join(__dirname, '..', 'dist');
-const BASE = String(arg('base', 'https://8uvu.github.io/msglog')).replace(/\/+$/, '');
+const BASE = String(arg('base', 'https://8uvu.github.io/plugins')).replace(/\/+$/, '');
 const WAIT = Number(arg('wait', 0));
 const ONLY_ID = arg('id');
 const ONLY_VERSION = arg('version');

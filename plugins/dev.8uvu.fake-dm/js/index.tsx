@@ -6,7 +6,7 @@
 // across restarts, and can batch-inject a whole fake conversation from a
 // simple "[14:30] Name: text" script.
 //
-const PLUGIN_VERSION = '1.2.7';
+const PLUGIN_VERSION = '1.2.8';
 
 // Desktop-only pieces (chat-bar button portal, context-menu edit, CSS) have no
 // Revenge equivalent — here everything lives in the plugin's settings page,
@@ -1269,7 +1269,8 @@ function buildSettingsComponent() {
             el(View, { style: { paddingHorizontal: 16, paddingTop: 14 } },
                 el(Text, { style: { color: C.text, fontSize: 18, fontWeight: '800' } }, 'FakeDM ' + PLUGIN_VERSION),
                 el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, 'Injects into: ' + (channelId ? (getChannelStore()?.getChannel?.(channelId)?.name ?? 'DM · ' + channelId.slice(-6)) : 'no channel open — open a DM first')),
-                el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 2 } }, 'Chat button: ' + buttonStatus)),
+                el(Pressable, { onPress: () => { installTries = 0; installChatButton(); toast('Chat button: ' + buttonStatus); } },
+                    el(Text, { style: { color: C.blurple, fontSize: 11, marginTop: 2 } }, 'Chat button: ' + buttonStatus + ' · tap to retry'))),
                 el(SwitchRow, { label: 'Chat-bar Fake button (reload chat to apply)', value: chatBtn, onValueChange: (val: boolean) => { (cfg as any).chatButton = val; setChatBtn(val); savePluginCfg(); toast(val ? 'Fake button on — reload the chat to see it' : 'Fake button off — reload the chat'); } }),
                 el(Input, { placeholder: 'Quick Fake text (chat-bar button)', value: quickTxt, onChangeText: (t: string) => { (cfg as any).quickText = t; setQuickTxt(t); savePluginCfg(); } }),
             el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginTop: 10, paddingHorizontal: 12 } },
@@ -1351,108 +1352,151 @@ function insertChatButton(tree: any): any {
 // than hooking JSX (see the community "Better Chat Buttons" plugin), and the
 // chat action row is the memo component named ChatInputRightActions. Find it by
 // displayName, then append our button to its rendered row.
+//
+// Three things can go wrong on a phone, and each one used to be silent:
+//   * the module finders live somewhere else on this build  -> finderApi()
+//   * the row has not been registered yet when start() runs  -> retry timer
+//   * the row is a memo object, not a function               -> patch `.type`
+// buttonStatus always says which of those actually happened.
+function finderApi(): { finders: any; filters: any; patcher: any } | null {
+    const v = getValenced();
+    if (!v) return null;
+    const holders: any[] = [v];
+    try { holders.push(v.discord); } catch {}
+    try { holders.push(v.unscoped); } catch {}
+    for (const holder of holders) {
+        try {
+            const finders = holder?.modules?.finders ?? holder?.finders;
+            const filters = finders?.filters;
+            const patcher = holder?.patcher ?? v?.patcher;
+            if (finders && filters && patcher && typeof patcher.after === 'function') {
+                return { finders, filters, patcher };
+            }
+        } catch {}
+    }
+    return null;
+}
+
+function memoFilter(filters: any, name: string): any {
+    try {
+        return filters.createFilterGenerator(
+            ([n]: any, _id: any, exports: any) => {
+                const t = exports?.type;
+                if (t && typeof t === 'function' && (t.displayName === n || t.name === n)) return true;
+                const r = exports?.render;
+                if (r && typeof r === 'function' && (r.displayName === n || r.name === n)) return true;
+                return exports?.displayName === n || exports?.name === n;
+            },
+            ([n]: any) => 'cenotaph.fakedm.memo(' + n + ')',
+        )(name);
+    } catch {
+        return null;
+    }
+}
+
+const CHAT_ROW_NAMES = ['ChatInputRightActions', 'ChatInputActions', 'ChatInputButtons', 'ChatInputAppButtons'];
+const MAX_INSTALL_TRIES = 12;
+let installTimer: any = null;
+let installTries = 0;
+
 function installChatButton() {
     try {
+        if (installTimer) { clearTimeout(installTimer); installTimer = null; }
         if ((cfg as any)?.chatButton === false) { buttonStatus = 'off in settings'; return; }
-        const v = getValenced();
-        if (!v) { buttonStatus = 'no valenced host'; return; }
-        const finders = v?.modules?.finders;
-        const filters = v?.modules?.finders?.filters;
-        const patcher = v?.patcher;
-        if (!finders?.getModules || !filters?.createFilterGenerator || typeof patcher?.after !== 'function') {
-            buttonStatus = 'host lacks finders/patcher';
+        const host = finderApi();
+        if (!host) { buttonStatus = 'host lacks finders/patcher'; return; }
+        const { finders, filters, patcher } = host;
+        if (typeof finders.getModules !== 'function') {
+            buttonStatus = 'host has no getModules';
             return;
         }
-        const hookComponent = (Comp: any, label: string) => {
+
+        const hook = (Comp: any, label: string): boolean => {
             if (!Comp) return false;
-            // Discord ships the chat row as a memo/forwardRef exotic component:
-            // an OBJECT whose `type` (or `render`) is the render function. It is
-            // deliberately not a function itself, so a `typeof === 'function'`
-            // guard here silently skipped every real chat row.
-            if (typeof Comp === 'object') {
-                const key = typeof Comp.type === 'function' ? 'type' : typeof Comp.render === 'function' ? 'render' : null;
-                if (!key) return false;
-                try {
-                    const unpatch = patcher.after(Comp, key, (_args: any, tree: any) => insertChatButton(tree));
-                    if (typeof unpatch === 'function') cleanupFns.push(unpatch);
-                    buttonStatus = 'hooked ' + label + ' (' + key + ')';
-                    return true;
-                } catch (e) {
-                    buttonStatus = 'patch failed on ' + label;
-                    hostError('chat button patch failed', e);
-                    return false;
-                }
-            }
-            // A plain function component cannot be patched by property; JSX
-            // hooking below is the fallback for that shape.
-            return false;
-        };
-        const memoNamed = (name: string) => {
+            // The chat row is a memo: an object whose `type` (sometimes `render`)
+            // is the render function. It is deliberately not a function itself, so
+            // a `typeof === 'function'` guard skipped every real chat row.
+            const key = typeof Comp === 'function' ? null
+                : typeof Comp.type === 'function' ? 'type'
+                : typeof Comp.render === 'function' ? 'render'
+                : null;
+            if (!key) return false;
             try {
-                // Match the memo/render component by name. Arity is NOT a
-                // requirement: a build is free to change how many props the
-                // render fn takes, and requiring exactly one silently lost the
-                // chat row on builds that did.
-                return filters.createFilterGenerator(
-                    ([n]: any, _id: any, exports: any) => {
-                        const t = exports?.type;
-                        if (t && typeof t === 'function' && (t.displayName === n || t.name === n)) return true;
-                        if (exports?.displayName === n || exports?.name === n) return true;
-                        const r = exports?.render;
-                        return !!r && typeof r === 'function' && (r.displayName === n || r.name === n);
-                    },
-                    ([n]: any) => 'cenotaph.fakedm.memo(' + n + ')',
-                )(name);
-            } catch {
-                return null;
+                const off = patcher.after(Comp, key, (_args: any, tree: any) => insertChatButton(tree));
+                if (typeof off === 'function') cleanupFns.push(off);
+                buttonStatus = 'hooked ' + label + ' (' + key + ')';
+                return true;
+            } catch (e) {
+                buttonStatus = 'patch failed on ' + label;
+                hostError('chat button patch failed', e);
+                return false;
             }
         };
-        const isComponentLike = (x: any) => !!x && (typeof x === 'function' || (typeof x === 'object' && (typeof x.type === 'function' || typeof x.render === 'function')));
-        const names = ['ChatInputRightActions', 'ChatInputActions', 'ChatInputButtons', 'ChatInputAppButtons'];
+
+        const pick = (exports: any): any => {
+            const candidates = [exports, exports?.default, exports?.default?.default];
+            for (const c of candidates) {
+                if (!c) continue;
+                if (typeof c === 'function') return c;
+                if (typeof c === 'object' && (typeof c.type === 'function' || typeof c.render === 'function')) return c;
+            }
+            return null;
+        };
+
         let installed = false;
-        for (const name of names) {
-            const filter = memoNamed(name);
+        for (const name of CHAT_ROW_NAMES) {
+            const filter = memoFilter(filters, name);
             if (!filter) continue;
             try {
                 const off = finders.getModules(filter, (exports: any) => {
                     if (installed) return;
-                    const Comp = isComponentLike(exports) ? exports : (exports?.default ?? exports);
-                    if (hookComponent(Comp, name)) installed = true;
+                    if (hook(pick(exports), name)) installed = true;
                 });
                 if (typeof off === 'function') cleanupFns.push(off);
             } catch {}
         }
-        // Secondary path for builds where the memo name moved: hook JSX on the
-        // chat input itself (afterJSX exists on newer runtimes only).
-        try {
-            const afterJSX = v?.react?.jsxRuntime?.afterJSX ?? v?.react?.ReactJSXRuntime?.afterJSX ?? null;
-            if (typeof afterJSX === 'function' && !installed) {
-                const byName = [
-                    filters.withName?.('ChatInput'),
-                    filters.withName?.('ChannelTextArea'),
-                    filters.withName?.('MessageInput'),
-                ].filter(Boolean);
-                if (byName.length) {
-                    const filter = byName.length === 1 ? byName[0] : filters.anyOf?.(...byName);
-                    if (filter) {
-                        const off = finders.getModules(filter, (exports: any) => {
-                            if (installed) return;
-                            const Comp = isComponentLike(exports) ? exports : (exports?.default ?? exports);
-                            const render = typeof Comp === 'function' ? Comp : Comp?.type ?? Comp?.render;
-                            if (!render) return;
-                            try {
-                                const unpatch = afterJSX(render, (tree: any) => insertChatButton(tree));
-                                if (typeof unpatch === 'function') cleanupFns.push(unpatch);
-                                buttonStatus = 'hooked via jsx';
-                                installed = true;
-                            } catch {}
-                        });
-                        if (typeof off === 'function') cleanupFns.push(off);
+
+        // Builds where the memo name moved: JSX hooking, when the runtime has it.
+        if (!installed) {
+            try {
+                const r = (getValenced()?.react ?? {}) as any;
+                const afterJSX = r.jsxRuntime?.afterJSX ?? r.ReactJSXRuntime?.afterJSX ?? null;
+                if (typeof afterJSX === 'function') {
+                    const byName = ['ChatInput', 'ChannelTextArea', 'MessageInput']
+                        .map((n: string) => { try { return filters.withName?.(n) ?? null; } catch { return null; } })
+                        .filter(Boolean);
+                    if (byName.length) {
+                        const filter = byName.length === 1 ? byName[0] : filters.anyOf?.(...byName);
+                        if (filter) {
+                            const off = finders.getModules(filter, (exports: any) => {
+                                if (installed) return;
+                                const Comp = pick(exports);
+                                const render = typeof Comp === 'function' ? Comp : Comp?.type ?? Comp?.render;
+                                if (typeof render !== 'function') return;
+                                try {
+                                    const unpatch = afterJSX(render, (tree: any) => insertChatButton(tree));
+                                    if (typeof unpatch === 'function') cleanupFns.push(unpatch);
+                                    buttonStatus = 'hooked via jsx';
+                                    installed = true;
+                                } catch {}
+                            });
+                            if (typeof off === 'function') cleanupFns.push(off);
+                        }
                     }
                 }
-            }
-        } catch {}
-        if (!installed) buttonStatus = 'chat row not found (yet)';
+            } catch {}
+        }
+
+        if (installed) { installTries = 0; return; }
+        // The row is often registered a few seconds after start(). Keep asking,
+        // cheaply and a bounded number of times, instead of giving up for good.
+        if (installTries < MAX_INSTALL_TRIES) {
+            installTries++;
+            buttonStatus = 'chat row not found (try ' + installTries + '/' + MAX_INSTALL_TRIES + ')';
+            installTimer = setTimeout(() => { installTimer = null; installChatButton(); }, 3000);
+        } else {
+            buttonStatus = 'chat row not found — settings page only';
+        }
     } catch (e) {
         buttonStatus = 'install failed';
         hostError('chat button install failed', e);
@@ -1519,6 +1563,8 @@ let __instance: any = {
         }
     },
     stop() {
+        if (installTimer) { clearTimeout(installTimer); installTimer = null; }
+        installTries = 0;
         while (cleanupFns.length) {
             try { cleanupFns.pop()?.(); } catch {}
         }

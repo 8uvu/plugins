@@ -270,8 +270,8 @@ if (policy) {
     if (!advertised.includes(policy.root)) {
         fail(`the root install target ${policy.root} is not advertised in index.json`);
     }
-} else if (!advertised.includes('dev.8uvu.message-logger')) {
-    fail('the root install target dev.8uvu.message-logger is not advertised in index.json');
+} else {
+    fail('publish.json declares no root plugin, so the bare repository URL has no target');
 }
 const rootManifest = exists(join(dist, 'manifest.json')) ? readJson(join(dist, 'manifest.json')) : null;
 if (rootManifest) {

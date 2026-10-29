@@ -1,0 +1,15 @@
+{
+    "format": 1,
+    "id": "dev.8uvu.zero-width-sanitizer",
+    "name": "ZeroWidthSanitizer",
+    "description": "Strips invisible zero-width tracking characters out of your messages before they are sent.",
+    "author": "Cenotaph",
+    "version": "1.0.0",
+    "dependencies": {
+        "valenced.api": { "version": ">=1" },
+        "discord": { "version": "*" }
+    },
+    "dist": {
+        "script": "index.js"
+    }
+}
