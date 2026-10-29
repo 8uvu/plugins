@@ -6,7 +6,7 @@
 // across restarts, and can batch-inject a whole fake conversation from a
 // simple "[14:30] Name: text" script.
 //
-const PLUGIN_VERSION = '1.2.4';
+const PLUGIN_VERSION = '1.2.6';
 
 // Desktop-only pieces (chat-bar button portal, context-menu edit, CSS) have no
 // Revenge equivalent — here everything lives in the plugin's settings page,
@@ -1268,7 +1268,8 @@ function buildSettingsComponent() {
         return el(ScrollView, { style: { flex: 1, backgroundColor: C.bg } },
             el(View, { style: { paddingHorizontal: 16, paddingTop: 14 } },
                 el(Text, { style: { color: C.text, fontSize: 18, fontWeight: '800' } }, 'FakeDM ' + PLUGIN_VERSION),
-                el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, 'Injects into: ' + (channelId ? (getChannelStore()?.getChannel?.(channelId)?.name ?? 'DM · ' + channelId.slice(-6)) : 'no channel open — open a DM first'))),
+                el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, 'Injects into: ' + (channelId ? (getChannelStore()?.getChannel?.(channelId)?.name ?? 'DM · ' + channelId.slice(-6)) : 'no channel open — open a DM first')),
+                el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 2 } }, 'Chat button: ' + buttonStatus)),
                 el(SwitchRow, { label: 'Chat-bar Fake button (reload chat to apply)', value: chatBtn, onValueChange: (val: boolean) => { (cfg as any).chatButton = val; setChatBtn(val); savePluginCfg(); toast(val ? 'Fake button on — reload the chat to see it' : 'Fake button off — reload the chat'); } }),
                 el(Input, { placeholder: 'Quick Fake text (chat-bar button)', value: quickTxt, onChangeText: (t: string) => { (cfg as any).quickText = t; setQuickTxt(t); savePluginCfg(); } }),
             el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginTop: 10, paddingHorizontal: 12 } },
@@ -1300,75 +1301,162 @@ function quickFake() {
     } catch (e) { hostError('quick fake failed', e); }
 }
 
+let buttonStatus = 'not installed yet';
+
+function chatButtonElement(): any {
+    const React = getReact();
+    const RN = getRN();
+    if (!React?.createElement || !RN?.Pressable || !RN?.Text) return null;
+    const el = React.createElement;
+    return el(RN.Pressable, {
+        accessibilityLabel: 'FakeDM quick fake',
+        onPress: () => quickFake(),
+        style: { marginLeft: 6, paddingHorizontal: 8, paddingVertical: 4, justifyContent: 'center', alignItems: 'center' },
+    }, el(RN.Text, { style: { color: '#ffffff', fontSize: 13, fontWeight: '700' } }, 'Fake'));
+}
+
+// Push the button into the first row-like container of the rendered tree. The
+// chat action row is a View whose props.children is the array of buttons; the
+// walker prefers a row that already holds something pressable so a nested
+// layout container is not mistaken for it.
+function insertChatButton(tree: any): any {
+    try {
+        if (!tree || typeof tree !== 'object') return tree;
+        const btn = chatButtonElement();
+        if (!btn) return tree;
+        const find = getValenced()?.utils?.react?.findInReactFiber;
+        const isRow = (n: any) => Array.isArray(n?.props?.children)
+            && n.props.children.length > 0
+            && n.props.children.length < 10
+            && n.props.children.some((k: any) => k && typeof k === 'object');
+        let target: any = null;
+        try {
+            target = find?.(tree, (n: any) => isRow(n) && n.props.children.some((k: any) => k?.props?.onPress || k?.props?.accessibilityLabel));
+        } catch {}
+        if (!target) {
+            try { target = find?.(tree, isRow); } catch {}
+        }
+        if (!target) return tree;
+        const kids = target.props.children;
+        if (kids.some((k: any) => k?.props?.accessibilityLabel === 'FakeDM quick fake')) return tree;
+        kids.push(btn);
+        return tree;
+    } catch (e) {
+        hostError('chat button insert failed', e);
+        return tree;
+    }
+}
+
+// Valenced's own chat-button plugins patch the memo component's `type` rather
+// than hooking JSX (see the community "Better Chat Buttons" plugin), and the
+// chat action row is the memo component named ChatInputRightActions. Find it by
+// displayName, then append our button to its rendered row.
 function installChatButton() {
     try {
-        if ((cfg as any)?.chatButton === false) return;
+        if ((cfg as any)?.chatButton === false) { buttonStatus = 'off in settings'; return; }
         const v = getValenced();
-        if (!v) return;
-        const afterJSX = v?.react?.jsxRuntime?.afterJSX ?? v?.react?.ReactJSXRuntime?.afterJSX ?? null;
-        if (typeof afterJSX !== 'function') return; // old client: settings-only
+        if (!v) { buttonStatus = 'no valenced host'; return; }
         const finders = v?.modules?.finders;
         const filters = v?.modules?.finders?.filters;
-        if (!finders || !filters) return;
-        const candidates: any[] = [];
-        try {
-            candidates.push(filters.withName('ChatInput'), filters.withName('ChannelTextArea'), filters.withName('MessageInput'), filters.withName('ChatBox'));
-            candidates.push(filters.withProps('channelId', 'onSend'), filters.withProps('sendMessage', 'channelId'), filters.withProps('renderAccessory', 'channelId'));
-        } catch { return; }
-        let filter: any = null;
-        try { filter = candidates.length === 1 ? candidates[0] : filters.anyOf(...candidates); } catch { return; }
-        const React = getReact();
-        const RN = getRN();
-        if (!React || !RN) return;
-        const el = React.createElement;
-        const installed = new Set<any>();
-        const placeButton = (node: any, btn: any, depth: number): boolean => {
-            if (!node || typeof node !== 'object' || depth > 4) return false;
-            try {
-                const props = node.props ?? {};
-                const kids = props.children ?? node.children;
-                if (Array.isArray(kids) && kids.length > 0 && kids.length < 12) {
-                    const row = props?.style;
-                    const styles = Array.isArray(row) ? row : [row];
-                    const horizontal = styles.some((s: any) => s?.flexDirection === 'row');
-                    const hasPressable = kids.some((k: any) => k?.props?.onPress || k?.props?.accessibilityLabel);
-                    if ((horizontal || hasPressable) && !kids.some((k: any) => k?.props?.accessibilityLabel === 'FakeDM quick fake')) {
-                        kids.push(btn);
-                        return true;
-                    }
+        const patcher = v?.patcher;
+        if (!finders?.getModules || !filters?.createFilterGenerator || typeof patcher?.after !== 'function') {
+            buttonStatus = 'host lacks finders/patcher';
+            return;
+        }
+        const hookComponent = (Comp: any, label: string) => {
+            if (!Comp) return false;
+            // Discord ships the chat row as a memo/forwardRef exotic component:
+            // an OBJECT whose `type` (or `render`) is the render function. It is
+            // deliberately not a function itself, so a `typeof === 'function'`
+            // guard here silently skipped every real chat row.
+            if (typeof Comp === 'object') {
+                const key = typeof Comp.type === 'function' ? 'type' : typeof Comp.render === 'function' ? 'render' : null;
+                if (!key) return false;
+                try {
+                    const unpatch = patcher.after(Comp, key, (_args: any, tree: any) => insertChatButton(tree));
+                    if (typeof unpatch === 'function') cleanupFns.push(unpatch);
+                    buttonStatus = 'hooked ' + label + ' (' + key + ')';
+                    return true;
+                } catch (e) {
+                    buttonStatus = 'patch failed on ' + label;
+                    hostError('chat button patch failed', e);
+                    return false;
                 }
-                if (Array.isArray(kids)) { for (const k of kids) if (placeButton(k, btn, depth + 1)) return true; }
-                else if (kids && typeof kids === 'object') return placeButton(kids, btn, depth + 1);
-            } catch {}
+            }
+            // A plain function component cannot be patched by property; JSX
+            // hooking below is the fallback for that shape.
             return false;
         };
-        const hook = (Comp: any) => {
-            if (!Comp || (typeof Comp !== 'function' && typeof Comp !== 'object') || installed.has(Comp)) return;
-            installed.add(Comp);
+        const memoNamed = (name: string) => {
             try {
-                const unpatch = (afterJSX as any)(Comp, (tree: any) => {
-                    try {
-                        const btn = el(RN.Pressable ?? 'view', {
-                            accessibilityLabel: 'FakeDM quick fake',
-                            onPress: () => quickFake(),
-                            style: { paddingHorizontal: 10, paddingVertical: 8, borderRadius: 8, backgroundColor: '#5865F2', marginLeft: 6 },
-                        }, el(RN.Text ?? 'text', { style: { color: '#ffffff', fontWeight: '700', fontSize: 13 } }, 'Fake'));
-                        placeButton(tree, btn, 0);
-                    } catch {}
-                    return tree;
-                });
-                if (typeof unpatch === 'function') cleanupFns.push(unpatch);
-            } catch (e) { hostError('chat button hook failed', e); }
+                // Match the memo/render component by name. Arity is NOT a
+                // requirement: a build is free to change how many props the
+                // render fn takes, and requiring exactly one silently lost the
+                // chat row on builds that did.
+                return filters.createFilterGenerator(
+                    ([n]: any, _id: any, exports: any) => {
+                        const t = exports?.type;
+                        if (t && typeof t === 'function' && (t.displayName === n || t.name === n)) return true;
+                        if (exports?.displayName === n || exports?.name === n) return true;
+                        const r = exports?.render;
+                        return !!r && typeof r === 'function' && (r.displayName === n || r.name === n);
+                    },
+                    ([n]: any) => 'cenotaph.fakedm.memo(' + n + ')',
+                )(name);
+            } catch {
+                return null;
+            }
         };
+        const isComponentLike = (x: any) => !!x && (typeof x === 'function' || (typeof x === 'object' && (typeof x.type === 'function' || typeof x.render === 'function')));
+        const names = ['ChatInputRightActions', 'ChatInputActions', 'ChatInputButtons', 'ChatInputAppButtons'];
+        let installed = false;
+        for (const name of names) {
+            const filter = memoNamed(name);
+            if (!filter) continue;
+            try {
+                const off = finders.getModules(filter, (exports: any) => {
+                    if (installed) return;
+                    const Comp = isComponentLike(exports) ? exports : (exports?.default ?? exports);
+                    if (hookComponent(Comp, name)) installed = true;
+                });
+                if (typeof off === 'function') cleanupFns.push(off);
+            } catch {}
+        }
+        // Secondary path for builds where the memo name moved: hook JSX on the
+        // chat input itself (afterJSX exists on newer runtimes only).
         try {
-            const [found] = finders.lookupModule(filter);
-            if (found) hook(found);
+            const afterJSX = v?.react?.jsxRuntime?.afterJSX ?? v?.react?.ReactJSXRuntime?.afterJSX ?? null;
+            if (typeof afterJSX === 'function' && !installed) {
+                const byName = [
+                    filters.withName?.('ChatInput'),
+                    filters.withName?.('ChannelTextArea'),
+                    filters.withName?.('MessageInput'),
+                ].filter(Boolean);
+                if (byName.length) {
+                    const filter = byName.length === 1 ? byName[0] : filters.anyOf?.(...byName);
+                    if (filter) {
+                        const off = finders.getModules(filter, (exports: any) => {
+                            if (installed) return;
+                            const Comp = isComponentLike(exports) ? exports : (exports?.default ?? exports);
+                            const render = typeof Comp === 'function' ? Comp : Comp?.type ?? Comp?.render;
+                            if (!render) return;
+                            try {
+                                const unpatch = afterJSX(render, (tree: any) => insertChatButton(tree));
+                                if (typeof unpatch === 'function') cleanupFns.push(unpatch);
+                                buttonStatus = 'hooked via jsx';
+                                installed = true;
+                            } catch {}
+                        });
+                        if (typeof off === 'function') cleanupFns.push(off);
+                    }
+                }
+            }
         } catch {}
-        try {
-            const off = finders.getModules?.(filter, (exports: any) => hook(exports?.default ?? exports));
-            if (typeof off === 'function') cleanupFns.push(off);
-        } catch {}
-    } catch (e) { hostError('chat button install failed', e); }
+        if (!installed) buttonStatus = 'chat row not found (yet)';
+    } catch (e) {
+        buttonStatus = 'install failed';
+        hostError('chat button install failed', e);
+    }
 }
 
 // ---- Start / stop ---------------------------------------------------------------
@@ -1480,6 +1568,7 @@ __instance.__engine = {
     doRestore,
     memberCandidates,
     getFakes: readFakes,
+    chatButtonStatus: () => buttonStatus,
 };
 
 if (typeof plugin === 'function') {

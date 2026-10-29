@@ -176,7 +176,44 @@ for (let plug of await readdir("./plugins", { withFileTypes: true })) {
         process.exit(1);
     }
 
-    const wrapped = `(() => { const module = { exports: {} }; const exports = module.exports; ${bundle}; return (module.exports && module.exports.default) || module.exports; })()`;
+    // The host evaluates this file as `new Function('valenced','plugin', 'return ' + script)`
+    // and keeps `result.default`; `SettingsComponent` is only ever taken from that
+    // object. So a throw anywhere in the bundle's top level means the plugin
+    // registers with no settings page at all and looks dead on the device, with
+    // the reason only in a log nobody can read on a phone. Catch it and hand back
+    // a working plugin whose settings page IS the error report.
+    const wrapped = `(() => {
+    try {
+        const module = { exports: {} };
+        const exports = module.exports;
+        ${bundle};
+        const exported = (module.exports && module.exports.default) || module.exports;
+        if (!exported || typeof exported !== 'object') throw new Error('bundle exported ' + typeof exported + ' instead of a plugin object');
+        return exported;
+    } catch (error) {
+        const message = String((error && (error.stack || error.message)) || error);
+        try { console.error('[${manifest.id}] bundle failed to evaluate', error); } catch (ignored) {}
+        return {
+            jsonStorage: { load: true, default: {} },
+            start() {},
+            stop() {},
+            SettingsComponent() {
+                try {
+                    const R = valenced.react.React;
+                    const N = valenced.react.ReactNative;
+                    if (!R || !N || typeof R.createElement !== 'function') return null;
+                    const el = R.createElement;
+                    return el(N.ScrollView, { style: { padding: 16 } },
+                        el(N.Text, { style: { color: '#f04747', fontSize: 16, fontWeight: '700', marginBottom: 8 } }, ${JSON.stringify(manifest.name)} + ' failed to load'),
+                        el(N.Text, { style: { color: '#9ba0a8', fontSize: 12, marginBottom: 8 } }, 'Copy this text to the plugin author — it is the exact error:'),
+                        el(N.Text, { style: { color: '#ffffff', fontSize: 11 } }, message));
+                } catch (uiError) {
+                    return null;
+                }
+            },
+        };
+    }
+})()`;
     const bundleBytes = Buffer.from(wrapped, "utf8");
     const bundleHash = createHash("sha256").update(bundleBytes).digest("hex");
 
@@ -185,6 +222,11 @@ for (let plug of await readdir("./plugins", { withFileTypes: true })) {
     // format fields wire up jsonStorage/settings on current Revenge builds.
     const deployed = {
         ...manifest,
+        // Valenced resolves the bundle ONLY through dist.script. Without it the
+        // host registers the plugin with empty options: no start(), no
+        // SettingsComponent, no settings tab, and no error anywhere a user can
+        // see it. Emit it for every plugin, whatever the source manifest says.
+        dist: { ...(manifest.dist ?? {}), script },
         main: script,
         hash: bundleHash,
         authors: [{ name: manifest.author ?? "Unknown" }],
@@ -192,8 +234,10 @@ for (let plug of await readdir("./plugins", { withFileTypes: true })) {
     };
 
     const artifactName = zipName(id, version, policy);
+    // The ZIP carries the same manifest the folder URL serves, so a repository
+    // install and a direct URL install cannot disagree about dist.script.
     const zip = reproducibleZip({
-        "manifest.json": strToU8(JSON.stringify(manifest, null, 4)),
+        "manifest.json": strToU8(JSON.stringify(deployed, null, 4)),
         [script]: bundleBytes,
     });
 

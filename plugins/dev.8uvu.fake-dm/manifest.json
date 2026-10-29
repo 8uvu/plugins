@@ -10,11 +10,13 @@
         "description": "Injects fake messages, calls, system messages, reactions & embeds into any DM or channel. Batch fake conversations. Persists across restarts.",
         "authors": [{ "name": "Cenotaph" }]
     },
-    "version": "1.2.4",
+    "version": "1.2.6",
     "license": "GPL-3.0-or-later",
     "dependencies": {
         "valenced.api": { "version": ">=1" },
         "discord": { "version": "*" }
     },
-    "main": "index.js"
+    "dist": {
+        "script": "index.js"
+    }
 }
