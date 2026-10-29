@@ -217,6 +217,27 @@ const textIn = (tree) => {
         check('the dispatched message carries the quick text', sent[0]?.message?.content === 'hello', sent[0]?.message?.content);
     }
 
+    // The switch must act immediately: enabling has to install the button on the
+    // spot, disabling has to take the patch back out. Waiting for a reload is what
+    // made the feature look broken.
+    const switchedOff = onOptions.__engine.setChatButton(false);
+    check('turning the switch off reports it is off', String(switchedOff).includes('off in settings'), switchedOff);
+    const afterOff = on.row.type({});
+    check('turning the switch off removes the button', buttonsIn(afterOff).length === 0, String(buttonsIn(afterOff).length));
+    void on.state.patchedKeys;
+
+    onOptions.__engine.setChatButton(true);
+    // The module handover is asynchronous on a cold chat; the point is that it
+    // happens without a reload.
+    await new Promise((resolve) => setTimeout(resolve, 80));
+    const switchedOn = onOptions.__engine.chatButtonStatus();
+    check('turning the switch on hooks without a reload', String(switchedOn).startsWith('hooked ChatInputRightActions'), switchedOn);
+    const afterOn = on.row.type({});
+    const pill = buttonsIn(afterOn)[0];
+    check('the button comes back after enabling', !!pill);
+    check('the button has its own visible surface', pill?.props?.style?.backgroundColor === '#5865F2', JSON.stringify(pill?.props?.style ?? {}));
+    check('the button is a real hit target', (pill?.props?.style?.height ?? 0) >= 24 && (pill?.props?.style?.minWidth ?? 0) >= 40, JSON.stringify(pill?.props?.style ?? {}));
+
     const page = onOptions.SettingsComponent({ api: { jsonStorage: storage } });
     const text = textIn(page);
     check('the settings page renders text', text.length > 0);

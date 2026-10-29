@@ -6,7 +6,7 @@
 // across restarts, and can batch-inject a whole fake conversation from a
 // simple "[14:30] Name: text" script.
 //
-const PLUGIN_VERSION = '1.4.1';
+const PLUGIN_VERSION = '1.4.2';
 
 // Desktop-only pieces (chat-bar button portal, context-menu edit, CSS) have no
 // Revenge equivalent — here everything lives in the plugin's settings page,
@@ -1365,8 +1365,23 @@ function buildSettingsComponent() {
                 el(Text, { style: { color: C.text, fontSize: 18, fontWeight: '800' } }, 'FakeDM ' + PLUGIN_VERSION),
                 el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 2 } }, 'Injects into: ' + (channelId ? (getChannelStore()?.getChannel?.(channelId)?.name ?? 'DM · ' + channelId.slice(-6)) : 'no channel open — open a DM first')),
                 el(Pressable, { onPress: () => { installTries = 0; installChatButton(); toast('Chat button: ' + buttonStatus); } },
-                    el(Text, { style: { color: C.blurple, fontSize: 11, marginTop: 2 } }, 'Chat button: ' + buttonStatus + ' · tap to retry'))),
-                el(SwitchRow, { label: 'Chat-bar Fake button (off by default, reload chat after)', value: chatBtn, onValueChange: (val: boolean) => { (cfg as any).chatButton = val; setChatBtn(val); savePluginCfg(); toast(val ? 'Fake button on — reload the chat to see it' : 'Fake button off — reload the chat'); } }),
+                    el(Text, { style: { color: C.blurple, fontSize: 11, marginTop: 2 } }, 'Chat button: ' + buttonStatus + ' · tap to retry')),
+                chatRowNames.length && buttonStatus.indexOf('hooked') !== 0
+                    ? el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 2 } }, 'Chat components on this build: ' + chatRowNames.join(', '))
+                    : null),
+                el(SwitchRow, {
+                    label: 'Chat-bar Fake button',
+                    subLabel: 'Adds a Fake pill to the chat action row',
+                    value: chatBtn,
+                    onValueChange: (val: boolean) => {
+                        setChatBtn(val);
+                        // Applies immediately; the status line under the header
+                        // shows whether the row was found (it can land a moment
+                        // later on a cold chat).
+                        setChatButton(val);
+                        toast(val ? 'Fake button on' : 'Fake button off');
+                    },
+                }),
                 el(Input, { placeholder: 'Quick Fake text (chat-bar button)', value: quickTxt, onChangeText: (t: string) => { (cfg as any).quickText = t; setQuickTxt(t); savePluginCfg(); } }),
                 el(Pressable, { onPress: () => { const r = restoreSaved(); toast(r.restored ? 'Restored ' + r.restored + (r.skipped ? ' · skipped ' + r.skipped : '') : 'Nothing restorable · skipped ' + r.skipped); setFakeTick((x2: number) => x2 + 1); } },
                     el(Text, { style: { color: C.blurple, fontSize: 12, marginTop: 6 } }, 'Show saved fakes again (' + readFakes().length + ')')),
@@ -1409,11 +1424,25 @@ function chatButtonElement(): any {
     const RN = getRN();
     if (!React?.createElement || !RN?.Pressable || !RN?.Text) return null;
     const el = React.createElement;
+    // A plain text label disappeared into the action row on the phone, so this
+    // is a filled pill: its own background, its own contrast, a fixed height and
+    // a real hit area. If it renders, it is visible.
     return el(RN.Pressable, {
         accessibilityLabel: 'FakeDM quick fake',
+        accessibilityRole: 'button',
         onPress: () => quickFake(),
-        style: { marginLeft: 6, paddingHorizontal: 8, paddingVertical: 4, justifyContent: 'center', alignItems: 'center' },
-    }, el(RN.Text, { style: { color: '#ffffff', fontSize: 13, fontWeight: '700' } }, 'Fake'));
+        style: {
+            marginLeft: 6,
+            marginRight: 2,
+            minWidth: 44,
+            height: 28,
+            paddingHorizontal: 10,
+            borderRadius: 14,
+            backgroundColor: '#5865F2',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+    }, el(RN.Text, { style: { color: '#ffffff', fontSize: 12, fontWeight: '700' } }, 'Fake'));
 }
 
 // Push the button into the first row-like container of the rendered tree. The
@@ -1509,13 +1538,71 @@ function memoFilter(filters: any, name: string): any {
 // Only the name Valenced's own chat-button plugin targets. Guessing extra names
 // meant patching components we had no proof were rows, which risks the client.
 const CHAT_ROW_NAMES = ['ChatInputRightActions'];
+// Names the build actually exposes, filled in only when the hook misses. This
+// turns "no button" into something the user can paste back.
+let chatRowNames: string[] = [];
 const MAX_INSTALL_TRIES = 4;
 let installTimer: any = null;
 let installTries = 0;
 
+// Only the patches that belong to the chat button, so the switch can undo them
+// without disturbing the storage subscription or anything else registered.
+let buttonCleanups: (() => void)[] = [];
+
+function uninstallChatButton() {
+    if (installTimer) { clearTimeout(installTimer); installTimer = null; }
+    installTries = 0;
+    while (buttonCleanups.length) {
+        try { buttonCleanups.pop()?.(); } catch {}
+    }
+    buttonStatus = 'off in settings';
+}
+
+function setChatButton(on: boolean) {
+    try {
+        (cfg as any).chatButton = on;
+        savePluginCfg();
+        if (on) installChatButton();
+        else uninstallChatButton();
+    } catch (e) {
+        hostError('could not switch the chat button', e);
+    }
+    return buttonStatus;
+}
+
+function scanChatRows() {
+    const host = finderApi();
+    if (!host) return;
+    const { finders, filters } = host;
+    try {
+        const nameOf = (exports: any): string | null => {
+            const candidates = [
+                exports?.type?.displayName, exports?.type?.name,
+                exports?.render?.displayName, exports?.render?.name,
+                exports?.displayName, exports?.name,
+            ];
+            for (const n of candidates) {
+                if (typeof n === 'string' && n.indexOf('ChatInput') === 0) return n;
+            }
+            return null;
+        };
+        const generator = filters.createFilterGenerator(
+            (_args: any, _id: any, exports: any) => nameOf(exports) !== null,
+            (_args: any) => 'cenotaph.fakedm.chatscan',
+        );
+        const off = finders.getModules(generator([]), (exports: any) => {
+            const name = nameOf(exports);
+            if (name && chatRowNames.indexOf(name) === -1 && chatRowNames.length < 8) chatRowNames.push(name);
+        });
+        if (typeof off === 'function') buttonCleanups.push(off);
+    } catch {}
+}
+
 function installChatButton() {
     try {
         if (installTimer) { clearTimeout(installTimer); installTimer = null; }
+        // Re-installing must not stack a second copy on the same row.
+        while (buttonCleanups.length) { try { buttonCleanups.pop()?.(); } catch {} }
         if ((cfg as any)?.chatButton === false) { buttonStatus = 'off in settings'; return; }
         const host = finderApi();
         if (!host) { buttonStatus = 'host lacks finders/patcher'; return; }
@@ -1537,7 +1624,7 @@ function installChatButton() {
             if (!key) return false;
             try {
                 const off = patcher.after(Comp, key, (_args: any, tree: any) => insertChatButton(tree));
-                if (typeof off === 'function') cleanupFns.push(off);
+                if (typeof off === 'function') buttonCleanups.push(off);
                 buttonStatus = 'hooked ' + label + ' (' + key + ')';
                 return true;
             } catch (e) {
@@ -1566,7 +1653,7 @@ function installChatButton() {
                     if (installed) return;
                     if (hook(pick(exports), name)) installed = true;
                 });
-                if (typeof off === 'function') cleanupFns.push(off);
+                if (typeof off === 'function') buttonCleanups.push(off);
             } catch {}
         }
 
@@ -1589,7 +1676,7 @@ function installChatButton() {
                                 if (typeof render !== 'function') return;
                                 try {
                                     const unpatch = afterJSX(render, (tree: any) => insertChatButton(tree));
-                                    if (typeof unpatch === 'function') cleanupFns.push(unpatch);
+                                    if (typeof unpatch === 'function') buttonCleanups.push(unpatch);
                                     buttonStatus = 'hooked via jsx';
                                     installed = true;
                                 } catch {}
@@ -1602,6 +1689,10 @@ function installChatButton() {
         }
 
         if (installed) { installTries = 0; return; }
+
+        // Nothing matched: ask the module system what chat-input components exist,
+        // so the status line can name them.
+        scanChatRows();
         // The row is often registered a few seconds after start(). Keep asking,
         // cheaply and a bounded number of times, instead of giving up for good.
         if (installTries < MAX_INSTALL_TRIES) {
@@ -1680,7 +1771,7 @@ let __instance: any = {
         }
     },
     stop() {
-        if (installTimer) { clearTimeout(installTimer); installTimer = null; }
+        uninstallChatButton();
         installTries = 0;
         while (cleanupFns.length) {
             try { cleanupFns.pop()?.(); } catch {}
@@ -1735,6 +1826,7 @@ __instance.__engine = {
     memberCandidates,
     getFakes: readFakes,
     chatButtonStatus: () => buttonStatus,
+    setChatButton,
 };
 
 if (typeof plugin === 'function') {
