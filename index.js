@@ -27,7 +27,7 @@ __export(index_exports, {
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "1.4.1";
+var PLUGIN_VERSION = "1.4.2";
 var DEFAULT_SETTINGS = {
   jitterSeconds: true,
   // randomize seconds like the desktop plugin's randomSeconds
@@ -1398,14 +1398,19 @@ function buildSettingsComponent() {
             toast("Chat button: " + buttonStatus);
           } },
           el(Text, { style: { color: C.blurple, fontSize: 11, marginTop: 2 } }, "Chat button: " + buttonStatus + " \xB7 tap to retry")
-        )
+        ),
+        chatRowNames.length && buttonStatus.indexOf("hooked") !== 0 ? el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 2 } }, "Chat components on this build: " + chatRowNames.join(", ")) : null
       ),
-      el(SwitchRow, { label: "Chat-bar Fake button (off by default, reload chat after)", value: chatBtn, onValueChange: (val) => {
-        cfg.chatButton = val;
-        setChatBtn(val);
-        savePluginCfg();
-        toast(val ? "Fake button on \u2014 reload the chat to see it" : "Fake button off \u2014 reload the chat");
-      } }),
+      el(SwitchRow, {
+        label: "Chat-bar Fake button",
+        subLabel: "Adds a Fake pill to the chat action row",
+        value: chatBtn,
+        onValueChange: (val) => {
+          setChatBtn(val);
+          setChatButton(val);
+          toast(val ? "Fake button on" : "Fake button off");
+        }
+      }),
       el(Input, { placeholder: "Quick Fake text (chat-bar button)", value: quickTxt, onChangeText: (t) => {
         cfg.quickText = t;
         setQuickTxt(t);
@@ -1467,9 +1472,20 @@ function chatButtonElement() {
   const el = React.createElement;
   return el(RN.Pressable, {
     accessibilityLabel: "FakeDM quick fake",
+    accessibilityRole: "button",
     onPress: () => quickFake(),
-    style: { marginLeft: 6, paddingHorizontal: 8, paddingVertical: 4, justifyContent: "center", alignItems: "center" }
-  }, el(RN.Text, { style: { color: "#ffffff", fontSize: 13, fontWeight: "700" } }, "Fake"));
+    style: {
+      marginLeft: 6,
+      marginRight: 2,
+      minWidth: 44,
+      height: 28,
+      paddingHorizontal: 10,
+      borderRadius: 14,
+      backgroundColor: "#5865F2",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, el(RN.Text, { style: { color: "#ffffff", fontSize: 12, fontWeight: "700" } }, "Fake"));
 }
 function insertChatButton(tree) {
   var _a, _b, _c;
@@ -1559,15 +1575,81 @@ function memoFilter(filters, name) {
   }
 }
 var CHAT_ROW_NAMES = ["ChatInputRightActions"];
+var chatRowNames = [];
 var MAX_INSTALL_TRIES = 4;
 var installTimer = null;
 var installTries = 0;
+var buttonCleanups = [];
+function uninstallChatButton() {
+  var _a;
+  if (installTimer) {
+    clearTimeout(installTimer);
+    installTimer = null;
+  }
+  installTries = 0;
+  while (buttonCleanups.length) {
+    try {
+      (_a = buttonCleanups.pop()) == null ? void 0 : _a();
+    } catch {
+    }
+  }
+  buttonStatus = "off in settings";
+}
+function setChatButton(on) {
+  try {
+    cfg.chatButton = on;
+    savePluginCfg();
+    if (on) installChatButton();
+    else uninstallChatButton();
+  } catch (e) {
+    hostError("could not switch the chat button", e);
+  }
+  return buttonStatus;
+}
+function scanChatRows() {
+  const host = finderApi();
+  if (!host) return;
+  const { finders, filters } = host;
+  try {
+    const nameOf = (exports) => {
+      var _a, _b, _c, _d;
+      const candidates = [
+        (_a = exports == null ? void 0 : exports.type) == null ? void 0 : _a.displayName,
+        (_b = exports == null ? void 0 : exports.type) == null ? void 0 : _b.name,
+        (_c = exports == null ? void 0 : exports.render) == null ? void 0 : _c.displayName,
+        (_d = exports == null ? void 0 : exports.render) == null ? void 0 : _d.name,
+        exports == null ? void 0 : exports.displayName,
+        exports == null ? void 0 : exports.name
+      ];
+      for (const n of candidates) {
+        if (typeof n === "string" && n.indexOf("ChatInput") === 0) return n;
+      }
+      return null;
+    };
+    const generator = filters.createFilterGenerator(
+      (_args, _id, exports) => nameOf(exports) !== null,
+      (_args) => "cenotaph.fakedm.chatscan"
+    );
+    const off = finders.getModules(generator([]), (exports) => {
+      const name = nameOf(exports);
+      if (name && chatRowNames.indexOf(name) === -1 && chatRowNames.length < 8) chatRowNames.push(name);
+    });
+    if (typeof off === "function") buttonCleanups.push(off);
+  } catch {
+  }
+}
 function installChatButton() {
-  var _a, _b, _c, _d, _e, _f, _g;
+  var _a, _b, _c, _d, _e, _f, _g, _h;
   try {
     if (installTimer) {
       clearTimeout(installTimer);
       installTimer = null;
+    }
+    while (buttonCleanups.length) {
+      try {
+        (_a = buttonCleanups.pop()) == null ? void 0 : _a();
+      } catch {
+      }
     }
     if ((cfg == null ? void 0 : cfg.chatButton) === false) {
       buttonStatus = "off in settings";
@@ -1589,7 +1671,7 @@ function installChatButton() {
       if (!key) return false;
       try {
         const off = patcher.after(Comp, key, (_args, tree) => insertChatButton(tree));
-        if (typeof off === "function") cleanupFns.push(off);
+        if (typeof off === "function") buttonCleanups.push(off);
         buttonStatus = "hooked " + label + " (" + key + ")";
         return true;
       } catch (e) {
@@ -1617,14 +1699,14 @@ function installChatButton() {
           if (installed) return;
           if (hook(pick(exports), name)) installed = true;
         });
-        if (typeof off === "function") cleanupFns.push(off);
+        if (typeof off === "function") buttonCleanups.push(off);
       } catch {
       }
     }
     if (!installed) {
       try {
-        const r = (_b = (_a = getValenced()) == null ? void 0 : _a.react) != null ? _b : {};
-        const afterJSX = (_f = (_e = (_c = r.jsxRuntime) == null ? void 0 : _c.afterJSX) != null ? _e : (_d = r.ReactJSXRuntime) == null ? void 0 : _d.afterJSX) != null ? _f : null;
+        const r = (_c = (_b = getValenced()) == null ? void 0 : _b.react) != null ? _c : {};
+        const afterJSX = (_g = (_f = (_d = r.jsxRuntime) == null ? void 0 : _d.afterJSX) != null ? _f : (_e = r.ReactJSXRuntime) == null ? void 0 : _e.afterJSX) != null ? _g : null;
         if (typeof afterJSX === "function") {
           const byName = ["ChatInput", "ChannelTextArea", "MessageInput"].map((n) => {
             var _a2, _b2;
@@ -1635,7 +1717,7 @@ function installChatButton() {
             }
           }).filter(Boolean);
           if (byName.length) {
-            const filter = byName.length === 1 ? byName[0] : (_g = filters.anyOf) == null ? void 0 : _g.call(filters, ...byName);
+            const filter = byName.length === 1 ? byName[0] : (_h = filters.anyOf) == null ? void 0 : _h.call(filters, ...byName);
             if (filter) {
               const off = finders.getModules(filter, (exports) => {
                 var _a2;
@@ -1645,7 +1727,7 @@ function installChatButton() {
                 if (typeof render !== "function") return;
                 try {
                   const unpatch = afterJSX(render, (tree) => insertChatButton(tree));
-                  if (typeof unpatch === "function") cleanupFns.push(unpatch);
+                  if (typeof unpatch === "function") buttonCleanups.push(unpatch);
                   buttonStatus = "hooked via jsx";
                   installed = true;
                 } catch {
@@ -1662,6 +1744,7 @@ function installChatButton() {
       installTries = 0;
       return;
     }
+    scanChatRows();
     if (installTries < MAX_INSTALL_TRIES) {
       installTries++;
       buttonStatus = "chat row not found (try " + installTries + "/" + MAX_INSTALL_TRIES + ")";
@@ -1739,10 +1822,7 @@ var __instance = {
   },
   stop() {
     var _a;
-    if (installTimer) {
-      clearTimeout(installTimer);
-      installTimer = null;
-    }
+    uninstallChatButton();
     installTries = 0;
     while (cleanupFns.length) {
       try {
@@ -1794,7 +1874,8 @@ __instance.__engine = {
   validFake,
   memberCandidates,
   getFakes: readFakes,
-  chatButtonStatus: () => buttonStatus
+  chatButtonStatus: () => buttonStatus,
+  setChatButton
 };
 if (typeof plugin === "function") {
   __instance = plugin(__instance);
