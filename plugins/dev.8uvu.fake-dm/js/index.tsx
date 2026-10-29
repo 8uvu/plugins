@@ -6,7 +6,7 @@
 // across restarts, and can batch-inject a whole fake conversation from a
 // simple "[14:30] Name: text" script.
 //
-const PLUGIN_VERSION = '1.3.0';
+const PLUGIN_VERSION = '1.4.0';
 
 // Desktop-only pieces (chat-bar button portal, context-menu edit, CSS) have no
 // Revenge equivalent — here everything lives in the plugin's settings page,
@@ -512,37 +512,42 @@ function injectReaction(channelId: string, messageId: string, userId: string, em
     return true;
 }
 
-// Desktop notes: dispatching a PARTIAL message through MESSAGE_UPDATE crashes
-// the renderer — always merge into the full cached record.
-function editFakeMessage(channelId: string, messageId: string, newContent: string, newTimestamp?: string): boolean {
+// Desktop parity (injection.ts editFakeMessage): dispatch MESSAGE_UPDATE with the
+// FULL cached record merged in. A partial message makes Discord's renderer read
+// fields that are not there, which is exactly how an "edit" can crash the client —
+// so if the message is not in cache this refuses instead of guessing.
+function editFakeMessage(channelId: string, messageId: string, newContent: string, newTimestamp?: string): { ok: boolean; reason: string } {
     const dispatch = getDispatch();
-    if (!dispatch) return false;
+    if (!dispatch) return { ok: false, reason: 'No dispatcher on this build' };
+    const text = String(newContent ?? '');
     const cached = getMessageStore()?.getMessage?.(channelId, messageId);
-    if (!cached) {
-        hostError('editFakeMessage: message not in cache, cannot edit safely');
-        return false;
+    if (!cached) return { ok: false, reason: 'Open that chat once so the message is cached, then edit' };
+    let ts: string | null = null;
+    if (newTimestamp) {
+        const parsed = new Date(newTimestamp);
+        if (!Number.isFinite(parsed.getTime())) return { ok: false, reason: 'Time not understood — use YYYY-MM-DD HH:MM' };
+        ts = parsed.toISOString();
     }
-    const ts = newTimestamp ? new Date(newTimestamp).toISOString() : new Date().toISOString();
-    const updated: any = { ...cached, content: newContent, edited_timestamp: ts };
+    const updated: any = { ...cached, content: text, edited_timestamp: ts ?? new Date().toISOString() };
+    if (ts) updated.timestamp = ts;
     try {
         dispatch({ type: 'MESSAGE_UPDATE', channelId, message: updated });
     } catch (e) {
         hostError('editFakeMessage dispatch failed', e);
-        return false;
+        return { ok: false, reason: 'Discord refused the update' };
     }
     const list = readFakes();
     for (const f of list) {
         if (f.type === 'message' && f.snowflakeId === messageId) {
-            f.content = newContent;
+            f.content = text;
+            if (ts) f.timestamp = ts;
             break;
         }
     }
     persistFakes(list);
-    return true;
+    return { ok: true, reason: 'Edited' };
 }
 
-// Removes fake messages from a channel. Dispatches MESSAGE_DELETE with the
-// mlDeleted marker so MessageLogger (1.6.2+) lets the rows vanish normally.
 function clearFakesInChannel(channelId: string, ids?: Set<string>): number {
     const dispatch = getDispatch();
     const list = readFakes();
@@ -649,18 +654,39 @@ function deleteSavedFakes(): number {
 
 // ---- Batch injection (desktop injectBatch + parse) ----------------------------
 
-function parseBatchScript(text: string): BatchLine[] {
+// Desktop FakeDM accepts one message per line and only needs the "[HH:MM]"
+// prefix; anything else is a plain line, sent by the default sender at the base
+// time. The previous parser demanded a time and threw away every line without
+// one, which is why batch scripts appeared to do nothing.
+//
+// Accepted, in this order:
+//   [14:30] Name: text   time + sender
+//   [14:30] text         time, default sender
+//   Name: text           base time, sender
+//   text                 base time, default sender
+function parseBatchScript(text: string, base?: Date): BatchLine[] {
     const lines: BatchLine[] = [];
+    const at = base ?? new Date();
+    const baseTime = String(at.getHours()).padStart(2, '0') + ':' + String(at.getMinutes()).padStart(2, '0');
     for (const raw of String(text ?? '').split('\n')) {
         const line = raw.trim();
         if (!line) continue;
-        const m = line.match(/^\[?(\d{1,2}):(\d{2})\]?\s*(?:([^:]+?):)?\s*(.+)$/);
-        if (!m) continue;
-        lines.push({
-            time: String(Math.min(23, parseInt(m[1], 10))).padStart(2, '0') + ':' + m[2],
-            senderName: (m[3] ?? '').trim(),
-            content: m[4].trim(),
-        });
+        const timed = line.match(/^\[(\d{1,2}):(\d{2})\]\s*(?:([^:]+?)\s*:\s*)?(.+)$/);
+        if (timed) {
+            lines.push({
+                time: String(Math.min(23, parseInt(timed[1], 10))).padStart(2, '0') + ':' + timed[2],
+                senderName: (timed[3] ?? '').trim(),
+                content: timed[4].trim(),
+            });
+            continue;
+        }
+        // "Name: text" — but never a URL, which would read as somebody speaking.
+        const named = line.match(/^([^:/\n]{1,40}?)\s*:\s*(.+)$/);
+        if (named && !/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(line)) {
+            lines.push({ time: baseTime, senderName: named[1].trim(), content: named[2].trim() });
+            continue;
+        }
+        lines.push({ time: baseTime, senderName: '', content: line });
     }
     return lines;
 }
@@ -681,17 +707,28 @@ function resolveBatchAuthor(name: string, candidates: any[], me: any): any | nul
     return null;
 }
 
-function injectBatch(channelId: string, lines: BatchLine[], candidates: any[], me: any, baseDate: Date): number {
-    let n = 0;
+// Desktop injectBatch: one message per parsed line, the time-of-day comes from
+// the line and the date from the tab. A name that resolves to nobody is skipped
+// by desktop too — the difference is that this reports how many were skipped, so
+// a script cannot look like it worked when half of it went nowhere.
+function injectBatch(channelId: string, lines: BatchLine[], candidates: any[], me: any, baseDate: Date): { injected: number; skipped: number; unknown: string[] } {
+    let injected = 0;
+    let skipped = 0;
+    const unknown: string[] = [];
     for (const line of lines) {
         const author = resolveBatchAuthor(line.senderName, candidates, me);
-        if (!author) continue;
+        if (!author) {
+            skipped++;
+            if (line.senderName && unknown.indexOf(line.senderName) === -1) unknown.push(line.senderName);
+            continue;
+        }
         const [h, m] = line.time.split(':').map(Number);
         const msgDate = new Date(baseDate);
-        msgDate.setHours(h, m, 0, 0);
-        if (injectMessage(channelId, author, line.content, msgDate)) n++;
+        msgDate.setHours(Number.isFinite(h) ? h : 0, Number.isFinite(m) ? m : 0, 0, 0);
+        if (injectMessage(channelId, author, line.content, msgDate)) injected++;
+        else skipped++;
     }
-    return n;
+    return { injected, skipped, unknown };
 }
 
 // ---- Member candidates for pickers --------------------------------------------
@@ -996,6 +1033,10 @@ function buildSettingsComponent() {
         refreshConfigFromStorage();
 
         const [tab, setTab] = React.useState('quick');
+        // Inline editor for one saved fake (desktop's Edit Fake Message modal).
+        const [editingId, setEditingId] = React.useState('');
+        const [editText, setEditText] = React.useState('');
+        const [editWhen, setEditWhen] = React.useState('');
         // quick tab
         const [qUser, setQUser] = React.useState('');
         const [qUserId, setQUserId] = React.useState('');
@@ -1208,29 +1249,43 @@ function buildSettingsComponent() {
                     },
                 }));
         } else if (tab === 'batch') {
-            const parsed = parseBatchScript(batchText);
+            const base = parseWhen(batchTime, batchDate);
+            const parsed = parseBatchScript(batchText, base);
+            const defaultSender = memberById(batchSenderId || (me?.id ?? ''));
+            const unresolved = parsed.filter((l) => !resolveBatchAuthor(l.senderName, candidates, defaultSender)).length;
             body = el(View, null,
-                el(Label, null, 'Default sender (lines without a name)'),
+                el(Label, null, 'Default sender (lines with no name)'),
                 el(MemberChips, { members: candidates, value: batchSenderId, onChange: setBatchSenderId }),
-                el(Label, null, 'Script — one message per line, [HH:MM] optional name'),
+                el(Label, null, 'Script — one message per line'),
                 el(Input, {
-                    placeholder: '[14:30] Me: hey\n[14:31] ' + userLabel(candidates[1] ?? me) + ': sup\n[14:32] Me: check this out',
-                    value: batchText, onChangeText: setBatchText, multiline: true, style: { minHeight: 100, textAlignVertical: 'top' },
+                    placeholder: '[14:30] me: hey\n[14:31] somebody: sup\njust text = default sender, base time',
+                    value: batchText, onChangeText: setBatchText, multiline: true, style: { minHeight: 110, textAlignVertical: 'top' },
                 }),
-                el(Text, { style: { color: C.sub, fontSize: 12, marginBottom: 6 } }, parsed.length + ' message(s) parsed'),
-                el(Label, null, 'Base date (YYYY-MM-DD, optional — times come from the script)'),
+                el(Text, { style: { color: parsed.length ? C.ok : C.sub, fontSize: 12, marginBottom: 6 } },
+                    parsed.length + ' message(s) ready' + (unresolved ? ' · ' + unresolved + ' unknown name(s)' : '')),
+                ...parsed.slice(0, 6).map((l, i) => el(Text, { key: 'batch-' + i, numberOfLines: 1, style: { color: C.sub, fontSize: 11, marginBottom: 1 } },
+                    l.time + ' · ' + (l.senderName || userLabel(defaultSender ?? {})) + ': ' + l.content)),
+                parsed.length > 6 ? el(Text, { style: { color: C.sub, fontSize: 11, marginBottom: 4 } }, '…and ' + (parsed.length - 6) + ' more') : null,
+                el(Label, null, 'Start time (HH:MM, used by lines without one)'),
+                el(Input, { placeholder: '14:30', value: batchTime, onChangeText: setBatchTime }),
+                el(Label, null, 'Date (YYYY-MM-DD, optional)'),
                 el(Input, { placeholder: '2026-09-26', value: batchDate, onChangeText: setBatchDate }),
                 el(Btn, {
-                    label: 'Inject ' + parsed.length + ' messages', onPress: () => {
-                        if (!parsed.length) return toast('Nothing parsed — check the format');
-                        const base = parseWhen(batchTime, batchDate);
-                        const n = injectBatch(channelId, parsed, candidates, memberById(batchSenderId || (me?.id ?? '')), base);
-                        toast(n + ' fake message(s) injected' + (n < parsed.length ? ' — some names unknown' : ''));
-                        setFakeTick((nn: number) => nn + 1);
+                    label: 'Inject ' + parsed.length + ' message(s)', onPress: () => {
+                        if (!parsed.length) return toast('Nothing parsed — one message per line');
+                        if (!channelId) return toast('Open a chat first');
+                        const r = injectBatch(channelId, parsed, candidates, defaultSender, base);
+                        const names = r.unknown.length ? ' (' + r.unknown.join(', ') + ')' : '';
+                        toast(r.injected + ' injected' + (r.skipped ? ' · ' + r.skipped + ' skipped' + names : ''));
+                        if (r.injected) setBatchText('');
+                        setFakeTick((n2: number) => n2 + 1);
                     },
-                }));
+                }),
+                el(Pressable, { onPress: () => setBatchText(''), style: { marginTop: 10 } },
+                    el(Text, { style: { color: C.danger, fontSize: 12 } }, 'Clear script')));
         } else {
-            // Fakes tab
+            // Fakes tab: what this channel remembers, newest first, with a real
+            // editor per message (desktop's Edit Fake Message modal).
             void fakeTick;
             const all = readFakes();
             const inChannel = all.filter((f) => f.type !== 'reaction' && f.channelId === channelId);
@@ -1252,30 +1307,50 @@ function buildSettingsComponent() {
                         : f.type === 'call' ? 'CALL' : 'REACT';
                     const color = isMsg ? C.blurple : f.type === 'call' ? C.ok : C.amber;
                     const authorName = userLabel(memberById(isMsg ? (f as PersistedMessage).authorId : f.type === 'call' ? (f as PersistedCall).callerId : (f as PersistedReaction).userId));
+                    const editing = editingId === f.snowflakeId;
                     return el(View, { key: String(f.snowflakeId) + ':' + i, style: { paddingHorizontal: 14, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: C.input } },
                         el(View, { style: { flexDirection: 'row', justifyContent: 'space-between' } },
                             el(Text, { style: { color, fontSize: 11, fontWeight: '800' } }, label + ' · ' + authorName),
                             el(Text, { style: { color: C.sub, fontSize: 11 } }, new Date(isMsg || f.type === 'call' ? (f as any).timestamp : Date.now()).toLocaleString())),
-                        el(Text, { style: { color: C.text, fontSize: 13, marginTop: 2 } },
-                            isMsg ? String((f as PersistedMessage).content || '(no text)') : f.type === 'call' ? ((f as PersistedCall).missed ? 'Missed call' : 'Call · ' + Math.round((f as PersistedCall).durationSec / 60) + ' min') : ':' + (f as PersistedReaction).emoji + ':'),
-                        isMsg ? el(View, { style: { flexDirection: 'row', marginTop: 6 } },
-                            el(Pressable, {
-                                onPress: () => {
-                                    const next = String((f as PersistedMessage).content ?? '');
-                                    const ok = editFakeMessage(f.channelId, f.snowflakeId, next + ' ');
-                                    toast(ok ? 'Edited (added a space — full inline editor coming)' : 'Not in cache — open the channel first');
-                                },
-                                style: { backgroundColor: C.chip, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, marginRight: 8 },
-                            }, el(Text, { style: { color: C.text, fontSize: 12 } }, 'Edit (cache)')),
-                            el(Pressable, {
-                                onPress: () => {
-                                    const ok = removeFakeById(f.snowflakeId);
-                                    toast(ok ? 'Removed' : 'Remove failed');
-                                    setFakeTick((x: number) => x + 1);
-                                },
-                                style: { backgroundColor: C.danger, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4 },
-                            }, el(Text, { style: { color: '#ffffff', fontSize: 12 } }, 'Delete')),
-                        ) : null,
+                        editing
+                            ? null
+                            : el(Text, { style: { color: C.text, fontSize: 13, marginTop: 2 } },
+                                isMsg ? String((f as PersistedMessage).content || '(no text)') : f.type === 'call' ? ((f as PersistedCall).missed ? 'Missed call' : 'Call · ' + Math.round((f as PersistedCall).durationSec / 60) + ' min') : ':' + (f as PersistedReaction).emoji + ':'),
+                        isMsg ? (editing
+                            ? el(View, { style: { marginTop: 6 } },
+                                el(Input, { placeholder: 'New text', value: editText, onChangeText: setEditText, multiline: true, style: { minHeight: 48, textAlignVertical: 'top' } }),
+                                el(Input, { placeholder: 'New time (optional, YYYY-MM-DD HH:MM)', value: editWhen, onChangeText: setEditWhen }),
+                                el(View, { style: { flexDirection: 'row' } },
+                                    el(Pressable, {
+                                        onPress: () => {
+                                            const res = editFakeMessage(f.channelId, f.snowflakeId, editText, editWhen.trim() || undefined);
+                                            toast(res.reason);
+                                            if (res.ok) { setEditingId(''); setFakeTick((x: number) => x + 1); }
+                                        },
+                                        style: { backgroundColor: C.blurple, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 6, marginRight: 8 },
+                                    }, el(Text, { style: { color: '#ffffff', fontSize: 12, fontWeight: '700' } }, 'Save')),
+                                    el(Pressable, {
+                                        onPress: () => setEditingId(''),
+                                        style: { backgroundColor: C.chip, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 6 },
+                                    }, el(Text, { style: { color: C.text, fontSize: 12 } }, 'Cancel'))))
+                            : el(View, { style: { flexDirection: 'row', marginTop: 6 } },
+                                el(Pressable, {
+                                    onPress: () => {
+                                        setEditingId(f.snowflakeId);
+                                        setEditText(String((f as PersistedMessage).content ?? ''));
+                                        setEditWhen('');
+                                    },
+                                    style: { backgroundColor: C.chip, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, marginRight: 8 },
+                                }, el(Text, { style: { color: C.text, fontSize: 12 } }, 'Edit')),
+                                el(Pressable, {
+                                    onPress: () => {
+                                        const ok = removeFakeById(f.snowflakeId);
+                                        toast(ok ? 'Removed' : 'Remove failed');
+                                        setFakeTick((x: number) => x + 1);
+                                    },
+                                    style: { backgroundColor: C.danger, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4 },
+                                }, el(Text, { style: { color: '#ffffff', fontSize: 12 } }, 'Delete'))))
+                            : null,
                     );
                 }));
         }

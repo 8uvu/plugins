@@ -131,6 +131,11 @@ function makeHost() {
                         getUser: (id) => (String(id) === '42' ? { id: '42', username: 'me', discriminator: '0' } : null),
                     },
                     ChannelStore: { getChannel: (id) => (String(id) === '111' ? null : { id: String(id), name: 'DM' }) },
+                MessageStore: {
+                    getMessage: (channelId, id) => (String(id) === '555000222'
+                        ? { id: '555000222', channelId: String(channelId), content: 'old text', timestamp: new Date().toISOString(), author: { id: '42', username: 'me' }, attachments: [], embeds: [], mentions: [] }
+                        : null),
+                },
                 },
                 onFluxEventDispatched: () => () => {},
             },
@@ -224,7 +229,7 @@ const textIn = (tree) => {
     //    entry into a crash loop that survives reinstalling the plugin.
     const boot = makeHost();
     const saved = [
-        { type: 'message', channelId: '999000111', authorId: '42', content: 'restored hello', timestamp: new Date().toISOString(), snowflakeId: '555000222' },
+        { type: 'message', channelId: '999000111', authorId: '42', content: 'restored hello', timestamp: new Date().toISOString(), snowflakeId: '777000111' },
         { type: 'message', channelId: '111', authorId: '42', content: 'channel is gone', timestamp: new Date().toISOString(), snowflakeId: '555000333' },
     ];
     const bootStorage = { get: async () => ({ fakes: saved }), set: async () => {}, use: () => ({ fakes: saved }), subscribe: () => () => {} };
@@ -248,11 +253,54 @@ const textIn = (tree) => {
     check('deleteSavedFakes dispatches nothing', boot.events.length === before, String(boot.events.length - before));
     bootOptions.stop?.();
 
+    // 6. Batch conversations, ported the way desktop does it: one message per
+    //    line, [HH:MM] optional, a bare line falls back to the default sender and
+    //    the tab's start time instead of being thrown away.
+    const batch = makeHost();
+    const batchOptions = new Function('valenced', 'plugin', `return ${code}\n//# sourceURL=Valenced:Plugin:${manifest.id}`)(batch.host, (o) => o)?.default;
+    const seeded = [{ type: 'message', channelId: '999000111', authorId: '42', content: 'old text', timestamp: new Date().toISOString(), snowflakeId: '555000222' }];
+    const batchStorage = { get: async () => ({ fakes: seeded }), set: async () => {}, use: () => ({ fakes: seeded.map((f) => ({ ...f })) }), subscribe: () => () => {} };
+    await batchOptions.start?.({ jsonStorage: batchStorage });
+
+    const base = new Date('2026-09-26T10:00:00');
+    const script = [
+        '[14:30] me: first line',
+        '[14:31] Ghost: who is this',
+        'plain line',
+        'Somebody: named line',
+        'https://example.com/a:b',
+    ].join('\n');
+    const parsed = batchOptions.__engine.parseBatchScript(script, base);
+    check('the batch parser keeps every line', parsed.length === 5, String(parsed.length));
+    check('a timed line keeps its time and sender', parsed[0]?.time === '14:30' && parsed[0]?.senderName === 'me', JSON.stringify(parsed[0]));
+    check('an untimed line falls back to the base time', parsed[2]?.time === '10:00' && parsed[2]?.senderName === '', JSON.stringify(parsed[2]));
+    check('a bare "Name: text" line keeps the name', parsed[3]?.senderName === 'Somebody', JSON.stringify(parsed[3]));
+    check('a URL is not mistaken for a sender', parsed[4]?.senderName === '', JSON.stringify(parsed[4]));
+
+    const me = { id: '42', username: 'me' };
+    const inject = batchOptions.__engine.injectBatch('999000111', parsed, [me, { id: '43', username: 'Somebody' }], me, base);
+    check('unknown senders are counted, not silently dropped', inject.injected === 4 && inject.skipped === 1, JSON.stringify(inject));
+    check('the unknown sender is named', inject.unknown[0] === 'Ghost', JSON.stringify(inject.unknown));
+    const batchSent = batch.events.filter((e) => e && e.type === 'MESSAGE_CREATE');
+    check('the batch dispatches one message per resolvable line', batchSent.length === 4, String(batchSent.length));
+
+    // 7. Editing a fake merges into the cached record (a partial MESSAGE_UPDATE
+    //    is what crashes the renderer) and moves the saved copy too.
+    const edited = batchOptions.__engine.editFakeMessage('999000111', '555000222', 'new text');
+    check('editing a cached fake succeeds', edited.ok === true, edited.reason);
+    const update = batch.events.filter((e) => e && e.type === 'MESSAGE_UPDATE').pop();
+    check('the update carries the merged record, not a stub', update?.message?.content === 'new text' && !!update?.message?.author?.id, JSON.stringify(update?.message ?? {}).slice(0, 120));
+    const savedAfterEdit = batchOptions.__engine.getFakes().find((f) => f.snowflakeId === '555000222');
+    check('the saved copy carries the new text', savedAfterEdit?.content === 'new text', savedAfterEdit?.content);
+    const missing = batchOptions.__engine.editFakeMessage('999000111', '404404404', 'x');
+    check('editing an uncached fake refuses instead of guessing', missing.ok === false, missing.reason);
+    batchOptions.stop?.();
+
     if (problems.length) {
         for (const problem of problems) console.error('  - ' + problem);
         console.error(`
 FAKEDM VERIFY FAILED: ${problems.length} problem(s)`);
         process.exit(1);
     }
-    console.log(`FAKEDM VERIFY OK v${manifest.version}: boot dispatches nothing, restore skips unsafe entries, delete clears storage without dispatching, chat button off by default and correct when enabled`);
+    console.log(`FAKEDM VERIFY OK v${manifest.version}: quiet boot, validated restore, batch parser keeps every line and reports unknown senders, edit merges the cached record, chat button opt-in and correct`);
 })();
