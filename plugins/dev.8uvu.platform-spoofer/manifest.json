@@ -2,19 +2,27 @@
     "format": 1,
     "id": "dev.8uvu.platform-spoofer",
     "name": "PlatformSpoofer",
-    "description": "Spoof what platform you're on — Discord shows the matching platform icon (desktop, web, iOS, Xbox…) next to your name. Mobile port of Equicord's platformSpoofer.",
+    "description": "Shows a different platform than you are on.",
     "author": "Cenotaph",
     "main": "index.js",
     "display": {
         "name": "PlatformSpoofer",
-        "description": "Spoof what platform you're on — Discord shows the matching platform icon next to your name.",
-        "authors": [{ "name": "Cenotaph" }]
+        "description": "Shows a different platform than you are on.",
+        "authors": [
+            {
+                "name": "Cenotaph"
+            }
+        ]
     },
     "version": "1.4.1",
     "license": "GPL-3.0-or-later",
     "dependencies": {
-        "valenced.api": { "version": ">=1" },
-        "discord": { "version": "*" }
+        "valenced.api": {
+            "version": ">=1"
+        },
+        "discord": {
+            "version": "*"
+        }
     },
     "dist": {
         "script": "index.js"

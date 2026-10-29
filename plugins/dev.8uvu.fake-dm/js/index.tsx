@@ -6,7 +6,7 @@
 // across restarts, and can batch-inject a whole fake conversation from a
 // simple "[14:30] Name: text" script.
 //
-const PLUGIN_VERSION = '1.2.9';
+const PLUGIN_VERSION = '1.3.0';
 
 // Desktop-only pieces (chat-bar button portal, context-menu edit, CSS) have no
 // Revenge equivalent — here everything lives in the plugin's settings page,
@@ -568,7 +568,7 @@ function removeFakeById(id: string): boolean {
     return clearFakesInChannel(f.channelId, new Set([(f as any).snowflakeId])) > 0;
 }
 
-// ---- Restore on start (desktop doRestore + CONNECTION_OPEN) -------------------
+// ---- Restoring saved fakes (manual, validated) --------------------------------
 
 let restoredThisSession = false;
 
@@ -580,56 +580,71 @@ function messageInCache(channelId: string, messageId: string): boolean {
     }
 }
 
-function doRestore(): number {
-    if (restoredThisSession) return 0;
-    restoredThisSession = true;
-    const userStore = getUserStore();
-    let n = 0;
+// Restoring dispatches MESSAGE_CREATE into Discord's own store, which is the
+// riskiest thing this plugin does: one saved fake whose channel is gone, whose
+// reply target no longer exists or whose payload this build cannot render can
+// take the whole client down. Desktop replays them on every CONNECTION_OPEN;
+// here nothing is replayed automatically, and even the manual path refuses any
+// entry it cannot prove is safe to show.
+function validFake(f: any): boolean {
+    if (!f || typeof f !== 'object') return false;
+    if (typeof f.channelId !== 'string' || !/^\d+$/.test(f.channelId)) return false;
+    if (typeof f.snowflakeId !== 'string' || !/^\d+$/.test(f.snowflakeId)) return false;
+    if (!Number.isFinite(Date.parse(String(f.timestamp ?? '')))) return false;
+    if (f.type === 'message') {
+        if (typeof f.content !== 'string') return false;
+        if (typeof f.authorId !== 'string' || !/^\d+$/.test(f.authorId)) return false;
+        // A reply needs its target still in cache; otherwise the reply row asks
+        // the client for a message that no longer exists.
+        if (f.replyToId && !messageInCache(f.channelId, f.replyToId)) return false;
+    } else if (f.type === 'call') {
+        if (typeof f.callerId !== 'string' || !/^\d+$/.test(f.callerId)) return false;
+    } else {
+        return false;
+    }
+    try {
+        if (!getChannelStore()?.getChannel?.(f.channelId)) return false;
+    } catch {
+        return false;
+    }
+    return true;
+}
+
+function restoreSaved(): { restored: number; skipped: number } {
+    const store = getUserStore();
+    let restored = 0;
+    let skipped = 0;
     for (const f of readFakes()) {
+        if (!validFake(f) || restored >= 60) { skipped++; continue; }
         try {
             if (f.type === 'message') {
                 if (messageInCache(f.channelId, f.snowflakeId)) continue;
-                const author = userStore?.getUser?.(f.authorId);
-                if (!author) continue;
-                injectMessage(f.channelId, author, f.content, new Date(f.timestamp), f.snowflakeId, f.attachments, f.replyToId ? { messageId: f.replyToId } : undefined, f.embeds);
-                n++;
+                const author = store?.getUser?.(f.authorId);
+                if (!author) { skipped++; continue; }
+                if (!injectMessage(f.channelId, author, f.content, new Date(f.timestamp), f.snowflakeId, f.attachments, f.replyToId ? { messageId: f.replyToId } : undefined, f.embeds)) skipped++;
+                else restored++;
             } else if (f.type === 'call') {
                 if (messageInCache(f.channelId, f.snowflakeId)) continue;
-                const caller = userStore?.getUser?.(f.callerId);
-                const other = userStore?.getUser?.(f.otherId);
-                if (!caller) continue;
+                const caller = store?.getUser?.(f.callerId);
+                const other = store?.getUser?.(f.otherId);
+                if (!caller) { skipped++; continue; }
                 injectCall(f.channelId, caller, other ?? caller, f.missed, f.durationSec, new Date(f.timestamp), f.snowflakeId, f.endedTimestamp);
-                n++;
+                restored++;
             }
-            // Reactions are replayed on the fly — nothing to restore (desktop parity).
         } catch (e) {
-            hostError('restore failed for a fake', e);
+            skipped++;
+            hostError('restore skipped an entry', e);
         }
     }
-    return n;
+    return { restored, skipped };
 }
 
-function scheduleRestore(onConnectionOpen?: () => void) {
-    // Same trick as desktop: re-inject only once Discord is connected, with a
-    // timer fallback in case CONNECTION_OPEN fired before we subscribed.
-    try {
-        const dispatch = getDispatch();
-        const rawDispatcher: any = null;
-        void rawDispatcher;
-        const metro = getMetro();
-        const fd = metro?.findByProps?.('dispatch', 'subscribe');
-        if (fd && typeof fd.subscribe === 'function' && typeof onConnectionOpen === 'function') {
-            const handler = () => {
-                try { fd.unsubscribe('CONNECTION_OPEN', handler); } catch {}
-                setTimeout(onConnectionOpen, 1200);
-            };
-            fd.subscribe('CONNECTION_OPEN', handler);
-            void dispatch;
-        }
-    } catch (e) {
-        hostError('could not subscribe CONNECTION_OPEN', e);
-    }
-    setTimeout(() => { try { doRestore(); } catch (e) { hostError('timed restore failed', e); } }, 2000);
+// Recovery path: drop every saved fake without dispatching anything. This is the
+// way out of a crash loop that a saved fake caused.
+function deleteSavedFakes(): number {
+    const n = readFakes().length;
+    persistFakes([]);
+    return n;
 }
 
 // ---- Batch injection (desktop injectBatch + parse) ----------------------------
@@ -1273,6 +1288,11 @@ function buildSettingsComponent() {
                     el(Text, { style: { color: C.blurple, fontSize: 11, marginTop: 2 } }, 'Chat button: ' + buttonStatus + ' · tap to retry'))),
                 el(SwitchRow, { label: 'Chat-bar Fake button (off by default, reload chat after)', value: chatBtn, onValueChange: (val: boolean) => { (cfg as any).chatButton = val; setChatBtn(val); savePluginCfg(); toast(val ? 'Fake button on — reload the chat to see it' : 'Fake button off — reload the chat'); } }),
                 el(Input, { placeholder: 'Quick Fake text (chat-bar button)', value: quickTxt, onChangeText: (t: string) => { (cfg as any).quickText = t; setQuickTxt(t); savePluginCfg(); } }),
+                el(Pressable, { onPress: () => { const r = restoreSaved(); toast(r.restored ? 'Restored ' + r.restored + (r.skipped ? ' · skipped ' + r.skipped : '') : 'Nothing restorable · skipped ' + r.skipped); setFakeTick((x2: number) => x2 + 1); } },
+                    el(Text, { style: { color: C.blurple, fontSize: 12, marginTop: 6 } }, 'Show saved fakes again (' + readFakes().length + ')')),
+                el(Pressable, { onPress: () => { const n = deleteSavedFakes(); toast(n ? 'Deleted ' + n + ' saved fake' + (n === 1 ? '' : 's') : 'Nothing saved'); setFakeTick((x2: number) => x2 + 1); } },
+                    el(Text, { style: { color: C.danger, fontSize: 12, marginTop: 4 } }, 'Delete saved fakes (recovery — kills a crash loop)')),
+
             el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginTop: 10, paddingHorizontal: 12 } },
                 ...TABS.map((t) => el(Pressable, {
                     key: t.key,
@@ -1533,9 +1553,10 @@ async function startNext(api: any) {
         const off = jsonStorageApi.subscribe(() => { try { refreshConfigFromStorage(); } catch {} });
         if (typeof off === 'function') cleanupFns.push(off);
     }
-    scheduleRestore(doRestore);
+    // Nothing is restored or dispatched here on purpose: the client must be able
+    // to boot with this plugin enabled even if the saved fakes are unusable.
     installChatButton();
-    toast('FakeDM loaded — open its settings to inject');
+    toast('FakeDM ready — saved fakes are replayed only when you ask');
 }
 
 async function startClassic() {
@@ -1556,7 +1577,8 @@ async function startClassic() {
         hostError('plugin storage unavailable', e);
     }
     refreshConfigFromStorage();
-    scheduleRestore(doRestore);
+    // Same rule as the Valenced path: booting the client never dispatches a saved
+    // fake, so an unusable entry cannot make the app crash on every launch.
 }
 
 let __instance: any = {
@@ -1625,7 +1647,10 @@ __instance.__engine = {
     editFakeMessage,
     clearFakesInChannel,
     removeFakeById,
-    doRestore,
+    doRestore: restoreSaved,
+    deleteSavedFakes,
+    restoreSaved,
+    validFake,
     memberCandidates,
     getFakes: readFakes,
     chatButtonStatus: () => buttonStatus,

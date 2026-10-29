@@ -2,18 +2,26 @@
     "format": 1,
     "id": "dev.8uvu.clean-urls",
     "name": "Clean URLs",
-    "description": "Strips tracking parameters (utm_*, fbclid, gclid, igshid, ...) from links in messages, with blacklist and whitelist modes.",
+    "description": "Strips tracking parameters from links.",
     "author": "Cenotaph",
     "main": "index.js",
     "display": {
         "name": "Clean URLs",
-        "description": "Strips tracking parameters (utm_*, fbclid, gclid, igshid, ...) from links in messages, with blacklist and whitelist modes.",
-        "authors": [{ "name": "Cenotaph" }]
+        "description": "Strips tracking parameters from links.",
+        "authors": [
+            {
+                "name": "Cenotaph"
+            }
+        ]
     },
     "version": "1.0.4",
     "dependencies": {
-        "valenced.api": { "version": "*" },
-        "discord": { "version": "*" }
+        "valenced.api": {
+            "version": "*"
+        },
+        "discord": {
+            "version": "*"
+        }
     },
     "dist": {
         "script": "index.js"

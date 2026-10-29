@@ -126,8 +126,11 @@ function makeHost() {
             flux: {
                 Stores: {
                     SelectedChannelStore: { getChannelId: () => '999000111' },
-                    UserStore: { getCurrentUser: () => ({ id: '42', username: 'me' }) },
-                    ChannelStore: { getChannel: () => ({ id: '999000111', name: 'DM' }) },
+                    UserStore: {
+                        getCurrentUser: () => ({ id: '42', username: 'me' }),
+                        getUser: (id) => (String(id) === '42' ? { id: '42', username: 'me', discriminator: '0' } : null),
+                    },
+                    ChannelStore: { getChannel: (id) => (String(id) === '111' ? null : { id: String(id), name: 'DM' }) },
                 },
                 onFluxEventDispatched: () => () => {},
             },
@@ -217,11 +220,39 @@ const textIn = (tree) => {
 
     onOptions.stop?.();
 
+    // 3. Boot must not replay saved fakes. That replay is what turns one bad
+    //    entry into a crash loop that survives reinstalling the plugin.
+    const boot = makeHost();
+    const saved = [
+        { type: 'message', channelId: '999000111', authorId: '42', content: 'restored hello', timestamp: new Date().toISOString(), snowflakeId: '555000222' },
+        { type: 'message', channelId: '111', authorId: '42', content: 'channel is gone', timestamp: new Date().toISOString(), snowflakeId: '555000333' },
+    ];
+    const bootStorage = { get: async () => ({ fakes: saved }), set: async () => {}, use: () => ({ fakes: saved }), subscribe: () => () => {} };
+    const bootOptions = new Function('valenced', 'plugin', `return ${code}
+//# sourceURL=Valenced:Plugin:${manifest.id}`)(boot.host, (o) => o)?.default;
+    await bootOptions.start?.({ jsonStorage: bootStorage });
+    await new Promise((resolve) => setTimeout(resolve, 120));
+    const bootDispatches = boot.events.filter((event) => event && event.type === 'MESSAGE_CREATE');
+    check('booting with saved fakes dispatches nothing', bootDispatches.length === 0, String(bootDispatches.length));
+
+    // 4. The explicit path restores what is safe and skips what is not.
+    const result = bootOptions.__engine?.restoreSaved?.();
+    check('the explicit restore only takes the safe entry', result?.restored === 1 && result?.skipped === 1, JSON.stringify(result));
+    const restoredEvents = boot.events.filter((event) => event && event.type === 'MESSAGE_CREATE');
+    check('the restored message is the valid one', restoredEvents[0]?.message?.content === 'restored hello', restoredEvents[0]?.message?.content);
+
+    // 5. Recovery: deleting saved fakes clears storage and dispatches nothing.
+    const before = boot.events.length;
+    const deleted = bootOptions.__engine?.deleteSavedFakes?.();
+    check('deleteSavedFakes clears every saved fake', deleted === 2, String(deleted));
+    check('deleteSavedFakes dispatches nothing', boot.events.length === before, String(boot.events.length - before));
+    bootOptions.stop?.();
+
     if (problems.length) {
         for (const problem of problems) console.error('  - ' + problem);
         console.error(`
 FAKEDM VERIFY FAILED: ${problems.length} problem(s)`);
         process.exit(1);
     }
-    console.log(`FAKEDM VERIFY OK: off by default (row untouched), opt-in hooks the memo row once, tap dispatches MESSAGE_CREATE, settings page reports v${manifest.version}`);
+    console.log(`FAKEDM VERIFY OK v${manifest.version}: boot dispatches nothing, restore skips unsafe entries, delete clears storage without dispatching, chat button off by default and correct when enabled`);
 })();
