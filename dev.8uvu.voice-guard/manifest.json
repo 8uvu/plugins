@@ -2,7 +2,7 @@
     "format": 1,
     "id": "dev.8uvu.voice-guard",
     "name": "Voice Guard",
-    "description": "Undoes server deafen and mute, and rejoins the voice channel you were dropped from.",
+    "description": "Undoes server mute/deafen and reconnects you.",
     "author": "Cenotaph",
     "version": "1.0.0",
     "dependencies": {

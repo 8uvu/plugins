@@ -1,11 +1,11 @@
 {
     "format": 1,
     "name": "VoiceTime",
-    "description": "Counts how long you spent in voice calls, per day and per server.",
+    "description": "Counts your voice time per day and server.",
     "plugins": {
         "dev.8uvu.voice-time": {
             "name": "VoiceTime",
-            "description": "Counts how long you spent in voice calls, per day and per server.",
+            "description": "Counts your voice time per day and server.",
             "author": "Cenotaph",
             "channels": {
                 "latest": "1.0.1"
@@ -13,8 +13,8 @@
             "versions": {
                 "1.0.1": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.voice-time@1.0.1.zip",
-                    "sha256": "5828dac8a7ab5c8f77676399a97d84c275b8cd6871cd6f97552934803dfbfaef",
-                    "size": 5277,
+                    "sha256": "d02831f9e75045f5ef555b89e2c1eb4851109884ba78d58de47a2362edd637b9",
+                    "size": 5260,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

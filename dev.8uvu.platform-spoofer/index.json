@@ -1,11 +1,11 @@
 {
     "format": 1,
     "name": "PlatformSpoofer",
-    "description": "Spoof what platform you're on — Discord shows the matching platform icon (desktop, web, iOS, Xbox…) next to your name. Mobile port of Equicord's platformSpoofer.",
+    "description": "Shows a different platform than you are on.",
     "plugins": {
         "dev.8uvu.platform-spoofer": {
             "name": "PlatformSpoofer",
-            "description": "Spoof what platform you're on — Discord shows the matching platform icon (desktop, web, iOS, Xbox…) next to your name. Mobile port of Equicord's platformSpoofer.",
+            "description": "Shows a different platform than you are on.",
             "author": "Cenotaph",
             "channels": {
                 "latest": "1.4.1"
@@ -13,8 +13,8 @@
             "versions": {
                 "1.4.1": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.4.1.zip",
-                    "sha256": "e0d6dabbb2ef8caef691d87b8627b6dd0eb5fe7f0e1e3ade7d0f58f614e5ab20",
-                    "size": 6756,
+                    "sha256": "545f3655a7c7f1c9b2cd1313e18746009bbf6c297f4d7d2965a594b742c70402",
+                    "size": 6663,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

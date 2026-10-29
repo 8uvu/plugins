@@ -1,11 +1,11 @@
 {
     "format": 1,
     "name": "Voice Guard",
-    "description": "Undoes server deafen and mute, and rejoins the voice channel you were dropped from.",
+    "description": "Undoes server mute/deafen and reconnects you.",
     "plugins": {
         "dev.8uvu.voice-guard": {
             "name": "Voice Guard",
-            "description": "Undoes server deafen and mute, and rejoins the voice channel you were dropped from.",
+            "description": "Undoes server mute/deafen and reconnects you.",
             "author": "Cenotaph",
             "channels": {
                 "latest": "1.0.0"
@@ -13,8 +13,8 @@
             "versions": {
                 "1.0.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.voice-guard@1.0.0.zip",
-                    "sha256": "d3cc64e4a6a2ca53787f4374cafdf907c3221f702b0a226b6a3616ec19ff7f0a",
-                    "size": 5775,
+                    "sha256": "4cb1ae4d6ac165ecf5621e39854892187328e11dfc6b9bd3a77d220884524dd0",
+                    "size": 5751,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

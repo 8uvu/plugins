@@ -2,7 +2,7 @@
     "format": 1,
     "id": "dev.8uvu.user-change-alerts",
     "name": "UserChangeAlerts",
-    "description": "Toasts when someone changes their username, display name or profile picture.",
+    "description": "Toasts when a user changes name or avatar.",
     "author": "Cenotaph",
     "version": "1.0.1",
     "dependencies": {

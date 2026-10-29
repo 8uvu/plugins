@@ -2,12 +2,12 @@
     "format": 1,
     "id": "dev.8uvu.last-online-tracker",
     "name": "LastOnlineTracker",
-    "description": "Records when friends go offline — a 'last seen' Discord never shows you. Only counts departures you actually witnessed, so server syncs can't fake them.",
+    "description": "Remembers when people went offline.",
     "author": "Cenotaph",
     "main": "index.js",
     "display": {
         "name": "LastOnlineTracker",
-        "description": "Records when friends go offline — a 'last seen' Discord never shows you.",
+        "description": "Remembers when people went offline.",
         "authors": [
             {
                 "name": "Cenotaph"

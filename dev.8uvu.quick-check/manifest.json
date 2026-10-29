@@ -2,7 +2,7 @@
     "format": 1,
     "id": "dev.8uvu.quick-check",
     "name": "Quick Check",
-    "description": "Diagnostic: pops a native Alert with your device's full host diagnosis (React, flux dispatcher, stores, file module) the moment the plugin is enabled.",
+    "description": "Alerts your device host diagnosis on enable.",
     "author": "Cenotaph",
     "version": "1.0.2",
     "license": "MIT",

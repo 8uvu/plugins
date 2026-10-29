@@ -1,11 +1,11 @@
 {
     "format": 1,
     "name": "ZeroWidthSanitizer",
-    "description": "Strips invisible zero-width tracking characters out of your messages before they are sent.",
+    "description": "Strips invisible characters from your messages.",
     "plugins": {
         "dev.8uvu.zero-width-sanitizer": {
             "name": "ZeroWidthSanitizer",
-            "description": "Strips invisible zero-width tracking characters out of your messages before they are sent.",
+            "description": "Strips invisible characters from your messages.",
             "author": "Cenotaph",
             "channels": {
                 "latest": "1.0.0"
@@ -13,8 +13,8 @@
             "versions": {
                 "1.0.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.zero-width-sanitizer@1.0.0.zip",
-                    "sha256": "25906b12e55f72caee29cd2c5b8ff689666ec4463e1ba45e06632862df96f1f8",
-                    "size": 5980,
+                    "sha256": "a9b725ad39b68a5aa635cde88d3b767a24c3e6a698fb651a4483a7d1b6242e9d",
+                    "size": 5955,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

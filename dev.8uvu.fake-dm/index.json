@@ -1,20 +1,20 @@
 {
     "format": 1,
     "name": "FakeDM",
-    "description": "Injects fake messages, calls, system messages, reactions & embeds into any DM or channel. Batch fake conversations. Persists across restarts. Mobile port of your Equicord plugin.",
+    "description": "Fake messages and calls in any chat.",
     "plugins": {
         "dev.8uvu.fake-dm": {
             "name": "FakeDM",
-            "description": "Injects fake messages, calls, system messages, reactions & embeds into any DM or channel. Batch fake conversations. Persists across restarts. Mobile port of your Equicord plugin.",
+            "description": "Fake messages and calls in any chat.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "1.2.9"
+                "latest": "1.3.0"
             },
             "versions": {
-                "1.2.9": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.2.9.zip",
-                    "sha256": "0115ed92eee58d632135ec2de2d718f19404809a776b1efc07efffd197e35cf3",
-                    "size": 17917,
+                "1.3.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@1.3.0.zip",
+                    "sha256": "00537c99588b07d3bfe6b46bd6f6443ced3692eb6a8c6877659181f3f43fde9f",
+                    "size": 18095,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

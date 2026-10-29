@@ -1,11 +1,11 @@
 {
     "format": 1,
     "name": "Clean URLs",
-    "description": "Strips tracking parameters (utm_*, fbclid, gclid, igshid, ...) from links in messages, with blacklist and whitelist modes.",
+    "description": "Strips tracking parameters from links.",
     "plugins": {
         "dev.8uvu.clean-urls": {
             "name": "Clean URLs",
-            "description": "Strips tracking parameters (utm_*, fbclid, gclid, igshid, ...) from links in messages, with blacklist and whitelist modes.",
+            "description": "Strips tracking parameters from links.",
             "author": "Cenotaph",
             "channels": {
                 "latest": "1.0.4"
@@ -13,8 +13,8 @@
             "versions": {
                 "1.0.4": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.clean-urls@1.0.4.zip",
-                    "sha256": "84a9cb3b6ceb91379717b78687378c63a170d0645407b62c6651f6e049d28d41",
-                    "size": 6972,
+                    "sha256": "a828aa80354e7e44d0930c4459f1b58d645ed29a5c3a0a7d57d18c5a6a3671e0",
+                    "size": 6915,
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"

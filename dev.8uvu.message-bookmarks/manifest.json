@@ -2,7 +2,7 @@
     "format": 1,
     "id": "dev.8uvu.message-bookmarks",
     "name": "MessageBookmarks",
-    "description": "Save messages privately on your device by pasting a message link, and read them again later.",
+    "description": "Saves message links you want to keep.",
     "author": "Cenotaph",
     "version": "1.0.1",
     "dependencies": {

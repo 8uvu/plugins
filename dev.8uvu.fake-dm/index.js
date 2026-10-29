@@ -27,7 +27,7 @@ __export(index_exports, {
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "1.2.9";
+var PLUGIN_VERSION = "1.3.0";
 var DEFAULT_SETTINGS = {
   jitterSeconds: true,
   // randomize seconds like the desktop plugin's randomSeconds
@@ -593,63 +593,70 @@ function messageInCache(channelId, messageId) {
     return false;
   }
 }
-function doRestore() {
+function validFake(f) {
   var _a, _b, _c;
-  if (restoredThisSession) return 0;
-  restoredThisSession = true;
-  const userStore = getUserStore();
-  let n = 0;
+  if (!f || typeof f !== "object") return false;
+  if (typeof f.channelId !== "string" || !/^\d+$/.test(f.channelId)) return false;
+  if (typeof f.snowflakeId !== "string" || !/^\d+$/.test(f.snowflakeId)) return false;
+  if (!Number.isFinite(Date.parse(String((_a = f.timestamp) != null ? _a : "")))) return false;
+  if (f.type === "message") {
+    if (typeof f.content !== "string") return false;
+    if (typeof f.authorId !== "string" || !/^\d+$/.test(f.authorId)) return false;
+    if (f.replyToId && !messageInCache(f.channelId, f.replyToId)) return false;
+  } else if (f.type === "call") {
+    if (typeof f.callerId !== "string" || !/^\d+$/.test(f.callerId)) return false;
+  } else {
+    return false;
+  }
+  try {
+    if (!((_c = (_b = getChannelStore()) == null ? void 0 : _b.getChannel) == null ? void 0 : _c.call(_b, f.channelId))) return false;
+  } catch {
+    return false;
+  }
+  return true;
+}
+function restoreSaved() {
+  var _a, _b, _c;
+  const store = getUserStore();
+  let restored = 0;
+  let skipped = 0;
   for (const f of readFakes()) {
+    if (!validFake(f) || restored >= 60) {
+      skipped++;
+      continue;
+    }
     try {
       if (f.type === "message") {
         if (messageInCache(f.channelId, f.snowflakeId)) continue;
-        const author = (_a = userStore == null ? void 0 : userStore.getUser) == null ? void 0 : _a.call(userStore, f.authorId);
-        if (!author) continue;
-        injectMessage(f.channelId, author, f.content, new Date(f.timestamp), f.snowflakeId, f.attachments, f.replyToId ? { messageId: f.replyToId } : void 0, f.embeds);
-        n++;
+        const author = (_a = store == null ? void 0 : store.getUser) == null ? void 0 : _a.call(store, f.authorId);
+        if (!author) {
+          skipped++;
+          continue;
+        }
+        if (!injectMessage(f.channelId, author, f.content, new Date(f.timestamp), f.snowflakeId, f.attachments, f.replyToId ? { messageId: f.replyToId } : void 0, f.embeds)) skipped++;
+        else restored++;
       } else if (f.type === "call") {
         if (messageInCache(f.channelId, f.snowflakeId)) continue;
-        const caller = (_b = userStore == null ? void 0 : userStore.getUser) == null ? void 0 : _b.call(userStore, f.callerId);
-        const other = (_c = userStore == null ? void 0 : userStore.getUser) == null ? void 0 : _c.call(userStore, f.otherId);
-        if (!caller) continue;
+        const caller = (_b = store == null ? void 0 : store.getUser) == null ? void 0 : _b.call(store, f.callerId);
+        const other = (_c = store == null ? void 0 : store.getUser) == null ? void 0 : _c.call(store, f.otherId);
+        if (!caller) {
+          skipped++;
+          continue;
+        }
         injectCall(f.channelId, caller, other != null ? other : caller, f.missed, f.durationSec, new Date(f.timestamp), f.snowflakeId, f.endedTimestamp);
-        n++;
+        restored++;
       }
     } catch (e) {
-      hostError("restore failed for a fake", e);
+      skipped++;
+      hostError("restore skipped an entry", e);
     }
   }
-  return n;
+  return { restored, skipped };
 }
-function scheduleRestore(onConnectionOpen) {
-  var _a;
-  try {
-    const dispatch = getDispatch();
-    const rawDispatcher = null;
-    void rawDispatcher;
-    const metro = getMetro();
-    const fd = (_a = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _a.call(metro, "dispatch", "subscribe");
-    if (fd && typeof fd.subscribe === "function" && typeof onConnectionOpen === "function") {
-      const handler = () => {
-        try {
-          fd.unsubscribe("CONNECTION_OPEN", handler);
-        } catch {
-        }
-        setTimeout(onConnectionOpen, 1200);
-      };
-      fd.subscribe("CONNECTION_OPEN", handler);
-      void dispatch;
-    }
-  } catch (e) {
-    hostError("could not subscribe CONNECTION_OPEN", e);
-  }
-  setTimeout(() => {
-    try {
-      doRestore();
-    } catch (e) {
-      hostError("timed restore failed", e);
-    }
-  }, 2e3);
+function deleteSavedFakes() {
+  const n = readFakes().length;
+  persistFakes([]);
+  return n;
 }
 function parseBatchScript(text) {
   var _a;
@@ -1357,6 +1364,24 @@ function buildSettingsComponent() {
         savePluginCfg();
       } }),
       el(
+        Pressable,
+        { onPress: () => {
+          const r = restoreSaved();
+          toast(r.restored ? "Restored " + r.restored + (r.skipped ? " \xB7 skipped " + r.skipped : "") : "Nothing restorable \xB7 skipped " + r.skipped);
+          setFakeTick((x2) => x2 + 1);
+        } },
+        el(Text, { style: { color: C.blurple, fontSize: 12, marginTop: 6 } }, "Show saved fakes again (" + readFakes().length + ")")
+      ),
+      el(
+        Pressable,
+        { onPress: () => {
+          const n = deleteSavedFakes();
+          toast(n ? "Deleted " + n + " saved fake" + (n === 1 ? "" : "s") : "Nothing saved");
+          setFakeTick((x2) => x2 + 1);
+        } },
+        el(Text, { style: { color: C.danger, fontSize: 12, marginTop: 4 } }, "Delete saved fakes (recovery \u2014 kills a crash loop)")
+      ),
+      el(
         ScrollView,
         { horizontal: true, showsHorizontalScrollIndicator: false, style: { marginTop: 10, paddingHorizontal: 12 } },
         ...TABS.map((t) => el(Pressable, {
@@ -1623,9 +1648,8 @@ async function startNext(api) {
     });
     if (typeof off === "function") cleanupFns.push(off);
   }
-  scheduleRestore(doRestore);
   installChatButton();
-  toast("FakeDM loaded \u2014 open its settings to inject");
+  toast("FakeDM ready \u2014 saved fakes are replayed only when you ask");
 }
 async function startClassic() {
   var _a, _b;
@@ -1647,7 +1671,6 @@ async function startClassic() {
     hostError("plugin storage unavailable", e);
   }
   refreshConfigFromStorage();
-  scheduleRestore(doRestore);
 }
 var __instance = {
   jsonStorage: {
@@ -1718,7 +1741,10 @@ __instance.__engine = {
   editFakeMessage,
   clearFakesInChannel,
   removeFakeById,
-  doRestore,
+  doRestore: restoreSaved,
+  deleteSavedFakes,
+  restoreSaved,
+  validFake,
   memberCandidates,
   getFakes: readFakes,
   chatButtonStatus: () => buttonStatus

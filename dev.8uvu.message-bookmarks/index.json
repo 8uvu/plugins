@@ -1,11 +1,11 @@
 {
     "format": 1,
     "name": "MessageBookmarks",
-    "description": "Save messages privately on your device by pasting a message link, and read them again later.",
+    "description": "Saves message links you want to keep.",
     "plugins": {
         "dev.8uvu.message-bookmarks": {
             "name": "MessageBookmarks",
-            "description": "Save messages privately on your device by pasting a message link, and read them again later.",
+            "description": "Saves message links you want to keep.",
             "author": "Cenotaph",
             "channels": {
                 "latest": "1.0.1"
@@ -13,8 +13,8 @@
             "versions": {
                 "1.0.1": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-bookmarks@1.0.1.zip",
-                    "sha256": "9bf7cb58281ad4a2fd531faa4ca99e376827b72df80553a6517f793e4b513472",
-                    "size": 4952,
+                    "sha256": "c91eb1f6461a597dd4b955f8c10e61d5d205afd8eb836a87e956fd16d0714ae9",
+                    "size": 4919,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
