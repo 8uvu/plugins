@@ -936,14 +936,14 @@ function buildSettingsComponent() {
     );
   }
   function Input(props) {
-    var _a, _b;
-    const NativeInput = (_b = (_a = D == null ? void 0 : D.TextInput) != null ? _a : D == null ? void 0 : D.TextField) != null ? _b : null;
+    // Always React Native's own TextInput. Discord's design TextInput renders a
+    // controlled field that never accepts keystrokes on 352.x, which made every
+    // FakeDM field untypable. RN's TextInput with our own styling works.
     const base = {
       placeholderTextColor: C.sub,
       ...props,
       style: [{ color: C.text, backgroundColor: C.input, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 9, fontSize: 14, marginBottom: 4 }, props.style]
     };
-    if (NativeInput) return el(NativeInput, base);
     return el(TextInput, base);
   }
   function BigBtn(props) {

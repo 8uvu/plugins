@@ -31,13 +31,26 @@
             "description": "Fake messages, calls, events, reactions and embeds in any chat — full 2.0 UI.",
             "author": "Cenotaph",
             "channels": {
-                "latest": "2.0.0"
+                "latest": "2.0.1"
             },
             "versions": {
                 "2.0.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@2.0.0.zip",
                     "sha256": "179522089af8ab044b446ea88e7f4e6e0e679583e0981163774cc7f694692df5",
                     "size": 20602,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "2.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@2.0.1.zip",
+                    "sha256": "9ca9f90f36ea9329a069768bffdf824ae9813409635234c627b46247c355096c",
+                    "size": 20664,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
