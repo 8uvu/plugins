@@ -1,0 +1,30 @@
+{
+    "format": 1,
+    "name": "TypingGuard",
+    "description": "Stops your typing indicator from reaching other people.",
+    "plugins": {
+        "dev.8uvu.typing-guard": {
+            "name": "TypingGuard",
+            "description": "Stops your typing indicator from reaching other people.",
+            "author": "cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-guard@1.0.0.zip",
+                    "sha256": "d57b02e83d7595f35e7b9bdb3889fde1223ae7e35bca41313c34ab40a1ca72e3",
+                    "size": 1943,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

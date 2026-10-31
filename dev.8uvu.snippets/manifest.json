@@ -1,0 +1,19 @@
+{
+    "format": 1,
+    "id": "dev.8uvu.snippets",
+    "name": "Snippets",
+    "description": "Turn a short trigger into a full message when you send it.",
+    "author": "cenotaph",
+    "version": "1.0.0",
+    "dependencies": {
+        "valenced.api": {
+            "version": ">=1 <2"
+        },
+        "discord": {
+            "version": "*"
+        }
+    },
+    "dist": {
+        "script": "index.js"
+    }
+}
