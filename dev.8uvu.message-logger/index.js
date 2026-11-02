@@ -259,7 +259,7 @@ var index_default = plugin({
         import_react_native.TextInput,
         {
           style: { color: "#ffffff", backgroundColor: "#232428", borderRadius: 8, padding: 8, marginBottom: 8 },
-          defaultValue: query,
+          value: query,
           onChangeText: setQuery
         }
       ),

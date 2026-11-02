@@ -362,7 +362,7 @@
             "description": "Turn a short trigger into a full message when you send it.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.1"
+                "latest": "1.0.2"
             },
             "versions": {
                 "1.0.0": {
@@ -382,6 +382,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snippets@1.0.1.zip",
                     "sha256": "b33de554a25104126d807c56bc5e94a4c707c93fece0178ef26eb8fa15a02ae9",
                     "size": 2721,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snippets@1.0.2.zip",
+                    "sha256": "2d8c0581543af12161e3e18bba9f703d308ecf8cd772565ee40eda6280d4b0da",
+                    "size": 2896,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
@@ -457,13 +470,26 @@
             "description": "Remembers who started typing, in case the indicator vanished before you looked.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.0"
+                "latest": "1.0.1"
             },
             "versions": {
                 "1.0.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-watch@1.0.0.zip",
                     "sha256": "57a2eace2c46b4e0c45990ad77782929af65e01d5b9787b7d63107df55b5b2e9",
                     "size": 2604,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-watch@1.0.1.zip",
+                    "sha256": "9442addc398c94bbc3a454c8c91ab3e75c148c0008a22747167d85a4dd902f5d",
+                    "size": 2679,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
@@ -526,13 +552,26 @@
             "description": "Logs deleted and edited messages, searchable.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.8.0"
+                "latest": "1.8.1"
             },
             "versions": {
                 "1.8.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.8.0.zip",
                     "sha256": "b96de569e47878a302628e91ffcb5789c459d0eb298e67ec0bbf706214967e67",
                     "size": 3579,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.8.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.8.1.zip",
+                    "sha256": "3639c52b221594d80e40183b3da2104478e282508ff7889514b54b117169cb8e",
+                    "size": 3574,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"

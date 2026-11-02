@@ -116,7 +116,20 @@ var index_default = plugin({
     const body = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { padding: 16 }, children: [
       field("Trigger", trigger, setTrigger),
       field("Sends instead", replacement, setReplacement),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.Button, { text: "Add snippet", onPress: add }),
+      D.Button ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.Button, { text: "Add snippet", onPress: add }) : (
+        // Design.Button is not on every build. Rendering it unconditionally
+        // throws "element type is invalid" and takes the whole settings
+        // page down, so the add button falls back to a plain pressable.
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          import_react_native.Pressable,
+          {
+            accessibilityLabel: "Add snippet",
+            onPress: add,
+            style: { padding: 12, backgroundColor: "#232428", borderRadius: 8, marginVertical: 4 },
+            children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff" }, children: "Add snippet" })
+          }
+        )
+      ),
       pairs.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#9ba0a8", marginTop: 12 }, children: "No snippets yet." }) : pairs.map((pair) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { flexDirection: "row", alignItems: "center", marginTop: 10 }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", flex: 1 }, children: pair.trigger + " \u2192 " + pair.replacement }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityLabel: "Remove " + pair.trigger, onPress: () => remove(pair.trigger), children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ff6b6b" }, children: "Remove" }) })

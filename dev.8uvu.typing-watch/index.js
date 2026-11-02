@@ -78,6 +78,10 @@ var index_default = plugin({
     const recent = Array.isArray(settings.recent) ? settings.recent : [];
     const now = Date.now();
     const D = (_b = import_design.Design) != null ? _b : {};
+    const row = (key, label, subLabel) => D.TableRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label, subLabel }, key) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { paddingVertical: 6 }, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff" }, children: label }),
+      subLabel ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#9ba0a8" }, children: subLabel }) : null
+    ] }, key);
     if (D.TableRowGroup) {
       return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(D.TableRowGroup, { title: "TypingWatch", children: [
@@ -92,14 +96,13 @@ var index_default = plugin({
           ) : null,
           D.TableRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: "Clear the list", onPress: () => set({ recent: [] }) }) : null
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: `Recent (${recent.length})`, children: recent.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: "Nobody has typed yet." }) : recent.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-          D.TableRow,
-          {
-            label: entry.userId + " in " + entry.channelId,
-            subLabel: ago(entry.at, now)
-          },
-          entry.channelId + ":" + entry.userId
-        )) })
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: `Recent (${recent.length})`, children: recent.length === 0 ? row("empty", "Nobody has typed yet.") : recent.map(
+          (entry) => row(
+            entry.channelId + ":" + entry.userId,
+            entry.userId + " in " + entry.channelId,
+            ago(entry.at, now)
+          )
+        ) })
       ] });
     }
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { style: { padding: 16 }, children: [

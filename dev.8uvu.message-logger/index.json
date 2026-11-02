@@ -8,13 +8,26 @@
             "description": "Logs deleted and edited messages, searchable.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.8.0"
+                "latest": "1.8.1"
             },
             "versions": {
                 "1.8.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.8.0.zip",
                     "sha256": "b96de569e47878a302628e91ffcb5789c459d0eb298e67ec0bbf706214967e67",
                     "size": 3579,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.8.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.8.1.zip",
+                    "sha256": "3639c52b221594d80e40183b3da2104478e282508ff7889514b54b117169cb8e",
+                    "size": 3574,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
