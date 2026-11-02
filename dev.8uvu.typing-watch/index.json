@@ -1,0 +1,30 @@
+{
+    "format": 1,
+    "name": "TypingWatch",
+    "description": "Remembers who started typing, in case the indicator vanished before you looked.",
+    "plugins": {
+        "dev.8uvu.typing-watch": {
+            "name": "TypingWatch",
+            "description": "Remembers who started typing, in case the indicator vanished before you looked.",
+            "author": "cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-watch@1.0.0.zip",
+                    "sha256": "57a2eace2c46b4e0c45990ad77782929af65e01d5b9787b7d63107df55b5b2e9",
+                    "size": 2604,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

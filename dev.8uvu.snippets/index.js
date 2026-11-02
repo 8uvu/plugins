@@ -66,9 +66,13 @@ var index_default = plugin({
     };
     try {
       cleanup(
-        (0, import_finders.getModules)((0, import_filters.withProps)("sendMessage"), (mod) => {
-          if (!mod || typeof mod.sendMessage !== "function") return;
-          cleanup((0, import_patcher.before)(mod, "sendMessage", (args) => rewrite(args)));
+        (0, import_finders.getModules)((0, import_filters.withProps)("sendMessage", "editMessage"), (mod) => {
+          if (typeof (mod == null ? void 0 : mod.sendMessage) === "function") {
+            cleanup((0, import_patcher.before)(mod, "sendMessage", (args) => rewrite(args)));
+          }
+          if (typeof (mod == null ? void 0 : mod.editMessage) === "function") {
+            cleanup((0, import_patcher.before)(mod, "editMessage", (args) => rewrite(args)));
+          }
         })
       );
     } catch (error) {

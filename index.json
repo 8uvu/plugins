@@ -297,13 +297,26 @@
             "description": "Turn a short trigger into a full message when you send it.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.0"
+                "latest": "1.0.1"
             },
             "versions": {
                 "1.0.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snippets@1.0.0.zip",
                     "sha256": "63eedde31b5916dd58284bff44fa36e2db91b8d6f80b6084b61c7fc01c1e3e59",
                     "size": 2701,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snippets@1.0.1.zip",
+                    "sha256": "b33de554a25104126d807c56bc5e94a4c707c93fece0178ef26eb8fa15a02ae9",
+                    "size": 2721,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
@@ -320,13 +333,72 @@
             "description": "Stops your typing indicator from reaching other people.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.0"
+                "latest": "1.1.0"
             },
             "versions": {
                 "1.0.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-guard@1.0.0.zip",
                     "sha256": "d57b02e83d7595f35e7b9bdb3889fde1223ae7e35bca41313c34ab40a1ca72e3",
                     "size": 1943,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.1.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-guard@1.1.0.zip",
+                    "sha256": "38c25520b84409e7ae79363d0ac7a7c3cdc7e538868428893578cc544abdd693",
+                    "size": 1999,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        },
+        "dev.8uvu.send-polish": {
+            "name": "SendPolish",
+            "description": "Tidies what you send: trailing spaces, stacked blank lines, stray markdown.",
+            "author": "cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.send-polish@1.0.0.zip",
+                    "sha256": "d201f4c9d0a3d83def09678c6f86a3b7f2b62bc14d28487ca1fb6efd434d5651",
+                    "size": 2617,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        },
+        "dev.8uvu.typing-watch": {
+            "name": "TypingWatch",
+            "description": "Remembers who started typing, in case the indicator vanished before you looked.",
+            "author": "cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-watch@1.0.0.zip",
+                    "sha256": "57a2eace2c46b4e0c45990ad77782929af65e01d5b9787b7d63107df55b5b2e9",
+                    "size": 2604,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"

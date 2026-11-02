@@ -1,0 +1,30 @@
+{
+    "format": 1,
+    "name": "SendPolish",
+    "description": "Tidies what you send: trailing spaces, stacked blank lines, stray markdown.",
+    "plugins": {
+        "dev.8uvu.send-polish": {
+            "name": "SendPolish",
+            "description": "Tidies what you send: trailing spaces, stacked blank lines, stray markdown.",
+            "author": "cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.send-polish@1.0.0.zip",
+                    "sha256": "d201f4c9d0a3d83def09678c6f86a3b7f2b62bc14d28487ca1fb6efd434d5651",
+                    "size": 2617,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "format": 1,
+    "id": "dev.8uvu.send-polish",
+    "name": "SendPolish",
+    "description": "Tidies what you send: trailing spaces, stacked blank lines, stray markdown.",
+    "author": "cenotaph",
+    "version": "1.0.0",
+    "dependencies": {
+        "valenced.api": {
+            "version": ">=1 <2"
+        },
+        "discord": {
+            "version": "*"
+        }
+    },
+    "dist": {
+        "script": "index.js"
+    }
+}

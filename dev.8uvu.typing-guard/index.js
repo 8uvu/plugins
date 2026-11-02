@@ -23,6 +23,7 @@ __export(index_exports, {
 });
 module.exports = __toCommonJS(index_exports);
 var import_design = (valenced.discord.design);
+var import_flux = (valenced.discord.flux);
 var import_finders = (valenced.modules.finders);
 var import_filters = (valenced.modules.finders.filters);
 var import_patcher = (valenced.patcher);
@@ -37,6 +38,7 @@ var index_default = plugin({
       var _a2;
       return ((_a2 = jsonStorage.cache) != null ? _a2 : DEFAULTS).hide !== false;
     };
+    cleanup((0, import_flux.onFluxEventDispatched)("TYPING_START_LOCAL", (payload) => hidden() ? void 0 : payload));
     let patched = 0;
     try {
       cleanup(
@@ -54,7 +56,7 @@ var index_default = plugin({
     } catch (error) {
       (_a = logger == null ? void 0 : logger.error) == null ? void 0 : _a.call(logger, "[TypingGuard] typing sender not found", error);
     }
-    if (!patched) (_b = logger == null ? void 0 : logger.warn) == null ? void 0 : _b.call(logger, "[TypingGuard] this build exposes no typing sender; the indicator stays visible");
+    if (!patched) (_b = logger == null ? void 0 : logger.log) == null ? void 0 : _b.call(logger, "[TypingGuard] no typing sender module; the dispatcher hook is carrying this");
     (_c = logger == null ? void 0 : logger.log) == null ? void 0 : _c.call(logger, "[TypingGuard] started");
   },
   SettingsComponent({ api }) {
