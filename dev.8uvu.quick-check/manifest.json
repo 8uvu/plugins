@@ -2,13 +2,12 @@
     "format": 1,
     "id": "dev.8uvu.quick-check",
     "name": "Quick Check",
-    "description": "Alerts your device host diagnosis on enable.",
-    "author": "Cenotaph",
-    "version": "1.0.2",
-    "license": "MIT",
+    "description": "Pops a host diagnosis when enabled.",
+    "author": "cenotaph",
+    "version": "1.1.0",
     "dependencies": {
         "valenced.api": {
-            "version": "*"
+            "version": ">=1 <2"
         },
         "discord": {
             "version": "*"
@@ -16,15 +15,5 @@
     },
     "dist": {
         "script": "index.js"
-    },
-    "main": "index.js",
-    "hash": "abbcb361fa7ab0ed4edccc336dde1853688b55e33f46bc8f54fff188a413319f",
-    "authors": [
-        {
-            "name": "Cenotaph"
-        }
-    ],
-    "vendetta": {
-        "icon": "ic_chat_bubble"
     }
 }

@@ -2,23 +2,12 @@
     "format": 1,
     "id": "dev.8uvu.last-online-tracker",
     "name": "LastOnlineTracker",
-    "description": "Remembers when people went offline.",
-    "author": "Cenotaph",
-    "main": "index.js",
-    "display": {
-        "name": "LastOnlineTracker",
-        "description": "Remembers when people went offline.",
-        "authors": [
-            {
-                "name": "Cenotaph"
-            }
-        ]
-    },
-    "version": "1.5.3",
-    "license": "GPL-3.0-or-later",
+    "description": "Shows when friends were last online.",
+    "author": "cenotaph",
+    "version": "1.6.0",
     "dependencies": {
         "valenced.api": {
-            "version": ">=1"
+            "version": ">=1 <2"
         },
         "discord": {
             "version": "*"
@@ -26,14 +15,5 @@
     },
     "dist": {
         "script": "index.js"
-    },
-    "hash": "ba549cc5144d195c161f3dcb73ec5dda339502ee257411d1a42db0272e92596e",
-    "authors": [
-        {
-            "name": "Cenotaph"
-        }
-    ],
-    "vendetta": {
-        "icon": "ic_chat_bubble"
     }
 }

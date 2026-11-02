@@ -5,10 +5,10 @@
     "plugins": {
         "dev.8uvu.host-probe": {
             "name": "Host Probe",
-            "description": "Shows which host APIs your build exposes.",
-            "author": "Cenotaph",
+            "description": "Reports which Valenced APIs this build exposes.",
+            "author": "cenotaph",
             "channels": {
-                "latest": "1.0.4"
+                "latest": "1.1.0"
             },
             "versions": {
                 "1.0.4": {
@@ -18,6 +18,19 @@
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.1.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.1.0.zip",
+                    "sha256": "e520bf4d9d5263a1f89417f2d13648a8fb5eeab9ab27b71d57b04131763e0f82",
+                    "size": 1947,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
                         },
                         "discord": {
                             "version": "*"

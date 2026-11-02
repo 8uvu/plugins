@@ -6,9 +6,9 @@
         "dev.8uvu.clean-urls": {
             "name": "Clean URLs",
             "description": "Strips tracking parameters from links.",
-            "author": "Cenotaph",
+            "author": "cenotaph",
             "channels": {
-                "latest": "1.0.4"
+                "latest": "1.1.0"
             },
             "versions": {
                 "1.0.4": {
@@ -18,6 +18,19 @@
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.1.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.clean-urls@1.1.0.zip",
+                    "sha256": "dab26f51d7dfc75a5f364094e53ba8ce8062a021b4877f90ebbc484c1efa1eef",
+                    "size": 3026,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
                         },
                         "discord": {
                             "version": "*"

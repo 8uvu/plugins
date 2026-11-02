@@ -5,10 +5,10 @@
     "plugins": {
         "dev.8uvu.last-online-tracker": {
             "name": "LastOnlineTracker",
-            "description": "Remembers when people went offline.",
-            "author": "Cenotaph",
+            "description": "Shows when friends were last online.",
+            "author": "cenotaph",
             "channels": {
-                "latest": "1.5.3"
+                "latest": "1.6.0"
             },
             "versions": {
                 "1.5.3": {
@@ -18,6 +18,19 @@
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.6.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.6.0.zip",
+                    "sha256": "4acea81e5958293916dd4eab51d156d89b195846fe99ce6ae1ee8af0ccf9e5dd",
+                    "size": 4196,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
                         },
                         "discord": {
                             "version": "*"

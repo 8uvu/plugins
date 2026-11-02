@@ -3,21 +3,11 @@
     "id": "dev.8uvu.clean-urls",
     "name": "Clean URLs",
     "description": "Strips tracking parameters from links.",
-    "author": "Cenotaph",
-    "main": "index.js",
-    "display": {
-        "name": "Clean URLs",
-        "description": "Strips tracking parameters from links.",
-        "authors": [
-            {
-                "name": "Cenotaph"
-            }
-        ]
-    },
-    "version": "1.0.4",
+    "author": "cenotaph",
+    "version": "1.1.0",
     "dependencies": {
         "valenced.api": {
-            "version": "*"
+            "version": ">=1 <2"
         },
         "discord": {
             "version": "*"
@@ -25,14 +15,5 @@
     },
     "dist": {
         "script": "index.js"
-    },
-    "hash": "d2efe9be728d92cf8a8f937e81480261e3a696916e95b9b4967ae10b40c846c1",
-    "authors": [
-        {
-            "name": "Cenotaph"
-        }
-    ],
-    "vendetta": {
-        "icon": "ic_chat_bubble"
     }
 }

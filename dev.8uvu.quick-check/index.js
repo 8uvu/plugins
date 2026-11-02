@@ -1,10 +1,8 @@
-(() => {
-    try {
-        const module = { exports: {} };
-        const exports = module.exports;
-        var __defProp = Object.defineProperty;
+(() => { const module = { exports: {} }; const exports = module.exports; var __create = Object.create;
+var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -18,298 +16,76 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// plugins/dev.8uvu.quick-check/js/index.ts
+// plugins/dev.8uvu.quick-check/js/index.tsx
 var index_exports = {};
 __export(index_exports, {
-  default: () => index_default
+  default: () => index_default,
+  diagnosis: () => diagnosis
 });
 module.exports = __toCommonJS(index_exports);
-function rn() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
-  let out = null;
-  try {
-    out = ((_b = (_a = typeof revenge !== "undefined" && revenge) == null ? void 0 : _a.react) == null ? void 0 : _b.ReactNative) || out;
-  } catch {
-  }
-  try {
-    out = ((_e = (_d = (_c = typeof bunny !== "undefined" && bunny) == null ? void 0 : _c.metro) == null ? void 0 : _d.common) == null ? void 0 : _e.ReactNative) || out;
-  } catch {
-  }
-  try {
-    out = ((_h = (_g = (_f = typeof vendetta !== "undefined" && vendetta) == null ? void 0 : _f.metro) == null ? void 0 : _g.common) == null ? void 0 : _h.ReactNative) || out;
-  } catch {
-  }
-  try {
-    out = ((_j = (_i = typeof vendetta !== "undefined" && vendetta) == null ? void 0 : _i.common) == null ? void 0 : _j.ReactNative) || out;
-  } catch {
-  }
-  return out;
-}
-function react() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
-  let out = null;
-  try {
-    out = ((_b = (_a = typeof revenge !== "undefined" && revenge) == null ? void 0 : _a.react) == null ? void 0 : _b.React) || out;
-  } catch {
-  }
-  try {
-    out = ((_e = (_d = (_c = typeof bunny !== "undefined" && bunny) == null ? void 0 : _c.metro) == null ? void 0 : _d.common) == null ? void 0 : _e.React) || out;
-  } catch {
-  }
-  try {
-    out = ((_f = typeof bunny !== "undefined" && bunny) == null ? void 0 : _f.React) || out;
-  } catch {
-  }
-  try {
-    out = ((_i = (_h = (_g = typeof vendetta !== "undefined" && vendetta) == null ? void 0 : _g.metro) == null ? void 0 : _h.common) == null ? void 0 : _i.React) || out;
-  } catch {
-  }
-  try {
-    out = ((_k = (_j = typeof vendetta !== "undefined" && vendetta) == null ? void 0 : _j.common) == null ? void 0 : _k.React) || out;
-  } catch {
-  }
-  return out;
-}
+var import_design = (valenced.discord.design);
+var import_react_native = (({ ...valenced.react.ReactNative }));
+var import_react = __toESM((({ default: valenced.react.React, ...valenced.react.React })));
+var import_jsx_runtime = (({ jsx: (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime).jsx, jsxs: (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime).jsxs, Fragment: (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime).Fragment }));
 function line(label, value) {
   return label + ": " + (value === void 0 ? "MISSING" : value === null ? "null" : String(value));
 }
-function diagnosis() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o;
+function diagnosis(api) {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s;
   const lines = [];
-  let host = "UNKNOWN (none of revenge/bunny/vendetta found)";
-  try {
-    if (typeof revenge !== "undefined") host = "Revenge (Next)";
-  } catch {
-  }
-  try {
-    if (host.startsWith("UNKNOWN") && typeof bunny !== "undefined") host = "Revenge Classic (bunny)";
-  } catch {
-  }
-  try {
-    if (host.startsWith("UNKNOWN") && typeof vendetta !== "undefined") host = "Vendetta-compat manager";
-  } catch {
-  }
-  lines.push("Host: " + host);
+  const unscoped = (_a = api == null ? void 0 : api.unscoped) != null ? _a : {};
+  lines.push("Host: Valenced");
   lines.push("");
-  const R = react();
-  const RN = rn();
-  lines.push(line("React", R ? typeof R.createElement : void 0));
-  lines.push(line("ReactNative", RN ? "present" : void 0));
-  lines.push(line("RN.Alert", (RN == null ? void 0 : RN.Alert) ? typeof RN.Alert.alert : void 0));
+  lines.push(line("React", typeof ((_e = (_c = (_b = unscoped == null ? void 0 : unscoped.react) == null ? void 0 : _b.React) == null ? void 0 : _c.createElement) != null ? _e : (_d = import_react.default) == null ? void 0 : _d.createElement)));
+  lines.push(line("ReactNative", ((_f = unscoped == null ? void 0 : unscoped.react) == null ? void 0 : _f.ReactNative) ? "present" : void 0));
+  const rnAlert = (_i = (_h = (_g = unscoped == null ? void 0 : unscoped.react) == null ? void 0 : _g.ReactNative) == null ? void 0 : _h.Alert) != null ? _i : import_react_native.Alert;
+  lines.push(line("RN.Alert", rnAlert ? typeof rnAlert.alert : void 0));
   lines.push("");
-  let dispatcher = null;
-  try {
-    if (typeof revenge !== "undefined") dispatcher = (_a = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _a.flux;
-  } catch {
-  }
-  try {
-    if (!dispatcher && typeof bunny !== "undefined") dispatcher = (_b = bunny == null ? void 0 : bunny.api) == null ? void 0 : _b.flux;
-  } catch {
-  }
-  try {
-    if (!dispatcher && typeof vendetta !== "undefined") {
-      const v = vendetta;
-      dispatcher = (_f = (_d = (_c = v == null ? void 0 : v.metro) == null ? void 0 : _c.common) == null ? void 0 : _d.FluxDispatcher) != null ? _f : (_e = v == null ? void 0 : v.common) == null ? void 0 : _e.FluxDispatcher;
-    }
-  } catch {
-  }
-  lines.push(line("Flux (Next API)", typeof revenge !== "undefined" ? typeof ((_h = (_g = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _g.flux) == null ? void 0 : _h.onFluxEventDispatched) : void 0));
-  lines.push(line("Flux (bunny intercept)", typeof bunny !== "undefined" ? typeof ((_j = (_i = bunny == null ? void 0 : bunny.api) == null ? void 0 : _i.flux) == null ? void 0 : _j.intercept) : void 0));
-  lines.push(line("FluxDispatcher.addInterceptor", typeof (dispatcher == null ? void 0 : dispatcher.addInterceptor)));
+  lines.push(line("flux.onFluxEventDispatched", typeof ((_k = (_j = unscoped == null ? void 0 : unscoped.discord) == null ? void 0 : _j.flux) == null ? void 0 : _k.onFluxEventDispatched)));
+  lines.push(line("Design rows", ((_p = (_n = (_m = (_l = unscoped == null ? void 0 : unscoped.discord) == null ? void 0 : _l.design) == null ? void 0 : _m.Design) == null ? void 0 : _n.TableRowGroup) != null ? _p : (_o = import_design.Design) == null ? void 0 : _o.TableRowGroup) ? "present" : void 0));
+  lines.push(line("patcher.before", typeof ((_q = unscoped == null ? void 0 : unscoped.patcher) == null ? void 0 : _q.before)));
+  lines.push(line("modules.finders", typeof ((_s = (_r = unscoped == null ? void 0 : unscoped.modules) == null ? void 0 : _r.finders) == null ? void 0 : _s.lookupModule)));
   lines.push("");
-  let store = "none";
-  try {
-    const m = (_k = typeof bunny !== "undefined" ? bunny == null ? void 0 : bunny.metro : null) != null ? _k : typeof vendetta !== "undefined" ? vendetta == null ? void 0 : vendetta.metro : null;
-    const us = (_l = m == null ? void 0 : m.findByStoreName) == null ? void 0 : _l.call(m, "UserStore");
-    store = (us == null ? void 0 : us.getCurrentUser) ? "resolved" : us ? "found, no getCurrentUser" : "MISSING";
-    if (us == null ? void 0 : us.getCurrentUser) {
-      const u = us.getCurrentUser();
-      store += " (user id: " + String((_m = u == null ? void 0 : u.id) != null ? _m : "?") + ")";
-    }
-  } catch (e) {
-    store = "finder threw: " + (e instanceof Error ? e.message : String(e));
-  }
-  lines.push(line("UserStore (metro)", store));
-  lines.push("");
-  lines.push(line("FileModule", typeof revenge !== "undefined" && ((_o = (_n = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _n.native) == null ? void 0 : _o.FileModule) ? "present" : void 0));
-  lines.push("");
-  lines.push('If React/RN show "MISSING" or the host is UNKNOWN,');
-  lines.push("the loader never injected this plugin correctly.");
-  lines.push("Send this whole popup to the plugin developer.");
+  lines.push("Send this whole report to the plugin developer if something shows MISSING.");
   return lines.join("\n");
 }
-function popIt() {
-  var _a, _b, _c, _d;
-  const RN = rn();
-  const text = diagnosis();
-  try {
-    if ((_a = RN == null ? void 0 : RN.Alert) == null ? void 0 : _a.alert) {
-      RN.Alert.alert("Quick Check", text);
-      return;
-    }
-  } catch {
-  }
-  try {
-    const v = typeof vendetta !== "undefined" ? vendetta : null;
-    (_d = (_c = (_b = v == null ? void 0 : v.ui) == null ? void 0 : _b.alerts) == null ? void 0 : _c.showConfirmationAlert) == null ? void 0 : _d.call(_c, {
-      title: "Quick Check",
-      content: text,
-      confirmText: "OK",
-      cancelText: "Close",
-      onConfirm: () => {
-      },
-      onCancel: () => {
-      }
-    });
-  } catch {
-  }
-  try {
-    console.log("[QuickCheck]\n" + text);
-  } catch {
-  }
-}
-function settingsInk() {
-  var _a, _b, _c, _d, _e;
-  let dark = true;
-  try {
-    const tm = (_c = (_b = (_a = globalThis.revenge) == null ? void 0 : _a.metro) == null ? void 0 : _b.findByProps) == null ? void 0 : _c.call(_b, "theme", "setTheme");
-    const t = (_e = (_d = tm == null ? void 0 : tm.theme) != null ? _d : tm == null ? void 0 : tm.resolvedTheme) != null ? _e : tm == null ? void 0 : tm.currentTheme;
-    if (t) dark = String(t).toLowerCase().includes("dark");
-  } catch {
-  }
-  return dark ? { text: "#ffffff", sub: "#9ba0a8" } : { text: "#060607", sub: "#5c5e66" };
-}
-function resolveDesign() {
-  var _a, _b, _c, _d;
-  try {
-    const g = (_b = (_a = globalThis.revenge) == null ? void 0 : _a.discord) == null ? void 0 : _b.design;
-    const d = (_c = g == null ? void 0 : g.Design) != null ? _c : g;
-    if (d && (d.TableRowGroup || d.TableSwitchRow || d.TableRow)) return d;
-  } catch {
-  }
-  try {
-    const b = (_d = globalThis.bunny) == null ? void 0 : _d.ui;
-    if (b == null ? void 0 : b.FormTableRowGroup) return b;
-  } catch {
-  }
-  return null;
-}
-function makeSettings() {
-  const ink = settingsInk();
-  const React = react();
-  const RN = rn();
-  if (!React || !RN) return null;
-  const { View, Text, ScrollView } = RN;
-  const el = React.createElement;
-  const D = resolveDesign();
-  return function Settings() {
-    if ((D == null ? void 0 : D.TableRowGroup) && (D == null ? void 0 : D.TableRow)) {
-      const rows = diagnosis().split("\n").map((text, i) => text.trim() ? el(D.TableRow, { key: "r" + i, label: text }) : el(View, { key: "g" + i, style: { height: 6 } }));
-      return el(
-        ScrollView,
-        { style: { flex: 1 } },
-        el(D.TableRowGroup, { title: "Quick Check" }, ...rows)
-      );
-    }
-    return el(
-      ScrollView,
-      { style: { flex: 1 } },
-      el(View, { style: { padding: 12 } }, el(Text, { style: { color: ink.text, fontSize: 13 } }, diagnosis()))
-    );
-  };
-}
-var _settings = null;
-function SettingsComponent(props) {
-  try {
-    if (!_settings) _settings = makeSettings();
-    if (!_settings) {
-      const React = react();
-      const RN = rn();
-      if (React && (RN == null ? void 0 : RN.Text)) return React.createElement(RN.Text, { style: { color: settingsInk().text } }, "React resolved late \u2014 toggle the plugin off and on.");
-      return null;
-    }
-    return _settings(props);
-  } catch (e) {
-    const React = react();
-    const RN = rn();
-    if (React && (RN == null ? void 0 : RN.Text)) return React.createElement(RN.Text, { style: { color: settingsInk().text } }, "QuickCheck settings crashed: " + (e instanceof Error ? e.message : String(e)));
-    return null;
-  }
-}
-var instance = {
+var index_default = plugin({
   jsonStorage: { load: true, default: {} },
-  start() {
-    var _a;
+  start(api) {
+    var _a, _b, _c, _d, _e, _f, _g;
+    const text = diagnosis(api);
     try {
-      popIt();
-    } catch (e) {
+      const RNAlert = (_d = (_c = (_b = (_a = api == null ? void 0 : api.unscoped) == null ? void 0 : _a.react) == null ? void 0 : _b.ReactNative) == null ? void 0 : _c.Alert) != null ? _d : import_react_native.Alert;
+      (_e = RNAlert == null ? void 0 : RNAlert.alert) == null ? void 0 : _e.call(RNAlert, "Quick Check", text);
+    } catch {
       try {
-        console.log("[QuickCheck] probe crashed: " + (e instanceof Error ? e.stack : String(e)));
-      } catch {
-      }
-      const RN = rn();
-      try {
-        (_a = RN == null ? void 0 : RN.Alert) == null ? void 0 : _a.alert("QuickCheck crashed", String(e instanceof Error ? e.message : e));
+        console.log("[QuickCheck]\n" + text);
       } catch {
       }
     }
+    (_g = (_f = api == null ? void 0 : api.logger) == null ? void 0 : _f.log) == null ? void 0 : _g.call(_f, "[QuickCheck] started");
   },
-  stop() {
-  },
-  SettingsComponent
-};
-if (typeof plugin === "function") {
-  instance = plugin(instance);
-}
-globalThis.plugin = instance;
-instance.onLoad = function() {
-  var _a;
-  (_a = instance.start) == null ? void 0 : _a.call(instance);
-};
-instance.onUnload = function() {
-  var _a;
-  (_a = instance.stop) == null ? void 0 : _a.call(instance);
-};
-instance.settings = instance.SettingsComponent;
-var index_default = globalThis.plugin;
-;
-        const exported = (module.exports && module.exports.default) || module.exports;
-        if (!exported || typeof exported !== 'object') throw new Error('bundle exported ' + typeof exported + ' instead of a plugin object');
-        // Valenced evaluates this file and then reads result.default
-        // (bundle/lib/plugins/src/_internal/script.ts). Returning the bare plugin
-        // therefore gives it undefined and it fails with
-        // "Plugin options must be an object" — the plugin never starts and has no
-        // settings page. Older loaders want the plugin itself, so expose BOTH:
-        // the object is the plugin and its own .default points back at it.
-        if (!exported.default) {
-            try { exported.default = exported; } catch (ignored) {}
-        }
-        return exported;
-    } catch (error) {
-        const message = String((error && (error.stack || error.message)) || error);
-        try { console.error('[dev.8uvu.quick-check] bundle failed to evaluate', error); } catch (ignored) {}
-        const fallback = {
-            jsonStorage: { load: true, default: {} },
-            start() {},
-            stop() {},
-            SettingsComponent() {
-                try {
-                    const R = valenced.react.React;
-                    const N = valenced.react.ReactNative;
-                    if (!R || !N || typeof R.createElement !== 'function') return null;
-                    const el = R.createElement;
-                    return el(N.ScrollView, { style: { padding: 16 } },
-                        el(N.Text, { style: { color: '#f04747', fontSize: 16, fontWeight: '700', marginBottom: 8 } }, "Quick Check" + ' failed to load'),
-                        el(N.Text, { style: { color: '#9ba0a8', fontSize: 12, marginBottom: 8 } }, 'Copy this text to the plugin author — it is the exact error:'),
-                        el(N.Text, { style: { color: '#ffffff', fontSize: 11 } }, message));
-                } catch (uiError) {
-                    return null;
-                }
-            },
-        };
-        try { fallback.default = fallback; } catch (ignored) {}
-        return fallback;
+  SettingsComponent({ api }) {
+    var _a;
+    const text = diagnosis(api);
+    const D = (_a = import_design.Design) != null ? _a : {};
+    if (D.TableRowGroup && D.TableRow) {
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.ScrollView, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "Quick Check", children: text.split("\n").map((row, i) => row ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: row }, i) : null) }) });
     }
-})()
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { style: { padding: 16 }, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "bold", marginBottom: 8 }, children: "Quick Check" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff" }, children: text })
+    ] });
+  }
+});
+; return (module.exports && module.exports.default) || module.exports; })()

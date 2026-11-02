@@ -2,13 +2,12 @@
     "format": 1,
     "id": "dev.8uvu.host-probe",
     "name": "Host Probe",
-    "description": "Shows which host APIs your build exposes.",
-    "author": "Cenotaph",
-    "version": "1.0.4",
-    "license": "MIT",
+    "description": "Reports which Valenced APIs this build exposes.",
+    "author": "cenotaph",
+    "version": "1.1.0",
     "dependencies": {
         "valenced.api": {
-            "version": "*"
+            "version": ">=1 <2"
         },
         "discord": {
             "version": "*"
@@ -16,15 +15,5 @@
     },
     "dist": {
         "script": "index.js"
-    },
-    "main": "index.js",
-    "hash": "4bee97dad2756a35fa7231740220ade73cb972672b31ad7578302d8b8aad6fc7",
-    "authors": [
-        {
-            "name": "Cenotaph"
-        }
-    ],
-    "vendetta": {
-        "icon": "ic_chat_bubble"
     }
 }

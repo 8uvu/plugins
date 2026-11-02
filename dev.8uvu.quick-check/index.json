@@ -5,10 +5,10 @@
     "plugins": {
         "dev.8uvu.quick-check": {
             "name": "Quick Check",
-            "description": "Alerts your device host diagnosis on enable.",
-            "author": "Cenotaph",
+            "description": "Pops a host diagnosis when enabled.",
+            "author": "cenotaph",
             "channels": {
-                "latest": "1.0.2"
+                "latest": "1.1.0"
             },
             "versions": {
                 "1.0.2": {
@@ -18,6 +18,19 @@
                     "dependencies": {
                         "valenced.api": {
                             "version": "*"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.1.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.quick-check@1.1.0.zip",
+                    "sha256": "3ee4e0e05f0ac34ceb6cdae18d05dacf51635215c39f1a75840d2dc64091803d",
+                    "size": 2329,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
                         },
                         "discord": {
                             "version": "*"

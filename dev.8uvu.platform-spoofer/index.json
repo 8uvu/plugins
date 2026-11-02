@@ -5,10 +5,10 @@
     "plugins": {
         "dev.8uvu.platform-spoofer": {
             "name": "PlatformSpoofer",
-            "description": "Shows a different platform than you are on.",
-            "author": "Cenotaph",
+            "description": "Spoofs the platform icon next to your name.",
+            "author": "cenotaph",
             "channels": {
-                "latest": "1.4.2"
+                "latest": "1.5.0"
             },
             "versions": {
                 "1.4.2": {
@@ -18,6 +18,19 @@
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.5.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.5.0.zip",
+                    "sha256": "a68a418f87f6b3d5a1fe778825ea47f649bf30b0da6418e5f9a81609fd70fe08",
+                    "size": 2388,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
                         },
                         "discord": {
                             "version": "*"

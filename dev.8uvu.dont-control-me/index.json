@@ -1,0 +1,30 @@
+{
+    "format": 1,
+    "name": "Don't Control Me",
+    "description": "Keeps you in your voice channel.",
+    "plugins": {
+        "dev.8uvu.dont-control-me": {
+            "name": "Don't Control Me",
+            "description": "Keeps you in your voice channel.",
+            "author": "cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.dont-control-me@1.0.0.zip",
+                    "sha256": "aa81de433bc992df20babb0106bff73fada1ae910c07ae4f4518c5773a3ab496",
+                    "size": 3143,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

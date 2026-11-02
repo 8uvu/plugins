@@ -2,23 +2,12 @@
     "format": 1,
     "id": "dev.8uvu.platform-spoofer",
     "name": "PlatformSpoofer",
-    "description": "Shows a different platform than you are on.",
-    "author": "Cenotaph",
-    "main": "index.js",
-    "display": {
-        "name": "PlatformSpoofer",
-        "description": "Shows a different platform than you are on.",
-        "authors": [
-            {
-                "name": "Cenotaph"
-            }
-        ]
-    },
-    "version": "1.4.2",
-    "license": "GPL-3.0-or-later",
+    "description": "Spoofs the platform icon next to your name.",
+    "author": "cenotaph",
+    "version": "1.5.0",
     "dependencies": {
         "valenced.api": {
-            "version": ">=1"
+            "version": ">=1 <2"
         },
         "discord": {
             "version": "*"
@@ -26,14 +15,5 @@
     },
     "dist": {
         "script": "index.js"
-    },
-    "hash": "db5f2186e74b23b29ddc61fc9085b6c302a92de7d8f3451b6110cb985cbfa3c2",
-    "authors": [
-        {
-            "name": "Cenotaph"
-        }
-    ],
-    "vendetta": {
-        "icon": "ic_chat_bubble"
     }
 }

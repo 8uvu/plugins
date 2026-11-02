@@ -1,8 +1,4 @@
-(() => {
-    try {
-        const module = { exports: {} };
-        const exports = module.exports;
-        var __defProp = Object.defineProperty;
+(() => { const module = { exports: {} }; const exports = module.exports; var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
@@ -23,1066 +19,275 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // plugins/dev.8uvu.last-online-tracker/js/index.tsx
 var index_exports = {};
 __export(index_exports, {
-  clearLastSeen: () => clearLastSeen,
   default: () => index_default,
-  getLastSeen: () => getLastSeen,
-  handlePresence: () => handlePresence
+  engine: () => engine
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "1.5.3";
-function getValenced() {
-  try {
-    if (typeof valenced !== "undefined" && valenced) return valenced;
-  } catch {
-  }
-  return null;
-}
-function getMetro() {
-  var _a, _b, _c, _d, _e;
-  try {
-    if (typeof revenge !== "undefined") return (_c = (_b = revenge == null ? void 0 : revenge.metro) != null ? _b : (_a = revenge == null ? void 0 : revenge.internal) == null ? void 0 : _a.metro) != null ? _c : null;
-  } catch {
-  }
-  try {
-    if (typeof bunny !== "undefined") return (_d = bunny == null ? void 0 : bunny.metro) != null ? _d : null;
-  } catch {
-  }
-  try {
-    if (typeof vendetta !== "undefined") return (_e = vendetta == null ? void 0 : vendetta.metro) != null ? _e : null;
-  } catch {
-  }
-  return null;
-}
-function getReact(api) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
-  try {
-    const react = (_d = (_b = (_a = api == null ? void 0 : api.unscoped) == null ? void 0 : _a.react) == null ? void 0 : _b.React) != null ? _d : (_c = api == null ? void 0 : api.react) == null ? void 0 : _c.React;
-    if ((react == null ? void 0 : react.createElement) && (react == null ? void 0 : react.useState)) return react;
-  } catch {
-  }
-  try {
-    const r = (_f = (_e = getValenced()) == null ? void 0 : _e.react) == null ? void 0 : _f.React;
-    if ((r == null ? void 0 : r.createElement) && (r == null ? void 0 : r.useState)) return r;
-  } catch {
-  }
-  try {
-    const m = getMetro();
-    const r = (_j = (_i = (_g = m == null ? void 0 : m.findByDisplayName) == null ? void 0 : _g.call(m, "React")) != null ? _i : (_h = m == null ? void 0 : m.findByProps) == null ? void 0 : _h.call(m, "createElement", "cloneElement")) != null ? _j : null;
-    if (r) return r;
-  } catch {
-  }
-  try {
-    if (typeof revenge !== "undefined") return (_l = (_k = revenge == null ? void 0 : revenge.react) == null ? void 0 : _k.React) != null ? _l : null;
-  } catch {
-  }
-  return null;
-}
-function getRN(api) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
-  try {
-    const rn = (_d = (_b = (_a = api == null ? void 0 : api.unscoped) == null ? void 0 : _a.react) == null ? void 0 : _b.ReactNative) != null ? _d : (_c = api == null ? void 0 : api.react) == null ? void 0 : _c.ReactNative;
-    if ((rn == null ? void 0 : rn.View) && (rn == null ? void 0 : rn.Text)) return rn;
-  } catch {
-  }
-  try {
-    const rn = (_f = (_e = getValenced()) == null ? void 0 : _e.react) == null ? void 0 : _f.ReactNative;
-    if ((rn == null ? void 0 : rn.View) && (rn == null ? void 0 : rn.Text)) return rn;
-  } catch {
-  }
-  try {
-    const m = getMetro();
-    const rn = (_j = (_i = (_g = m == null ? void 0 : m.findByDisplayName) == null ? void 0 : _g.call(m, "ReactNative")) != null ? _i : (_h = m == null ? void 0 : m.findByProps) == null ? void 0 : _h.call(m, "View", "Text", "TextInput")) != null ? _j : null;
-    if (rn) return rn;
-  } catch {
-  }
-  try {
-    if (typeof revenge !== "undefined") return (_l = (_k = revenge == null ? void 0 : revenge.react) == null ? void 0 : _k.ReactNative) != null ? _l : null;
-  } catch {
-  }
-  return null;
-}
-function findStore(name, props, api) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
-  try {
-    const s = (_f = (_c = (_b = (_a = api == null ? void 0 : api.unscoped) == null ? void 0 : _a.discord) == null ? void 0 : _b.flux) == null ? void 0 : _c.Stores) != null ? _f : (_e = (_d = api == null ? void 0 : api.discord) == null ? void 0 : _d.flux) == null ? void 0 : _e.Stores;
-    if (s == null ? void 0 : s[name]) return s[name];
-  } catch {
-  }
-  try {
-    const s = (_i = (_h = (_g = getValenced()) == null ? void 0 : _g.discord) == null ? void 0 : _h.flux) == null ? void 0 : _i.Stores;
-    if (s == null ? void 0 : s[name]) return s[name];
-  } catch {
-  }
-  try {
-    const s = typeof revenge !== "undefined" && ((_k = (_j = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _j.flux) == null ? void 0 : _k.Stores) || null;
-    if (s == null ? void 0 : s[name]) return s[name];
-  } catch {
-  }
-  try {
-    const metro = getMetro();
-    if (metro == null ? void 0 : metro.findByStoreName) {
-      const m = metro.findByStoreName(name);
-      if (m) return m;
-    }
-    if (metro == null ? void 0 : metro.findByProps) {
-      const m = metro.findByProps(...props);
-      if (m) return m;
-    }
-  } catch {
-  }
-  try {
-    const v = typeof vendetta !== "undefined" ? vendetta : null;
-    if ((_m = (_l = v == null ? void 0 : v.metro) == null ? void 0 : _l.common) == null ? void 0 : _m[name]) return v.metro.common[name];
-  } catch {
-  }
-  return null;
-}
-function getUserStore(api) {
-  return findStore("UserStore", ["getCurrentUser"], api);
-}
-function getFlux(api) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
-  try {
-    const flux = (_d = (_b = (_a = api == null ? void 0 : api.unscoped) == null ? void 0 : _a.discord) == null ? void 0 : _b.flux) != null ? _d : (_c = api == null ? void 0 : api.discord) == null ? void 0 : _c.flux;
-    if (typeof (flux == null ? void 0 : flux.onFluxEventDispatched) === "function") return flux;
-  } catch {
-  }
-  try {
-    const flux = (_f = (_e = getValenced()) == null ? void 0 : _e.discord) == null ? void 0 : _f.flux;
-    if (flux && typeof (flux == null ? void 0 : flux.onFluxEventDispatched) === "function") return flux;
-  } catch {
-  }
-  try {
-    if (typeof revenge !== "undefined") {
-      const flux = (_g = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _g.flux;
-      if (flux) return flux;
-    }
-  } catch {
-  }
-  try {
-    if (typeof bunny !== "undefined") {
-      const flux = (_h = bunny == null ? void 0 : bunny.api) == null ? void 0 : _h.flux;
-      if (flux == null ? void 0 : flux.intercept) {
-        return {
-          onFluxEventDispatched: (event, listener) => flux.intercept((payload) => (payload == null ? void 0 : payload.type) === event ? listener(payload) : void 0)
-        };
-      }
-    }
-  } catch {
-  }
-  try {
-    if (typeof vendetta !== "undefined") {
-      const v = vendetta;
-      const fd = (_l = (_j = (_i = v == null ? void 0 : v.metro) == null ? void 0 : _i.common) == null ? void 0 : _j.FluxDispatcher) != null ? _l : (_k = v == null ? void 0 : v.common) == null ? void 0 : _k.FluxDispatcher;
-      if (fd == null ? void 0 : fd.addInterceptor) {
-        return {
-          onFluxEventDispatched: (event, listener) => fd.addInterceptor((payload) => (payload == null ? void 0 : payload.type) === event ? listener(payload) : void 0)
-        };
-      }
-    }
-  } catch {
-  }
-  return null;
-}
-function getDispatcher() {
-  var _a, _b, _c, _d, _e, _f, _g;
-  try {
-    const metro = getMetro();
-    const fd = (_d = (_c = (_a = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _a.call(metro, "subscribe", "dispatch")) != null ? _c : (_b = metro == null ? void 0 : metro.common) == null ? void 0 : _b.FluxDispatcher) != null ? _d : null;
-    if (fd == null ? void 0 : fd.subscribe) return fd;
-  } catch {
-  }
-  try {
-    const v = getValenced();
-    const finders = (_e = v == null ? void 0 : v.modules) == null ? void 0 : _e.finders;
-    const filters = (_g = (_f = v == null ? void 0 : v.modules) == null ? void 0 : _f.finders) == null ? void 0 : _g.filters;
-    if (finders && filters) {
-      const [mod] = finders.lookupModule(filters.withProps("subscribe", "dispatch"));
-      if (mod == null ? void 0 : mod.subscribe) return mod;
-    }
-  } catch {
-  }
-  try {
-    const flux = getFlux();
-    const fd = flux == null ? void 0 : flux.dispatcher;
-    if (fd == null ? void 0 : fd.subscribe) return fd;
-  } catch {
-  }
-  return null;
-}
-function getStorage() {
-  var _a, _b, _c, _d;
-  try {
-    if (typeof revenge !== "undefined") return (_d = (_c = (_a = revenge == null ? void 0 : revenge.plugin) == null ? void 0 : _a.jsonStorage) != null ? _c : (_b = revenge == null ? void 0 : revenge.api) == null ? void 0 : _b.jsonStorage) != null ? _d : null;
-  } catch {
-  }
-  return null;
-}
-function toast(content) {
-  var _a, _b, _c;
-  const text = String(content != null ? content : "");
-  try {
-    const RN = getRN();
-    if ((_a = RN == null ? void 0 : RN.ToastAndroid) == null ? void 0 : _a.show) {
-      RN.ToastAndroid.show(text, (_b = RN.ToastAndroid.SHORT) != null ? _b : 0);
-      return;
-    }
-    if ((_c = RN == null ? void 0 : RN.Alert) == null ? void 0 : _c.alert) {
-      RN.Alert.alert("Last Online Tracker", text);
-    }
-  } catch {
-  }
-}
-function hostError(msg, e) {
-  var _a, _b;
-  try {
-    const logger = typeof revenge !== "undefined" && (revenge == null ? void 0 : revenge.logger) || typeof bunny !== "undefined" && ((_a = bunny == null ? void 0 : bunny.plugin) == null ? void 0 : _a.logger) || console;
-    (_b = logger == null ? void 0 : logger.error) == null ? void 0 : _b.call(logger, "[last-online-tracker] " + msg, e != null ? e : "");
-  } catch {
-  }
-}
-var cfg = {
-  persist: true,
-  // keep last-seen times across restarts
-  notify: false
-  // toast when a tracked friend goes offline
-};
-var jsonStorageApi = null;
-var settingsChangedCb = null;
-async function loadConfig() {
-  var _a, _b;
-  try {
-    const data = (_b = await ((_a = jsonStorageApi == null ? void 0 : jsonStorageApi.get) == null ? void 0 : _a.call(jsonStorageApi))) != null ? _b : {};
-    if (data && typeof data === "object") {
-      if (typeof data.persist === "boolean") cfg.persist = data.persist;
-      if (typeof data.notify === "boolean") cfg.notify = data.notify;
-    }
-  } catch (e) {
-    hostError("loadConfig failed", e);
-  }
-}
-async function persistConfig() {
-  var _a;
-  try {
-    await ((_a = jsonStorageApi == null ? void 0 : jsonStorageApi.set) == null ? void 0 : _a.call(jsonStorageApi, { ...cfg, lastSeen: cfg.persist ? lastSeenRaw : {} }));
-  } catch (e) {
-    hostError("persistConfig failed", e);
-  }
-  settingsChangedCb == null ? void 0 : settingsChangedCb();
-}
+var import_flux = (valenced.discord.flux);
+var import_actions = (valenced.discord.actions);
+var import_design = (valenced.discord.design);
+var import_react_native = (({ ...valenced.react.ReactNative }));
+var import_jsx_runtime = (({ jsx: (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime).jsx, jsxs: (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime).jsxs, Fragment: (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime).Fragment }));
+var DEFAULTS = { persist: true, notify: false, lastSeen: {} };
 var MIN_ONLINE_MS = 5e3;
-var lastSeenRaw = {};
+var POLL_MS = 3e4;
+var MAX_LIST = 100;
+var lastSeen = {};
 var seenOnlineAt = /* @__PURE__ */ new Map();
-function presenceStatus(payload) {
-  var _a, _b, _c, _d;
-  const value = (_d = (_b = payload == null ? void 0 : payload.status) != null ? _b : (_a = payload == null ? void 0 : payload.presence) == null ? void 0 : _a.status) != null ? _d : (_c = payload == null ? void 0 : payload.user) == null ? void 0 : _c.status;
-  const raw = typeof value === "string" ? value : value == null ? void 0 : value.status;
+var pollTimer = null;
+var lastEventDebug = "no presence events yet";
+function statusOf(payload) {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
+  const raw = (_k = (_j = (_g = (_e = (_b = payload == null ? void 0 : payload.status) != null ? _b : (_a = payload == null ? void 0 : payload.presence) == null ? void 0 : _a.status) != null ? _e : (_d = (_c = payload == null ? void 0 : payload.presence) == null ? void 0 : _c.clientStatus) == null ? void 0 : _d.status) != null ? _g : (_f = payload == null ? void 0 : payload.user) == null ? void 0 : _f.status) != null ? _j : (_i = (_h = payload == null ? void 0 : payload.presence) == null ? void 0 : _h.user) == null ? void 0 : _i.status) != null ? _k : null;
   if (typeof raw !== "string") return null;
   const status = raw.toLowerCase();
-  return ["online", "idle", "dnd", "offline", "invisible"].includes(status) ? status : null;
+  return ["online", "idle", "dnd", "offline", "invisible", "unknown"].includes(status) ? status : null;
 }
-function statusIsOnline(status) {
+function isOnline(status) {
   return status === "online" || status === "idle" || status === "dnd";
 }
-var presenceEventsSeen = 0;
-var departuresRecorded = 0;
-var lastPresenceEventAt = 0;
-function handlePresence(payload) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
+function displayName(userId) {
+  var _a, _b, _c, _d;
   try {
-    const userId = String((_i = (_h = (_f = (_c = (_a = payload == null ? void 0 : payload.userId) != null ? _a : payload == null ? void 0 : payload.user_id) != null ? _c : (_b = payload == null ? void 0 : payload.user) == null ? void 0 : _b.id) != null ? _f : (_e = (_d = payload == null ? void 0 : payload.presence) == null ? void 0 : _d.user) == null ? void 0 : _e.id) != null ? _h : (_g = payload == null ? void 0 : payload.presence) == null ? void 0 : _g.userId) != null ? _i : "");
-    const status = presenceStatus(payload);
+    const user = (_b = (_a = import_flux.Stores.UserStore) == null ? void 0 : _a.getUser) == null ? void 0 : _b.call(_a, userId);
+    return String((_d = (_c = user == null ? void 0 : user.globalName) != null ? _c : user == null ? void 0 : user.username) != null ? _d : userId);
+  } catch {
+    return String(userId);
+  }
+}
+var engine = {
+  receive(api, userId, status) {
+    var _a, _b, _c, _d, _e, _f;
     if (!userId || !status) return false;
     const now = Date.now();
-    presenceEventsSeen++;
-    lastPresenceEventAt = now;
-    if (statusIsOnline(status)) {
+    if (isOnline(status)) {
       if (!seenOnlineAt.has(userId)) seenOnlineAt.set(userId, now);
       return false;
     }
-    const since = seenOnlineAt.get(userId);
+    const firstSeen = seenOnlineAt.get(userId);
     seenOnlineAt.delete(userId);
-    if (since == null || now - since < MIN_ONLINE_MS) return false;
-    const prev = (_j = lastSeenRaw[userId]) != null ? _j : 0;
-    if (now - prev < MIN_ONLINE_MS) return false;
-    lastSeenRaw[userId] = now;
-    departuresRecorded++;
-    if (cfg.notify) {
-      const u = (_l = (_k = getUserStore()) == null ? void 0 : _k.getUser) == null ? void 0 : _l.call(_k, userId);
-      toast(((_n = (_m = u == null ? void 0 : u.globalName) != null ? _m : u == null ? void 0 : u.username) != null ? _n : "Someone") + " went offline");
-    }
-    void persistConfig();
-    return true;
-  } catch {
-    return false;
-  }
-}
-function getLastSeen() {
-  return { ...lastSeenRaw };
-}
-function clearLastSeen() {
-  for (const k of Object.keys(lastSeenRaw)) delete lastSeenRaw[k];
-  void persistConfig();
-}
-function seedOnlineFromStore(api) {
-  try {
-    const store = findStore("PresenceStore", ["getStatus"], api);
-    const getter = typeof (store == null ? void 0 : store.getOnlineUserIds) === "function" ? store.getOnlineUserIds : typeof (store == null ? void 0 : store.getOnlineFriendIds) === "function" ? store.getOnlineFriendIds : null;
-    const ids = getter ? getter.call(store) : null;
-    if (!Array.isArray(ids)) return 0;
-    const now = Date.now();
-    let seeded = 0;
-    for (const id of ids) {
-      const key = String(id);
-      if (!seenOnlineAt.has(key)) {
-        seenOnlineAt.set(key, now);
-        seeded++;
-      }
-    }
-    return seeded;
-  } catch {
-    return 0;
-  }
-}
-var presenceActionTypes = /* @__PURE__ */ new Set();
-var presenceCensusInstalled = false;
-var ingestedPayloads = /* @__PURE__ */ new WeakSet();
-function looksLikePresence(type) {
-  return typeof type === "string" && /presence/i.test(type);
-}
-function censusDispatch(payload) {
-  var _a;
-  if (!looksLikePresence(String((_a = payload == null ? void 0 : payload.type) != null ? _a : ""))) return;
-  if (presenceActionTypes.size < 12) presenceActionTypes.add(String(payload.type));
-  receivePresence(payload);
-}
-function installFluxCensus(api) {
-  var _a, _b;
-  if (presenceCensusInstalled) return true;
-  const flux = getFlux(api);
-  try {
-    if (typeof (flux == null ? void 0 : flux.onAnyFluxEventDispatched) === "function") {
-      const off = flux.onAnyFluxEventDispatched(censusDispatch);
-      registerPresenceCleanup(typeof off === "function" ? off : void 0);
-      presenceCensusInstalled = true;
-      return true;
-    }
-  } catch (e) {
-    hostError("flux census failed", e);
-  }
-  try {
-    const raw = (_b = (_a = getDispatcher()) != null ? _a : flux == null ? void 0 : flux.dispatcher) != null ? _b : flux;
-    if (typeof (raw == null ? void 0 : raw.addInterceptor) === "function") {
-      const off = raw.addInterceptor((payload) => {
-        censusDispatch(payload);
+    if (firstSeen === void 0 || now - firstSeen < MIN_ONLINE_MS) return false;
+    lastSeen[userId] = now;
+    const cfg = (_b = (_a = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _a.cache) != null ? _b : DEFAULTS;
+    if (cfg.persist !== false) {
+      (_f = (_d = (_c = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _c.set) == null ? void 0 : (_e = _d.call(_c, { lastSeen: { ...lastSeen } })).catch) == null ? void 0 : _f.call(_e, () => {
       });
-      registerPresenceCleanup(off);
-      presenceCensusInstalled = true;
-      return true;
     }
-  } catch (e) {
-    hostError("dispatcher census failed", e);
-  }
-  return false;
-}
-var GATEWAY_INBOUND_METHODS = [
-  "_handleMessage",
-  "_handleMessageInternal",
-  "_handleSocketMessage",
-  "_handleIncomingMessage",
-  "handleMessage",
-  "handleSocketMessage",
-  "onMessage",
-  "onSocketMessage",
-  "_handleDispatch",
-  "handleDispatch",
-  "_handlePayload",
-  "handlePayload",
-  "_handleEvent",
-  "handleEvent",
-  "processMessage",
-  "_processMessage"
-];
-var gatewayPatches = [];
-var gatewayHandlerCalls = 0;
-var gatewayPresenceFrames = 0;
-var gatewayAttempts = 0;
-function gatewayCandidates() {
-  var _a, _b, _c;
-  const out = [];
-  const owners = /* @__PURE__ */ new Set();
-  const metro = getMetro();
-  const push = (owner, describe) => {
-    if (!owner || owners.has(owner)) return;
-    owners.add(owner);
-    for (const method of GATEWAY_INBOUND_METHODS) {
+    if (cfg.notify === true) {
       try {
-        if (typeof owner[method] === "function") out.push({ owner, method, describe: describe + "." + method });
+        import_actions.ToastActionCreators.open({ key: "last-online-tracker", content: `${displayName(userId)} went offline` });
       } catch {
+        try {
+          import_actions.ToastActionCreators.open("last-online-tracker", { text: `${displayName(userId)} went offline`, variant: "default" });
+        } catch {
+        }
       }
     }
-  };
-  try {
-    push((_a = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _a.call(metro, "_doIdentify"), "socket");
-    push((_b = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _b.call(metro, "connect", "getGatewayIntents"), "socket");
-  } catch {
+    return true;
+  },
+  onlineCount() {
+    return seenOnlineAt.size;
+  },
+  debug() {
+    return lastEventDebug;
+  },
+  entries() {
+    return Object.entries(lastSeen).map(([userId, at]) => ({ userId, name: displayName(userId), at })).sort((a, b) => b.at - a.at).slice(0, MAX_LIST);
+  },
+  reset() {
+    for (const key of Object.keys(lastSeen)) delete lastSeen[key];
+    seenOnlineAt.clear();
   }
-  for (const method of GATEWAY_INBOUND_METHODS) {
+};
+function snapshotPresences() {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p;
+  const out = [];
+  try {
+    const store = import_flux.Stores.PresenceStore;
+    if (!store) return out;
+    const push = (id, status) => {
+      if (id == null || status == null) return;
+      const s = String(status).toLowerCase();
+      if (s) out.push({ id: String(id), status: s });
+    };
     try {
-      push((_c = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _c.call(metro, method), "gateway");
+      const ids = (_b = (_a = store == null ? void 0 : store.getUserIds) == null ? void 0 : _a.call(store)) != null ? _b : [];
+      for (const id of ids) push(id, (_c = store == null ? void 0 : store.getStatus) == null ? void 0 : _c.call(store, String(id)));
+      if (out.length) return out;
     } catch {
     }
+    try {
+      const state = (_i = (_h = (_f = (_d = store == null ? void 0 : store.getState) == null ? void 0 : _d.call(store)) != null ? _f : (_e = store == null ? void 0 : store.getPresences) == null ? void 0 : _e.call(store)) != null ? _h : (_g = store == null ? void 0 : store.getAll) == null ? void 0 : _g.call(store)) != null ? _i : null;
+      const map = (_j = state == null ? void 0 : state.presences) != null ? _j : state;
+      if (map && typeof map === "object") {
+        const entries = map instanceof Map ? Array.from(map.entries()) : Object.entries(map);
+        for (const [id, p] of entries) {
+          push(id, typeof p === "string" ? p : (_l = p == null ? void 0 : p.status) != null ? _l : (_k = p == null ? void 0 : p.presence) == null ? void 0 : _k.status);
+        }
+        if (out.length) return out;
+      }
+    } catch {
+    }
+    try {
+      const all = (_o = (_n = (_m = store == null ? void 0 : store.getAll) == null ? void 0 : _m.call(store)) != null ? _n : store == null ? void 0 : store.presences) != null ? _o : null;
+      if (all && typeof all === "object") {
+        for (const [id, p] of Object.entries(all)) push(id, (_p = p == null ? void 0 : p.status) != null ? _p : p);
+      }
+    } catch {
+    }
+  } catch {
   }
   return out;
 }
-function ingestGatewayFrame(frame) {
-  var _a, _b, _c, _d;
-  let data = frame;
-  if (typeof frame === "string") {
-    if (!frame.includes("PRESENCE")) return;
+function pollOnce(api) {
+  for (const { id, status } of snapshotPresences()) {
     try {
-      data = JSON.parse(frame);
+      engine.receive(api, id, status);
     } catch {
-      return;
-    }
-  } else if (frame && typeof frame.data === "string") {
-    if (!frame.data.includes("PRESENCE")) return;
-    try {
-      data = JSON.parse(frame.data);
-    } catch {
-      return;
     }
   }
-  const type = String((_b = (_a = data == null ? void 0 : data.t) != null ? _a : data == null ? void 0 : data.type) != null ? _b : "");
-  if (!looksLikePresence(type)) return;
-  gatewayPresenceFrames++;
-  receivePresence((_d = (_c = data == null ? void 0 : data.d) != null ? _c : data == null ? void 0 : data.payload) != null ? _d : data);
 }
-function installGatewaySniff() {
-  if (gatewayPatches.length) return gatewayPatches.length;
-  gatewayAttempts++;
-  for (const candidate of gatewayCandidates()) {
+var index_default = plugin({
+  jsonStorage: { load: true, default: DEFAULTS },
+  engine,
+  start({ cleanup, jsonStorage, logger }) {
+    var _a, _b, _c;
+    const api = { jsonStorage };
     try {
-      const original = candidate.owner[candidate.method];
-      const wrapped = function(...args) {
-        try {
-          gatewayHandlerCalls++;
-          for (const arg of args) ingestGatewayFrame(arg);
-        } catch {
+      const saved = (_a = jsonStorage.cache) == null ? void 0 : _a.lastSeen;
+      if (saved && typeof saved === "object") {
+        for (const [id, at] of Object.entries(saved)) {
+          if (typeof at === "number") lastSeen[id] = at;
         }
-        return original.apply(this, args);
-      };
-      candidate.owner[candidate.method] = wrapped;
-      gatewayPatches.push({ ...candidate, wrapped, original });
-    } catch {
-    }
-  }
-  return gatewayPatches.length;
-}
-function restoreGatewaySniff() {
-  while (gatewayPatches.length) {
-    const patch = gatewayPatches.pop();
-    try {
-      if (patch && patch.owner[patch.method] === patch.wrapped) patch.owner[patch.method] = patch.original;
-    } catch {
-    }
-  }
-}
-var POLL_MS = 2e4;
-var GATEWAY_RETRY_LIMIT = 12;
-var pollTimer = null;
-var storePolls = 0;
-var storeSeenOnline = null;
-var presenceStoreLabel = null;
-var lastProbeReport = "";
-function presenceStore(api) {
-  var _a, _b, _c;
-  const found = (_c = (_b = (_a = findStore("PresenceStore", ["getStatus", "getUserIds"], api)) != null ? _a : findStore("PresenceStore", ["getStatus", "getActivities"], api)) != null ? _b : findStore("PresenceStore", ["getUserIds"], api)) != null ? _c : findStore("PresenceStore", ["getStatus"], api);
-  if (found && !presenceStoreLabel) {
-    const methods = ["getStatus", "getUserIds", "getOnlineUserIds", "getOnlineFriendIds", "getActivities"].filter(
-      (m) => typeof found[m] === "function"
-    );
-    presenceStoreLabel = "PresenceStore" + (methods.length ? " (" + methods.join(", ") + ")" : " (no known methods)");
-  }
-  return found;
-}
-function readOnlineSet(store) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
-  for (const method of ["getOnlineUserIds", "getOnlineFriendIds", "getUserIds"]) {
-    try {
-      const value = (_a = store == null ? void 0 : store[method]) == null ? void 0 : _a.call(store);
-      if (Array.isArray(value)) return new Set(value.map(String));
-      if (value && typeof value.size === "number") return new Set(Array.from(value).map(String));
-    } catch {
-    }
-  }
-  try {
-    const map = (_c = (_b = store == null ? void 0 : store.getState) == null ? void 0 : _b.call(store)) == null ? void 0 : _c.clientStatuses;
-    if (map && typeof map === "object") {
-      const ids = /* @__PURE__ */ new Set();
-      for (const [id, status] of Object.entries(map)) {
-        if (status && Object.keys(status).length > 0) ids.add(String(id));
       }
-      if (ids.size) return ids;
+    } catch {
     }
-  } catch {
-  }
-  try {
-    const presences = (_h = (_g = (_e = (_d = store == null ? void 0 : store.getState) == null ? void 0 : _d.call(store)) == null ? void 0 : _e.presences) != null ? _g : (_f = store == null ? void 0 : store.getPresences) == null ? void 0 : _f.call(store)) != null ? _h : null;
-    const entries = presences instanceof Map ? Array.from(presences.entries()) : presences && typeof presences === "object" ? Object.entries(presences) : [];
-    const ids = /* @__PURE__ */ new Set();
-    for (const [id, p] of entries) {
-      const st = typeof p === "string" ? p : (_j = p == null ? void 0 : p.status) != null ? _j : (_i = p == null ? void 0 : p.presence) == null ? void 0 : _i.status;
-      if (typeof st === "string" && ["online", "idle", "dnd"].includes(st.toLowerCase())) ids.add(String(id));
-    }
-    if (ids.size) return ids;
-  } catch {
-  }
-  return null;
-}
-function readStatusFor(store, userId) {
-  var _a;
-  try {
-    const raw = (_a = store == null ? void 0 : store.getStatus) == null ? void 0 : _a.call(store, userId);
-    const status = typeof raw === "string" ? raw.toLowerCase() : null;
-    if (!status || status === "unknown") return null;
-    return status;
-  } catch {
-  }
-  return null;
-}
-function pollPresenceStore(api) {
-  storePolls++;
-  const store = presenceStore(api);
-  if (!store) return 0;
-  let departures = 0;
-  const online = readOnlineSet(store);
-  if (online) {
-    for (const id of online) handlePresence({ userId: id, status: "online" });
-    if (storeSeenOnline) {
-      for (const id of storeSeenOnline) {
-        if (!online.has(id) && handlePresence({ userId: id, status: "offline" })) departures++;
+    const onPresence = (payload) => {
+      var _a2, _b2, _c2, _d, _e, _f, _g, _h, _i, _j;
+      const list = Array.isArray(payload == null ? void 0 : payload.presences) ? payload.presences : Array.isArray(payload == null ? void 0 : payload.updates) ? payload.updates : [payload];
+      for (const item of list) {
+        const userId = String(
+          (_i = (_h = (_g = (_f = (_c2 = (_a2 = item == null ? void 0 : item.userId) != null ? _a2 : item == null ? void 0 : item.user_id) != null ? _c2 : (_b2 = item == null ? void 0 : item.user) == null ? void 0 : _b2.id) != null ? _f : (_e = (_d = item == null ? void 0 : item.presence) == null ? void 0 : _d.user) == null ? void 0 : _e.id) != null ? _g : payload == null ? void 0 : payload.userId) != null ? _h : payload == null ? void 0 : payload.user_id) != null ? _i : ""
+        );
+        const status = (_j = statusOf(item)) != null ? _j : statusOf(payload);
+        if (userId && status) {
+          lastEventDebug = `${userId} -> ${status}`;
+          engine.receive(api, userId, status);
+        }
       }
-    }
-    storeSeenOnline = online;
-    return departures;
-  }
-  for (const id of Array.from(seenOnlineAt.keys())) {
-    const status = readStatusFor(store, id);
-    if (status && handlePresence({ userId: id, status })) departures++;
-  }
-  return departures;
-}
-function startPresencePoll(api) {
-  stopPresencePoll();
-  try {
-    pollPresenceStore(api);
-  } catch {
-  }
-  pollTimer = setInterval(() => {
-    try {
-      if (!gatewayPatches.length && gatewayAttempts < GATEWAY_RETRY_LIMIT) installGatewaySniff();
-      pollPresenceStore(api);
-    } catch {
-    }
-  }, POLL_MS);
-  if (typeof (pollTimer == null ? void 0 : pollTimer.unref) === "function") pollTimer.unref();
-}
-function stopPresencePoll() {
-  if (pollTimer) {
-    try {
-      clearInterval(pollTimer);
-    } catch {
-    }
-    pollTimer = null;
-  }
-}
-function probeReport() {
-  const store = presenceStore();
-  const methods = store ? ["getStatus", "getUserIds", "getOnlineUserIds", "getOnlineFriendIds", "getActivities"].filter((m) => typeof (store == null ? void 0 : store[m]) === "function") : [];
-  return "LastOnlineTracker " + PLUGIN_VERSION + " probe \u2014 flux: " + (presenceCensusInstalled ? "census on" : "no census") + " \xB7 presence actions seen: " + (presenceActionTypes.size ? Array.from(presenceActionTypes).join(",") : "none") + " \xB7 gateway: " + gatewayPatches.length + " handler(s), " + gatewayHandlerCalls + " call(s), " + gatewayPresenceFrames + " presence frame(s) \xB7 store: " + (store ? methods.join(",") || "found, no known methods" : "not found") + " \xB7 polls: " + storePolls + " \xB7 events: " + presenceEventsSeen + " \xB7 departures: " + departuresRecorded;
-}
-var PRESENCE_EVENTS = ["PRESENCE_UPDATE", "PRESENCE_UPDATES"];
-var presenceCleanups = [];
-var cleanupApi = null;
-function registerPresenceCleanup(off) {
-  if (typeof off === "function") {
-    presenceCleanups.push(off);
-    try {
-      cleanupApi == null ? void 0 : cleanupApi(off);
-    } catch {
-    }
-  }
-}
-function receivePresence(payload) {
-  var _a, _b, _c, _d, _e;
-  if (payload && typeof payload === "object") {
-    if (ingestedPayloads.has(payload)) return;
-    ingestedPayloads.add(payload);
-  }
-  const updates = Array.isArray(payload == null ? void 0 : payload.updates) ? payload.updates : Array.isArray(payload == null ? void 0 : payload.presences) ? payload.presences : Array.isArray(payload == null ? void 0 : payload.users) ? payload.users : Array.isArray(payload) ? payload : [payload];
-  for (const item of updates) {
-    const id = (_c = (_b = (_a = item == null ? void 0 : item.user) == null ? void 0 : _a.id) != null ? _b : item == null ? void 0 : item.userId) != null ? _c : item == null ? void 0 : item.user_id;
-    const clientStatus = (_e = (_d = item == null ? void 0 : item.clientStatus) != null ? _d : item == null ? void 0 : item.client_status) != null ? _e : null;
-    const status = typeof (item == null ? void 0 : item.status) === "string" ? item.status : clientStatus && Object.keys(clientStatus).length ? "online" : null;
-    if (id && status) handlePresence({ userId: String(id), status });
-  }
-  settingsChangedCb == null ? void 0 : settingsChangedCb();
-}
-function subscribePresence(api) {
-  if (presenceCleanups.length) return true;
-  const flux = getFlux(api);
-  const fd = getDispatcher();
-  let installed = 0;
-  for (const event of PRESENCE_EVENTS) {
-    const listener = (payload) => {
-      receivePresence(payload);
-      return payload;
     };
+    const unsubs = [];
     try {
-      if (typeof (flux == null ? void 0 : flux.onFluxEventDispatched) === "function") {
-        const off = flux.onFluxEventDispatched(event, listener);
-        if (typeof off === "function") {
-          registerPresenceCleanup(off);
-          installed++;
-          continue;
-        }
-        if (typeof flux.removeFluxEventListener === "function") {
-          registerPresenceCleanup(() => flux.removeFluxEventListener(event, listener));
-          installed++;
-          continue;
-        }
-      }
-    } catch (e) {
-      hostError("Revenge flux " + event + " hook failed", e);
-    }
-    try {
-      if (typeof (flux == null ? void 0 : flux.intercept) === "function") {
-        const off = flux.intercept((payload) => {
-          if ((payload == null ? void 0 : payload.type) === event) return listener(payload);
-          return void 0;
-        });
-        if (typeof off === "function") {
-          registerPresenceCleanup(off);
-          installed++;
-          continue;
-        }
-      }
-    } catch (e) {
-      hostError("flux interceptor " + event + " hook failed", e);
-    }
-    try {
-      if (fd == null ? void 0 : fd.subscribe) {
-        fd.subscribe(event, listener);
-        registerPresenceCleanup(() => {
-          var _a;
-          return (_a = fd.unsubscribe) == null ? void 0 : _a.call(fd, event, listener);
-        });
-        installed++;
-      }
-    } catch (e) {
-      hostError("subscribe " + event + " failed", e);
-    }
-  }
-  return installed > 0;
-}
-function unsubscribePresence() {
-  var _a;
-  while (presenceCleanups.length) {
-    try {
-      (_a = presenceCleanups.pop()) == null ? void 0 : _a();
+      unsubs.push((0, import_flux.onFluxEventDispatched)("PRESENCE_UPDATE", onPresence));
     } catch {
     }
-  }
-}
-var cleanupFns = [];
-async function startNext(api) {
-  try {
-    await startPlugin(api);
-  } catch (e) {
-    hostError("start failed", e);
-  }
-}
-async function startPlugin(api) {
-  var _a, _b, _c;
-  jsonStorageApi = (_a = api == null ? void 0 : api.jsonStorage) != null ? _a : getStorage();
-  cleanupApi = typeof (api == null ? void 0 : api.cleanup) === "function" ? api.cleanup : null;
-  await loadConfig();
-  try {
-    const data = (_c = await ((_b = jsonStorageApi == null ? void 0 : jsonStorageApi.get) == null ? void 0 : _b.call(jsonStorageApi))) != null ? _c : {};
-    if (cfg.persist && (data == null ? void 0 : data.lastSeen) && typeof data.lastSeen === "object") {
-      for (const [k, v] of Object.entries(data.lastSeen)) {
-        if (typeof v === "number" && v > 0) lastSeenRaw[k] = v;
+    try {
+      unsubs.push((0, import_flux.onFluxEventDispatched)("PRESENCE_UPDATES", onPresence));
+    } catch {
+    }
+    try {
+      if (typeof import_flux.onAnyFluxEventDispatched === "function") {
+        unsubs.push(
+          (0, import_flux.onAnyFluxEventDispatched)((payload) => {
+            if (!payload || typeof payload !== "object") return;
+            if (!("presences" in payload || "updates" in payload || "presence" in payload)) return;
+            try {
+              onPresence(payload);
+            } catch {
+            }
+          })
+        );
       }
-    }
-  } catch (e) {
-    hostError("restore lastSeen failed", e);
-  }
-  const named = subscribePresence(api);
-  const census = installFluxCensus(api);
-  const gateway = installGatewaySniff();
-  seedOnlineFromStore(api);
-  startPresencePoll(api);
-  if (!named && !census && !gateway) hostError("no presence surface found; tracking is inactive");
-}
-async function stopNext() {
-  unsubscribePresence();
-  stopPresencePoll();
-  restoreGatewaySniff();
-  cleanupFns.forEach((f) => {
-    try {
-      f();
     } catch {
     }
-  });
-  cleanupFns = [];
-  await persistConfig();
-  cleanupApi = null;
-  settingsChangedCb = null;
-}
-function relTime(ts) {
-  const diff = Date.now() - ts;
-  if (diff < 6e4) return "just now";
-  if (diff < 36e5) return Math.floor(diff / 6e4) + "m ago";
-  if (diff < 864e5) return Math.floor(diff / 36e5) + "h ago";
-  return Math.floor(diff / 864e5) + "d ago";
-}
-function isDarkTheme() {
-  var _a, _b, _c, _d;
-  try {
-    const tm = (_b = (_a = getMetro()) == null ? void 0 : _a.findByProps) == null ? void 0 : _b.call(_a, "theme", "setTheme");
-    const t = (_d = (_c = tm == null ? void 0 : tm.theme) != null ? _c : tm == null ? void 0 : tm.resolvedTheme) != null ? _d : tm == null ? void 0 : tm.currentTheme;
-    if (t) return String(t).toLowerCase().includes("dark");
-  } catch {
-  }
-  return true;
-}
-function resolveDesign(api) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i;
-  const candidates = [api == null ? void 0 : api.design, (_a = api == null ? void 0 : api.discord) == null ? void 0 : _a.design, (_c = (_b = api == null ? void 0 : api.unscoped) == null ? void 0 : _b.discord) == null ? void 0 : _c.design, (_d = api == null ? void 0 : api.unscoped) == null ? void 0 : _d.design];
-  for (const candidate of candidates) {
+    for (const u of unsubs) cleanup(u);
     try {
-      const d = (_e = candidate == null ? void 0 : candidate.Design) != null ? _e : candidate;
-      if (d && (d.TableRowGroup || d.TableSwitchRow || d.TableRow)) return d;
+      pollOnce(api);
     } catch {
     }
-  }
-  try {
-    const g = (_g = (_f = globalThis.revenge) == null ? void 0 : _f.discord) == null ? void 0 : _g.design;
-    const d = (_h = g == null ? void 0 : g.Design) != null ? _h : g;
-    if (d && (d.TableRowGroup || d.TableSwitchRow || d.TableRow)) return d;
-  } catch {
-  }
-  try {
-    const b = (_i = globalThis.bunny) == null ? void 0 : _i.ui;
-    if (b == null ? void 0 : b.FormTableRowGroup) return b;
-  } catch {
-  }
-  return null;
-}
-function buildSettingsComponent(api) {
-  var _a, _b, _c, _d, _e, _f;
-  const React = getReact(api);
-  if (!(React == null ? void 0 : React.createElement) || typeof React.useState !== "function") return null;
-  const el = React.createElement;
-  const RN = (_a = getRN(api)) != null ? _a : {};
-  const View = (_b = RN.View) != null ? _b : "view";
-  const Text = (_c = RN.Text) != null ? _c : "text";
-  const Pressable = (_d = RN.Pressable) != null ? _d : View;
-  const ScrollView = (_e = RN.ScrollView) != null ? _e : View;
-  const Switch = (_f = RN.Switch) != null ? _f : null;
-  const C = isDarkTheme() ? { text: "#ffffff", sub: "#9ba0a8", card: "#1a1b1e", accent: "#5865F2", danger: "#f04747" } : { text: "#060607", sub: "#5c5e66", card: "#ffffff", accent: "#5865F2", danger: "#d83c3e" };
-  const kids = (c) => Array.isArray(c) ? c : c == null ? [] : [c];
-  const D = resolveDesign(api);
-  function Group(props) {
-    if (D == null ? void 0 : D.TableRowGroup) {
-      return el(D.TableRowGroup, { title: props.title, description: props.description }, ...kids(props.children));
-    }
-    return el(
-      View,
-      { style: { marginTop: 16 } },
-      el(Text, { style: { color: C.text, fontSize: 15, fontWeight: "600", paddingHorizontal: 16, marginBottom: 4 } }, props.title),
-      props.description ? el(Text, { style: { color: C.sub, fontSize: 13, paddingHorizontal: 16, marginBottom: 6 } }, props.description) : null,
-      el(View, { style: { backgroundColor: C.card, borderRadius: 12, marginHorizontal: 12, paddingVertical: 4 } }, ...kids(props.children))
-    );
-  }
-  function ToggleRow(props) {
-    if (D == null ? void 0 : D.TableSwitchRow) {
-      return el(D.TableSwitchRow, {
-        label: props.label,
-        subLabel: props.subLabel,
-        value: !!props.value,
-        onValueChange: props.onValueChange
-      });
-    }
-    const control = Switch ? el(Switch, {
-      value: !!props.value,
-      onValueChange: props.onValueChange,
-      accessibilityLabel: props.label,
-      trackColor: { false: "rgba(128,128,128,0.35)", true: C.accent },
-      thumbColor: "#ffffff"
-    }) : el(Text, {
-      accessibilityLabel: props.label,
-      style: { color: C.accent, fontWeight: "700" },
-      onPress: () => props.onValueChange(!props.value)
-    }, props.value ? "On" : "Off");
-    return el(
-      View,
-      { style: { flexDirection: "row", alignItems: "center", paddingVertical: 10, paddingHorizontal: 16 } },
-      el(
-        View,
-        { style: { flex: 1, paddingRight: 12 } },
-        el(Text, { style: { color: C.text, fontSize: 16 } }, props.label),
-        props.subLabel ? el(Text, { style: { color: C.sub, fontSize: 13, marginTop: 2 } }, props.subLabel) : null
-      ),
-      control
-    );
-  }
-  function InfoRow(props) {
-    if (D == null ? void 0 : D.TableRow) {
-      return el(D.TableRow, {
-        label: props.label,
-        subLabel: props.subLabel,
-        variant: props.danger ? "danger" : void 0,
-        onPress: props.onPress
-      });
-    }
-    return el(
-      Pressable,
-      {
-        onPress: props.onPress,
-        accessibilityLabel: props.label,
-        style: { paddingVertical: 10, paddingHorizontal: 16 }
-      },
-      el(Text, { style: { color: props.danger ? C.danger : C.text, fontSize: 16 } }, props.label),
-      props.subLabel ? el(Text, { style: { color: C.sub, fontSize: 13, marginTop: 2 } }, props.subLabel) : null
-    );
-  }
-  return function LastOnlineSettings(props) {
-    var _a2, _b2, _c2, _d2, _e2, _f2;
-    const settingsApi = (_a2 = props == null ? void 0 : props.api) != null ? _a2 : api;
-    const storage = (_b2 = settingsApi == null ? void 0 : settingsApi.jsonStorage) != null ? _b2 : jsonStorageApi;
-    jsonStorageApi = storage;
-    const [, force] = React.useState(0);
-    React.useEffect(() => {
-      settingsChangedCb = () => force((n) => n + 1);
-      return () => {
-        settingsChangedCb = null;
-      };
-    }, []);
-    let stored = {};
     try {
-      stored = (_e2 = (_d2 = (_c2 = storage == null ? void 0 : storage.use) == null ? void 0 : _c2.call(storage)) != null ? _d2 : storage == null ? void 0 : storage.cache) != null ? _e2 : {};
+      (0, import_flux.getStore)("PresenceStore", () => pollOnce(api));
     } catch {
-      stored = (_f2 = storage == null ? void 0 : storage.cache) != null ? _f2 : {};
     }
-    const persist = typeof (stored == null ? void 0 : stored.persist) === "boolean" ? stored.persist : cfg.persist;
-    const notify = typeof (stored == null ? void 0 : stored.notify) === "boolean" ? stored.notify : cfg.notify;
-    const entries = Object.entries(getLastSeen()).filter(([, ts]) => typeof ts === "number" && ts > 0).sort((a, b) => b[1] - a[1]).slice(0, 80).map(([id, ts]) => {
-      var _a3, _b3, _c3, _d3, _e3;
-      const user = (_b3 = (_a3 = getUserStore(settingsApi)) == null ? void 0 : _a3.getUser) == null ? void 0 : _b3.call(_a3, id);
-      return { id, ts, name: String((_e3 = (_d3 = (_c3 = user == null ? void 0 : user.globalName) != null ? _c3 : user == null ? void 0 : user.global_name) != null ? _d3 : user == null ? void 0 : user.username) != null ? _e3 : "User " + id) };
+    pollTimer = setInterval(() => pollOnce(api), POLL_MS);
+    try {
+      (_b = pollTimer == null ? void 0 : pollTimer.unref) == null ? void 0 : _b.call(pollTimer);
+    } catch {
+    }
+    cleanup(() => {
+      if (pollTimer) clearInterval(pollTimer);
+      pollTimer = null;
     });
-    const tracking = presenceCleanups.length > 0;
-    return el(
-      ScrollView,
-      { contentContainerStyle: { paddingBottom: 24 } },
-      el(
-        Group,
-        { title: "LastOnlineTracker", description: "Records when friends go offline, from presence changes this plugin witnessed." },
-        el(ToggleRow, {
-          label: "Keep last-seen times across restarts",
-          subLabel: "Save recorded departures on this device.",
-          value: persist,
-          onValueChange: (value) => {
-            var _a3;
-            cfg.persist = value;
-            void ((_a3 = storage == null ? void 0 : storage.set) == null ? void 0 : _a3.call(storage, { persist: value, lastSeen: value ? getLastSeen() : {} }));
-            settingsChangedCb == null ? void 0 : settingsChangedCb();
-          }
-        }),
-        el(ToggleRow, {
-          label: "Offline notifications",
-          subLabel: "Show a notification when someone goes offline.",
-          value: notify,
-          onValueChange: (value) => {
-            var _a3;
-            cfg.notify = value;
-            void ((_a3 = storage == null ? void 0 : storage.set) == null ? void 0 : _a3.call(storage, { notify: value }));
-            settingsChangedCb == null ? void 0 : settingsChangedCb();
-          }
-        })
-      ),
-      el(
-        Group,
-        { title: "Last online", description: "Only departures observed after at least 15 seconds online are recorded." },
-        ...entries.length ? entries.map((entry) => el(InfoRow, {
-          key: entry.id,
-          label: entry.name,
-          subLabel: "Offline " + relTime(entry.ts)
-        })) : [el(InfoRow, {
-          key: "empty",
-          label: "No departures recorded yet",
-          subLabel: tracking ? "Tracking is active; this list fills as friends go offline." : "Tracking is inactive \u2014 open Detection below to see which presence source this build exposes."
-        })]
-      ),
-      el(
-        Group,
-        { title: "Detection", description: "Which presence sources this build actually exposes. Nothing here means the list cannot fill." },
-        el(InfoRow, {
-          label: "Version " + PLUGIN_VERSION,
-          subLabel: "If this is not the version you installed, the new build did not load."
-        }),
-        el(InfoRow, {
-          label: "Flux presence listeners",
-          subLabel: presenceCleanups.length ? "installed (" + (presenceCensusInstalled ? "watching every dispatch" : "named events only") + ")" : "not installed \u2014 this host exposes no flux hook"
-        }),
-        el(InfoRow, {
-          label: "Presence actions seen",
-          subLabel: presenceActionTypes.size ? Array.from(presenceActionTypes).join(", ") : "none yet \u2014 presence may not be dispatched to plugins on this build"
-        }),
-        el(InfoRow, {
-          label: "Gateway socket",
-          subLabel: gatewayPatches.length ? gatewayPatches.length + " handler(s) watched \xB7 " + gatewayHandlerCalls + " call(s) \xB7 " + gatewayPresenceFrames + " presence frame(s)" : "no inbound handler found" + (gatewayAttempts >= GATEWAY_RETRY_LIMIT ? " (gave up)" : " (still retrying)")
-        }),
-        el(InfoRow, {
-          label: "Presence store",
-          subLabel: presenceStoreLabel != null ? presenceStoreLabel : "not found" + (pollTimer ? " \xB7 polling every " + Math.round(POLL_MS / 1e3) + "s" : " \xB7 polling off")
-        }),
-        el(InfoRow, {
-          label: "Run presence probe",
-          subLabel: "Re-check every source above now",
-          onPress: () => {
-            presenceStoreLabel = null;
-            installFluxCensus(settingsApi);
-            if (!gatewayPatches.length) installGatewaySniff();
-            pollPresenceStore(settingsApi);
-            lastProbeReport = probeReport();
-            toast(lastProbeReport);
-            settingsChangedCb == null ? void 0 : settingsChangedCb();
-          }
-        }),
-        lastProbeReport ? el(InfoRow, { label: "Last probe", subLabel: lastProbeReport }) : null
-      ),
-      el(
-        Group,
-        { title: "History controls" },
-        el(InfoRow, {
-          label: "Clear last-online history",
-          subLabel: "Remove every saved departure from this device.",
-          danger: true,
-          onPress: () => {
-            clearLastSeen();
-          }
-        }),
-        el(InfoRow, {
-          label: tracking ? "Tracking active" : "Tracking inactive",
-          subLabel: `${presenceEventsSeen} presence updates \xB7 ${departuresRecorded} departures recorded`
-        })
-      )
-    );
-  };
-}
-var __builtSettings = null;
-var __instance = {
-  jsonStorage: { load: true, default: { persist: true, notify: false, lastSeen: {} } },
-  start: startNext,
-  stop: stopNext,
-  SettingsComponent: function(props) {
-    var _a, _b, _c, _d;
-    const api = (_b = (_a = props == null ? void 0 : props.api) != null ? _a : jsonStorageApi) != null ? _b : null;
-    const React = getReact(api);
-    if (!(React == null ? void 0 : React.createElement)) return null;
-    try {
-      if (!__builtSettings) __builtSettings = buildSettingsComponent(api);
-      if (__builtSettings) return React.createElement(__builtSettings, { api });
-    } catch (e) {
-      hostError("settings build failed", e);
-    }
-    const RN = (_c = getRN(api)) != null ? _c : {};
-    return React.createElement((_d = RN.Text) != null ? _d : "text", null, "LastOnlineTracker settings could not load on this build.");
-  }
-};
-__instance.__engine = {
-  handlePresence,
-  getLastSeen,
-  clearLastSeen,
-  getConfig: () => ({ ...cfg }),
-  setConfig: (patch) => {
-    if (patch && typeof patch === "object") Object.assign(cfg, patch);
+    (_c = logger == null ? void 0 : logger.log) == null ? void 0 : _c.call(logger, "[LastOnlineTracker] started");
   },
-  MIN_ONLINE_MS,
-  getDiagnostics: () => ({
-    subscribed: presenceCleanups.length > 0,
-    eventsSeen: presenceEventsSeen,
-    departuresRecorded,
-    lastEventAt: lastPresenceEventAt,
-    censusInstalled: presenceCensusInstalled,
-    presenceActionTypes: Array.from(presenceActionTypes),
-    gatewayHandlers: gatewayPatches.length,
-    gatewayHandlerCalls,
-    gatewayPresenceFrames,
-    storeLabel: presenceStoreLabel,
-    storePolls,
-    polling: !!pollTimer
-  }),
-  probeReport,
-  pollPresenceStore,
-  installGatewaySniff,
-  ingestGatewayFrame,
-  censusDispatch
-};
-if (typeof plugin === "function") {
-  __instance = plugin(__instance);
-}
-globalThis.plugin = __instance;
-__instance.onLoad = function() {
-  var _a;
-  return (_a = __instance.start) == null ? void 0 : _a.call(__instance);
-};
-__instance.onUnload = function() {
-  var _a;
-  return (_a = __instance.stop) == null ? void 0 : _a.call(__instance);
-};
-__instance.settings = __instance.SettingsComponent;
-__instance.settingsComponentLazy = __instance.SettingsComponent;
-var index_default = __instance;
-;
-        const exported = (module.exports && module.exports.default) || module.exports;
-        if (!exported || typeof exported !== 'object') throw new Error('bundle exported ' + typeof exported + ' instead of a plugin object');
-        // Valenced evaluates this file and then reads result.default
-        // (bundle/lib/plugins/src/_internal/script.ts). Returning the bare plugin
-        // therefore gives it undefined and it fails with
-        // "Plugin options must be an object" — the plugin never starts and has no
-        // settings page. Older loaders want the plugin itself, so expose BOTH:
-        // the object is the plugin and its own .default points back at it.
-        if (!exported.default) {
-            try { exported.default = exported; } catch (ignored) {}
-        }
-        return exported;
-    } catch (error) {
-        const message = String((error && (error.stack || error.message)) || error);
-        try { console.error('[dev.8uvu.last-online-tracker] bundle failed to evaluate', error); } catch (ignored) {}
-        const fallback = {
-            jsonStorage: { load: true, default: {} },
-            start() {},
-            stop() {},
-            SettingsComponent() {
-                try {
-                    const R = valenced.react.React;
-                    const N = valenced.react.ReactNative;
-                    if (!R || !N || typeof R.createElement !== 'function') return null;
-                    const el = R.createElement;
-                    return el(N.ScrollView, { style: { padding: 16 } },
-                        el(N.Text, { style: { color: '#f04747', fontSize: 16, fontWeight: '700', marginBottom: 8 } }, "LastOnlineTracker" + ' failed to load'),
-                        el(N.Text, { style: { color: '#9ba0a8', fontSize: 12, marginBottom: 8 } }, 'Copy this text to the plugin author — it is the exact error:'),
-                        el(N.Text, { style: { color: '#ffffff', fontSize: 11 } }, message));
-                } catch (uiError) {
-                    return null;
-                }
-            },
-        };
-        try { fallback.default = fallback; } catch (ignored) {}
-        return fallback;
+  stop() {
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = null;
+  },
+  SettingsComponent({ api }) {
+    var _a, _b;
+    const settings = (_a = api.jsonStorage.use()) != null ? _a : DEFAULTS;
+    const set = (patch) => api.jsonStorage.set(patch);
+    const entries = engine.entries();
+    const D = (_b = import_design.Design) != null ? _b : {};
+    const fmt = (at) => {
+      const d = new Date(at);
+      return d.toLocaleDateString() + " " + d.toLocaleTimeString();
+    };
+    if (D.TableRowGroup && D.TableSwitchRow && D.TableRow) {
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(D.TableRowGroup, { title: "LastOnlineTracker", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            D.TableSwitchRow,
+            {
+              label: "Remember across restarts",
+              value: settings.persist !== false,
+              onValueChange: (v) => set({ persist: v })
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            D.TableSwitchRow,
+            {
+              label: "Toast on offline",
+              subLabel: "Toast when a friend goes offline.",
+              value: settings.notify === true,
+              onValueChange: (v) => set({ notify: v })
+            }
+          )
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(D.TableRowGroup, { title: `Last seen (${entries.length})`, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: `Tracking ${engine.onlineCount()} online now`, subLabel: `Last event: ${engine.debug()}` }),
+          entries.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: "Nothing yet", subLabel: "Leave the app open \u2014 departures appear after someone was online ~5s, then goes offline." }) : entries.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: entry.name, subLabel: fmt(entry.at) }, entry.userId))
+        ] })
+      ] });
     }
-})()
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { style: { padding: 16 }, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "bold", marginBottom: 8 }, children: "LastOnlineTracker" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityLabel: "Remember across restarts", onPress: () => set({ persist: !(settings.persist !== false) }), style: { paddingVertical: 8 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#ffffff" }, children: [
+        "Remember across restarts: ",
+        settings.persist !== false ? "on" : "off"
+      ] }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityLabel: "Toast on offline", onPress: () => set({ notify: !(settings.notify === true) }), style: { paddingVertical: 8 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#ffffff" }, children: [
+        "Toast on offline: ",
+        settings.notify === true ? "on" : "off"
+      ] }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#9ba0a8", marginTop: 8 }, children: [
+        "Tracking ",
+        engine.onlineCount(),
+        " online now \xB7 Last event: ",
+        engine.debug()
+      ] }),
+      entries.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#9ba0a8", marginTop: 4 }, children: "Nothing yet \u2014 leave the app open. Departures appear after someone was online ~5s, then goes offline." }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "bold", marginTop: 8, marginBottom: 4 }, children: [
+        "Last seen (",
+        entries.length,
+        ")"
+      ] }),
+      entries.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { paddingVertical: 4 }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff" }, children: entry.name }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#9ba0a8" }, children: fmt(entry.at) })
+      ] }, entry.userId))
+    ] });
+  }
+});
+; return (module.exports && module.exports.default) || module.exports; })()
