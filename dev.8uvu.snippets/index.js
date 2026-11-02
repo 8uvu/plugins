@@ -102,6 +102,7 @@ var index_default = plugin({
       setReplacement("");
     };
     const remove = (name) => save({ pairs: pairs.filter((pair) => clean(pair == null ? void 0 : pair.trigger) !== name) });
+    const canAdd = clean(trigger).length > 0 && text(replacement).trim().length > 0;
     const field = (label, value, onChange) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { marginVertical: 4 }, children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#9ba0a8", marginBottom: 2 }, children: label }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
@@ -117,16 +118,29 @@ var index_default = plugin({
       field("Trigger", trigger, setTrigger),
       field("Sends instead", replacement, setReplacement),
       D.Button ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.Button, { text: "Add snippet", onPress: add }) : (
-        // Design.Button is not on every build. Rendering it unconditionally
-        // throws "element type is invalid" and takes the whole settings
-        // page down, so the add button falls back to a plain pressable.
+        // Discord's Button is missing on some builds, and rendering a
+        // component the host does not have throws "element type is
+        // invalid" and takes the page down, so the primary button is
+        // drawn here in Discord's own style: blurple fill, bold white
+        // label, dimmed while the fields are still empty.
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           import_react_native.Pressable,
           {
             accessibilityLabel: "Add snippet",
+            accessibilityRole: "button",
+            accessibilityState: { disabled: !canAdd },
+            disabled: !canAdd,
             onPress: add,
-            style: { padding: 12, backgroundColor: "#232428", borderRadius: 8, marginVertical: 4 },
-            children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff" }, children: "Add snippet" })
+            android_ripple: { color: "#ffffff33" },
+            style: ({ pressed }) => ({
+              alignSelf: "flex-start",
+              marginTop: 12,
+              paddingVertical: 10,
+              paddingHorizontal: 16,
+              borderRadius: 4,
+              backgroundColor: !canAdd ? "#4e5058" : pressed ? "#4752C4" : "#5865F2"
+            }),
+            children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontSize: 14, fontWeight: "600" }, children: "Add snippet" })
           }
         )
       ),
