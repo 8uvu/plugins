@@ -75,42 +75,6 @@
                 }
             }
         },
-        "dev.8uvu.host-probe": {
-            "name": "Host Probe",
-            "description": "Reports which Valenced APIs this build exposes.",
-            "author": "cenotaph",
-            "channels": {
-                "latest": "1.1.0"
-            },
-            "versions": {
-                "1.0.4": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.0.4.zip",
-                    "sha256": "9c8c5a240c3345d3e8e136f718a5d1c14e6024fe595463b0a48125da4f1e22fc",
-                    "size": 5926,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": "*"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.1.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.host-probe@1.1.0.zip",
-                    "sha256": "e520bf4d9d5263a1f89417f2d13648a8fb5eeab9ab27b71d57b04131763e0f82",
-                    "size": 1947,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                }
-            }
-        },
         "dev.8uvu.last-online-tracker": {
             "name": "LastOnlineTracker",
             "description": "Shows when friends were last online.",
@@ -218,42 +182,6 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.5.0.zip",
                     "sha256": "a68a418f87f6b3d5a1fe778825ea47f649bf30b0da6418e5f9a81609fd70fe08",
                     "size": 2388,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                }
-            }
-        },
-        "dev.8uvu.quick-check": {
-            "name": "Quick Check",
-            "description": "Pops a host diagnosis when enabled.",
-            "author": "cenotaph",
-            "channels": {
-                "latest": "1.1.0"
-            },
-            "versions": {
-                "1.0.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.quick-check@1.0.2.zip",
-                    "sha256": "b152d39dcec287ba3c968d3214ed47d7cbdf38d3fe4a1599202a53b14d5e0a09",
-                    "size": 4031,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": "*"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.1.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.quick-check@1.1.0.zip",
-                    "sha256": "3ee4e0e05f0ac34ceb6cdae18d05dacf51635215c39f1a75840d2dc64091803d",
-                    "size": 2329,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
