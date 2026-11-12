@@ -32,27 +32,27 @@ __export(index_exports, {
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
-var import_finders = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get lookupModule() { return __g().lookupModule }, get getModules() { return __g().getModules }, get lookupModules() { return __g().lookupModules }, get waitForModules() { return __g().waitForModules } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_filters = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders && valenced.modules.finders.filters) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get withProps() { return __g().withProps }, get anyOf() { return __g().anyOf }, get withName() { return __g().withName }, get withoutProps() { return __g().withoutProps }, get withSingleProp() { return __g().withSingleProp }, get withDependencies() { return __g().withDependencies }, get allOf() { return __g().allOf }, get namespaceOnly() { return __g().namespaceOnly }, get createFilterGenerator() { return __g().createFilterGenerator }, get partial() { return __g().partial } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_finders = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get lookupModule() { return __g().lookupModule }, get lookupModules() { return __g().lookupModules }, get getModules() { return __g().getModules }, get waitForModules() { return __g().waitForModules } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_filters = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders && valenced.modules.finders.filters) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get withProps() { return __g().withProps }, get withoutProps() { return __g().withoutProps }, get withSingleProp() { return __g().withSingleProp }, get withName() { return __g().withName }, get withDependencies() { return __g().withDependencies }, get anyOf() { return __g().anyOf }, get allOf() { return __g().allOf }, get namespaceOnly() { return __g().namespaceOnly }, get createFilterGenerator() { return __g().createFilterGenerator }, get partial() { return __g().partial } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_design = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.design) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Design() { return __g().Design } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var SettingsModules = __toESM((function () { const __g = () => { try { return (valenced.discord && valenced.discord.modules && valenced.discord.modules.settings) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get onSettingsModulesLoaded() { return __g().onSettingsModulesLoaded }, get registerSettingsSection() { return __g().registerSettingsSection }, get registerSettingsItem() { return __g().registerSettingsItem } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var PathFinders = __toESM((function () { const __g = () => { try { return (valenced.discord && valenced.discord.utils && valenced.discord.utils.modules && valenced.discord.utils.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get getModuleWithImportedPath() { return __g().getModuleWithImportedPath }, get getModule() { return __g().getModule }, get getModulesWithImportedPath() { return __g().getModulesWithImportedPath }, get findModuleWithImportedPath() { return __g().findModuleWithImportedPath } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
-var Jsx = __toESM((function () { const __g = () => { try { return (valenced.react && (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime)) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get beforeJSX() { return __g().beforeJSX }, get afterJSX() { return __g().afterJSX }, get insteadJSX() { return __g().insteadJSX } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
-var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get cloneElement() { return __g().cloneElement }, get useState() { return __g().useState }, get createElement() { return __g().createElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Pressable() { return __g().Pressable }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get View() { return __g().View }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_patcher = (function () { const __g = () => { try { return (valenced.patcher) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get after() { return __g().after }, get before() { return __g().before }, get instead() { return __g().instead } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get createElement() { return __g().createElement }, get isValidElement() { return __g().isValidElement }, get useState() { return __g().useState }, get cloneElement() { return __g().cloneElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Text() { return __g().Text }, get Pressable() { return __g().Pressable }, get View() { return __g().View }, get TextInput() { return __g().TextInput }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsx() { return __g().jsx }, get jsxs() { return __g().jsxs }, get jsxDEV() { return __g().jsxDEV }, get Fragment() { return __g().Fragment } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULTS = {
   text: "hello",
   asThem: true,
-  pill: false,
+  button: true,
   fakes: []
 };
-var PILL_LABEL = "FakeDM fake message";
-var ROW_PATH = "modules/chat_input/native/action_buttons/ChatInputRightActions.tsx";
+var BUTTON_PATH = "modules/chat_input/native/action_buttons/ChatInputActionButton.tsx";
+var INPUT_PATH = "modules/chat_input/native/ChatInput.tsx";
 var state = {
   cfg: { ...DEFAULTS },
   storage: null,
-  patched: false
+  actionButton: null
 };
 var seq = 0;
 function find(...props) {
@@ -219,71 +219,103 @@ function clearNow() {
   const removed = clear(chat.id);
   return removed ? "Removed " + removed + " fake(s)." : "No fakes in this chat.";
 }
-function Pill() {
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-    import_react_native.Pressable,
-    {
-      accessibilityRole: "button",
-      accessibilityLabel: PILL_LABEL,
-      onPress: () => {
-        try {
-          fake();
-        } catch {
-        }
-      },
-      style: { height: 28, paddingHorizontal: 10, borderRadius: 14, backgroundColor: "#5865F2", justifyContent: "center" },
-      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "700", fontSize: 12 }, children: "Fake" })
-    },
-    "fakedm-pill"
-  );
+function FakeIcon() {
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { fontSize: 16 }, children: "\u{1F3AD}" });
 }
-var isPill = (node) => {
-  var _a;
-  return ((_a = node == null ? void 0 : node.props) == null ? void 0 : _a.accessibilityLabel) === PILL_LABEL;
-};
-function holdsInput(node) {
-  var _a, _b;
-  if (!node || typeof node !== "object") return false;
-  if (node.type === import_react_native.TextInput || ((_a = node.props) == null ? void 0 : _a.onChangeText)) return true;
-  const kids = (_b = node.props) == null ? void 0 : _b.children;
-  return Array.isArray(kids) ? kids.some(holdsInput) : holdsInput(kids);
-}
-function addPill(el) {
-  if (!(el == null ? void 0 : el.props) || !state.cfg.pill) return el;
-  const kids = Array.isArray(el.props.children) ? el.props.children : el.props.children == null ? [] : [el.props.children];
-  if (kids.some(isPill) || kids.some(holdsInput)) return el;
-  return (0, import_react.cloneElement)(el, { children: [...kids, /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Pill, {})] });
-}
-function installPill(cleanup, logger) {
-  var _a, _b, _c, _d, _e;
-  const after = (_b = Jsx == null ? void 0 : Jsx.afterJSX) != null ? _b : (_a = Jsx == null ? void 0 : Jsx.default) == null ? void 0 : _a.afterJSX;
-  if (typeof after !== "function") return;
-  const attach = (row) => {
-    var _a2;
-    if (state.patched || !row) return;
-    if (typeof row !== "function" && typeof row !== "object") return;
-    try {
-      cleanup(after.call(Jsx, row, (el) => addPill(el)));
-      state.patched = true;
-    } catch (error) {
-      (_a2 = logger == null ? void 0 : logger.error) == null ? void 0 : _a2.call(logger, "[FakeDM] could not hook the chat bar", error);
+function FakeButton() {
+  const Button = state.actionButton;
+  if (!Button) return null;
+  return (0, import_react.createElement)(Button, {
+    accessibilityLabel: "FakeDM",
+    IconComponent: FakeIcon,
+    onPress: () => {
+      try {
+        fake();
+      } catch {
+      }
     }
-  };
-  try {
-    const [mod] = (_d = (_c = PathFinders == null ? void 0 : PathFinders.lookupModuleWithImportedPath) == null ? void 0 : _c.call(PathFinders, ROW_PATH)) != null ? _d : [];
-    attach((_e = mod == null ? void 0 : mod.default) != null ? _e : mod);
-  } catch {
+  });
+}
+var hasExpression = (node) => {
+  var _a;
+  return (0, import_react.isValidElement)(node) && !!((_a = node.props) == null ? void 0 : _a.onPressExpression);
+};
+var hasKey = (node) => (0, import_react.isValidElement)(node) && node.key === "fakedm";
+function isButtonGroup(node) {
+  var _a, _b;
+  if (!(0, import_react.isValidElement)(node)) return false;
+  const kids = (_a = node.props) == null ? void 0 : _a.children;
+  if (hasExpression(kids)) return true;
+  if (!(0, import_react.isValidElement)(kids)) return false;
+  const inner = (_b = kids.props) == null ? void 0 : _b.children;
+  return Array.isArray(inner) ? inner.some(hasExpression) : hasExpression(inner);
+}
+function addButton(node, button) {
+  if (!button || !(0, import_react.isValidElement)(node)) return node;
+  const { children } = node.props;
+  const list = Array.isArray(children) ? children : [children];
+  if (list.some(hasKey)) return node;
+  const at = list.findIndex(isButtonGroup);
+  if (at !== -1) {
+    const next = [...list];
+    next.splice(at, 0, button);
+    return { ...node, props: { ...node.props, children: next } };
   }
-  if (state.patched) return;
+  for (let i = 0; i < list.length; i++) {
+    const child = list[i];
+    const patched = addButton(child, button);
+    if (patched === child) continue;
+    const next = [...list];
+    next[i] = patched;
+    return {
+      ...node,
+      props: { ...node.props, children: Array.isArray(children) ? next : patched }
+    };
+  }
+  return node;
+}
+function patchChatInput(cleanup, logger) {
+  var _a, _b, _c;
+  const finders = PathFinders;
+  const get = finders == null ? void 0 : finders.getModuleWithImportedPath;
+  if (typeof get !== "function") {
+    (_a = logger == null ? void 0 : logger.warn) == null ? void 0 : _a.call(logger, "[FakeDM] this build has no import-path lookup, so no chat button.");
+    return;
+  }
   try {
-    cleanup(
-      (0, import_finders.getModules)(
-        (0, import_filters.anyOf)((0, import_filters.withName)("ChatInputRightActions"), (0, import_filters.withName)("ChatInputActionBar")),
-        attach,
-        { max: 1 }
-      )
-    );
-  } catch {
+    const off = get.call(finders, BUTTON_PATH, (mod) => {
+      var _a2, _b2;
+      state.actionButton = (_b2 = (_a2 = mod == null ? void 0 : mod.default) != null ? _a2 : mod) != null ? _b2 : null;
+    });
+    if (typeof off === "function") cleanup(off);
+  } catch (error) {
+    (_b = logger == null ? void 0 : logger.error) == null ? void 0 : _b.call(logger, "[FakeDM] could not find Discord's chat button component", error);
+  }
+  try {
+    const off = get.call(finders, INPUT_PATH, (mod) => {
+      var _a2, _b2, _c2;
+      const ChatInput = (_a2 = mod == null ? void 0 : mod.default) != null ? _a2 : mod;
+      if (!ChatInput || typeof ChatInput.type !== "function") {
+        (_b2 = logger == null ? void 0 : logger.warn) == null ? void 0 : _b2.call(logger, "[FakeDM] the chat input has no render function to patch.");
+        return;
+      }
+      try {
+        cleanup(
+          (0, import_patcher.after)(ChatInput, "type", (...params) => {
+            var _a3;
+            const rendered = params.find((value) => (0, import_react.isValidElement)(value));
+            const result = (_a3 = rendered != null ? rendered : params[1]) != null ? _a3 : params[0];
+            if (state.cfg.button === false) return result;
+            return addButton(result, (0, import_react.createElement)(FakeButton, { key: "fakedm" }));
+          })
+        );
+      } catch (error) {
+        (_c2 = logger == null ? void 0 : logger.error) == null ? void 0 : _c2.call(logger, "[FakeDM] could not patch the chat input", error);
+      }
+    });
+    if (typeof off === "function") cleanup(off);
+  } catch (error) {
+    (_c = logger == null ? void 0 : logger.error) == null ? void 0 : _c.call(logger, "[FakeDM] could not reach the chat input", error);
   }
 }
 function SettingsComponent({ api } = {}) {
@@ -364,13 +396,13 @@ function SettingsComponent({ api } = {}) {
         accessibilityRole: "button",
         accessibilityLabel: "Fake button in chat bar",
         onPress: () => {
-          set({ pill: !settings.pill });
+          set({ button: settings.button === false });
           setStatus("Reload FakeDM to apply.");
         },
         style: { paddingVertical: 10 },
         children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "600" }, children: [
           "Fake button in chat bar: ",
-          settings.pill ? "on" : "off"
+          settings.button === false ? "off" : "on"
         ] })
       }
     ),
@@ -437,9 +469,8 @@ var index_default = plugin({
       if (!Array.isArray(state.cfg.fakes)) state.cfg.fakes = [];
     } catch {
     }
-    state.patched = false;
     try {
-      installPill(api == null ? void 0 : api.cleanup, api == null ? void 0 : api.logger);
+      patchChatInput(api == null ? void 0 : api.cleanup, api == null ? void 0 : api.logger);
     } catch (error) {
       (_e = (_d = api == null ? void 0 : api.logger) == null ? void 0 : _d.error) == null ? void 0 : _e.call(_d, "[FakeDM] chat bar button skipped", error);
     }
@@ -449,10 +480,7 @@ var index_default = plugin({
       (_g = (_f = api == null ? void 0 : api.logger) == null ? void 0 : _f.error) == null ? void 0 : _g.call(_f, "[FakeDM] settings entry skipped", error);
     }
   },
-  stop() {
-    state.patched = false;
-  },
   SettingsComponent,
-  __engine: { fakeMessage, fakeCall, clear, openChat, addPill }
+  __engine: { fakeMessage, fakeCall, clear, openChat, addButton }
 });
 ; const __plugin = (module.exports && module.exports.default) || module.exports; if (__plugin && typeof __plugin === 'object' && !__plugin.default) { try { __plugin.default = __plugin; } catch (ignored) {} } if (__plugin && typeof __plugin.start === 'function') { const __start = __plugin.start.bind(__plugin); __plugin.start = function (...args) { try { return __start(...args); } catch (error) { try { (args[0] && args[0].logger && args[0].logger.error) ? args[0].logger.error('[plugin] start failed', error) : console.error('[plugin] start failed', error); } catch (ignored) {} } }; } return __plugin; })()
