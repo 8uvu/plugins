@@ -35,7 +35,9 @@ module.exports = __toCommonJS(index_exports);
 var import_finders = (valenced.modules.finders);
 var import_filters = (valenced.modules.finders.filters);
 var import_design = (valenced.discord.design);
+var SettingsModules = __toESM(((function () { const m = () => (valenced.discord && valenced.discord.modules && valenced.discord.modules.settings) || {}; return { get onSettingsModulesLoaded() { return m().onSettingsModulesLoaded }, get registerSettingsSection() { return m().registerSettingsSection }, get registerSettingsItem() { return m().registerSettingsItem } }; })()));
 var JsxRuntime = __toESM(((function () { const rt = () => (valenced.react && (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime)) || {}; return { get beforeJSX() { return rt().beforeJSX }, get afterJSX() { return rt().afterJSX }, get insteadJSX() { return rt().insteadJSX } }; })()));
+var UtilsDiscord = __toESM(((function () { const m = () => (valenced.utils && valenced.utils.discord) || {}; return { get lookupGeneratedIconComponent() { return m().lookupGeneratedIconComponent } }; })()));
 var import_react = ((function () { const R = (valenced.react && valenced.react.React) || {}; return { default: R, ...R }; })());
 var import_react_native = ((function () { return { ...((valenced.react && valenced.react.ReactNative) || {}) }; })());
 var import_jsx_runtime = ((function () { const rt = () => (valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime)) || {}; return { get jsx() { return rt().jsx }, get jsxs() { return rt().jsxs }, get Fragment() { return rt().Fragment } }; })());
@@ -303,15 +305,16 @@ function addPill(el) {
   nextKids[i] = nextRow;
   return { ...el, props: { ...el.props, children: nextKids }, children: nextKids };
 }
-function SettingsComponent({ api }) {
-  var _a, _b;
-  const settings = (_a = api.jsonStorage.use()) != null ? _a : DEFAULTS;
+function SettingsComponent({ api } = {}) {
+  var _a, _b, _c, _d, _e;
+  const store = (_a = api == null ? void 0 : api.jsonStorage) != null ? _a : state.storage;
+  const settings = (_d = (_c = (_b = store == null ? void 0 : store.use) == null ? void 0 : _b.call(store)) != null ? _c : state.cfg) != null ? _d : DEFAULTS;
   const set = (patch) => {
-    var _a2, _b2;
-    return (_b2 = (_a2 = api.jsonStorage.set(patch)).catch) == null ? void 0 : _b2.call(_a2, () => {
+    var _a2, _b2, _c2;
+    return (_c2 = (_b2 = (_a2 = store == null ? void 0 : store.set) == null ? void 0 : _a2.call(store, patch)) == null ? void 0 : _b2.catch) == null ? void 0 : _c2.call(_b2, () => {
     });
   };
-  const D = (_b = import_design.Design) != null ? _b : {};
+  const D = (_e = import_design.Design) != null ? _e : {};
   const [channelId, setChannelId] = (0, import_react.useState)("");
   const label = (text) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff" }, children: text });
   const button = (text, onPress) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityRole: "button", accessibilityLabel: text, onPress, style: { paddingVertical: 8 }, children: label(text) });
@@ -335,6 +338,49 @@ function SettingsComponent({ api }) {
   ] });
   return D.TableRowGroup ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "FakeDM", children: body }) : body;
 }
+function installSettingsEntry(cleanup, logger) {
+  var _a, _b, _c;
+  const settings = SettingsModules;
+  const onLoaded = settings == null ? void 0 : settings.onSettingsModulesLoaded;
+  const registerSection = settings == null ? void 0 : settings.registerSettingsSection;
+  const registerItem = settings == null ? void 0 : settings.registerSettingsItem;
+  if (typeof onLoaded !== "function" || typeof registerSection !== "function" || typeof registerItem !== "function") {
+    (_a = logger == null ? void 0 : logger.warn) == null ? void 0 : _a.call(logger, "[FakeDM] this build has no settings-module API, so the FakeDM settings page is unavailable.");
+    return;
+  }
+  let IconComponent = null;
+  try {
+    const lookup = UtilsDiscord == null ? void 0 : UtilsDiscord.lookupGeneratedIconComponent;
+    if (typeof lookup === "function") IconComponent = (_b = lookup("SettingsIcon")) != null ? _b : null;
+  } catch {
+    IconComponent = null;
+  }
+  try {
+    const off = onLoaded(() => {
+      var _a2, _b2;
+      try {
+        cleanup(registerSection("FAKEDM", { label: "FakeDM", settings: ["FAKEDM_MAIN"] }));
+        cleanup(
+          registerItem("FAKEDM_MAIN", {
+            type: "route",
+            title: () => "FakeDM",
+            IconComponent: IconComponent != null ? IconComponent : (() => null),
+            screen: { route: "FakeDMScreen", getComponent: () => FakeScreen }
+          })
+        );
+        (_a2 = logger == null ? void 0 : logger.log) == null ? void 0 : _a2.call(logger, "[FakeDM] settings entry registered");
+      } catch (error) {
+        (_b2 = logger == null ? void 0 : logger.error) == null ? void 0 : _b2.call(logger, "[FakeDM] could not register its settings entry", error);
+      }
+    });
+    if (typeof off === "function") cleanup(off);
+  } catch (error) {
+    (_c = logger == null ? void 0 : logger.error) == null ? void 0 : _c.call(logger, "[FakeDM] settings registration failed", error);
+  }
+}
+function FakeScreen(props) {
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SettingsComponent, { ...props });
+}
 var index_default = plugin({
   jsonStorage: { load: true, default: DEFAULTS },
   start({ cleanup, jsonStorage, logger }) {
@@ -346,6 +392,7 @@ var index_default = plugin({
       state.installed = false;
     });
     installPill(cleanup, logger);
+    installSettingsEntry(cleanup, logger);
   },
   SettingsComponent,
   __engine: { injectMessage, injectReaction, injectCall, clearFakesInChannel, parseBatchScript }
