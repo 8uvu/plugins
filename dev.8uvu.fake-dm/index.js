@@ -60,8 +60,62 @@ var state = {
   cfg: { ...DEFAULTS },
   storage: null,
   cleanups: [],
-  installed: false
+  installed: false,
+  warnTimer: null
 };
+var ROW_NAMES = ["ChatInputRightActions", "ChatInputActionBar", "ChatInputRightButtons"];
+function installPill(cleanup, logger) {
+  var _a, _b;
+  const hook = resolveAfterJSX();
+  if (!hook) {
+    (_a = logger == null ? void 0 : logger.warn) == null ? void 0 : _a.call(
+      logger,
+      "[FakeDM] this build exposes no afterJSX hook, so the chat-bar Fake pill cannot be installed. Settings and the inject actions still work."
+    );
+    return;
+  }
+  const filter = (0, import_filters.anyOf)(...ROW_NAMES.map((name) => (0, import_filters.withName)(name)));
+  cleanup(
+    (0, import_finders.getModules)(
+      filter,
+      (row) => {
+        var _a2, _b2;
+        if (state.installed) return;
+        if (typeof row !== "function") {
+          (_a2 = logger == null ? void 0 : logger.warn) == null ? void 0 : _a2.call(logger, "[FakeDM] the chat action row module was found but is not a component, so the pill was not installed.");
+          return;
+        }
+        state.installed = true;
+        if (state.warnTimer) {
+          clearTimeout(state.warnTimer);
+          state.warnTimer = null;
+        }
+        cleanup(hook.fn.call(hook.self, row, (el) => addPill(el)));
+        (_b2 = logger == null ? void 0 : logger.log) == null ? void 0 : _b2.call(logger, "[FakeDM] chat-bar pill installed on " + (row.name || "the chat action row"));
+      },
+      { max: 1 }
+    )
+  );
+  if (state.installed) return;
+  const [seen] = (0, import_finders.lookupModule)(filter);
+  if (seen) return;
+  (_b = logger == null ? void 0 : logger.warn) == null ? void 0 : _b.call(logger, "[FakeDM] no chat action row is loaded yet; waiting for one of " + ROW_NAMES.join(", "));
+  state.warnTimer = setTimeout(() => {
+    var _a2;
+    state.warnTimer = null;
+    if (state.installed) return;
+    (_a2 = logger == null ? void 0 : logger.warn) == null ? void 0 : _a2.call(
+      logger,
+      "[FakeDM] chat-bar pill NOT installed: none of " + ROW_NAMES.join(", ") + " appeared. That is why the Fake button is missing. Settings and the inject actions still work."
+    );
+  }, 8e3);
+  cleanup(() => {
+    if (state.warnTimer) {
+      clearTimeout(state.warnTimer);
+      state.warnTimer = null;
+    }
+  });
+}
 function dispatcher() {
   const [mod] = (0, import_finders.lookupModule)((0, import_filters.withProps)("dispatch", "subscribe"));
   return mod != null ? mod : null;
@@ -283,25 +337,15 @@ function SettingsComponent({ api }) {
 }
 var index_default = plugin({
   jsonStorage: { load: true, default: DEFAULTS },
-  start({ cleanup, jsonStorage }) {
+  start({ cleanup, jsonStorage, logger }) {
     var _a;
     state.storage = jsonStorage;
     state.cfg = { ...DEFAULTS, ...(_a = jsonStorage.cache) != null ? _a : {} };
-    const afterJSX = resolveAfterJSX();
-    if (afterJSX) {
-      const names = ["ChatInputRightActions", "ChatInputActionBar", "ChatInputRightButtons"];
-      cleanup(
-        (0, import_finders.getModules)(
-          (0, import_filters.anyOf)(...names.map((n) => (0, import_filters.withName)(n))),
-          (row) => {
-            if (state.installed || typeof row !== "function") return;
-            state.installed = true;
-            cleanup(afterJSX.fn.call(afterJSX.self, row, (el) => addPill(el)));
-          },
-          { max: 1 }
-        )
-      );
-    }
+    state.installed = false;
+    cleanup(() => {
+      state.installed = false;
+    });
+    installPill(cleanup, logger);
   },
   SettingsComponent,
   __engine: { injectMessage, injectReaction, injectCall, clearFakesInChannel, parseBatchScript }
