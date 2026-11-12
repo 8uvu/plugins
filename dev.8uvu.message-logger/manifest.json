@@ -4,7 +4,7 @@
     "name": "MessageLogger",
     "description": "Logs deleted and edited messages, searchable.",
     "author": "cenotaph",
-    "version": "1.8.2",
+    "version": "1.8.3",
     "dependencies": {
         "valenced.api": {
             "version": ">=1 <2"

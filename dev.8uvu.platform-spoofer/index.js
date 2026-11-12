@@ -29,8 +29,8 @@ var import_design = (valenced.discord.design);
 var import_finders = (valenced.modules.finders);
 var import_filters = (valenced.modules.finders.filters);
 var import_patcher = (valenced.patcher);
-var import_react_native = (({ ...valenced.react.ReactNative }));
-var import_jsx_runtime = (({ jsx: (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime).jsx, jsxs: (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime).jsxs, Fragment: (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime).Fragment }));
+var import_react_native = ((function () { return { ...((valenced.react && valenced.react.ReactNative) || {}) }; })());
+var import_jsx_runtime = ((function () { const rt = () => (valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime)) || {}; return { get jsx() { return rt().jsx }, get jsxs() { return rt().jsxs }, get Fragment() { return rt().Fragment } }; })());
 var DEFAULTS = { enabled: false, platform: "desktop" };
 var PLATFORMS = [
   { key: "desktop", label: "Desktop", browser: "Discord Client" },

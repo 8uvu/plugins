@@ -8,13 +8,26 @@
             "description": "Strips an accidental @everyone or @here from your message before it sends.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.0"
+                "latest": "1.0.1"
             },
             "versions": {
                 "1.0.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.mention-guard@1.0.0.zip",
                     "sha256": "598e2c26b4c288a47fdfacf338149fa8fe5b93bdbe9ed3a20cd2361ecfcd2faa",
                     "size": 2362,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.mention-guard@1.0.1.zip",
+                    "sha256": "7e34eabd24d112195b9cb29d9b99092a09cc04aef174129429b2da21c34c48a3",
+                    "size": 2407,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"

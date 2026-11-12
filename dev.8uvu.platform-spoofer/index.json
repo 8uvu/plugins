@@ -8,7 +8,7 @@
             "description": "Spoofs the platform icon next to your name.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.5.1"
+                "latest": "1.5.2"
             },
             "versions": {
                 "1.4.2": {
@@ -41,6 +41,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.5.1.zip",
                     "sha256": "e38e2cb4931320d2be57b9bf6dda157b878bacb3648ecc6fc67fbb9156593e4d",
                     "size": 2440,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.5.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.5.2.zip",
+                    "sha256": "5fbc04c8528297cd29b4e8a1cda046b5fa18e03e2fb8c427f42afcce60bcde75",
+                    "size": 2481,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"

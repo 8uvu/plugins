@@ -8,13 +8,26 @@
             "description": "Decodes a Discord ID into the exact time it was created, plus its type.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.0"
+                "latest": "1.0.1"
             },
             "versions": {
                 "1.0.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snowflake-tools@1.0.0.zip",
                     "sha256": "59a3be3ae7c95c88987eae16224d94f52771bcf03c106dcbc5ea4f6d42063a72",
                     "size": 2351,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snowflake-tools@1.0.1.zip",
+                    "sha256": "4357eec80bc2a6623bb9f9e8478254cca6aaed8bf0062da7ebcb8bcbbbe74ce8",
+                    "size": 2398,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
