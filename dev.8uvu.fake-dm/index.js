@@ -48,6 +48,10 @@ var DEFAULTS = {
   // Off until asked for: with it off the plugin never touches the chat input
   // at all, so the chat bar cannot break and only the settings page runs.
   button: false,
+  // Also off until asked for: adding a row to Discord's own settings list is
+  // what made opening normal Settings crash on 352.6, so the plugin page in
+  // the Valenced plugin list is the entry that is always used.
+  section: false,
   fakes: []
 };
 var BUTTON_PATH = "modules/chat_input/native/action_buttons/ChatInputActionButton.tsx";
@@ -542,10 +546,12 @@ var index_default = plugin({
     } catch (error) {
       (_e = (_d = api == null ? void 0 : api.logger) == null ? void 0 : _d.error) == null ? void 0 : _e.call(_d, "[FakeDM] chat bar button skipped", error);
     }
-    try {
-      installSettingsEntry(api == null ? void 0 : api.cleanup, api == null ? void 0 : api.logger);
-    } catch (error) {
-      (_g = (_f = api == null ? void 0 : api.logger) == null ? void 0 : _f.error) == null ? void 0 : _g.call(_f, "[FakeDM] settings entry skipped", error);
+    if (state.cfg.section === true) {
+      try {
+        installSettingsEntry(api == null ? void 0 : api.cleanup, api == null ? void 0 : api.logger);
+      } catch (error) {
+        (_g = (_f = api == null ? void 0 : api.logger) == null ? void 0 : _f.error) == null ? void 0 : _g.call(_f, "[FakeDM] settings entry skipped", error);
+      }
     }
   },
   SettingsComponent,
