@@ -4,7 +4,7 @@
     "name": "FakeDM",
     "description": "Fake messages, calls and reactions in any chat.",
     "author": "cenotaph",
-    "version": "2.0.8",
+    "version": "2.0.9",
     "dependencies": {
         "valenced.api": {
             "version": ">=1 <2"

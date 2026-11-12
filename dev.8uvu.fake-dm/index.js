@@ -36,6 +36,7 @@ var import_finders = (function () { const __g = () => { try { return (valenced.m
 var import_filters = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders && valenced.modules.finders.filters) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get anyOf() { return __g().anyOf }, get withName() { return __g().withName }, get withProps() { return __g().withProps }, get withoutProps() { return __g().withoutProps }, get withSingleProp() { return __g().withSingleProp }, get withDependencies() { return __g().withDependencies }, get allOf() { return __g().allOf }, get namespaceOnly() { return __g().namespaceOnly }, get createFilterGenerator() { return __g().createFilterGenerator }, get partial() { return __g().partial } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_design = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.design) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Design() { return __g().Design } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var SettingsModules = __toESM((function () { const __g = () => { try { return (valenced.discord && valenced.discord.modules && valenced.discord.modules.settings) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get onSettingsModulesLoaded() { return __g().onSettingsModulesLoaded }, get registerSettingsSection() { return __g().registerSettingsSection }, get registerSettingsItem() { return __g().registerSettingsItem } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
+var PathFinders = __toESM((function () { const __g = () => { try { return (valenced.discord && valenced.discord.utils && valenced.discord.utils.modules && valenced.discord.utils.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get getModuleWithImportedPath() { return __g().getModuleWithImportedPath }, get getModule() { return __g().getModule }, get getModulesWithImportedPath() { return __g().getModulesWithImportedPath }, get findModuleWithImportedPath() { return __g().findModuleWithImportedPath } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var JsxRuntime = __toESM((function () { const __g = () => { try { return (valenced.react && (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime)) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get beforeJSX() { return __g().beforeJSX }, get afterJSX() { return __g().afterJSX }, get insteadJSX() { return __g().insteadJSX } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get useState() { return __g().useState }, get createElement() { return __g().createElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Text() { return __g().Text }, get Pressable() { return __g().Pressable }, get View() { return __g().View }, get Switch() { return __g().Switch }, get TextInput() { return __g().TextInput }, get ScrollView() { return __g().ScrollView }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
@@ -100,7 +101,8 @@ function installPill(cleanup, logger) {
   if (state.installed) return;
   const [seen] = (0, import_finders.lookupModule)(filter);
   if (seen) return;
-  (_b = logger == null ? void 0 : logger.warn) == null ? void 0 : _b.call(logger, "[FakeDM] no chat action row is loaded yet; waiting for one of " + ROW_NAMES.join(", "));
+  if (!logger) return;
+  (_b = logger.warn) == null ? void 0 : _b.call(logger, "[FakeDM] no chat action row is loaded yet; waiting for one of " + ROW_NAMES.join(", "));
   state.warnTimer = setTimeout(() => {
     var _a2;
     state.warnTimer = null;
@@ -289,20 +291,24 @@ function hasActionRow(node) {
     return ((_a2 = k == null ? void 0 : k.props) == null ? void 0 : _a2.accessibilityLabel) !== void 0;
   });
 }
+var toArray = (kids) => Array.isArray(kids) ? kids : kids == null ? [] : [kids];
+function withChild(el, kids) {
+  return { ...el, props: { ...el.props, children: kids }, children: kids };
+}
 function addPill(el) {
   var _a, _b, _c;
   const enabled = (_c = (_b = (_a = state.storage) == null ? void 0 : _a.cache) == null ? void 0 : _b.chatButton) != null ? _c : state.cfg.chatButton;
   if (!enabled || !(el == null ? void 0 : el.props) || hasPill(el)) return el;
-  const kids = el.props.children;
-  if (!Array.isArray(kids)) return el;
+  const kids = toArray(el.props.children);
   const i = kids.findIndex((k) => hasActionRow(k));
-  if (i < 0) return el;
-  const row = kids[i];
-  const rowKids = [...row.props.children, chatButton()];
-  const nextRow = { ...row, props: { ...row.props, children: rowKids }, children: rowKids };
-  const nextKids = kids.slice();
-  nextKids[i] = nextRow;
-  return { ...el, props: { ...el.props, children: nextKids }, children: nextKids };
+  if (i >= 0) {
+    const row = kids[i];
+    const nextKids = kids.slice();
+    nextKids[i] = withChild(row, [...toArray(row.props.children), chatButton()]);
+    return withChild(el, nextKids);
+  }
+  if (!kids.length || holdsInput(el)) return el;
+  return withChild(el, [...kids, chatButton()]);
 }
 function SettingsComponent({ api } = {}) {
   var _a, _b, _c, _d, _e;
@@ -336,6 +342,33 @@ function SettingsComponent({ api } = {}) {
     button("Inject conversation", () => quickFake(channelId))
   ] });
   return D.TableRowGroup ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "FakeDM", children: body }) : body;
+}
+var ROW_IMPORT_PATH = "modules/chat_input/native/action_buttons/ChatInputRightActions.tsx";
+function installPathPill(cleanup, logger) {
+  var _a, _b;
+  const finders = PathFinders;
+  const find = (_a = finders == null ? void 0 : finders.getModuleWithImportedPath) != null ? _a : finders == null ? void 0 : finders.getModule;
+  if (typeof find !== "function") return;
+  const hook = resolveAfterJSX();
+  if (!hook) return;
+  try {
+    cleanup(
+      find.call(finders, ROW_IMPORT_PATH, (mod) => {
+        var _a2, _b2;
+        const row = (_a2 = mod == null ? void 0 : mod.default) != null ? _a2 : mod;
+        if (!row || typeof row !== "function" && typeof row !== "object") return;
+        if (state.warnTimer) {
+          clearTimeout(state.warnTimer);
+          state.warnTimer = null;
+        }
+        state.installed = true;
+        cleanup(hook.fn.call(hook.self, row, (el) => addPill(el)));
+        (_b2 = logger == null ? void 0 : logger.log) == null ? void 0 : _b2.call(logger, "[FakeDM] chat-bar pill installed via " + ROW_IMPORT_PATH);
+      })
+    );
+  } catch (error) {
+    (_b = logger == null ? void 0 : logger.error) == null ? void 0 : _b.call(logger, "[FakeDM] path-based row lookup failed", error);
+  }
 }
 function installSettingsEntry(cleanup, logger) {
   var _a, _b;
@@ -389,7 +422,7 @@ var index_default = plugin({
   // plugin bug into a client crash, so every step is sealed on its own and
   // a failure is reported to the log instead.
   start({ cleanup, jsonStorage, logger }) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     try {
       state.storage = jsonStorage;
       state.cfg = { ...DEFAULTS, ...(_a = jsonStorage == null ? void 0 : jsonStorage.cache) != null ? _a : {} };
@@ -406,9 +439,14 @@ var index_default = plugin({
       (_c = logger == null ? void 0 : logger.error) == null ? void 0 : _c.call(logger, "[FakeDM] chat-bar pill setup failed", error);
     }
     try {
+      installPathPill(cleanup, logger);
+    } catch (error) {
+      (_d = logger == null ? void 0 : logger.error) == null ? void 0 : _d.call(logger, "[FakeDM] path-based pill setup failed", error);
+    }
+    try {
       installSettingsEntry(cleanup, logger);
     } catch (error) {
-      (_d = logger == null ? void 0 : logger.error) == null ? void 0 : _d.call(logger, "[FakeDM] settings entry setup failed", error);
+      (_e = logger == null ? void 0 : logger.error) == null ? void 0 : _e.call(logger, "[FakeDM] settings entry setup failed", error);
     }
   },
   SettingsComponent,
