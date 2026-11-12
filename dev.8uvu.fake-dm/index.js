@@ -66,14 +66,11 @@ var state = {
   warnTimer: null
 };
 var ROW_NAMES = ["ChatInputRightActions", "ChatInputActionBar", "ChatInputRightButtons"];
-function installPill(cleanup, logger) {
-  var _a, _b;
+function installPill(cleanup, logger, report) {
+  var _a;
   const hook = resolveAfterJSX();
   if (!hook) {
-    (_a = logger == null ? void 0 : logger.warn) == null ? void 0 : _a.call(
-      logger,
-      "[FakeDM] this build exposes no afterJSX hook, so the chat-bar Fake pill cannot be installed. Settings and the inject actions still work."
-    );
+    report == null ? void 0 : report("FakeDM could not find the JSX hook this build uses, so the chat-bar Fake button is unavailable. The FakeDM settings page still works.");
     return;
   }
   const filter = (0, import_filters.anyOf)(...ROW_NAMES.map((name) => (0, import_filters.withName)(name)));
@@ -81,7 +78,7 @@ function installPill(cleanup, logger) {
     (0, import_finders.getModules)(
       filter,
       (row) => {
-        var _a2, _b2;
+        var _a2, _b;
         if (state.installed) return;
         if (typeof row !== "function") {
           (_a2 = logger == null ? void 0 : logger.warn) == null ? void 0 : _a2.call(logger, "[FakeDM] the chat action row module was found but is not a component, so the pill was not installed.");
@@ -93,7 +90,7 @@ function installPill(cleanup, logger) {
           state.warnTimer = null;
         }
         cleanup(hook.fn.call(hook.self, row, (el) => addPill(el)));
-        (_b2 = logger == null ? void 0 : logger.log) == null ? void 0 : _b2.call(logger, "[FakeDM] chat-bar pill installed on " + (row.name || "the chat action row"));
+        (_b = logger == null ? void 0 : logger.log) == null ? void 0 : _b.call(logger, "[FakeDM] chat-bar pill installed on " + (row.name || "the chat action row"));
       },
       { max: 1 }
     )
@@ -101,15 +98,12 @@ function installPill(cleanup, logger) {
   if (state.installed) return;
   const [seen] = (0, import_finders.lookupModule)(filter);
   if (seen) return;
-  if (!logger) return;
-  (_b = logger.warn) == null ? void 0 : _b.call(logger, "[FakeDM] no chat action row is loaded yet; waiting for one of " + ROW_NAMES.join(", "));
+  (_a = logger == null ? void 0 : logger.warn) == null ? void 0 : _a.call(logger, "[FakeDM] no chat action row is loaded yet; waiting for one of " + ROW_NAMES.join(", "));
   state.warnTimer = setTimeout(() => {
-    var _a2;
     state.warnTimer = null;
     if (state.installed) return;
-    (_a2 = logger == null ? void 0 : logger.warn) == null ? void 0 : _a2.call(
-      logger,
-      "[FakeDM] chat-bar pill NOT installed: none of " + ROW_NAMES.join(", ") + " appeared. That is why the Fake button is missing. Settings and the inject actions still work."
+    report == null ? void 0 : report(
+      "FakeDM could not find the chat action row, so the Fake button is missing from the chat bar. Open FakeDM in settings to use the same actions."
     );
   }, 8e3);
   cleanup(() => {
@@ -344,30 +338,42 @@ function SettingsComponent({ api } = {}) {
   return D.TableRowGroup ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "FakeDM", children: body }) : body;
 }
 var ROW_IMPORT_PATH = "modules/chat_input/native/action_buttons/ChatInputRightActions.tsx";
+function attachRow(cleanup, row, hook, log) {
+  if (!row || typeof row !== "function" && typeof row !== "object") return false;
+  state.installed = true;
+  if (state.warnTimer) {
+    clearTimeout(state.warnTimer);
+    state.warnTimer = null;
+  }
+  cleanup(hook.fn.call(hook.self, row, (el) => addPill(el)));
+  log == null ? void 0 : log("[FakeDM] chat-bar pill installed via " + ROW_IMPORT_PATH);
+  return true;
+}
 function installPathPill(cleanup, logger) {
-  var _a, _b;
+  var _a, _b, _c, _d;
   const finders = PathFinders;
-  const find = (_a = finders == null ? void 0 : finders.getModuleWithImportedPath) != null ? _a : finders == null ? void 0 : finders.getModule;
-  if (typeof find !== "function") return;
   const hook = resolveAfterJSX();
   if (!hook) return;
+  const log = (m) => {
+    var _a2;
+    return (_a2 = logger == null ? void 0 : logger.log) == null ? void 0 : _a2.call(logger, m);
+  };
   try {
+    const sync = finders == null ? void 0 : finders.lookupModuleWithImportedPath;
+    if (typeof sync === "function") {
+      const [mod] = (_a = sync.call(finders, ROW_IMPORT_PATH)) != null ? _a : [];
+      if (attachRow(cleanup, (_b = mod == null ? void 0 : mod.default) != null ? _b : mod, hook, log)) return;
+    }
+    const find = (_c = finders == null ? void 0 : finders.getModuleWithImportedPath) != null ? _c : finders == null ? void 0 : finders.getModule;
+    if (typeof find !== "function") return;
     cleanup(
       find.call(finders, ROW_IMPORT_PATH, (mod) => {
-        var _a2, _b2;
-        const row = (_a2 = mod == null ? void 0 : mod.default) != null ? _a2 : mod;
-        if (!row || typeof row !== "function" && typeof row !== "object") return;
-        if (state.warnTimer) {
-          clearTimeout(state.warnTimer);
-          state.warnTimer = null;
-        }
-        state.installed = true;
-        cleanup(hook.fn.call(hook.self, row, (el) => addPill(el)));
-        (_b2 = logger == null ? void 0 : logger.log) == null ? void 0 : _b2.call(logger, "[FakeDM] chat-bar pill installed via " + ROW_IMPORT_PATH);
+        var _a2;
+        attachRow(cleanup, (_a2 = mod == null ? void 0 : mod.default) != null ? _a2 : mod, hook, log);
       })
     );
   } catch (error) {
-    (_b = logger == null ? void 0 : logger.error) == null ? void 0 : _b.call(logger, "[FakeDM] path-based row lookup failed", error);
+    (_d = logger == null ? void 0 : logger.error) == null ? void 0 : _d.call(logger, "[FakeDM] path-based row lookup failed", error);
   }
 }
 function installSettingsEntry(cleanup, logger) {
@@ -421,32 +427,48 @@ var index_default = plugin({
   // Nothing here may throw: an exception escaping start is what turns a
   // plugin bug into a client crash, so every step is sealed on its own and
   // a failure is reported to the log instead.
-  start({ cleanup, jsonStorage, logger }) {
-    var _a, _b, _c, _d, _e;
+  start({ cleanup, jsonStorage, logger, plugin: plugin2 }) {
+    var _a, _b, _c, _d, _e, _f;
+    const report = (message) => {
+      var _a2, _b2, _c2;
+      try {
+        (_a2 = plugin2 == null ? void 0 : plugin2.reportError) == null ? void 0 : _a2.call(plugin2, message);
+      } catch (error) {
+        (_b2 = logger == null ? void 0 : logger.error) == null ? void 0 : _b2.call(logger, "[FakeDM]", error);
+      }
+      (_c2 = logger == null ? void 0 : logger.warn) == null ? void 0 : _c2.call(logger, "[FakeDM] " + message);
+    };
+    if ((plugin2 == null ? void 0 : plugin2.startedLate) && typeof plugin2.requireReload === "function") {
+      try {
+        plugin2.requireReload();
+      } catch (error) {
+        (_a = logger == null ? void 0 : logger.error) == null ? void 0 : _a.call(logger, "[FakeDM] could not request a reload", error);
+      }
+    }
     try {
       state.storage = jsonStorage;
-      state.cfg = { ...DEFAULTS, ...(_a = jsonStorage == null ? void 0 : jsonStorage.cache) != null ? _a : {} };
+      state.cfg = { ...DEFAULTS, ...(_b = jsonStorage == null ? void 0 : jsonStorage.cache) != null ? _b : {} };
       state.installed = false;
       cleanup(() => {
         state.installed = false;
       });
     } catch (error) {
-      (_b = logger == null ? void 0 : logger.error) == null ? void 0 : _b.call(logger, "[FakeDM] storage setup failed", error);
+      (_c = logger == null ? void 0 : logger.error) == null ? void 0 : _c.call(logger, "[FakeDM] storage setup failed", error);
     }
     try {
-      installPill(cleanup, logger);
+      installPill(cleanup, logger, report);
     } catch (error) {
-      (_c = logger == null ? void 0 : logger.error) == null ? void 0 : _c.call(logger, "[FakeDM] chat-bar pill setup failed", error);
+      (_d = logger == null ? void 0 : logger.error) == null ? void 0 : _d.call(logger, "[FakeDM] chat-bar pill setup failed", error);
     }
     try {
       installPathPill(cleanup, logger);
     } catch (error) {
-      (_d = logger == null ? void 0 : logger.error) == null ? void 0 : _d.call(logger, "[FakeDM] path-based pill setup failed", error);
+      (_e = logger == null ? void 0 : logger.error) == null ? void 0 : _e.call(logger, "[FakeDM] path-based pill setup failed", error);
     }
     try {
       installSettingsEntry(cleanup, logger);
     } catch (error) {
-      (_e = logger == null ? void 0 : logger.error) == null ? void 0 : _e.call(logger, "[FakeDM] settings entry setup failed", error);
+      (_f = logger == null ? void 0 : logger.error) == null ? void 0 : _f.call(logger, "[FakeDM] settings entry setup failed", error);
     }
   },
   SettingsComponent,
