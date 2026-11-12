@@ -8,7 +8,7 @@
             "description": "Strips tracking parameters from links.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.1.0"
+                "latest": "1.1.1"
             },
             "versions": {
                 "1.0.4": {
@@ -28,6 +28,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.clean-urls@1.1.0.zip",
                     "sha256": "dab26f51d7dfc75a5f364094e53ba8ce8062a021b4877f90ebbc484c1efa1eef",
                     "size": 3026,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.1.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.clean-urls@1.1.1.zip",
+                    "sha256": "aa02e7e8c9afd1dcbb6e31ec6d276f38681b7f31b952e2272c6db6fdeb25d9d5",
+                    "size": 3080,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
@@ -80,7 +93,7 @@
             "description": "Shows when friends were last online.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.6.0"
+                "latest": "1.6.1"
             },
             "versions": {
                 "1.5.3": {
@@ -100,6 +113,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.6.0.zip",
                     "sha256": "4acea81e5958293916dd4eab51d156d89b195846fe99ce6ae1ee8af0ccf9e5dd",
                     "size": 4196,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.6.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.6.1.zip",
+                    "sha256": "9f56124e59f5363e6961cf48329f5b9736e040bf3e8993b7f14a3f85a708267f",
+                    "size": 4253,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
@@ -162,7 +188,7 @@
             "description": "Spoofs the platform icon next to your name.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.5.0"
+                "latest": "1.5.1"
             },
             "versions": {
                 "1.4.2": {
@@ -182,6 +208,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.5.0.zip",
                     "sha256": "a68a418f87f6b3d5a1fe778825ea47f649bf30b0da6418e5f9a81609fd70fe08",
                     "size": 2388,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.5.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.5.1.zip",
+                    "sha256": "e38e2cb4931320d2be57b9bf6dda157b878bacb3648ecc6fc67fbb9156593e4d",
+                    "size": 2440,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
@@ -267,7 +306,7 @@
             "description": "Turn a short trigger into a full message when you send it.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.3"
+                "latest": "1.0.4"
             },
             "versions": {
                 "1.0.0": {
@@ -321,6 +360,19 @@
                             "version": "*"
                         }
                     }
+                },
+                "1.0.4": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snippets@1.0.4.zip",
+                    "sha256": "a5628dd08de4ac85157011d1856e1e45fe0ba8fcbc837286110bb53bf9023a8b",
+                    "size": 3200,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
                 }
             }
         },
@@ -329,7 +381,7 @@
             "description": "Stops your typing indicator from reaching other people.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.1.0"
+                "latest": "1.1.1"
             },
             "versions": {
                 "1.0.0": {
@@ -357,6 +409,19 @@
                             "version": "*"
                         }
                     }
+                },
+                "1.1.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-guard@1.1.1.zip",
+                    "sha256": "a8837554f981dcc351d313f6336902b41c286830558fdcd723836d59e7040c6d",
+                    "size": 2054,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
                 }
             }
         },
@@ -365,13 +430,26 @@
             "description": "Tidies what you send: trailing spaces, stacked blank lines, stray markdown.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.0"
+                "latest": "1.0.1"
             },
             "versions": {
                 "1.0.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.send-polish@1.0.0.zip",
                     "sha256": "d201f4c9d0a3d83def09678c6f86a3b7f2b62bc14d28487ca1fb6efd434d5651",
                     "size": 2617,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.send-polish@1.0.1.zip",
+                    "sha256": "e9aef3148349c488829ee2a618150442bfe3fa8a020051338625a39e6a683aa4",
+                    "size": 2671,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
@@ -388,7 +466,7 @@
             "description": "Remembers who started typing, in case the indicator vanished before you looked.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.1"
+                "latest": "1.0.2"
             },
             "versions": {
                 "1.0.0": {
@@ -416,6 +494,19 @@
                             "version": "*"
                         }
                     }
+                },
+                "1.0.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-watch@1.0.2.zip",
+                    "sha256": "73183c6da44ac683775d9027b94418f24bcc0e31660f1dd36bca5054241bcc99",
+                    "size": 2742,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
                 }
             }
         },
@@ -424,13 +515,26 @@
             "description": "Keeps you in your voice channel.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.0"
+                "latest": "1.0.1"
             },
             "versions": {
                 "1.0.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.dont-control-me@1.0.0.zip",
                     "sha256": "aa81de433bc992df20babb0106bff73fada1ae910c07ae4f4518c5773a3ab496",
                     "size": 3143,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.dont-control-me@1.0.1.zip",
+                    "sha256": "9d72fd3bac13f2c49c665a76ec75ab99407feed1810c655b716a1f85284f4a7b",
+                    "size": 3201,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
@@ -447,13 +551,26 @@
             "description": "Catches pings deleted before you see them.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.0"
+                "latest": "1.0.1"
             },
             "versions": {
                 "1.0.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.ghost-ping-sniper@1.0.0.zip",
                     "sha256": "eaaad80426f917eeef87cd4de174a10f26df09577bd6c3d2715d870e2e309ceb",
                     "size": 3387,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.ghost-ping-sniper@1.0.1.zip",
+                    "sha256": "06c1725141acd1b2618867f99099595e0b9784a0b27b7fdaa0010e342f3892a1",
+                    "size": 3446,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
@@ -470,7 +587,7 @@
             "description": "Logs deleted and edited messages, searchable.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.8.1"
+                "latest": "1.8.2"
             },
             "versions": {
                 "1.8.0": {
@@ -498,6 +615,19 @@
                             "version": "*"
                         }
                     }
+                },
+                "1.8.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.8.2.zip",
+                    "sha256": "a90d91d171dcef06b901b151b289f2b8c12c6ddb7081b87773af74e30bb7f7b6",
+                    "size": 3633,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
                 }
             }
         },
@@ -506,13 +636,26 @@
             "description": "Copies a server's roles and channels into another.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.0"
+                "latest": "1.0.1"
             },
             "versions": {
                 "1.0.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.server-cloner@1.0.0.zip",
                     "sha256": "ea55e4867ea93c0a72bf8853dd5ca6bf0375350c52335791804d01c64f1b5f9e",
                     "size": 4273,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.server-cloner@1.0.1.zip",
+                    "sha256": "ee20b1015eb69472c16edd6f1fe0ee8ad244c23c55c5f764f7d5674b363ba451",
+                    "size": 4329,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
@@ -529,13 +672,26 @@
             "description": "Counts how often you start typing in each channel today. Stays on this device.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.0"
+                "latest": "1.0.1"
             },
             "versions": {
                 "1.0.0": {
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-tally@1.0.0.zip",
                     "sha256": "bdb2a1f86fafa2d580e3d95f5ebb8c92ecbc4085958587a0c68089d14b108694",
                     "size": 2634,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-tally@1.0.1.zip",
+                    "sha256": "a48581d9eeebbf435c522eccbf5cf20cad5b1185668a7c706790db3a68cd540e",
+                    "size": 2695,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"

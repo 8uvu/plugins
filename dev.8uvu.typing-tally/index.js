@@ -123,4 +123,4 @@ var index_default = plugin({
     ] });
   }
 });
-; return (module.exports && module.exports.default) || module.exports; })()
+; const __plugin = (module.exports && module.exports.default) || module.exports; if (__plugin && typeof __plugin === 'object' && !__plugin.default) { try { __plugin.default = __plugin; } catch (ignored) {} } return __plugin; })()

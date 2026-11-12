@@ -166,4 +166,4 @@ var index_default = plugin({
     return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.ScrollView, { children: body });
   }
 });
-; return (module.exports && module.exports.default) || module.exports; })()
+; const __plugin = (module.exports && module.exports.default) || module.exports; if (__plugin && typeof __plugin === 'object' && !__plugin.default) { try { __plugin.default = __plugin; } catch (ignored) {} } return __plugin; })()

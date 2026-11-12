@@ -4,7 +4,7 @@
     "name": "TypingTally",
     "description": "Counts how often you start typing in each channel today. Stays on this device.",
     "author": "cenotaph",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "dependencies": {
         "valenced.api": {
             "version": ">=1 <2"

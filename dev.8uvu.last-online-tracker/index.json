@@ -8,7 +8,7 @@
             "description": "Shows when friends were last online.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.6.0"
+                "latest": "1.6.1"
             },
             "versions": {
                 "1.5.3": {
@@ -28,6 +28,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.6.0.zip",
                     "sha256": "4acea81e5958293916dd4eab51d156d89b195846fe99ce6ae1ee8af0ccf9e5dd",
                     "size": 4196,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.6.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.6.1.zip",
+                    "sha256": "9f56124e59f5363e6961cf48329f5b9736e040bf3e8993b7f14a3f85a708267f",
+                    "size": 4253,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"

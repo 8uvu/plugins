@@ -4,7 +4,7 @@
     "name": "LastOnlineTracker",
     "description": "Shows when friends were last online.",
     "author": "cenotaph",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "dependencies": {
         "valenced.api": {
             "version": ">=1 <2"
