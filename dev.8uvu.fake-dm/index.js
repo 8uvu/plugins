@@ -40,8 +40,8 @@ var PathFinders = __toESM((function () { const __g = () => { try { return (valen
 var Metro = __toESM((function () { const __g = () => { try { return (valenced.modules && valenced.modules.metro) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get onModuleInitialized() { return __g().onModuleInitialized }, get onAnyModuleInitialized() { return __g().onAnyModuleInitialized }, get onModuleFirstRequired() { return __g().onModuleFirstRequired }, get onAnyModuleFirstRequired() { return __g().onAnyModuleFirstRequired } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var import_patcher = (function () { const __g = () => { try { return (valenced.patcher) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get after() { return __g().after }, get before() { return __g().before }, get instead() { return __g().instead } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get createElement() { return __g().createElement }, get isValidElement() { return __g().isValidElement }, get useState() { return __g().useState }, get cloneElement() { return __g().cloneElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Text() { return __g().Text }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get TextInput() { return __g().TextInput }, get View() { return __g().View }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsx() { return __g().jsx }, get jsxs() { return __g().jsxs }, get jsxDEV() { return __g().jsxDEV }, get Fragment() { return __g().Fragment } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Text() { return __g().Text }, get View() { return __g().View }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get TextInput() { return __g().TextInput }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsx() { return __g().jsx }, get jsxs() { return __g().jsxs }, get Fragment() { return __g().Fragment }, get jsxDEV() { return __g().jsxDEV } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULTS = {
   text: "hello",
   // Who the next fake is from. Empty means "the other person in this chat".
@@ -323,6 +323,15 @@ function addButton(node, button) {
   const { children } = node.props;
   const list = Array.isArray(children) ? children : [children];
   if (list.some(hasKey)) return node;
+  let last = -1;
+  list.forEach((child, index) => {
+    if (hasExpression(child)) last = index;
+  });
+  if (last !== -1) {
+    const next = [...list];
+    next.splice(last + 1, 0, button);
+    return { ...node, props: { ...node.props, children: next } };
+  }
   const at = list.findIndex(isButtonGroup);
   if (at !== -1) {
     const next = [...list];
@@ -434,7 +443,180 @@ function patchChatInput(cleanup, logger) {
   }, 1500);
   cleanup(() => clearInterval(timer));
 }
-function SettingsComponent({ api } = {}) {
+function FancyPanel({ api } = {}) {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+  const [, bump] = (0, import_react.useState)(0);
+  const [status, setStatus] = (0, import_react.useState)("");
+  const settings = (_a = state.cfg) != null ? _a : DEFAULTS;
+  const store = (_b = api == null ? void 0 : api.jsonStorage) != null ? _b : state.storage;
+  const D = (_c = import_design.Design) != null ? _c : {};
+  const Row = D.TableRow;
+  const Group = D.TableRowGroup;
+  const SwitchRow = D.TableSwitchRow;
+  const Radio = D.FormRadio;
+  const set = (patch) => {
+    var _a2, _b2, _c2;
+    state.cfg = { ...state.cfg, ...patch };
+    try {
+      void ((_c2 = (_b2 = (_a2 = store == null ? void 0 : store.set) == null ? void 0 : _a2.call(store, patch)) == null ? void 0 : _b2.catch) == null ? void 0 : _c2.call(_b2, () => {
+      }));
+    } catch {
+    }
+    bump((n) => n + 1);
+  };
+  const run = (fn) => {
+    var _a2;
+    try {
+      setStatus(fn());
+    } catch (error) {
+      setStatus("Failed: " + ((_a2 = error == null ? void 0 : error.message) != null ? _a2 : "unknown error"));
+    }
+  };
+  let chat = null;
+  try {
+    chat = openChat();
+  } catch {
+  }
+  const people = [];
+  for (const user of (_d = chat == null ? void 0 : chat.others) != null ? _d : []) {
+    if (user == null ? void 0 : user.id) people.push({ id: String(user.id), name: user.globalName || user.username || String(user.id) });
+  }
+  const mine = (() => {
+    try {
+      return me();
+    } catch {
+      return null;
+    }
+  })();
+  if (mine == null ? void 0 : mine.id) people.push({ id: String(mine.id), name: "You" });
+  const fallback = settings.asThem ? (_e = people[0]) == null ? void 0 : _e.id : String((_h = (_g = mine == null ? void 0 : mine.id) != null ? _g : (_f = people[0]) == null ? void 0 : _f.id) != null ? _h : "");
+  const chosen = settings.senderId || fallback || "";
+  const senderName = (_j = (_i = people.find((p) => p.id === chosen)) == null ? void 0 : _i.name) != null ? _j : "nobody";
+  const on = settings.button !== false;
+  const white = "#ffffff";
+  const muted = "#b5bac1";
+  const blue = "#5865F2";
+  const heading = (title) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    import_react_native.Text,
+    {
+      style: {
+        color: muted,
+        fontSize: 13,
+        fontWeight: "700",
+        letterSpacing: 0.4,
+        marginTop: 18,
+        marginBottom: 8,
+        textTransform: "uppercase"
+      },
+      children: title
+    }
+  );
+  const box = (children) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children });
+  const button = (label, onPress, primary = false) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    import_react_native.Pressable,
+    {
+      accessibilityRole: "button",
+      accessibilityLabel: label,
+      onPress: () => {
+        try {
+          onPress();
+        } catch {
+        }
+      },
+      style: {
+        backgroundColor: primary ? blue : "#2b2d31",
+        borderRadius: 10,
+        paddingVertical: 12,
+        alignItems: "center"
+      },
+      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: white, fontWeight: "700" }, children: label })
+    }
+  );
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { contentContainerStyle: { padding: 16, paddingBottom: 64 }, children: [
+    heading("Chat"),
+    box(
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: white }, children: chat ? chat.label : "Open a DM or group DM first, then come back here." })
+    ),
+    heading("Send as"),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Group, { children: people.length ? people.map((person) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      Row,
+      {
+        label: person.name,
+        subLabel: chosen === person.id ? "Sending as them" : "Tap to send as them",
+        onPress: () => set({ senderId: person.id }),
+        trailing: Radio ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Radio, { selected: chosen === person.id }) : void 0
+      },
+      person.id
+    )) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Nobody here yet", subLabel: "Open a chat first" }) }),
+    heading("Message"),
+    box(
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          import_react_native.TextInput,
+          {
+            value: settings.text,
+            onChangeText: (value) => set({ text: value }),
+            placeholder: "Message text",
+            placeholderTextColor: "#888",
+            multiline: true,
+            style: { color: white, minHeight: 44, padding: 6 }
+          }
+        ),
+        button("Send as " + senderName, () => run(fake), true)
+      ] })
+    ),
+    heading("Quick actions"),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Group, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Fake call", subLabel: "A 90 second call in this chat", onPress: () => run(fakeCallNow) }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Missed call", subLabel: "A call nobody picked up", onPress: () => run(fakeMissedNow) }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Clear fakes", subLabel: "Remove every fake in this chat", onPress: () => run(clearNow) })
+    ] }),
+    heading("Batch"),
+    box(
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: muted }, children: 'One message per line. "Name: text" picks who says it.' }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          import_react_native.TextInput,
+          {
+            value: settings.batch,
+            onChangeText: (value) => set({ batch: value }),
+            placeholder: "Alice: hey\nBob: hi there\nsure",
+            placeholderTextColor: "#888",
+            multiline: true,
+            style: { color: white, minHeight: 110, padding: 6, textAlignVertical: "top" }
+          }
+        ),
+        button("Send batch", () => run(fakeBatch))
+      ] })
+    ),
+    heading("Chat bar"),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Group, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      SwitchRow,
+      {
+        label: "Fake button in chat bar",
+        subLabel: "Tap it to send your message. Now: " + (on ? state.actionButton ? "on" : "on (not found yet)" : "off"),
+        value: on,
+        onValueChange: (value) => {
+          set({ button: value });
+          setStatus("Reload FakeDM to apply.");
+        }
+      }
+    ) }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: muted, marginTop: 12 }, children: status })
+  ] });
+}
+function SettingsComponent(props = {}) {
+  var _a;
+  const D = (_a = import_design.Design) != null ? _a : {};
+  if (D.TableRow && D.TableRowGroup && D.TableSwitchRow) {
+    try {
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FancyPanel, { ...props });
+    } catch {
+    }
+  }
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlainPanel, { ...props });
+}
+function PlainPanel({ api } = {}) {
   var _a, _b, _c, _d, _e, _f, _g, _h, _i;
   const [, bump] = (0, import_react.useState)(0);
   const [status, setStatus] = (0, import_react.useState)("");
