@@ -8,7 +8,7 @@
             "description": "Fake messages and calls in the chat you have open. Drawn locally, never sent.",
             "author": "cenotaph",
             "channels": {
-                "latest": "3.3.0"
+                "latest": "3.4.0"
             },
             "versions": {
                 "2.0.0": {
@@ -184,6 +184,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@3.3.0.zip",
                     "sha256": "fe648cca04adfa5b77fedd1e664830fe11121abd8ebfbdfb48e1895295578cf9",
                     "size": 7109,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "3.4.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@3.4.0.zip",
+                    "sha256": "1c76177fdf86258fd56e223470f6c272d4fd6e04f551950ca970e4459aa4f476",
+                    "size": 7398,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
