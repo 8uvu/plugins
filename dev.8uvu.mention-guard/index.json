@@ -1,0 +1,30 @@
+{
+    "format": 1,
+    "name": "Mention Guard",
+    "description": "Strips an accidental @everyone or @here from your message before it sends.",
+    "plugins": {
+        "dev.8uvu.mention-guard": {
+            "name": "Mention Guard",
+            "description": "Strips an accidental @everyone or @here from your message before it sends.",
+            "author": "cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.mention-guard@1.0.0.zip",
+                    "sha256": "598e2c26b4c288a47fdfacf338149fa8fe5b93bdbe9ed3a20cd2361ecfcd2faa",
+                    "size": 2362,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

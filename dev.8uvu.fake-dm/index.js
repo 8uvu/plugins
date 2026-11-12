@@ -1,10 +1,8 @@
-(() => {
-    try {
-        const module = { exports: {} };
-        const exports = module.exports;
-        var __defProp = Object.defineProperty;
+(() => { const module = { exports: {} }; const exports = module.exports; var __create = Object.create;
+var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -18,2034 +16,294 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // plugins/dev.8uvu.fake-dm/js/index.tsx
 var index_exports = {};
 __export(index_exports, {
-  SYSTEM_TYPES: () => SYSTEM_TYPES,
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
-var PLUGIN_VERSION = "2.0.0";
-var DEFAULT_SETTINGS = {
-  jitterSeconds: true,
-  // randomize seconds like the desktop plugin's randomSeconds
-  chatButton: false,
-  // chat-bar Fake button — opt-in, because it wraps Discord's chat row
-  quickText: "hello"
-  // what one tap of the chat-bar button sends
-};
-function getValenced() {
-  try {
-    if (typeof valenced !== "undefined" && valenced) return valenced;
-  } catch {
-  }
-  return null;
-}
-function getReact() {
-  var _a, _b, _c, _d, _e, _f, _g, _h;
-  try {
-    const r = (_b = (_a = getValenced()) == null ? void 0 : _a.react) == null ? void 0 : _b.React;
-    if (r == null ? void 0 : r.createElement) return r;
-  } catch {
-  }
-  try {
-    if (typeof revenge !== "undefined") {
-      const r = revenge.react;
-      if (r) return r.React || r;
-    }
-  } catch {
-  }
-  try {
-    if (typeof bunny !== "undefined") {
-      const b = bunny;
-      const r = b.React || ((_c = b.common) == null ? void 0 : _c.React) || ((_e = (_d = b.metro) == null ? void 0 : _d.common) == null ? void 0 : _e.React);
-      if (r) return r;
-    }
-  } catch {
-  }
-  try {
-    if (typeof vendetta !== "undefined") {
-      const v = vendetta;
-      const r = ((_f = v.common) == null ? void 0 : _f.React) || ((_h = (_g = v.metro) == null ? void 0 : _g.common) == null ? void 0 : _h.React) || v.React;
-      if (r) return r;
-    }
-  } catch {
-  }
-  return null;
-}
-function getRN() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i;
-  try {
-    const rn = (_b = (_a = getValenced()) == null ? void 0 : _a.react) == null ? void 0 : _b.ReactNative;
-    if ((rn == null ? void 0 : rn.View) && (rn == null ? void 0 : rn.Text)) return rn;
-  } catch {
-  }
-  try {
-    if (typeof revenge !== "undefined") {
-      const rn = (_c = revenge.react) == null ? void 0 : _c.ReactNative;
-      if (rn) return rn;
-    }
-  } catch {
-  }
-  try {
-    if (typeof bunny !== "undefined") {
-      const b = bunny;
-      const rn = b.ReactNative || ((_d = b.common) == null ? void 0 : _d.ReactNative) || ((_f = (_e = b.metro) == null ? void 0 : _e.common) == null ? void 0 : _f.ReactNative);
-      if (rn) return rn;
-    }
-  } catch {
-  }
-  try {
-    if (typeof vendetta !== "undefined") {
-      const v = vendetta;
-      const rn = ((_g = v.common) == null ? void 0 : _g.ReactNative) || ((_i = (_h = v.metro) == null ? void 0 : _h.common) == null ? void 0 : _i.ReactNative);
-      if (rn) return rn;
-    }
-  } catch {
-  }
-  return null;
-}
-function getMetro() {
-  try {
-    const n = typeof revenge !== "undefined" && (revenge == null ? void 0 : revenge.metro) || null;
-    if (n) return n;
-  } catch {
-  }
-  try {
-    const b = typeof bunny !== "undefined" ? bunny : null;
-    if (b == null ? void 0 : b.metro) return b.metro;
-  } catch {
-  }
-  try {
-    const v = typeof vendetta !== "undefined" ? vendetta : null;
-    if (v == null ? void 0 : v.metro) return v.metro;
-  } catch {
-  }
-  return null;
-}
-function getDispatch() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
-  try {
-    const v = getValenced();
-    const finders = (_a = v == null ? void 0 : v.modules) == null ? void 0 : _a.finders;
-    const filters = (_c = (_b = v == null ? void 0 : v.modules) == null ? void 0 : _b.finders) == null ? void 0 : _c.filters;
-    if (finders && filters) {
-      const [mod] = finders.lookupModule(filters.withProps("dispatch", "subscribe"));
-      if (mod && typeof mod.dispatch === "function") return mod.dispatch.bind(mod);
-    }
-  } catch {
-  }
-  try {
-    const f = typeof revenge !== "undefined" && ((_e = (_d = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _d.flux) == null ? void 0 : _e.dispatcher) || null;
-    if (f && typeof f.dispatch === "function") return f.dispatch.bind(f);
-  } catch {
-  }
-  try {
-    const metro = getMetro();
-    const rd = (_f = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _f.call(metro, "dispatch", "subscribe");
-    if (rd && typeof rd.dispatch === "function") return rd.dispatch.bind(rd);
-    const rd2 = (_g = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _g.call(metro, "dispatch", "_dispatcher");
-    if (rd2 && typeof rd2.dispatch === "function") return rd2.dispatch.bind(rd2);
-  } catch {
-  }
-  try {
-    const v = typeof vendetta !== "undefined" ? vendetta : null;
-    const fd = ((_i = (_h = v == null ? void 0 : v.metro) == null ? void 0 : _h.common) == null ? void 0 : _i.FluxDispatcher) || ((_j = v == null ? void 0 : v.common) == null ? void 0 : _j.FluxDispatcher);
-    if (fd == null ? void 0 : fd.dispatch) return fd.dispatch.bind(fd);
-  } catch {
-  }
-  try {
-    const b = typeof bunny !== "undefined" ? bunny : null;
-    const fd = ((_l = (_k = b == null ? void 0 : b.metro) == null ? void 0 : _k.common) == null ? void 0 : _l.FluxDispatcher) || ((_m = b == null ? void 0 : b.common) == null ? void 0 : _m.FluxDispatcher);
-    if (fd == null ? void 0 : fd.dispatch) return fd.dispatch.bind(fd);
-  } catch {
-  }
-  return null;
-}
-function findStore(name, props) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i;
-  try {
-    const s = (_c = (_b = (_a = getValenced()) == null ? void 0 : _a.discord) == null ? void 0 : _b.flux) == null ? void 0 : _c.Stores;
-    if (s == null ? void 0 : s[name]) return s[name];
-  } catch {
-  }
-  try {
-    const s = typeof revenge !== "undefined" && ((_e = (_d = revenge == null ? void 0 : revenge.discord) == null ? void 0 : _d.flux) == null ? void 0 : _e.Stores) || null;
-    if (s == null ? void 0 : s[name]) return s[name];
-  } catch {
-  }
-  try {
-    const metro = getMetro();
-    if (metro == null ? void 0 : metro.findByStoreName) {
-      const m = metro.findByStoreName(name);
-      if (m) return m;
-    }
-    if (metro == null ? void 0 : metro.findByProps) {
-      const m = metro.findByProps(...props);
-      if (m) return m;
-    }
-  } catch {
-  }
-  try {
-    const v = typeof vendetta !== "undefined" ? vendetta : null;
-    if ((_g = (_f = v == null ? void 0 : v.metro) == null ? void 0 : _f.common) == null ? void 0 : _g[name]) return v.metro.common[name];
-  } catch {
-  }
-  try {
-    const b = typeof bunny !== "undefined" ? bunny : null;
-    if ((_i = (_h = b == null ? void 0 : b.metro) == null ? void 0 : _h.common) == null ? void 0 : _i[name]) return b.metro.common[name];
-  } catch {
-  }
-  return null;
-}
-function getUserStore() {
-  return findStore("UserStore", ["getCurrentUser"]);
-}
-function getChannelStore() {
-  return findStore("ChannelStore", ["getChannel"]);
-}
-function getMessageStore() {
-  return findStore("MessageStore", ["getMessage", "getMessages"]);
-}
-function getSelectedChannelStore() {
-  return findStore("SelectedChannelStore", ["getChannelId", "getSelectedChannelId"]);
-}
-function getGuildMemberStore() {
-  return findStore("GuildMemberStore", ["getMembers", "getMember"]);
-}
-function currentChannelId() {
-  var _a, _b, _c, _d;
-  try {
-    const s = getSelectedChannelStore();
-    return String((_d = (_c = (_a = s == null ? void 0 : s.getChannelId) == null ? void 0 : _a.call(s)) != null ? _c : (_b = s == null ? void 0 : s.getSelectedChannelId) == null ? void 0 : _b.call(s)) != null ? _d : "");
-  } catch {
-    return "";
-  }
-}
-function hostError(msg, e) {
+var import_finders = (valenced.modules.finders);
+var import_filters = (valenced.modules.finders.filters);
+var import_design = (valenced.discord.design);
+var JsxRuntime = __toESM(((valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime || valenced.react)));
+var import_react = (({ default: valenced.react.React, ...valenced.react.React }));
+var import_react_native = (({ ...valenced.react.ReactNative }));
+var import_jsx_runtime = (({ jsx: (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime).jsx, jsxs: (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime).jsxs, Fragment: (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime).Fragment }));
+var PILL_LABEL = "FakeDM quick fake";
+function resolveAfterJSX() {
   var _a, _b, _c;
-  try {
-    const logger = typeof revenge !== "undefined" && (revenge == null ? void 0 : revenge.logger) || typeof bunny !== "undefined" && ((_a = bunny == null ? void 0 : bunny.plugin) == null ? void 0 : _a.logger) || typeof vendetta !== "undefined" && (vendetta == null ? void 0 : vendetta.logger) || console;
-    ((_c = (_b = logger == null ? void 0 : logger.error) != null ? _b : logger == null ? void 0 : logger.log) != null ? _c : (() => {
-    })).call(logger, "[FakeDM] " + msg, e != null ? e : "");
-  } catch {
+  const host = (_a = globalThis.valenced) == null ? void 0 : _a.react;
+  const candidates = [JsxRuntime, host == null ? void 0 : host.jsxRuntime, host == null ? void 0 : host.ReactJSXRuntime, host];
+  for (const candidate of candidates) {
+    const fn = (_c = candidate == null ? void 0 : candidate.afterJSX) != null ? _c : (_b = candidate == null ? void 0 : candidate.default) == null ? void 0 : _b.afterJSX;
+    if (typeof fn === "function") return { fn, self: candidate };
   }
+  return null;
 }
-var jsonStorageApi = null;
-var storageProxy = null;
-var storageKind = "";
-var cfg = { ...DEFAULT_SETTINGS };
-var fakesCache = [];
-function readFakes() {
-  return Array.isArray(fakesCache) ? fakesCache : [];
+var DEFAULTS = {
+  jitterSeconds: true,
+  chatButton: false,
+  quickText: "hello",
+  fakes: []
+};
+var state = {
+  cfg: { ...DEFAULTS },
+  storage: null,
+  cleanups: [],
+  installed: false
+};
+function dispatcher() {
+  const [mod] = (0, import_finders.lookupModule)((0, import_filters.withProps)("dispatch", "subscribe"));
+  return mod != null ? mod : null;
 }
 function persistFakes(list) {
-  var _a;
-  fakesCache = list;
-  try {
-    if (jsonStorageApi) {
-      void ((_a = jsonStorageApi.set) == null ? void 0 : _a.call(jsonStorageApi, { fakes: list }));
-      return;
-    }
-    if (storageProxy) {
-      if (storageKind === "bunny" && storageProxy.data) {
-        storageProxy.data = { ...storageProxy.data, fakes: list };
-      } else {
-        storageProxy.fakes = list;
-      }
-    }
-  } catch (e) {
-    hostError("could not persist fakes", e);
-  }
+  var _a, _b;
+  state.cfg.fakes = list;
+  void ((_b = (_a = state.storage) == null ? void 0 : _a.set) == null ? void 0 : _b.call(_a, { fakes: list }));
 }
-function savePluginCfg() {
-  var _a;
-  try {
-    (_a = jsonStorageApi == null ? void 0 : jsonStorageApi.set) == null ? void 0 : _a.call(jsonStorageApi, { chatButton: cfg.chatButton, quickText: cfg.quickText });
-  } catch (e) {
-    hostError("could not save settings", e);
-  }
+function readFakes() {
+  return Array.isArray(state.cfg.fakes) ? state.cfg.fakes : [];
 }
-function refreshConfigFromStorage() {
-  var _a, _b, _c, _d;
-  try {
-    if (jsonStorageApi) {
-      const s = (_b = (_a = jsonStorageApi.use) == null ? void 0 : _a.call(jsonStorageApi)) != null ? _b : null;
-      if (s && typeof s === "object") cfg = { ...DEFAULT_SETTINGS, ...s };
-      const f = s == null ? void 0 : s.fakes;
-      if (Array.isArray(f)) fakesCache = f;
-      return;
-    }
-    if (storageProxy) {
-      const s = storageKind === "bunny" ? (_c = storageProxy == null ? void 0 : storageProxy.data) == null ? void 0 : _c.settings : storageProxy == null ? void 0 : storageProxy.settings;
-      if (s && typeof s === "object") cfg = { ...DEFAULT_SETTINGS, ...s };
-      const f = storageKind === "bunny" ? (_d = storageProxy == null ? void 0 : storageProxy.data) == null ? void 0 : _d.fakes : storageProxy == null ? void 0 : storageProxy.fakes;
-      if (Array.isArray(f)) fakesCache = f;
-    }
-  } catch (e) {
-    hostError("could not read settings", e);
-  }
+var idCounter = 0;
+function snowflake(date) {
+  const ms = Math.max(0, date.getTime() - 14200704e5);
+  return (BigInt(ms) << /* @__PURE__ */ BigInt("22") | BigInt(idCounter++ % 4096)).toString();
 }
-var _idCounter = 0;
-function uniqueSnowflake(date) {
-  try {
-    const offset = _idCounter++ % 4096;
-    const ms = Math.max(0, date.getTime() - 14200704e5);
-    return (BigInt(ms) << /* @__PURE__ */ BigInt("22") | BigInt(offset)).toString();
-  } catch {
-    return String(date.getTime()) + String(_idCounter++ % 4096).padStart(4, "0");
-  }
-}
-function randomSeconds(date) {
-  if (!cfg.jitterSeconds) return new Date(Math.floor(date.getTime() / 1e3) * 1e3);
-  const sec = 1 + Math.floor(Math.random() * 59);
-  return new Date(date.getTime() + sec * 1e3);
-}
-function buildAuthor(user) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i;
+function author(user) {
+  var _a, _b, _c, _d, _e;
   return {
     id: String(user.id),
     username: (_a = user.username) != null ? _a : "unknown",
     discriminator: (_b = user.discriminator) != null ? _b : "0",
     avatar: (_c = user.avatar) != null ? _c : null,
-    public_flags: (_e = (_d = user.publicFlags) != null ? _d : user.public_flags) != null ? _e : 0,
-    flags: (_f = user.flags) != null ? _f : 0,
-    banner: (_g = user.banner) != null ? _g : null,
-    accent_color: null,
-    global_name: (_i = (_h = user.globalName) != null ? _h : user.global_name) != null ? _i : user.username,
+    global_name: (_e = (_d = user.globalName) != null ? _d : user.global_name) != null ? _e : user.username,
     bot: !!user.bot
   };
 }
-function toDiscordEmbed(embed) {
-  var _a, _b, _c;
-  const d = {};
-  if (embed.title) d.title = embed.title;
-  if (embed.description) d.description = embed.description;
-  if (embed.url) d.url = embed.url;
-  if (embed.color !== void 0) d.color = embed.color;
-  if ((_a = embed.image) == null ? void 0 : _a.url) d.image = { url: embed.image.url, proxy_url: embed.image.url };
-  if ((_b = embed.thumbnail) == null ? void 0 : _b.url) d.thumbnail = { url: embed.thumbnail.url, proxy_url: embed.thumbnail.url };
-  if ((_c = embed.fields) == null ? void 0 : _c.length) d.fields = embed.fields.map((f) => ({ name: f.name, value: f.value, inline: !!f.inline }));
-  return d;
-}
-var _attachIdCounter = 0;
-function injectMessage(channelId, author, content, date, persistedId, attachments, replyTo, embeds) {
-  const dispatch = getDispatch();
-  if (!dispatch || !(author == null ? void 0 : author.id)) return null;
-  const actualDate = persistedId ? date : randomSeconds(date);
-  const id = persistedId != null ? persistedId : uniqueSnowflake(actualDate);
-  const attach = (attachments != null ? attachments : []).map((a, i) => {
-    var _a, _b, _c, _d, _e, _f, _g;
-    return {
-      id: (_a = a.id) != null ? _a : String(++_attachIdCounter),
-      filename: (_b = a.filename) != null ? _b : "image.png",
-      size: (_c = a.size) != null ? _c : 0,
-      url: a.url,
-      proxy_url: (_d = a.proxy_url) != null ? _d : a.url,
-      width: (_e = a.width) != null ? _e : 0,
-      height: (_f = a.height) != null ? _f : 0,
-      content_type: (_g = a.content_type) != null ? _g : "image/png"
-    };
-  });
-  const message = {
-    attachments: attach,
-    components: [],
-    embeds: [],
-    mention_roles: [],
-    mentions: [],
-    author: buildAuthor(author),
-    channel_id: channelId,
-    content: String(content != null ? content : ""),
-    edited_timestamp: null,
-    flags: 0,
-    id,
-    mention_everyone: false,
-    nonce: id,
-    pinned: false,
-    timestamp: actualDate.toISOString(),
-    tts: false,
-    type: 0
-  };
-  if (replyTo == null ? void 0 : replyTo.messageId) {
-    message.message_reference = { channel_id: channelId, message_id: replyTo.messageId };
-  }
-  if (embeds && embeds.length > 0) {
-    message.embeds = embeds.map(toDiscordEmbed);
-  }
-  try {
-    dispatch({ type: "MESSAGE_CREATE", channelId, message, optimistic: false, isPushNotification: false });
-  } catch (e) {
-    hostError("injectMessage dispatch failed", e);
-    return null;
-  }
-  if (!persistedId) {
-    const list = readFakes().slice();
-    list.push({
-      type: "message",
-      channelId,
-      authorId: String(author.id),
-      content: String(content != null ? content : ""),
-      attachments: attach,
-      timestamp: actualDate.toISOString(),
-      snowflakeId: id,
-      replyToId: replyTo == null ? void 0 : replyTo.messageId,
-      embeds
-    });
-    persistFakes(list);
-  }
-  return id;
-}
-function injectCall(channelId, caller, other, missed, durationSec, date, persistedId, persistedEndedTs) {
-  var _a, _b;
-  const dispatch = getDispatch();
-  if (!dispatch || !(caller == null ? void 0 : caller.id)) return null;
-  const actualDate = persistedId ? date : randomSeconds(date);
-  const id = persistedId != null ? persistedId : uniqueSnowflake(actualDate);
-  const participants = missed ? [String(caller.id)] : [String(caller.id), String((_a = other == null ? void 0 : other.id) != null ? _a : caller.id)];
-  const endedDate = missed ? actualDate : persistedEndedTs ? new Date(persistedEndedTs) : new Date(actualDate.getTime() + durationSec * 1e3);
-  try {
-    dispatch({
-      type: "MESSAGE_CREATE",
-      channelId,
-      message: {
-        attachments: [],
-        components: [],
-        embeds: [],
-        mention_roles: [],
-        mentions: [],
-        author: buildAuthor(caller),
-        channel_id: channelId,
-        content: "",
-        edited_timestamp: null,
-        flags: 0,
-        id,
-        mention_everyone: false,
-        nonce: id,
-        pinned: false,
-        timestamp: actualDate.toISOString(),
-        tts: false,
-        type: 3,
-        call: {
-          participants,
-          ended_timestamp: endedDate.toISOString(),
-          duration: missed ? void 0 : durationSec
-        }
-      },
-      optimistic: false,
-      isPushNotification: false
-    });
-  } catch (e) {
-    hostError("injectCall dispatch failed", e);
-    return null;
-  }
-  if (!persistedId) {
-    const list = readFakes().slice();
-    list.push({
-      type: "call",
-      channelId,
-      callerId: String(caller.id),
-      otherId: String((_b = other == null ? void 0 : other.id) != null ? _b : ""),
-      missed,
-      durationSec,
-      timestamp: actualDate.toISOString(),
-      endedTimestamp: endedDate.toISOString(),
-      snowflakeId: id
-    });
-    persistFakes(list);
-  }
-  return id;
-}
-var SYSTEM_TYPES = [
-  { value: 1, label: "User joined" },
-  { value: 2, label: "User left" },
-  { value: 4, label: "Name change" },
-  { value: 5, label: "Icon change" },
-  { value: 6, label: "Pinned a message" },
-  { value: 7, label: "Joined server" }
-];
-function injectSystemMessage(channelId, author, systemType, content, date) {
-  const dispatch = getDispatch();
-  if (!dispatch || !(author == null ? void 0 : author.id)) return null;
-  const actualDate = randomSeconds(date);
-  const id = uniqueSnowflake(actualDate);
-  try {
-    dispatch({
-      type: "MESSAGE_CREATE",
-      channelId,
-      message: {
-        attachments: [],
-        components: [],
-        embeds: [],
-        mention_roles: [],
-        mentions: [],
-        author: buildAuthor(author),
-        channel_id: channelId,
-        content: String(content != null ? content : ""),
-        edited_timestamp: null,
-        flags: 0,
-        id,
-        mention_everyone: false,
-        nonce: id,
-        pinned: false,
-        timestamp: actualDate.toISOString(),
-        tts: false,
-        type: systemType
-      },
-      optimistic: false,
-      isPushNotification: false
-    });
-  } catch (e) {
-    hostError("injectSystemMessage dispatch failed", e);
-    return null;
-  }
-  const list = readFakes().slice();
-  list.push({
-    type: "message",
+function injectMessage(channelId, user, content, date) {
+  var _a;
+  const dispatch = (_a = dispatcher()) == null ? void 0 : _a.dispatch;
+  if (!dispatch || !(user == null ? void 0 : user.id)) return null;
+  const jitter = state.cfg.jitterSeconds ? 1 + Math.floor(Math.random() * 59) : 0;
+  const when = new Date(date.getTime() + jitter * 1e3);
+  const id = snowflake(when);
+  dispatch({
+    type: "MESSAGE_CREATE",
     channelId,
-    authorId: String(author.id),
-    content: String(content != null ? content : ""),
-    timestamp: actualDate.toISOString(),
-    snowflakeId: id,
-    systemType
+    message: {
+      attachments: [],
+      components: [],
+      embeds: [],
+      mentions: [],
+      mention_roles: [],
+      author: author(user),
+      channel_id: channelId,
+      content: String(content != null ? content : ""),
+      edited_timestamp: null,
+      flags: 0,
+      id,
+      nonce: id,
+      pinned: false,
+      timestamp: when.toISOString(),
+      tts: false,
+      type: 0
+    },
+    optimistic: false,
+    isPushNotification: false
   });
-  persistFakes(list);
+  persistFakes([...readFakes(), { type: "message", channelId, content, timestamp: when.toISOString(), snowflakeId: id }]);
   return id;
 }
 function injectReaction(channelId, messageId, userId, emoji) {
-  const dispatch = getDispatch();
-  if (!dispatch || !channelId || !messageId || !emoji) return false;
-  try {
-    dispatch({
-      type: "MESSAGE_REACTION_ADD",
-      channelId,
-      messageId,
-      userId,
-      emoji: { name: emoji, id: null, animated: false }
-    });
-  } catch (e) {
-    hostError("injectReaction dispatch failed", e);
-    return false;
-  }
-  const list = readFakes().slice();
-  list.push({ type: "reaction", channelId, messageId, userId, emoji, snowflakeId: uniqueSnowflake(/* @__PURE__ */ new Date()) });
-  persistFakes(list);
+  var _a;
+  const dispatch = (_a = dispatcher()) == null ? void 0 : _a.dispatch;
+  if (!dispatch) return false;
+  dispatch({
+    type: "MESSAGE_REACTION_ADD",
+    channelId,
+    messageId,
+    userId,
+    emoji: { name: emoji }
+  });
   return true;
 }
-function editFakeMessage(channelId, messageId, newContent, newTimestamp) {
+function injectCall(channelId, caller, other, missed, durationSec, date) {
   var _a, _b;
-  const dispatch = getDispatch();
-  if (!dispatch) return { ok: false, reason: "No dispatcher on this build" };
-  const text = String(newContent != null ? newContent : "");
-  const cached = (_b = (_a = getMessageStore()) == null ? void 0 : _a.getMessage) == null ? void 0 : _b.call(_a, channelId, messageId);
-  if (!cached) return { ok: false, reason: "Open that chat once so the message is cached, then edit" };
-  let ts = null;
-  if (newTimestamp) {
-    const parsed = new Date(newTimestamp);
-    if (!Number.isFinite(parsed.getTime())) return { ok: false, reason: "Time not understood \u2014 use YYYY-MM-DD HH:MM" };
-    ts = parsed.toISOString();
-  }
-  const updated = { ...cached, content: text, edited_timestamp: ts != null ? ts : (/* @__PURE__ */ new Date()).toISOString() };
-  if (ts) updated.timestamp = ts;
-  try {
-    dispatch({ type: "MESSAGE_UPDATE", channelId, message: updated });
-  } catch (e) {
-    hostError("editFakeMessage dispatch failed", e);
-    return { ok: false, reason: "Discord refused the update" };
-  }
-  const list = readFakes();
-  for (const f of list) {
-    if (f.type === "message" && f.snowflakeId === messageId) {
-      f.content = text;
-      if (ts) f.timestamp = ts;
-      break;
-    }
-  }
-  persistFakes(list);
-  return { ok: true, reason: "Edited" };
+  const dispatch = (_a = dispatcher()) == null ? void 0 : _a.dispatch;
+  if (!dispatch || !(caller == null ? void 0 : caller.id)) return null;
+  const id = snowflake(date);
+  const participants = missed ? [String(caller.id)] : [String(caller.id), String((_b = other == null ? void 0 : other.id) != null ? _b : caller.id)];
+  const ended = missed ? date : new Date(date.getTime() + durationSec * 1e3);
+  dispatch({
+    type: "MESSAGE_CREATE",
+    channelId,
+    message: {
+      attachments: [],
+      components: [],
+      embeds: [],
+      mentions: [],
+      mention_roles: [],
+      author: author(caller),
+      channel_id: channelId,
+      content: "",
+      edited_timestamp: null,
+      flags: 0,
+      id,
+      nonce: id,
+      pinned: false,
+      timestamp: date.toISOString(),
+      tts: false,
+      type: 3,
+      call: { participants, ended_timestamp: ended.toISOString(), duration: missed ? void 0 : durationSec }
+    },
+    optimistic: false,
+    isPushNotification: false
+  });
+  persistFakes([...readFakes(), { type: "call", channelId, missed, durationSec, timestamp: date.toISOString(), snowflakeId: id }]);
+  return id;
 }
 function clearFakesInChannel(channelId, ids) {
-  const dispatch = getDispatch();
-  const list = readFakes();
-  const target = ids != null ? ids : new Set(list.filter((f) => f.type !== "reaction" && f.channelId === channelId).map((f) => f.snowflakeId));
-  let n = 0;
-  for (const f of list) {
-    if (f.type === "reaction") continue;
-    if (f.channelId !== channelId || !target.has(f.snowflakeId)) continue;
-    if (dispatch) {
-      try {
-        dispatch({ type: "MESSAGE_DELETE", channelId, id: f.snowflakeId, mlDeleted: true });
-      } catch {
-      }
-    }
-    n++;
-  }
-  persistFakes(list.filter((f) => !(f.type !== "reaction" && f.channelId === channelId && target.has(f.snowflakeId))));
-  return n;
-}
-function removeFakeById(id) {
-  const f = readFakes().find((x) => x.snowflakeId === id);
-  if (!f || f.type === "reaction") return false;
-  return clearFakesInChannel(f.channelId, /* @__PURE__ */ new Set([f.snowflakeId])) > 0;
-}
-var restoredThisSession = false;
-function messageInCache(channelId, messageId) {
-  var _a, _b;
-  try {
-    return !!((_b = (_a = getMessageStore()) == null ? void 0 : _a.getMessage) == null ? void 0 : _b.call(_a, channelId, messageId));
-  } catch {
-    return false;
-  }
-}
-function validFake(f) {
-  var _a, _b, _c;
-  if (!f || typeof f !== "object") return false;
-  if (typeof f.channelId !== "string" || !/^\d+$/.test(f.channelId)) return false;
-  if (typeof f.snowflakeId !== "string" || !/^\d+$/.test(f.snowflakeId)) return false;
-  if (!Number.isFinite(Date.parse(String((_a = f.timestamp) != null ? _a : "")))) return false;
-  if (f.type === "message") {
-    if (typeof f.content !== "string") return false;
-    if (typeof f.authorId !== "string" || !/^\d+$/.test(f.authorId)) return false;
-    if (f.replyToId && !messageInCache(f.channelId, f.replyToId)) return false;
-  } else if (f.type === "call") {
-    if (typeof f.callerId !== "string" || !/^\d+$/.test(f.callerId)) return false;
-  } else {
-    return false;
-  }
-  try {
-    if (!((_c = (_b = getChannelStore()) == null ? void 0 : _b.getChannel) == null ? void 0 : _c.call(_b, f.channelId))) return false;
-  } catch {
-    return false;
-  }
-  return true;
-}
-function restoreSaved() {
-  var _a, _b, _c;
-  const store = getUserStore();
-  let restored = 0;
-  let skipped = 0;
-  for (const f of readFakes()) {
-    if (!validFake(f) || restored >= 60) {
-      skipped++;
-      continue;
-    }
-    try {
-      if (f.type === "message") {
-        if (messageInCache(f.channelId, f.snowflakeId)) continue;
-        const author = (_a = store == null ? void 0 : store.getUser) == null ? void 0 : _a.call(store, f.authorId);
-        if (!author) {
-          skipped++;
-          continue;
-        }
-        if (!injectMessage(f.channelId, author, f.content, new Date(f.timestamp), f.snowflakeId, f.attachments, f.replyToId ? { messageId: f.replyToId } : void 0, f.embeds)) skipped++;
-        else restored++;
-      } else if (f.type === "call") {
-        if (messageInCache(f.channelId, f.snowflakeId)) continue;
-        const caller = (_b = store == null ? void 0 : store.getUser) == null ? void 0 : _b.call(store, f.callerId);
-        const other = (_c = store == null ? void 0 : store.getUser) == null ? void 0 : _c.call(store, f.otherId);
-        if (!caller) {
-          skipped++;
-          continue;
-        }
-        injectCall(f.channelId, caller, other != null ? other : caller, f.missed, f.durationSec, new Date(f.timestamp), f.snowflakeId, f.endedTimestamp);
-        restored++;
-      }
-    } catch (e) {
-      skipped++;
-      hostError("restore skipped an entry", e);
-    }
-  }
-  return { restored, skipped };
-}
-function deleteSavedFakes() {
-  const n = readFakes().length;
-  persistFakes([]);
-  return n;
+  var _a;
+  const dispatch = (_a = dispatcher()) == null ? void 0 : _a.dispatch;
+  for (const id of ids) dispatch == null ? void 0 : dispatch({ type: "MESSAGE_DELETE", id, channelId });
+  persistFakes(readFakes().filter((f) => !(f.channelId === channelId && ids.has(f.snowflakeId))));
 }
 function parseBatchScript(text, base) {
-  var _a;
-  const lines = [];
-  const at = base != null ? base : /* @__PURE__ */ new Date();
-  const baseTime = String(at.getHours()).padStart(2, "0") + ":" + String(at.getMinutes()).padStart(2, "0");
-  for (const raw of String(text != null ? text : "").split("\n")) {
-    const line = raw.trim();
-    if (!line) continue;
-    const timed = line.match(/^\[(\d{1,2}):(\d{2})\]\s*(?:([^:]+?)\s*:\s*)?(.+)$/);
-    if (timed) {
-      lines.push({
-        time: String(Math.min(23, parseInt(timed[1], 10))).padStart(2, "0") + ":" + timed[2],
-        senderName: ((_a = timed[3]) != null ? _a : "").trim(),
-        content: timed[4].trim()
-      });
-      continue;
-    }
-    const named = line.match(/^([^:/\n]{1,40}?)\s*:\s*(.+)$/);
-    if (named && !/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(line)) {
-      lines.push({ time: baseTime, senderName: named[1].trim(), content: named[2].trim() });
-      continue;
-    }
-    lines.push({ time: baseTime, senderName: "", content: line });
-  }
-  return lines;
-}
-function resolveBatchAuthor(name, candidates, me) {
-  var _a, _b, _c, _d, _e, _f;
-  if (!name) return me;
-  const lower = name.toLowerCase();
-  if (lower === "me") return me;
-  for (const u of candidates) {
-    const uname = String((_c = (_b = (_a = u.globalName) != null ? _a : u.global_name) != null ? _b : u.username) != null ? _c : "").toLowerCase();
-    if (uname === lower || String((_d = u.username) != null ? _d : "").toLowerCase() === lower) return u;
-  }
-  if (/^\d{5,}$/.test(name)) {
-    const byId = (_f = (_e = getUserStore()) == null ? void 0 : _e.getUser) == null ? void 0 : _f.call(_e, name);
-    if (byId) return byId;
-  }
-  return null;
-}
-function injectBatch(channelId, lines, candidates, me, baseDate) {
-  let injected = 0;
-  let skipped = 0;
-  const unknown = [];
-  for (const line of lines) {
-    const author = resolveBatchAuthor(line.senderName, candidates, me);
-    if (!author) {
-      skipped++;
-      if (line.senderName && unknown.indexOf(line.senderName) === -1) unknown.push(line.senderName);
-      continue;
-    }
-    const [h, m] = line.time.split(":").map(Number);
-    const msgDate = new Date(baseDate);
-    msgDate.setHours(Number.isFinite(h) ? h : 0, Number.isFinite(m) ? m : 0, 0, 0);
-    if (injectMessage(channelId, author, line.content, msgDate)) injected++;
-    else skipped++;
-  }
-  return { injected, skipped, unknown };
-}
-function memberCandidates() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q;
   const out = [];
-  const me = (_b = (_a = getUserStore()) == null ? void 0 : _a.getCurrentUser) == null ? void 0 : _b.call(_a);
-  if (me) out.push(me);
-  try {
-    const chId = currentChannelId();
-    const ch = (_d = (_c = getChannelStore()) == null ? void 0 : _c.getChannel) == null ? void 0 : _d.call(_c, chId);
-    const ids = (_g = (_f = ch == null ? void 0 : ch.recipients) != null ? _f : (_e = ch == null ? void 0 : ch.rawRecipients) == null ? void 0 : _e.map((r) => r.id)) != null ? _g : [];
-    for (const id of ids) {
-      const u = (_i = (_h = getUserStore()) == null ? void 0 : _h.getUser) == null ? void 0 : _i.call(_h, id);
-      if (u) out.push(u);
-    }
-    const guildId = (_j = ch == null ? void 0 : ch.guild_id) != null ? _j : ch == null ? void 0 : ch.guildId;
-    if (guildId) {
-      const members = (_m = (_l = (_k = getGuildMemberStore()) == null ? void 0 : _k.getMembers) == null ? void 0 : _l.call(_k, guildId)) != null ? _m : [];
-      for (const m of members.slice(0, 40)) {
-        const u = (_q = (_n = getUserStore()) == null ? void 0 : _n.getUser) == null ? void 0 : _q.call(_n, (_p = m.userId) != null ? _p : (_o = m == null ? void 0 : m.user) == null ? void 0 : _o.id);
-        if (u && !out.some((x) => String(x.id) === String(u.id))) out.push(u);
-      }
-    }
-  } catch {
+  for (const raw of text.split("\n")) {
+    const m = raw.trim().match(/^(?:\[[^\]]*\]\s*)?([^:]+):\s*(.*)$/);
+    if (m) out.push({ senderName: m[1].trim(), content: m[2], timestamp: base });
   }
-  return out.slice(0, 45);
+  return out;
 }
-function userLabel(u) {
+function currentChannelId() {
+  var _a, _b;
+  const store = (0, import_finders.lookupModule)((0, import_filters.withProps)("getChannelId"))[0];
+  return String((_b = (_a = store == null ? void 0 : store.getChannelId) == null ? void 0 : _a.call(store)) != null ? _b : "");
+}
+function quickFake(channelOverride) {
   var _a, _b, _c;
-  if (!u) return "Unknown";
-  return String((_c = (_b = (_a = u.globalName) != null ? _a : u.global_name) != null ? _b : u.username) != null ? _c : u.id);
+  const channelId = typeof channelOverride === "string" && channelOverride ? channelOverride : currentChannelId();
+  if (!channelId) return null;
+  const me = (_c = (_b = (_a = (0, import_finders.lookupModule)((0, import_filters.withProps)("getCurrentUser"))[0]) == null ? void 0 : _a.getCurrentUser) == null ? void 0 : _b.call(_a)) != null ? _c : { id: "" };
+  return injectMessage(channelId, me, state.cfg.quickText || "hello", /* @__PURE__ */ new Date());
 }
-function memberById(id) {
-  var _a, _b, _c;
-  if (!id) return null;
-  return (_c = (_b = (_a = getUserStore()) == null ? void 0 : _a.getUser) == null ? void 0 : _b.call(_a, id)) != null ? _c : { id, username: "ID " + id };
-}
-function recentMessages(channelId) {
-  var _a, _b, _c, _d, _e;
-  try {
-    let list = (_b = (_a = getMessageStore()) == null ? void 0 : _a.getMessages) == null ? void 0 : _b.call(_a, channelId);
-    if (Array.isArray(list)) return list.filter((m) => m == null ? void 0 : m.id).slice(-12).reverse();
-    const arr = Array.from((_e = (_d = (_c = list == null ? void 0 : list._map) == null ? void 0 : _c.values) == null ? void 0 : _d.call(_c)) != null ? _e : []);
-    if (arr.length) return arr.filter((m) => m == null ? void 0 : m.id).slice(-12).reverse();
-  } catch {
-  }
-  return [];
-}
-async function pickImageFromGallery() {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
-  const metro = getMetro();
-  try {
-    const p = (_a = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _a.call(metro, "openMediaPicker");
-    if (typeof (p == null ? void 0 : p.openMediaPicker) === "function") {
-      const res = await new Promise((resolve) => {
-        try {
-          p.openMediaPicker({ type: "image", multiple: false, onMediaSelected: (r) => resolve(r), onCanceled: () => resolve(null), onCancel: () => resolve(null) });
-        } catch (e) {
-          resolve(null);
-        }
-      });
-      const uri = (_g = (_f = (_c = res == null ? void 0 : res.uri) != null ? _c : (_b = res == null ? void 0 : res[0]) == null ? void 0 : _b.uri) != null ? _f : (_e = (_d = res == null ? void 0 : res.assets) == null ? void 0 : _d[0]) == null ? void 0 : _e.uri) != null ? _g : typeof res === "string" ? res : null;
-      if (uri) return String(uri);
+function chatButton() {
+  return {
+    type: "Pressable",
+    props: {
+      accessibilityLabel: PILL_LABEL,
+      accessibilityRole: "button",
+      onPress: quickFake,
+      style: { height: 28, paddingHorizontal: 10, borderRadius: 14, backgroundColor: "#5865F2", justifyContent: "center" },
+      children: { type: "Text", props: { style: { color: "#ffffff", fontWeight: "700" }, children: "Fake" } }
     }
-  } catch {
-  }
-  try {
-    const p = (_h = metro == null ? void 0 : metro.findByProps) == null ? void 0 : _h.call(metro, "launchImageLibrary");
-    if (typeof (p == null ? void 0 : p.launchImageLibrary) === "function") {
-      const res = await new Promise((resolve) => {
-        try {
-          p.launchImageLibrary({ mediaType: "photo", selectionLimit: 1 }, (r) => resolve(r));
-        } catch {
-          resolve(null);
-        }
-      });
-      const uri = (_l = (_k = (_j = (_i = res == null ? void 0 : res.assets) == null ? void 0 : _i[0]) == null ? void 0 : _j.uri) != null ? _k : res == null ? void 0 : res.uri) != null ? _l : null;
-      if (uri) return String(uri);
-    }
-  } catch {
-  }
-  return null;
-}
-function presetDate(key) {
-  const now = Date.now();
-  if (key === "now") return new Date(now);
-  const m = key.match(/^m(\d+)$/);
-  if (m) return new Date(now - parseInt(m[1], 10) * 6e4);
-  if (key === "yesterday-evening") {
-    const d = new Date(now - 864e5);
-    d.setHours(20, 34, 0, 0);
-    return d;
-  }
-  return new Date(now);
-}
-function toast(content) {
-  var _a, _b, _c;
-  const text = String(content != null ? content : "");
-  try {
-    const RN = getRN();
-    if ((_a = RN == null ? void 0 : RN.ToastAndroid) == null ? void 0 : _a.show) {
-      RN.ToastAndroid.show(text, (_b = RN.ToastAndroid.SHORT) != null ? _b : 0);
-      return;
-    }
-  } catch {
-  }
-  try {
-    const RN = getRN();
-    if ((_c = RN == null ? void 0 : RN.Alert) == null ? void 0 : _c.alert) {
-      RN.Alert.alert("FakeDM", text);
-      return;
-    }
-  } catch {
-  }
-  hostError("no notification channel available: " + text);
-}
-function hexToInt(hex) {
-  const m = String(hex != null ? hex : "").trim().replace("#", "");
-  if (!/^[0-9a-fA-F]{6}$/.test(m)) return void 0;
-  return parseInt(m, 16);
-}
-function resolveDesign() {
-  var _a, _b, _c, _d, _e, _f, _g;
-  try {
-    const g = (_b = (_a = getValenced()) == null ? void 0 : _a.discord) == null ? void 0 : _b.design;
-    const d = (_c = g == null ? void 0 : g.Design) != null ? _c : g;
-    if (d && (d.TableRowGroup || d.TableSwitchRow || d.TableRow)) return d;
-  } catch {
-  }
-  try {
-    const g = (_e = (_d = globalThis.revenge) == null ? void 0 : _d.discord) == null ? void 0 : _e.design;
-    const d = (_f = g == null ? void 0 : g.Design) != null ? _f : g;
-    if (d && (d.TableRowGroup || d.TableSwitchRow || d.TableRow)) return d;
-  } catch {
-  }
-  try {
-    const b = (_g = globalThis.bunny) == null ? void 0 : _g.ui;
-    if (b == null ? void 0 : b.FormTableRowGroup) return b;
-  } catch {
-  }
-  return null;
-}
-function buildSettingsComponent() {
-  const React = getReact();
-  const RN = getRN();
-  if (!React || !RN) return null;
-  const el = React.createElement;
-  const D = resolveDesign();
-  const { View = "view", Text = "text", TextInput = "input", Pressable = View, ScrollView = View, Switch = null } = RN;
-  const isDark = (() => {
-    var _a, _b, _c, _d, _e;
-    try {
-      const tm = (_c = findStore("ThemeManager", ["theme", "resolvedTheme"])) != null ? _c : (_b = (_a = getMetro()) == null ? void 0 : _a.findByProps) == null ? void 0 : _b.call(_a, "theme", "setTheme");
-      const t = (_e = (_d = tm == null ? void 0 : tm.theme) != null ? _d : tm == null ? void 0 : tm.resolvedTheme) != null ? _e : tm == null ? void 0 : tm.currentTheme;
-      if (t) return String(t).toLowerCase().includes("dark");
-    } catch {
-    }
-    return true;
-  })();
-  const C = isDark ? {
-    // Dark: flat near-black canvas, raised cards, one accent.
-    bg: "#0c0d10",
-    card: "#17181a",
-    cardAlt: "#1e2023",
-    line: "#282a30",
-    text: "#f2f3f5",
-    sub: "#8f95a3",
-    input: "#232529",
-    chip: "#27292f",
-    accent: "#5865F2",
-    accentSoft: "rgba(88,101,242,0.16)",
-    danger: "#f04747",
-    ok: "#23a55a",
-    amber: "#faa61a"
-  } : {
-    bg: "#eceef2",
-    card: "#ffffff",
-    cardAlt: "#f6f7f9",
-    line: "#dcdee4",
-    text: "#060607",
-    sub: "#5c5e66",
-    input: "#e7e9ee",
-    chip: "#e3e5e9",
-    accent: "#5865F2",
-    accentSoft: "rgba(88,101,242,0.12)",
-    danger: "#d83c3e",
-    ok: "#248046",
-    amber: "#c28516"
-  };
-  function Card(props) {
-    var _a;
-    const title = (_a = props == null ? void 0 : props.title) != null ? _a : "";
-    return el(
-      View,
-      { style: { backgroundColor: C.card, borderRadius: 14, borderWidth: 1, borderColor: C.line, marginHorizontal: 14, marginTop: 10, overflow: "hidden" } },
-      title ? el(
-        View,
-        { style: { flexDirection: "row", alignItems: "center", paddingHorizontal: 14, paddingTop: 11, paddingBottom: 1 } },
-        props.dot ? el(View, { style: { width: 7, height: 7, borderRadius: 4, backgroundColor: props.dot, marginRight: 7 } }) : null,
-        el(Text, { style: { color: C.text, fontSize: 14, fontWeight: "800", flex: 1 } }, title),
-        props.meta ? el(Text, { style: { color: C.sub, fontSize: 11 } }, String(props.meta)) : null
-      ) : null,
-      el(View, { style: { paddingHorizontal: 14, paddingVertical: 10 } }, props.children)
-    );
-  }
-  function Lbl(props) {
-    var _a;
-    return el(
-      View,
-      { style: { marginTop: props.first ? 0 : 10, marginBottom: 3 } },
-      el(Text, { style: { color: C.sub, fontSize: 11, fontWeight: "800", letterSpacing: 0.4 } }, String((_a = props.text) != null ? _a : "").toUpperCase()),
-      props.hint ? el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 1 } }, props.hint) : null
-    );
-  }
-  function Input(props) {
-    // Always React Native's own TextInput. Discord's design TextInput renders a
-    // controlled field that never accepts keystrokes on 352.x, which made every
-    // FakeDM field untypable. RN's TextInput with our own styling works.
-    const base = {
-      placeholderTextColor: C.sub,
-      ...props,
-      style: [{ color: C.text, backgroundColor: C.input, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 9, fontSize: 14, marginBottom: 4 }, props.style]
-    };
-    return el(TextInput, base);
-  }
-  function BigBtn(props) {
-    return el(Pressable, {
-      accessibilityLabel: props.label,
-      onPress: props.onPress,
-      disabled: !!props.disabled,
-      style: {
-        backgroundColor: props.danger ? C.danger : props.ok ? C.ok : C.accent,
-        borderRadius: 12,
-        paddingVertical: 12,
-        alignItems: "center",
-        marginTop: 6,
-        opacity: props.disabled ? 0.5 : 1
-      }
-    }, el(Text, { style: { color: "#ffffff", fontWeight: "800", fontSize: 15 } }, props.label));
-  }
-  function MiniBtn(props) {
-    return el(Pressable, {
-      accessibilityLabel: props.label,
-      onPress: props.onPress,
-      style: {
-        backgroundColor: props.active ? C.accent : props.danger ? "rgba(240,71,71,0.14)" : C.chip,
-        borderRadius: 10,
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        marginRight: 8,
-        marginTop: 4
-      }
-    }, el(Text, { style: { color: props.active ? "#ffffff" : props.danger ? C.danger : C.text, fontSize: 12, fontWeight: "700" } }, props.label));
-  }
-  function Confirm(props) {
-    const armed = props.armed === true;
-    return el(Pressable, {
-      accessibilityLabel: String(props.label),
-      onPress: () => {
-        var _a, _b, _c;
-        if (armed) {
-          (_a = props.setArmed) == null ? void 0 : _a.call(props, "");
-          (_b = props.onConfirm) == null ? void 0 : _b.call(props);
-        } else (_c = props.setArmed) == null ? void 0 : _c.call(props, props.id);
-      },
-      style: {
-        backgroundColor: armed ? C.danger : "rgba(240,71,71,0.14)",
-        borderRadius: 12,
-        paddingVertical: 10,
-        paddingHorizontal: 14,
-        marginTop: 6,
-        borderWidth: 1,
-        borderColor: armed ? C.danger : C.line
-      }
-    }, el(Text, { style: { color: armed ? "#ffffff" : C.danger, fontSize: 13, fontWeight: "700" } }, armed ? "Tap again to confirm \u2014 " + String(props.label) : String(props.label)));
-  }
-  function ChipRow(props) {
-    const items = Array.isArray(props == null ? void 0 : props.items) ? props.items : [];
-    if (!items.length) return null;
-    return el(
-      ScrollView,
-      { horizontal: true, showsHorizontalScrollIndicator: false },
-      ...items.map((item) => el(Pressable, {
-        key: String(item.key),
-        accessibilityLabel: String(item.label),
-        onPress: () => {
-          var _a;
-          return (_a = props.onChange) == null ? void 0 : _a.call(props, props.value === item.key ? "" : item.key);
-        },
-        style: { backgroundColor: props.value === item.key ? C.accent : C.chip, borderRadius: 16, paddingHorizontal: 13, paddingVertical: 7, marginRight: 8, marginBottom: 4 }
-      }, el(Text, { style: { color: props.value === item.key ? "#ffffff" : C.text, fontSize: 12, fontWeight: "700" } }, String(item.label))))
-    );
-  }
-  function SwitchRow(props) {
-    if (D == null ? void 0 : D.TableSwitchRow) {
-      return el(D.TableSwitchRow, { label: props.label, subLabel: props.subLabel, value: !!props.value, onValueChange: props.onValueChange });
-    }
-    const toggle = Switch ? el(Switch, { value: !!props.value, onValueChange: props.onValueChange, trackColor: { false: "rgba(128,128,128,0.35)", true: C.accent }, thumbColor: "#ffffff" }) : el(Text, { onPress: () => props.onValueChange(!props.value), style: { color: C.accent, fontWeight: "800" } }, props.value ? "On" : "Off");
-    return el(
-      View,
-      { style: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 6 } },
-      el(
-        View,
-        { style: { flex: 1, paddingRight: 12 } },
-        el(Text, { style: { color: C.text, fontSize: 15 } }, props.label),
-        props.subLabel ? el(Text, { style: { color: C.sub, fontSize: 12, marginTop: 1 } }, props.subLabel) : null
-      ),
-      toggle
-    );
-  }
-  function MemberChips(props) {
-    var _a;
-    const kids = ((_a = props.members) != null ? _a : []).map((u) => {
-      const active = props.value === String(u.id);
-      return el(Pressable, {
-        key: String(u.id),
-        accessibilityLabel: userLabel(u),
-        onPress: () => {
-          var _a2;
-          return (_a2 = props.onChange) == null ? void 0 : _a2.call(props, active ? "" : String(u.id));
-        },
-        style: { backgroundColor: active ? C.accent : C.chip, borderRadius: 16, paddingHorizontal: 13, paddingVertical: 7, marginRight: 8, marginBottom: 4 }
-      }, el(Text, { style: { color: active ? "#ffffff" : C.text, fontSize: 13 } }, userLabel(u)));
-    });
-    return el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false }, ...kids);
-  }
-  function MsgPicker(props) {
-    const msgs = recentMessages(props.channelId);
-    if (!msgs.length) {
-      return el(Text, { style: { color: C.sub, fontSize: 12 } }, "Open the chat, then come back here to pick a message.");
-    }
-    const kids = msgs.map((m) => {
-      const active = props.value === String(m.id);
-      return el(Pressable, {
-        key: String(m.id),
-        onPress: () => {
-          var _a;
-          return (_a = props.onChange) == null ? void 0 : _a.call(props, active ? "" : String(m.id));
-        },
-        style: { backgroundColor: active ? C.accent : C.chip, borderRadius: 10, paddingHorizontal: 10, paddingVertical: 6, marginRight: 8, maxWidth: 250 }
-      }, el(Text, { numberOfLines: 1, style: { color: active ? "#ffffff" : C.text, fontSize: 12 } }, String(m.content || "(attachment/embed)") + " \u2014 " + userLabel(m.author)));
-    });
-    return el(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false }, ...kids);
-  }
-  function FakeCard(props) {
-    var _a, _b;
-    const f = props.fake;
-    const isMsg = f.type === "message";
-    const kind = isMsg ? f.systemType ? "SYSTEM" : "MESSAGE" : f.type === "call" ? "CALL" : "REACT";
-    const color = isMsg ? C.accent : f.type === "call" ? C.ok : C.amber;
-    const authorName = userLabel(memberById(
-      isMsg ? f.authorId : f.type === "call" ? f.callerId : f.userId
-    ));
-    const summary = isMsg ? String(f.content || "(no text)") : f.type === "call" ? f.missed ? "Missed call" : "Call \xB7 " + Math.round(f.durationSec / 60) + " min" : ":" + f.emoji + ":";
-    const when = isMsg || f.type === "call" ? new Date(f.timestamp).toLocaleString() : "just now";
-    return el(
-      View,
-      { key: (_a = props.k) != null ? _a : String(f.snowflakeId), style: { backgroundColor: C.cardAlt, borderRadius: 12, borderWidth: 1, borderColor: C.line, paddingHorizontal: 12, paddingVertical: 10, marginTop: 8 } },
-      el(
-        View,
-        { style: { flexDirection: "row", alignItems: "center" } },
-        el(View, { style: { width: 6, height: 6, borderRadius: 3, backgroundColor: color, marginRight: 7 } }),
-        el(Text, { style: { color, fontSize: 10, fontWeight: "800", letterSpacing: 0.5, flex: 1 } }, kind + " \xB7 " + authorName),
-        el(Text, { style: { color: C.sub, fontSize: 10 } }, when),
-        props.onEdit ? el(MiniBtn, { label: "Edit", onPress: props.onEdit }) : null,
-        el(MiniBtn, { label: "Delete", danger: true, onPress: props.onDelete })
-      ),
-      props.editing ? null : el(Text, { style: { color: C.text, fontSize: 14, marginTop: 4, lineHeight: 19 } }, summary),
-      (_b = props.children) != null ? _b : null
-    );
-  }
-  const TAB_DEFS = [
-    { key: "compose", label: "Compose" },
-    { key: "batch", label: "Batch" },
-    { key: "callsys", label: "Call & System" },
-    { key: "react", label: "React" },
-    { key: "saved", label: "Saved" },
-    { key: "setup", label: "Setup" }
-  ];
-  return function FakeDMSettings(props) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i;
-    if (jsonStorageApi == null && ((_a = props == null ? void 0 : props.api) == null ? void 0 : _a.jsonStorage)) {
-      jsonStorageApi = props.api.jsonStorage;
-    }
-    refreshConfigFromStorage();
-    const [tab, setTab] = React.useState("compose");
-    const [armedConfirm, setArmedConfirm] = React.useState("");
-    const [fakeTick, setFakeTick] = React.useState(0);
-    const [senderId, setSenderId] = React.useState("");
-    const [content, setContent] = React.useState("");
-    const [timeText, setTimeText] = React.useState("");
-    const [dateText, setDateText] = React.useState("");
-    const [preset, setPreset] = React.useState("now");
-    const [replyId, setReplyId] = React.useState("");
-    const [imageUrl, setImageUrl] = React.useState("");
-    const [galleryImage, setGalleryImage] = React.useState("");
-    const [picking, setPicking] = React.useState(false);
-    const [embedOn, setEmbedOn] = React.useState(false);
-    const [embedTitle, setEmbedTitle] = React.useState("");
-    const [embedDesc, setEmbedDesc] = React.useState("");
-    const [embeddingColor, setEmbeddingColor] = React.useState("#5865F2");
-    const [embedImage, setEmbedImage] = React.useState("");
-    const [batchText, setBatchText] = React.useState("");
-    const [batchSenderId, setBatchSenderId] = React.useState("");
-    const [batchTime, setBatchTime] = React.useState("");
-    const [batchDate, setBatchDate] = React.useState("");
-    const [callerId, setCallerId] = React.useState("");
-    const [receiverId, setReceiverId] = React.useState("");
-    const [missed, setMissed] = React.useState(false);
-    const [durationMin, setDurationMin] = React.useState("2");
-    const [sysSenderId, setSysSenderId] = React.useState("");
-    const [sysType, setSysType] = React.useState(6);
-    const [sysContent, setSysContent] = React.useState("");
-    const [reactMsgId, setReactMsgId] = React.useState("");
-    const [reactEmoji, setReactEmoji] = React.useState("");
-    const [reactUserId, setReactUserId] = React.useState("");
-    const [editingId, setEditingId] = React.useState("");
-    const [editText, setEditText] = React.useState("");
-    const [editWhen, setEditWhen] = React.useState("");
-    const [chatBtn, setChatBtn] = React.useState((cfg == null ? void 0 : cfg.chatButton) !== false);
-    const [quickTxt, setQuickTxt] = React.useState(String((_b = cfg == null ? void 0 : cfg.quickText) != null ? _b : "hello"));
-    const candidates = memberCandidates();
-    const me = (_e = (_d = (_c = getUserStore()) == null ? void 0 : _c.getCurrentUser) == null ? void 0 : _d.call(_c)) != null ? _e : null;
-    const channelId = currentChannelId();
-    const [defaultsInit, setDefaultsInit] = React.useState(0);
-    if (!defaultsInit && (me == null ? void 0 : me.id)) {
-      setDefaultsInit(1);
-      setSenderId(String(me.id));
-      setBatchSenderId(String(me.id));
-      setReactUserId(String(me.id));
-    }
-    function parseWhen(t, d) {
-      const date = /* @__PURE__ */ new Date();
-      const dm = String(d != null ? d : "").trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
-      if (dm) date.setFullYear(parseInt(dm[1], 10), parseInt(dm[2], 10) - 1, parseInt(dm[3], 10));
-      const tm = String(t != null ? t : "").trim().match(/^(\d{1,2}):(\d{2})$/);
-      if (tm) date.setHours(Math.min(23, parseInt(tm[1], 10)), parseInt(tm[2], 10), 0, 0);
-      return date;
-    }
-    const manualWhen = String(timeText).trim() !== "" || String(dateText).trim() !== "";
-    const PRESETS = [
-      { key: "now", label: "Now" },
-      { key: "m5", label: "5m ago" },
-      { key: "m30", label: "30m ago" },
-      { key: "m120", label: "2h ago" },
-      { key: "yesterday-evening", label: "Yesterday 8:34 PM" }
-    ];
-    function composeScreen() {
-      var _a2, _b2;
-      const photoSource = galleryImage || String(imageUrl).trim();
-      const author = memberById(senderId || ((_b2 = (_a2 = candidates[0]) == null ? void 0 : _a2.id) != null ? _b2 : ""));
-      return el(
-        View,
-        null,
-        Card({ title: "Who says it", dot: C.accent, meta: author ? userLabel(author) : "you", children: [
-          Lbl({ text: "Tap a person \u2014 you is pre-picked", first: true }),
-          MemberChips({ members: candidates, value: senderId, onChange: setSenderId }),
-          Input({ placeholder: "...or paste a user ID", value: senderId, onChangeText: (t) => setSenderId(t.replace(/[^0-9]/g, "")) })
-        ] }),
-        Card({ title: "The message", dot: C.accent, children: [
-          Input({ placeholder: "Type the message\u2026", value: content, onChangeText: setContent, multiline: true, style: { minHeight: 64, textAlignVertical: "top", marginTop: 2 } })
-        ] }),
-        Card({ title: "When", dot: C.accent, meta: manualWhen ? "manual" : "preset", children: [
-          Lbl({ text: "Preset \u2014 used while the fields below are empty", first: true }),
-          ChipRow({ items: PRESETS, value: preset, onChange: setPreset }),
-          Lbl({ text: "Time (HH:MM) and date (YYYY-MM-DD) override the preset" }),
-          Input({ placeholder: "14:30", value: timeText, onChangeText: setTimeText }),
-          Input({ placeholder: "2026-10-29", value: dateText, onChangeText: setDateText })
-        ] }),
-        Card({ title: "Reply & photo", dot: C.accent, children: [
-          Lbl({ text: "Reply to a message from this chat", first: true }),
-          MsgPicker({ channelId, value: replyId, onChange: setReplyId }),
-          Input({ placeholder: "...or paste a message ID", value: replyId, onChangeText: (t) => setReplyId(t.replace(/[^0-9]/g, "")) }),
-          Lbl({ text: "Photo \u2014 gallery pick or URL" }),
-          el(
-            View,
-            { style: { flexDirection: "row", alignItems: "center" } },
-            el(Pressable, {
-              accessibilityLabel: "Pick photo from gallery",
-              disabled: picking,
-              onPress: async () => {
-                setPicking(true);
-                try {
-                  const uri = await pickImageFromGallery();
-                  if (uri) {
-                    setGalleryImage(uri);
-                    toast("Photo attached");
-                  } else toast("Gallery picker not available on this build \u2014 use the URL field below");
-                } finally {
-                  setPicking(false);
-                }
-              },
-              style: { backgroundColor: C.chip, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8, marginRight: 10, marginTop: 4 }
-            }, el(Text, { style: { color: C.text, fontSize: 13, fontWeight: "700" } }, picking ? "Opening\u2026" : "\u{1F4F7} Gallery")),
-            galleryImage ? el(MiniBtn, { label: "Remove photo", danger: true, onPress: () => setGalleryImage("") }) : null
-          ),
-          galleryImage ? el(Text, { numberOfLines: 1, style: { color: C.ok, fontSize: 12, marginTop: 2 } }, "\u2713 gallery photo attached") : null,
-          Input({ placeholder: "https://\u2026/image.png", value: imageUrl, onChangeText: setImageUrl, style: { marginTop: 6 } }),
-          Lbl({ text: "Embed (optional)" }),
-          SwitchRow({ label: "Attach an embed", value: embedOn, onValueChange: setEmbedOn }),
-          embedOn ? el(
-            View,
-            null,
-            Input({ placeholder: "Embed title", value: embedTitle, onChangeText: setEmbedTitle }),
-            Input({ placeholder: "Embed description", value: embedDesc, onChangeText: setEmbedDesc, multiline: true }),
-            Input({ placeholder: "#5865F2", value: embeddingColor, onChangeText: setEmbeddingColor }),
-            Input({ placeholder: "Embed image URL", value: embedImage, onChangeText: setEmbedImage })
-          ) : null
-        ] }),
-        el(View, { style: { marginHorizontal: 14 } }, BigBtn({
-          label: "Fake send",
-          onPress: () => {
-            if (!author) return toast("Pick who sends it first");
-            if (!String(content).trim()) return toast("Write the message text first");
-            const when = manualWhen ? parseWhen(timeText, dateText) : presetDate(preset);
-            const embeds = embedOn ? [{ title: embedTitle || void 0, description: embedDesc || void 0, color: hexToInt(embeddingColor), image: embedImage ? { url: embedImage } : void 0 }] : void 0;
-            const attachments = photoSource ? [{ url: photoSource, filename: photoSource.split("/").pop() || "image.png", ...galleryImage ? { local: true } : {} }] : void 0;
-            const id = injectMessage(channelId, author, content, when, void 0, attachments, replyId ? { messageId: replyId } : void 0, embeds);
-            toast(id ? "Fake sent \u2713" : "Inject failed (no dispatcher?)");
-            if (id) {
-              setContent("");
-              setReplyId("");
-              setGalleryImage("");
-              setImageUrl("");
-            }
-            setFakeTick((n) => n + 1);
-          }
-        }))
-      );
-    }
-    function batchScreen() {
-      var _a2;
-      const base = parseWhen(batchTime, batchDate);
-      const parsed = parseBatchScript(batchText, base);
-      const defaultSender = memberById(batchSenderId || ((_a2 = me == null ? void 0 : me.id) != null ? _a2 : ""));
-      const unresolvedCount = parsed.filter((l) => !resolveBatchAuthor(l.senderName, candidates, defaultSender)).length;
-      return el(
-        View,
-        null,
-        Card({ title: "Default sender", dot: C.accent, meta: batchSenderId ? userLabel(memberById(batchSenderId)) : "you", children: [
-          Lbl({ text: "Lines with no name speak as this person", first: true }),
-          MemberChips({ members: candidates, value: batchSenderId, onChange: setBatchSenderId }),
-          Input({ placeholder: "...or paste a user ID", value: batchSenderId, onChangeText: (t) => setBatchSenderId(t.replace(/[^0-9]/g, "")) })
-        ] }),
-        Card({ title: "Script", dot: C.accent, meta: parsed.length ? String(parsed.length) + " ready" : "empty", children: [
-          Lbl({ text: "One per line \u2014 [HH:MM] and name both optional", first: true }),
-          Input({
-            placeholder: "[14:30] me: hey\n[14:31] somebody: sup\njust text = default sender, base time",
-            value: batchText,
-            onChangeText: setBatchText,
-            multiline: true,
-            style: { minHeight: 120, textAlignVertical: "top" }
-          }),
-          parsed.length ? el(
-            View,
-            { style: { backgroundColor: C.cardAlt, borderRadius: 10, borderWidth: 1, borderColor: C.line, padding: 10, marginTop: 4 } },
-            el(
-              Text,
-              { style: { color: unresolvedCount ? C.amber : C.ok, fontSize: 12, fontWeight: "800", marginBottom: 2 } },
-              parsed.length + " message(s) ready" + (unresolvedCount ? " \xB7 " + unresolvedCount + " unknown name(s)" : " \u2713")
-            ),
-            ...parsed.slice(0, 8).map((l, i) => el(
-              Text,
-              { key: "bp-" + i, numberOfLines: 1, style: { color: C.sub, fontSize: 11, marginTop: 1 } },
-              l.time + " \xB7 " + (l.senderName || userLabel(defaultSender != null ? defaultSender : {})) + ": " + l.content
-            )),
-            parsed.length > 8 ? el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 2 } }, "\u2026and " + (parsed.length - 8) + " more") : null
-          ) : null,
-          Lbl({ text: "Base time (HH:MM)" }),
-          Input({ placeholder: "14:30", value: batchTime, onChangeText: setBatchTime }),
-          Lbl({ text: "Base date (YYYY-MM-DD)" }),
-          Input({ placeholder: "2026-10-29", value: batchDate, onChangeText: setBatchDate })
-        ] }),
-        el(View, { style: { marginHorizontal: 14 } }, BigBtn({
-          label: "Inject " + parsed.length + " message(s)",
-          disabled: !parsed.length,
-          onPress: () => {
-            if (!channelId) return toast("Open a chat first");
-            const r = injectBatch(channelId, parsed, candidates, defaultSender, base);
-            const names = r.unknown.length ? " (" + r.unknown.join(", ") + ")" : "";
-            toast(r.injected + " injected" + (r.skipped ? " \xB7 " + r.skipped + " skipped" + names : ""));
-            if (r.injected) setBatchText("");
-            setFakeTick((n) => n + 1);
-          }
-        })),
-        el(View, { style: { marginHorizontal: 14 } }, MiniBtn({ label: "Clear script", danger: true, onPress: () => setBatchText("") }))
-      );
-    }
-    function callCard() {
-      return Card({ title: "Fake call", dot: C.ok, children: [
-        Lbl({ text: "Caller", first: true }),
-        MemberChips({ members: candidates, value: callerId, onChange: setCallerId }),
-        Lbl({ text: "Receiver" }),
-        MemberChips({ members: candidates, value: receiverId, onChange: setReceiverId }),
-        SwitchRow({ label: "Missed call", value: missed, onValueChange: setMissed }),
-        Lbl({ text: "Duration in minutes (ignored when missed)" }),
-        Input({ placeholder: "2", value: durationMin, onChangeText: (t) => setDurationMin(t.replace(/[^0-9]/g, "")) }),
-        Lbl({ text: "Time (HH:MM) \xB7 date (YYYY-MM-DD)" }),
-        Input({ placeholder: "14:30", value: timeText, onChangeText: setTimeText }),
-        Input({ placeholder: "2026-10-29", value: dateText, onChangeText: setDateText }),
-        BigBtn({
-          label: "Inject call",
-          onPress: () => {
-            var _a2, _b2, _c2, _d2;
-            const caller = memberById(callerId || ((_b2 = (_a2 = candidates[0]) == null ? void 0 : _a2.id) != null ? _b2 : ""));
-            if (!caller) return toast("Pick a caller first");
-            const other = memberById(receiverId || ((_d2 = (_c2 = candidates.find((u) => String(u.id) !== String(caller.id))) == null ? void 0 : _c2.id) != null ? _d2 : caller.id));
-            const sec = Math.max(0, parseInt(durationMin || "0", 10) || 0) * 60;
-            const id = injectCall(channelId, caller, other, missed, sec, parseWhen(timeText, dateText));
-            toast(id ? "Fake call injected" : "Inject failed");
-            setFakeTick((n) => n + 1);
-          }
-        })
-      ] });
-    }
-    function sysCard() {
-      return Card({ title: "System event", dot: C.amber, children: [
-        Lbl({ text: "Actor (who did it)", first: true }),
-        MemberChips({ members: candidates, value: sysSenderId, onChange: setSysSenderId }),
-        Lbl({ text: "Event type" }),
-        ChipRow({
-          items: SYSTEM_TYPES.map((t) => ({ key: t.value, label: t.label })),
-          value: sysType,
-          onChange: setSysType
-        }),
-        Lbl({ text: "Custom text (optional)" }),
-        Input({ placeholder: "Usually empty", value: sysContent, onChangeText: setSysContent, multiline: true }),
-        BigBtn({
-          label: "Inject system message",
-          onPress: () => {
-            var _a2, _b2;
-            const author = memberById(sysSenderId || ((_b2 = (_a2 = candidates[0]) == null ? void 0 : _a2.id) != null ? _b2 : ""));
-            if (!author) return toast("Pick an actor first");
-            const id = injectSystemMessage(channelId, author, sysType != null ? sysType : 6, sysContent, parseWhen(timeText, dateText));
-            toast(id ? "System message injected" : "Inject failed");
-            setFakeTick((n) => n + 1);
-          }
-        })
-      ] });
-    }
-    function reactScreen() {
-      return el(
-        View,
-        null,
-        Card({ title: "Reaction", dot: C.amber, children: [
-          Lbl({ text: "Message \u2014 tap one from the chat", first: true }),
-          MsgPicker({ channelId, value: reactMsgId, onChange: setReactMsgId }),
-          Lbl({ text: "Emoji" }),
-          Input({ placeholder: "\u{1F600}", value: reactEmoji, onChangeText: setReactEmoji }),
-          Lbl({ text: "React as (you is pre-picked)" }),
-          MemberChips({ members: candidates, value: reactUserId, onChange: setReactUserId }),
-          BigBtn({
-            label: "Inject reaction",
-            onPress: () => {
-              var _a2;
-              if (!reactMsgId || !reactEmoji) return toast("Pick a message and an emoji first");
-              const uid = reactUserId || String((_a2 = me == null ? void 0 : me.id) != null ? _a2 : "");
-              const ok = injectReaction(channelId, reactMsgId, uid, reactEmoji);
-              toast(ok ? "Reaction added" : "Inject failed");
-              setFakeTick((n) => n + 1);
-            }
-          })
-        ] })
-      );
-    }
-    function savedScreen() {
-      void fakeTick;
-      const all = readFakes();
-      const inChannel = all.filter((f) => f.type !== "reaction" && f.channelId === channelId);
-      const shown = (inChannel.length ? inChannel : all).slice().reverse().slice(0, 60);
-      return el(
-        View,
-        null,
-        Card({ title: "This channel", dot: C.accent, meta: inChannel.length + " fake(s)", children: [
-          inChannel.length ? el(Text, { style: { color: C.sub, fontSize: 12 } }, "What this channel remembers, newest first.") : el(Text, { style: { color: C.sub, fontSize: 12 } }, "No fakes in this channel \u2014 showing all " + all.length + "."),
-          Confirm({ id: "clearchannel", label: "Clear fakes in this channel", armed: armedConfirm === "clearchannel", setArmed: setArmedConfirm, onConfirm: () => {
-            const n = clearFakesInChannel(channelId);
-            toast(n + " fake(s) cleared in this channel");
-            setFakeTick((x) => x + 1);
-          } })
-        ] }),
-        ...shown.map((f, i) => FakeCard({
-          k: String(f.snowflakeId) + ":" + i,
-          fake: f,
-          editing: editingId === f.snowflakeId,
-          onEdit: isMsg(f) ? () => {
-            var _a2;
-            setEditingId(String(f.snowflakeId));
-            setEditText(String((_a2 = f.content) != null ? _a2 : ""));
-            setEditWhen("");
-          } : void 0,
-          onDelete: () => {
-            const ok = removeFakeById(f.snowflakeId);
-            toast(ok ? "Removed" : "Remove failed");
-            setFakeTick((x) => x + 1);
-          },
-          children: editingId === f.snowflakeId && isMsg(f) ? el(
-            View,
-            { style: { marginTop: 6 } },
-            Input({ placeholder: "New text", value: editText, onChangeText: setEditText, multiline: true, style: { minHeight: 48, textAlignVertical: "top" } }),
-            Input({ placeholder: "New time (optional, YYYY-MM-DD HH:MM)", value: editWhen, onChangeText: setEditWhen }),
-            el(
-              View,
-              { style: { flexDirection: "row" } },
-              MiniBtn({ label: "Save", onPress: () => {
-                const res = editFakeMessage(f.channelId, f.snowflakeId, editText, editWhen.trim() || void 0);
-                toast(res.reason);
-                if (res.ok) {
-                  setEditingId("");
-                  setFakeTick((x) => x + 1);
-                }
-              } }),
-              MiniBtn({ label: "Cancel", onPress: () => setEditingId("") })
-            )
-          ) : null
-        })),
-        Card({ title: "Recovery", children: [
-          BigBtn({
-            label: "Show saved fakes again (" + all.length + ")",
-            ok: true,
-            onPress: () => {
-              const r = restoreSaved();
-              toast(r.restored ? "Restored " + r.restored + (r.skipped ? " \xB7 skipped " + r.skipped : "") : "Nothing restorable \xB7 skipped " + r.skipped);
-              setFakeTick((x) => x + 1);
-            }
-          }),
-          Confirm({ id: "deletesaved", label: "Delete saved fakes (recovery \u2014 kills a crash loop)", armed: armedConfirm === "deletesaved", setArmed: setArmedConfirm, onConfirm: () => {
-            const n = deleteSavedFakes();
-            toast(n ? "Deleted " + n + " saved fake" + (n === 1 ? "" : "s") : "Nothing saved");
-            setFakeTick((x) => x + 1);
-          } })
-        ] })
-      );
-    }
-    function isMsg(f) {
-      return f.type === "message";
-    }
-    function setupScreen() {
-      return el(
-        View,
-        null,
-        Card({ title: "Chat bar", dot: C.accent, children: [
-          SwitchRow({
-            label: "Chat-bar Fake button",
-            subLabel: "Puts a Fake pill beside the chat buttons",
-            value: chatBtn,
-            onValueChange: (val) => {
-              setChatBtn(val);
-              setChatButton(val);
-              toast(val ? "Fake button on" : "Fake button off");
-            }
-          }),
-          Lbl({ text: "Quick Fake text (chat-bar button)" }),
-          Input({ placeholder: "hello", value: quickTxt, onChangeText: (t) => {
-            cfg.quickText = t;
-            setQuickTxt(t);
-            savePluginCfg();
-          } }),
-          el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 2 } }, "Chat button: " + buttonStatus)
-        ] }),
-        Card({ title: "About", children: [
-          el(Text, { style: { color: C.text, fontSize: 13 } }, "FakeDM " + PLUGIN_VERSION + " \u2014 by Cenotaph (ported from the Equicord plugin)."),
-          el(
-            Text,
-            { style: { color: C.sub, fontSize: 12, marginTop: 4, lineHeight: 18 } },
-            "Fake messages, calls, events and reactions are injected as real client events \u2014 nothing here patches Discord's own screens, so nothing here can crash them."
-          )
-        ] })
-      );
-    }
-    const body = tab === "compose" ? composeScreen() : tab === "batch" ? batchScreen() : tab === "callsys" ? el(View, null, callCard(), sysCard()) : tab === "react" ? reactScreen() : tab === "saved" ? savedScreen() : setupScreen();
-    const channel = channelId ? (_h = (_g = (_f = getChannelStore()) == null ? void 0 : _f.getChannel) == null ? void 0 : _g.call(_f, channelId)) != null ? _h : null : null;
-    const targetText = channelId ? ((channel == null ? void 0 : channel.guild_id) ? "#" : "DM \xB7 ") + ((_i = channel == null ? void 0 : channel.name) != null ? _i : channelId.slice(-6)) : "no channel open \u2014 open a chat first";
-    return el(
-      ScrollView,
-      { style: { flex: 1, backgroundColor: C.bg } },
-      el(
-        View,
-        { style: { paddingHorizontal: 14, paddingTop: 16, paddingBottom: 2 } },
-        el(
-          View,
-          { style: { flexDirection: "row", alignItems: "center" } },
-          el(
-            View,
-            { style: { width: 40, height: 40, borderRadius: 12, backgroundColor: C.accent, alignItems: "center", justifyContent: "center", marginRight: 10 } },
-            el(Text, { style: { color: "#ffffff", fontSize: 18, fontWeight: "900" } }, "F")
-          ),
-          el(
-            View,
-            { style: { flex: 1 } },
-            el(Text, { style: { color: C.text, fontSize: 18, fontWeight: "900" } }, "FakeDM " + PLUGIN_VERSION),
-            el(Text, { style: { color: C.sub, fontSize: 11, marginTop: 1 } }, "Injects into: " + targetText)
-          )
-        ),
-        el(
-          View,
-          { style: { marginTop: 10, flexDirection: "row", flexWrap: "wrap" } },
-          TAB_DEFS.map((t) => MiniBtn({ key: t.key, label: t.label, active: tab === t.key, onPress: () => setTab(t.key) }))
-        ),
-        el(Pressable, {
-          accessibilityLabel: "Retry chat button install",
-          onPress: () => {
-            installTries = 0;
-            anchorCursor = 0;
-            uninstallChatButton();
-            installChatButton();
-          },
-          style: { marginTop: 6, backgroundColor: C.chip, borderRadius: 10, paddingVertical: 7, paddingHorizontal: 10, alignSelf: "flex-start" }
-        }, el(Text, { style: { color: C.sub, fontSize: 11 } }, "Chat button: " + buttonStatus + " \xB7 tap to retry"))
-      ),
-      body,
-      el(View, { style: { height: 44 } })
-    );
   };
 }
-function quickFake() {
-  var _a, _b, _c, _d;
-  try {
-    const channelId = currentChannelId();
-    if (!channelId) {
-      toast("Open a chat first, then tap Fake");
-      return;
-    }
-    const me = (_c = (_b = (_a = getUserStore()) == null ? void 0 : _a.getCurrentUser) == null ? void 0 : _b.call(_a)) != null ? _c : null;
-    const text = String((_d = cfg == null ? void 0 : cfg.quickText) != null ? _d : "hello") || "hello";
-    const id = injectMessage(channelId, me != null ? me : { id: "" }, text, /* @__PURE__ */ new Date());
-    if (!id) toast("Could not inject \u2014 dispatcher not found on this build");
-  } catch (e) {
-    hostError("quick fake failed", e);
-  }
+function hasPill(node) {
+  var _a, _b;
+  if (!node || typeof node !== "object") return false;
+  if (((_a = node.props) == null ? void 0 : _a.accessibilityLabel) === PILL_LABEL) return true;
+  const kids = (_b = node.props) == null ? void 0 : _b.children;
+  return Array.isArray(kids) ? kids.some(hasPill) : hasPill(kids);
 }
-var PILL_LABEL = "FakeDM quick fake";
-var MAX_RENDER_FAULTS = 3;
-var buttonStatus = "not installed yet";
-var buttonActive = false;
-var renderFaults = 0;
-var rowPatches = [];
-var fallbackTimer = null;
-var anchorCursor = 0;
-function chatButtonElement() {
-  const React = getReact();
-  const RN = getRN();
-  if (!(React == null ? void 0 : React.createElement) || !(RN == null ? void 0 : RN.Pressable) || !(RN == null ? void 0 : RN.Text)) return null;
-  const el = React.createElement;
-  return el(RN.Pressable, {
-    accessibilityLabel: PILL_LABEL,
-    accessibilityRole: "button",
-    onPress: () => quickFake(),
-    style: {
-      flexShrink: 0,
-      marginLeft: 6,
-      marginRight: 2,
-      minWidth: 44,
-      height: 28,
-      paddingHorizontal: 10,
-      borderRadius: 14,
-      backgroundColor: "#5865F2",
-      alignItems: "center",
-      justifyContent: "center"
-    }
-  }, el(RN.Text, { style: { color: "#ffffff", fontSize: 12, fontWeight: "700" } }, "Fake"));
+function holdsInput(node) {
+  var _a, _b;
+  if (!node || typeof node !== "object") return false;
+  if (node.type === "TextInput" || ((_a = node.props) == null ? void 0 : _a.onChangeText)) return true;
+  const kids = (_b = node.props) == null ? void 0 : _b.children;
+  return Array.isArray(kids) ? kids.some(holdsInput) : holdsInput(kids);
 }
-var WRAP_MARKER = "fakedm-row";
-function alreadyWrapped(tree, depth = 0) {
-  var _a, _b, _c;
-  if (!tree || typeof tree !== "object" || depth > 3) return false;
-  if (((_a = tree.props) == null ? void 0 : _a.testID) === WRAP_MARKER) return true;
-  const kids = (_c = tree.children) != null ? _c : (_b = tree.props) == null ? void 0 : _b.children;
-  if (Array.isArray(kids)) {
-    for (const kid of kids) {
-      if (alreadyWrapped(kid, depth + 1)) return true;
-    }
-  } else if (alreadyWrapped(kids, depth + 1)) return true;
-  return false;
-}
-function wrapChatRow(label, tree) {
-  if (!buttonActive) return tree;
-  if (!tree || typeof tree !== "object" || tree.type === void 0) return tree;
-  if (alreadyWrapped(tree)) return tree;
-  try {
-    const React = getReact();
-    const RN = getRN();
-    const el = React == null ? void 0 : React.createElement;
-    const pill = chatButtonElement();
-    if (!el || !(RN == null ? void 0 : RN.View) || !pill) {
-      renderFault("wrapper unavailable (react-native view or pill missing)");
-      return tree;
-    }
-    for (const p of rowPatches) if (p.label === label) p.wraps += 1;
-    refreshButtonStatus();
-    return el(RN.View, { testID: WRAP_MARKER, style: { flexDirection: "row", alignItems: "center", overflow: "visible" } }, pill, tree);
-  } catch (e) {
-    renderFault(e);
-    return tree;
-  }
-}
-function renderFault(detail) {
-  if (!buttonActive) return;
-  renderFaults++;
-  hostError("chat button render fault " + renderFaults + "/" + MAX_RENDER_FAULTS, detail);
-  if (renderFaults < MAX_RENDER_FAULTS) return;
-  uninstallChatButton();
-  buttonStatus = "auto-disabled after " + renderFaults + " render faults";
-}
-function refreshButtonStatus() {
-  if (!rowPatches.length) return;
-  const parts = rowPatches.map((p) => p.label + " (" + p.key + (p.wraps ? " \xB7 wrapped " + p.wraps : " \xB7 never rendered") + ")");
-  buttonStatus = "hooked: " + parts.join(", ");
-}
-function checkFallback() {
+function hasActionRow(node) {
   var _a;
-  fallbackTimer = null;
-  if (!buttonActive) return;
-  const current = rowPatches[0];
-  if (!current || current.wraps > 0) return;
-  if (anchorCursor >= CHAT_ANCHORS.length - 1) return;
-  try {
-    (_a = current.off) == null ? void 0 : _a.call(current);
-  } catch {
-  }
-  rowPatches = [];
-  anchorCursor += 1;
-  buttonStatus = "that chat row never rendered \u2014 trying the next one";
-  hostError("chat button: silent anchor, moving on", current.label);
-  installChatButton();
+  if (!node || typeof node !== "object" || holdsInput(node)) return false;
+  const kids = (_a = node.props) == null ? void 0 : _a.children;
+  const list = Array.isArray(kids) ? kids : [kids];
+  return list.some((k) => {
+    var _a2;
+    return ((_a2 = k == null ? void 0 : k.props) == null ? void 0 : _a2.accessibilityLabel) !== void 0;
+  });
 }
-function finderApi() {
+function addPill(el) {
   var _a, _b, _c;
-  const v = getValenced();
-  if (!v) return null;
-  const holders = [v];
-  try {
-    holders.push(v.discord);
-  } catch {
-  }
-  try {
-    holders.push(v.unscoped);
-  } catch {
-  }
-  for (const holder of holders) {
-    try {
-      const finders = (_b = (_a = holder == null ? void 0 : holder.modules) == null ? void 0 : _a.finders) != null ? _b : holder == null ? void 0 : holder.finders;
-      const filters = finders == null ? void 0 : finders.filters;
-      const patcher = (_c = holder == null ? void 0 : holder.patcher) != null ? _c : v == null ? void 0 : v.patcher;
-      if (finders && filters && patcher && typeof patcher.after === "function") {
-        return { finders, filters, patcher };
-      }
-    } catch {
-    }
-  }
-  return null;
+  const enabled = (_c = (_b = (_a = state.storage) == null ? void 0 : _a.cache) == null ? void 0 : _b.chatButton) != null ? _c : state.cfg.chatButton;
+  if (!enabled || !(el == null ? void 0 : el.props) || hasPill(el)) return el;
+  const kids = el.props.children;
+  if (!Array.isArray(kids)) return el;
+  const i = kids.findIndex((k) => hasActionRow(k));
+  if (i < 0) return el;
+  const row = kids[i];
+  const rowKids = [...row.props.children, chatButton()];
+  const nextRow = { ...row, props: { ...row.props, children: rowKids }, children: rowKids };
+  const nextKids = kids.slice();
+  nextKids[i] = nextRow;
+  return { ...el, props: { ...el.props, children: nextKids }, children: nextKids };
 }
-function memoFilter(filters, name) {
-  try {
-    return filters.createFilterGenerator(
-      ([n], _id, exports) => {
-        const t = exports == null ? void 0 : exports.type;
-        if (t && typeof t === "function" && (t.displayName === n || t.name === n)) return true;
-        const r = exports == null ? void 0 : exports.render;
-        if (r && typeof r === "function" && (r.displayName === n || r.name === n)) return true;
-        return (exports == null ? void 0 : exports.displayName) === n || (exports == null ? void 0 : exports.name) === n;
-      },
-      ([n]) => "cenotaph.fakedm.memo(" + n + ")"
-    )(name);
-  } catch {
-    return null;
-  }
-}
-var CHAT_ANCHORS = ["ChatInputRightActions", "ChatInputActions"];
-var chatRowNames = [];
-var MAX_INSTALL_TRIES = 4;
-var installTimer = null;
-var installTries = 0;
-var buttonCleanups = [];
-function uninstallChatButton() {
-  var _a;
-  buttonActive = false;
-  if (installTimer) {
-    clearTimeout(installTimer);
-    installTimer = null;
-  }
-  if (fallbackTimer) {
-    clearTimeout(fallbackTimer);
-    fallbackTimer = null;
-  }
-  installTries = 0;
-  renderFaults = 0;
-  anchorCursor = 0;
-  while (buttonCleanups.length) {
-    try {
-      (_a = buttonCleanups.pop()) == null ? void 0 : _a();
-    } catch {
-    }
-  }
-  rowPatches = [];
-  buttonStatus = "off in settings";
-}
-function setChatButton(on) {
-  try {
-    cfg.chatButton = on;
-    savePluginCfg();
-    if (on) installChatButton();
-    else uninstallChatButton();
-  } catch (e) {
-    hostError("could not switch the chat button", e);
-  }
-  return buttonStatus;
-}
-function scanChatRows() {
-  const host = finderApi();
-  if (!host) return;
-  const { finders, filters } = host;
-  try {
-    const nameOf = (exports) => {
-      var _a, _b, _c, _d;
-      const candidates = [
-        (_a = exports == null ? void 0 : exports.type) == null ? void 0 : _a.displayName,
-        (_b = exports == null ? void 0 : exports.type) == null ? void 0 : _b.name,
-        (_c = exports == null ? void 0 : exports.render) == null ? void 0 : _c.displayName,
-        (_d = exports == null ? void 0 : exports.render) == null ? void 0 : _d.name,
-        exports == null ? void 0 : exports.displayName,
-        exports == null ? void 0 : exports.name
-      ];
-      for (const n of candidates) {
-        if (typeof n === "string" && n.indexOf("ChatInput") === 0) return n;
-      }
-      return null;
-    };
-    const generator = filters.createFilterGenerator(
-      (_args, _id, exports) => nameOf(exports) !== null,
-      (_args) => "cenotaph.fakedm.chatscan"
-    );
-    const off = finders.getModules(generator([]), (exports) => {
-      const name = nameOf(exports);
-      if (name && chatRowNames.indexOf(name) === -1 && chatRowNames.length < 8) chatRowNames.push(name);
+function SettingsComponent({ api }) {
+  var _a, _b;
+  const settings = (_a = api.jsonStorage.use()) != null ? _a : DEFAULTS;
+  const set = (patch) => {
+    var _a2, _b2;
+    return (_b2 = (_a2 = api.jsonStorage.set(patch)).catch) == null ? void 0 : _b2.call(_a2, () => {
     });
-    if (typeof off === "function") buttonCleanups.push(off);
-  } catch {
-  }
+  };
+  const D = (_b = import_design.Design) != null ? _b : {};
+  const [channelId, setChannelId] = (0, import_react.useState)("");
+  const label = (text) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff" }, children: text });
+  const button = (text, onPress) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityRole: "button", accessibilityLabel: text, onPress, style: { paddingVertical: 8 }, children: label(text) });
+  const body = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { padding: 12, gap: 8 }, children: [
+    label("FakeDM"),
+    D.TableSwitchRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableSwitchRow, { label: "Chat-bar Fake button", value: !!settings.chatButton, onValueChange: (v) => set({ chatButton: v }) }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Switch, { value: !!settings.chatButton, onValueChange: (v) => set({ chatButton: v }) }),
+    label("Quick Fake text (chat-bar button)"),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      import_react_native.TextInput,
+      {
+        style: { color: "#ffffff" },
+        value: settings.quickText,
+        onChangeText: (v) => set({ quickText: v })
+      }
+    ),
+    label("Channel ID"),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.TextInput, { style: { color: "#ffffff" }, value: channelId, onChangeText: setChannelId }),
+    button("Inject fake message", () => quickFake(channelId)),
+    button("Clear fakes in channel", () => clearFakesInChannel(channelId, /* @__PURE__ */ new Set())),
+    button("Inject conversation", () => quickFake(channelId))
+  ] });
+  return D.TableRowGroup ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "FakeDM", children: body }) : body;
 }
-function installChatButton() {
-  var _a, _b;
-  try {
-    if (installTimer) {
-      clearTimeout(installTimer);
-      installTimer = null;
-    }
-    buttonActive = false;
-    while (buttonCleanups.length) {
-      try {
-        (_a = buttonCleanups.pop()) == null ? void 0 : _a();
-      } catch {
-      }
-    }
-    renderFaults = 0;
-    if ((cfg == null ? void 0 : cfg.chatButton) === false) {
-      buttonStatus = "off in settings";
-      return;
-    }
-    const host = finderApi();
-    if (!host) {
-      buttonStatus = "host lacks finders/patcher";
-      return;
-    }
-    const { finders, filters, patcher } = host;
-    if (typeof finders.getModules !== "function") {
-      buttonStatus = "host has no getModules";
-      return;
-    }
-    const hook = (Comp, label) => {
-      var _a2;
-      if (!Comp) return false;
-      const key = typeof Comp === "function" ? null : typeof Comp.type === "function" ? "type" : typeof Comp.render === "function" ? "render" : null;
-      if (!key) return false;
-      if (rowPatches.some((p) => p.label === label)) return false;
-      try {
-        const off = patcher.after(Comp, key, (_args, tree) => wrapChatRow(label, tree));
-        if (typeof off !== "function") return false;
-        buttonActive = true;
-        rowPatches.push({ label, key: String(key), wraps: 0, off });
-        buttonCleanups.push(off);
-        installTries = 0;
-        if (installTimer) {
-          clearTimeout(installTimer);
-          installTimer = null;
-        }
-        refreshButtonStatus();
-        if (!fallbackTimer) {
-          fallbackTimer = setTimeout(checkFallback, 15e3);
-          try {
-            (_a2 = fallbackTimer.unref) == null ? void 0 : _a2.call(fallbackTimer);
-          } catch {
-          }
-        }
-        return true;
-      } catch (e) {
-        buttonStatus = "patch failed on " + label;
-        hostError("chat button patch failed", e);
-        return false;
-      }
-    };
-    const pick = (exports) => {
-      var _a2;
-      const ways = [exports, exports == null ? void 0 : exports.default, (_a2 = exports == null ? void 0 : exports.default) == null ? void 0 : _a2.default];
-      for (const c of ways) {
-        if (!c) continue;
-        if (typeof c === "function") return c;
-        if (typeof c === "object" && (typeof c.type === "function" || typeof c.render === "function")) return c;
-      }
-      return null;
-    };
-    try {
-      scanChatRows();
-    } catch {
-    }
-    for (const name of CHAT_ANCHORS.slice(anchorCursor)) {
-      if (rowPatches.length) break;
-      const filter = memoFilter(filters, name);
-      if (!filter) continue;
-      try {
-        const off = finders.getModules(filter, (exports) => {
-          if (rowPatches.length) return;
-          hook(pick(exports), name);
-        });
-        if (typeof off === "function") buttonCleanups.push(off);
-      } catch {
-      }
-    }
-    if (rowPatches.length) {
-      buttonActive = true;
-      installTries = 0;
-      refreshButtonStatus();
-      if (!fallbackTimer) {
-        fallbackTimer = setTimeout(checkFallback, 15e3);
-        try {
-          (_b = fallbackTimer.unref) == null ? void 0 : _b.call(fallbackTimer);
-        } catch {
-        }
-      }
-      return;
-    }
-    if (installTries < MAX_INSTALL_TRIES) {
-      installTries++;
-      buttonStatus = "chat row not found (try " + installTries + "/" + MAX_INSTALL_TRIES + ")";
-      installTimer = setTimeout(() => {
-        installTimer = null;
-        installChatButton();
-      }, 5e3);
-    } else {
-      buttonStatus = "chat row not found \u2014 settings page only";
-    }
-  } catch (e) {
-    buttonActive = false;
-    buttonStatus = "install failed";
-    hostError("chat button install failed", e);
-  }
-}
-var cleanupFns = [];
-async function startNext(api) {
-  var _a, _b;
-  jsonStorageApi = (_a = api == null ? void 0 : api.jsonStorage) != null ? _a : null;
-  try {
-    await ((_b = jsonStorageApi == null ? void 0 : jsonStorageApi.get) == null ? void 0 : _b.call(jsonStorageApi));
-  } catch (e) {
-    hostError("jsonStorage unavailable", e);
-  }
-  refreshConfigFromStorage();
-  if (jsonStorageApi == null ? void 0 : jsonStorageApi.subscribe) {
-    const off = jsonStorageApi.subscribe(() => {
-      try {
-        refreshConfigFromStorage();
-      } catch {
-      }
-    });
-    if (typeof off === "function") cleanupFns.push(off);
-  }
-  installChatButton();
-}
-async function startClassic() {
-  var _a, _b;
-  const b = typeof bunny !== "undefined" ? bunny : {};
-  const v = typeof vendetta !== "undefined" ? vendetta : null;
-  try {
-    if ((_a = b.plugin) == null ? void 0 : _a.createStorage) {
-      const store = b.plugin.createStorage();
-      const promise = store == null ? void 0 : store[Symbol.for("bunny.storage.promise")];
-      if (promise && typeof promise.then === "function") await promise.catch(() => {
-      });
-      storageProxy = store;
-      storageKind = "bunny";
-    } else if ((_b = v == null ? void 0 : v.plugin) == null ? void 0 : _b.storage) {
-      storageProxy = v.plugin.storage;
-      storageKind = "vendetta";
-    }
-  } catch (e) {
-    hostError("plugin storage unavailable", e);
-  }
-  refreshConfigFromStorage();
-}
-var __instance = {
-  jsonStorage: {
-    load: true,
-    default: { ...DEFAULT_SETTINGS, fakes: [] }
-  },
-  async start(api) {
-    try {
-      if (api && typeof api === "object" && (api.cleanup || api.jsonStorage)) {
-        if (api.cleanup && typeof api.cleanup === "function") api.cleanup(() => {
-        });
-        await startNext(api);
-      } else {
-        await startClassic();
-      }
-    } catch (e) {
-      hostError("start failed", e);
-    }
-  },
-  stop() {
+var index_default = plugin({
+  jsonStorage: { load: true, default: DEFAULTS },
+  start({ cleanup, jsonStorage }) {
     var _a;
-    uninstallChatButton();
-    installTries = 0;
-    while (cleanupFns.length) {
-      try {
-        (_a = cleanupFns.pop()) == null ? void 0 : _a();
-      } catch {
-      }
+    state.storage = jsonStorage;
+    state.cfg = { ...DEFAULTS, ...(_a = jsonStorage.cache) != null ? _a : {} };
+    const afterJSX = resolveAfterJSX();
+    if (afterJSX) {
+      const names = ["ChatInputRightActions", "ChatInputActionBar", "ChatInputRightButtons"];
+      cleanup(
+        (0, import_finders.getModules)(
+          (0, import_filters.anyOf)(...names.map((n) => (0, import_filters.withName)(n))),
+          (row) => {
+            if (state.installed || typeof row !== "function") return;
+            state.installed = true;
+            cleanup(afterJSX.fn.call(afterJSX.self, row, (el) => addPill(el)));
+          },
+          { max: 1 }
+        )
+      );
     }
-    restoredThisSession = false;
-    fakesCache = [];
-    jsonStorageApi = null;
-    storageProxy = null;
-    storageKind = "";
   },
-  SettingsComponent: null
-};
-var __builtSettings = null;
-function settingsComponentLazy(props) {
-  var _a, _b;
-  if (!__builtSettings) {
-    try {
-      __builtSettings = buildSettingsComponent();
-    } catch (e) {
-      hostError("settings component build failed", e);
-    }
-  }
-  if (!__builtSettings) {
-    const React = getReact();
-    const RN = getRN();
-    const el = React == null ? void 0 : React.createElement;
-    if (el && RN) return el((_a = RN.View) != null ? _a : "view", null, el((_b = RN.Text) != null ? _b : "text", null, "FakeDM: UI unavailable on this host"));
-    return null;
-  }
-  return __builtSettings(props);
-}
-__instance.SettingsComponent = settingsComponentLazy;
-__instance.__engine = {
-  injectMessage,
-  injectCall,
-  injectSystemMessage,
-  injectReaction,
-  injectBatch,
-  parseBatchScript,
-  editFakeMessage,
-  clearFakesInChannel,
-  removeFakeById,
-  doRestore: restoreSaved,
-  deleteSavedFakes,
-  restoreSaved,
-  validFake,
-  memberCandidates,
-  getFakes: readFakes,
-  chatButtonStatus: () => buttonStatus,
-  forceFallback: checkFallback,
-  setChatButton
-};
-if (typeof plugin === "function") {
-  __instance = plugin(__instance);
-}
-globalThis.plugin = __instance;
-__instance.onLoad = function() {
-  var _a;
-  return (_a = __instance.start) == null ? void 0 : _a.call(__instance);
-};
-__instance.onUnload = function() {
-  var _a;
-  return (_a = __instance.stop) == null ? void 0 : _a.call(__instance);
-};
-__instance.settings = __instance.SettingsComponent;
-var index_default = __instance;
-;
-        const exported = (module.exports && module.exports.default) || module.exports;
-        if (!exported || typeof exported !== 'object') throw new Error('bundle exported ' + typeof exported + ' instead of a plugin object');
-        // Valenced evaluates this file and then reads result.default
-        // (bundle/lib/plugins/src/_internal/script.ts). Returning the bare plugin
-        // therefore gives it undefined and it fails with
-        // "Plugin options must be an object" — the plugin never starts and has no
-        // settings page. Older loaders want the plugin itself, so expose BOTH:
-        // the object is the plugin and its own .default points back at it.
-        if (!exported.default) {
-            try { exported.default = exported; } catch (ignored) {}
-        }
-        return exported;
-    } catch (error) {
-        const message = String((error && (error.stack || error.message)) || error);
-        try { console.error('[dev.8uvu.fake-dm] bundle failed to evaluate', error); } catch (ignored) {}
-        const fallback = {
-            jsonStorage: { load: true, default: {} },
-            start() {},
-            stop() {},
-            SettingsComponent() {
-                try {
-                    const R = valenced.react.React;
-                    const N = valenced.react.ReactNative;
-                    if (!R || !N || typeof R.createElement !== 'function') return null;
-                    const el = R.createElement;
-                    return el(N.ScrollView, { style: { padding: 16 } },
-                        el(N.Text, { style: { color: '#f04747', fontSize: 16, fontWeight: '700', marginBottom: 8 } }, "FakeDM" + ' failed to load'),
-                        el(N.Text, { style: { color: '#9ba0a8', fontSize: 12, marginBottom: 8 } }, 'Copy this text to the plugin author — it is the exact error:'),
-                        el(N.Text, { style: { color: '#ffffff', fontSize: 11 } }, message));
-                } catch (uiError) {
-                    return null;
-                }
-            },
-        };
-        try { fallback.default = fallback; } catch (ignored) {}
-        return fallback;
-    }
-})()
+  SettingsComponent,
+  __engine: { injectMessage, injectReaction, injectCall, clearFakesInChannel, parseBatchScript }
+});
+; const __plugin = (module.exports && module.exports.default) || module.exports; if (__plugin && typeof __plugin === 'object' && !__plugin.default) { try { __plugin.default = __plugin; } catch (ignored) {} } return __plugin; })()

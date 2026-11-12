@@ -54,10 +54,10 @@
         },
         "dev.8uvu.fake-dm": {
             "name": "FakeDM",
-            "description": "Fake messages, calls, events, reactions and embeds in any chat — full 2.0 UI.",
-            "author": "Cenotaph",
+            "description": "Fake messages, calls and reactions in any chat.",
+            "author": "cenotaph",
             "channels": {
-                "latest": "2.0.1"
+                "latest": "2.0.2"
             },
             "versions": {
                 "2.0.0": {
@@ -80,6 +80,19 @@
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "2.0.2": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@2.0.2.zip",
+                    "sha256": "cca770da63bee12012df74ab5998705234a96c6e47a5550bd0e5f9cea533e2d6",
+                    "size": 4558,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
                         },
                         "discord": {
                             "version": "*"
@@ -692,6 +705,52 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-tally@1.0.1.zip",
                     "sha256": "a48581d9eeebbf435c522eccbf5cf20cad5b1185668a7c706790db3a68cd540e",
                     "size": 2695,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        },
+        "dev.8uvu.mention-guard": {
+            "name": "Mention Guard",
+            "description": "Strips an accidental @everyone or @here from your message before it sends.",
+            "author": "cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.mention-guard@1.0.0.zip",
+                    "sha256": "598e2c26b4c288a47fdfacf338149fa8fe5b93bdbe9ed3a20cd2361ecfcd2faa",
+                    "size": 2362,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        },
+        "dev.8uvu.snowflake-tools": {
+            "name": "Snowflake Tools",
+            "description": "Decodes a Discord ID into the exact time it was created, plus its type.",
+            "author": "cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snowflake-tools@1.0.0.zip",
+                    "sha256": "59a3be3ae7c95c88987eae16224d94f52771bcf03c106dcbc5ea4f6d42063a72",
+                    "size": 2351,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"

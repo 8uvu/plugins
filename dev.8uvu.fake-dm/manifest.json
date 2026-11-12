@@ -2,23 +2,12 @@
     "format": 1,
     "id": "dev.8uvu.fake-dm",
     "name": "FakeDM",
-    "description": "Fake messages, calls, events, reactions and embeds in any chat — full 2.0 UI.",
-    "author": "Cenotaph",
-    "main": "index.js",
-    "display": {
-        "name": "FakeDM",
-        "description": "Fake messages, calls, events, reactions and embeds in any chat — full 2.0 UI.",
-        "authors": [
-            {
-                "name": "Cenotaph"
-            }
-        ]
-    },
-    "version": "2.0.1",
-    "license": "GPL-3.0-or-later",
+    "description": "Fake messages, calls and reactions in any chat.",
+    "author": "cenotaph",
+    "version": "2.0.2",
     "dependencies": {
         "valenced.api": {
-            "version": ">=1"
+            "version": ">=1 <2"
         },
         "discord": {
             "version": "*"
@@ -26,14 +15,5 @@
     },
     "dist": {
         "script": "index.js"
-    },
-    "hash": "a3765821777e4811b911336ca43eae8a5c74e9cac5b73114838a60dc580fd7b7",
-    "authors": [
-        {
-            "name": "Cenotaph"
-        }
-    ],
-    "vendetta": {
-        "icon": "ic_chat_bubble"
     }
 }

@@ -1,0 +1,30 @@
+{
+    "format": 1,
+    "name": "Snowflake Tools",
+    "description": "Decodes a Discord ID into the exact time it was created, plus its type.",
+    "plugins": {
+        "dev.8uvu.snowflake-tools": {
+            "name": "Snowflake Tools",
+            "description": "Decodes a Discord ID into the exact time it was created, plus its type.",
+            "author": "cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snowflake-tools@1.0.0.zip",
+                    "sha256": "59a3be3ae7c95c88987eae16224d94f52771bcf03c106dcbc5ea4f6d42063a72",
+                    "size": 2351,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
