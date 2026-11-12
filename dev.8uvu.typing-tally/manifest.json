@@ -1,0 +1,19 @@
+{
+    "format": 1,
+    "id": "dev.8uvu.typing-tally",
+    "name": "TypingTally",
+    "description": "Counts how often you start typing in each channel today. Stays on this device.",
+    "author": "cenotaph",
+    "version": "1.0.0",
+    "dependencies": {
+        "valenced.api": {
+            "version": ">=1 <2"
+        },
+        "discord": {
+            "version": "*"
+        }
+    },
+    "dist": {
+        "script": "index.js"
+    }
+}
