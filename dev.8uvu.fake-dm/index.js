@@ -39,7 +39,7 @@ var SettingsModules = __toESM((function () { const __g = () => { try { return (v
 var PathFinders = __toESM((function () { const __g = () => { try { return (valenced.discord && valenced.discord.utils && valenced.discord.utils.modules && valenced.discord.utils.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get getModuleWithImportedPath() { return __g().getModuleWithImportedPath }, get getModule() { return __g().getModule }, get getModulesWithImportedPath() { return __g().getModulesWithImportedPath }, get findModuleWithImportedPath() { return __g().findModuleWithImportedPath } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var import_patcher = (function () { const __g = () => { try { return (valenced.patcher) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get after() { return __g().after }, get before() { return __g().before }, get instead() { return __g().instead } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get createElement() { return __g().createElement }, get isValidElement() { return __g().isValidElement }, get useState() { return __g().useState }, get cloneElement() { return __g().cloneElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Text() { return __g().Text }, get Pressable() { return __g().Pressable }, get View() { return __g().View }, get TextInput() { return __g().TextInput }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Text() { return __g().Text }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get TextInput() { return __g().TextInput }, get View() { return __g().View }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsx() { return __g().jsx }, get jsxs() { return __g().jsxs }, get jsxDEV() { return __g().jsxDEV }, get Fragment() { return __g().Fragment } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULTS = {
   text: "hello",
@@ -52,7 +52,8 @@ var INPUT_PATH = "modules/chat_input/native/ChatInput.tsx";
 var state = {
   cfg: { ...DEFAULTS },
   storage: null,
-  actionButton: null
+  actionButton: null,
+  button: null
 };
 var seq = 0;
 function find(...props) {
@@ -220,21 +221,28 @@ function clearNow() {
   return removed ? "Removed " + removed + " fake(s)." : "No fakes in this chat.";
 }
 function FakeIcon() {
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { fontSize: 16 }, children: "\u{1F3AD}" });
+  try {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { fontSize: 16 }, children: "\u{1F3AD}" });
+  } catch {
+    return null;
+  }
 }
-function FakeButton() {
-  const Button = state.actionButton;
-  if (!Button) return null;
-  return (0, import_react.createElement)(Button, {
-    accessibilityLabel: "FakeDM",
-    IconComponent: FakeIcon,
-    onPress: () => {
-      try {
-        fake();
-      } catch {
+function buildButton() {
+  if (!state.actionButton || typeof import_react.createElement !== "function") return null;
+  try {
+    return (0, import_react.createElement)(state.actionButton, {
+      accessibilityLabel: "FakeDM",
+      IconComponent: FakeIcon,
+      onPress: () => {
+        try {
+          fake();
+        } catch {
+        }
       }
-    }
-  });
+    });
+  } catch {
+    return null;
+  }
 }
 var hasExpression = (node) => {
   var _a;
@@ -286,6 +294,7 @@ function patchChatInput(cleanup, logger) {
     const off = get.call(finders, BUTTON_PATH, (mod) => {
       var _a2, _b2;
       state.actionButton = (_b2 = (_a2 = mod == null ? void 0 : mod.default) != null ? _a2 : mod) != null ? _b2 : null;
+      state.button = buildButton();
     });
     if (typeof off === "function") cleanup(off);
   } catch (error) {
@@ -302,11 +311,22 @@ function patchChatInput(cleanup, logger) {
       try {
         cleanup(
           (0, import_patcher.after)(ChatInput, "type", (...params) => {
-            var _a3;
-            const rendered = params.find((value) => (0, import_react.isValidElement)(value));
-            const result = (_a3 = rendered != null ? rendered : params[1]) != null ? _a3 : params[0];
-            if (state.cfg.button === false) return result;
-            return addButton(result, (0, import_react.createElement)(FakeButton, { key: "fakedm" }));
+            var _a3, _b3, _c3;
+            let result = (_a3 = params[1]) != null ? _a3 : params[0];
+            try {
+              const rendered = params.find((value) => {
+                var _a4;
+                return (_a4 = import_react.isValidElement) == null ? void 0 : _a4(value);
+              });
+              if (rendered) result = rendered;
+              if (state.cfg.button === false) return result;
+              const button = (_b3 = state.button) != null ? _b3 : state.button = buildButton();
+              if (!button) return result;
+              return addButton(result, button);
+            } catch (error) {
+              (_c3 = logger == null ? void 0 : logger.warn) == null ? void 0 : _c3.call(logger, "[FakeDM] chat button skipped this render", error);
+              return result;
+            }
           })
         );
       } catch (error) {
@@ -319,7 +339,7 @@ function patchChatInput(cleanup, logger) {
   }
 }
 function SettingsComponent({ api } = {}) {
-  var _a, _b, _c;
+  var _a, _b, _c, _d;
   const [, bump] = (0, import_react.useState)(0);
   const [status, setStatus] = (0, import_react.useState)("");
   const settings = (_a = state.cfg) != null ? _a : DEFAULTS;
@@ -362,8 +382,37 @@ function SettingsComponent({ api } = {}) {
       children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#00a8fc", fontWeight: "600" }, children: label })
     }
   );
-  const content = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { gap: 10 }, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.7 }, children: chat ? "Chat: " + chat.label : "Open a DM or group DM first, then come back here." }),
+  const on = settings.button !== false;
+  const buttonState = !on ? "off" : state.actionButton ? "on" : "on (not found yet)";
+  const Group = (_c = import_design.Design) == null ? void 0 : _c.TableRowGroup;
+  const SwitchRow = (_d = import_design.Design) == null ? void 0 : _d.TableSwitchRow;
+  const rows = Group && SwitchRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Group, { children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      SwitchRow,
+      {
+        label: "Fake button in chat bar",
+        subLabel: "Tap it to drop a fake message in the chat. Now: " + buttonState,
+        value: on,
+        onValueChange: (value) => {
+          set({ button: value });
+          setStatus("Reload FakeDM to apply.");
+        }
+      }
+    ),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      SwitchRow,
+      {
+        label: "Send as the other person",
+        subLabel: settings.asThem ? "Off: the fake message is from you" : "On: it is from the person in the chat",
+        value: !!settings.asThem,
+        onValueChange: (value) => set({ asThem: value })
+      }
+    )
+  ] }) : null;
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { contentContainerStyle: { padding: 16, paddingBottom: 64 }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontSize: 16, fontWeight: "700" }, children: "FakeDM" }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.7, marginTop: 4, marginBottom: 12 }, children: chat ? "Chat: " + chat.label : "Open a DM or group DM first, then come back here." }),
+    rows,
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
       import_react_native.TextInput,
       {
@@ -371,47 +420,24 @@ function SettingsComponent({ api } = {}) {
         onChangeText: (value) => set({ text: value }),
         placeholder: "Message text",
         placeholderTextColor: "#888",
-        style: { color: "#ffffff", borderWidth: 1, borderColor: "#555", borderRadius: 8, padding: 8 }
-      }
-    ),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      import_react_native.Pressable,
-      {
-        accessibilityRole: "button",
-        accessibilityLabel: "Choose sender",
-        onPress: () => set({ asThem: !settings.asThem }),
-        style: { paddingVertical: 10 },
-        children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "600" }, children: [
-          "Sender: ",
-          settings.asThem ? "the other person" : "you"
-        ] })
+        style: {
+          color: "#ffffff",
+          borderWidth: 1,
+          borderColor: "#555",
+          borderRadius: 8,
+          padding: 8,
+          marginTop: 12
+        }
       }
     ),
     action("Fake message", () => run(fake)),
     action("Fake call", () => run(fakeCallNow)),
     action("Clear fakes in this chat", () => run(clearNow)),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      import_react_native.Pressable,
-      {
-        accessibilityRole: "button",
-        accessibilityLabel: "Fake button in chat bar",
-        onPress: () => {
-          set({ button: settings.button === false });
-          setStatus("Reload FakeDM to apply.");
-        },
-        style: { paddingVertical: 10 },
-        children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "600" }, children: [
-          "Fake button in chat bar: ",
-          settings.button === false ? "off" : "on"
-        ] })
-      }
-    ),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.7 }, children: status })
-  ] });
-  const Group = (_c = import_design.Design) == null ? void 0 : _c.TableRowGroup;
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { contentContainerStyle: { padding: 16 }, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontSize: 16, fontWeight: "700" }, children: "FakeDM" }),
-    Group ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Group, { title: "FakeDM", children: content }) : content
+    !rows && action(on ? "Fake button in chat bar: on" : "Fake button in chat bar: off", () => {
+      set({ button: !on });
+      setStatus("Reload FakeDM to apply.");
+    }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.7, marginTop: 8 }, children: status })
   ] });
 }
 function FakeScreen(props) {
@@ -462,6 +488,7 @@ var index_default = plugin({
   // plugin bug into a client crash, so each step is sealed on its own.
   start(api) {
     var _a, _b, _c, _d, _e, _f, _g;
+    state.button = null;
     try {
       state.storage = (_a = api == null ? void 0 : api.jsonStorage) != null ? _a : null;
       const cached = (_c = (_b = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _b.cache) != null ? _c : {};
