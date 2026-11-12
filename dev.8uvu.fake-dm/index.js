@@ -44,6 +44,9 @@ var import_react_native = (function () { const __g = () => { try { return (valen
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsx() { return __g().jsx }, get jsxs() { return __g().jsxs }, get jsxDEV() { return __g().jsxDEV }, get Fragment() { return __g().Fragment } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULTS = {
   text: "hello",
+  // Who the next fake is from. Empty means "the other person in this chat".
+  senderId: "",
+  batch: "",
   asThem: true,
   // Off until asked for: with it off the plugin never touches the chat input
   // at all, so the chat bar cannot break and only the settings page runs.
@@ -96,9 +99,25 @@ function openChat() {
     return null;
   }
 }
+function resolvePerson(chat, name) {
+  const wanted = String(name != null ? name : "").trim().toLowerCase();
+  if (!wanted) return null;
+  const mine = me();
+  if (wanted === "me" || wanted === "you" || mine && wanted === String(mine.id)) return mine;
+  for (const user of chat.others) {
+    if (!user) continue;
+    const names = [user.id, user.username, user.globalName].filter(Boolean).map((v) => String(v).toLowerCase());
+    if (names.includes(wanted)) return user;
+  }
+  return null;
+}
 function sender(chat) {
   var _a;
   const mine = me();
+  if (state.cfg.senderId) {
+    const picked = resolvePerson(chat, state.cfg.senderId);
+    if (picked) return picked;
+  }
   return state.cfg.asThem ? (_a = chat.others[0]) != null ? _a : mine : mine;
 }
 function snowflake() {
@@ -129,7 +148,7 @@ function fakes() {
   const list = state.cfg.fakes;
   return Array.isArray(list) ? list.filter((f) => f && f.channelId && f.id) : [];
 }
-function fakeMessage(channelId, user, content) {
+function fakeMessage(channelId, user, content, when) {
   var _a;
   const dispatch = (_a = flux()) == null ? void 0 : _a.dispatch;
   if (!dispatch || !channelId || !(user == null ? void 0 : user.id)) return null;
@@ -148,7 +167,7 @@ function fakeMessage(channelId, user, content) {
     id,
     nonce: id,
     pinned: false,
-    timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+    timestamp: new Date(when != null ? when : Date.now()).toISOString(),
     tts: false,
     type: 0
   };
@@ -221,6 +240,39 @@ function fakeCallNow() {
   const chat = openChat();
   if (!chat) return "Open a chat first.";
   return fakeCall(chat.id, sender(chat), me(), 90) ? "Sent a fake call." : "Discord is not ready yet.";
+}
+function parseBatch(text) {
+  const out = [];
+  for (const raw of String(text != null ? text : "").split("\n")) {
+    const line = raw.replace(/^\s*\[[^\]]*\]\s*/, "").trim();
+    if (!line) continue;
+    const match = line.match(/^([^:]{1,40}):\s*(.+)$/);
+    if (match) out.push({ name: match[1].trim(), content: match[2] });
+    else out.push({ name: "", content: line });
+  }
+  return out;
+}
+function fakeBatch() {
+  var _a;
+  const chat = openChat();
+  if (!chat) return "Open a chat first.";
+  const lines = parseBatch(state.cfg.batch);
+  if (!lines.length) return "Nothing to send: put one message per line.";
+  const fallback = sender(chat);
+  let sent = 0;
+  let clock = Date.now();
+  for (const line of lines) {
+    const who = (_a = resolvePerson(chat, line.name)) != null ? _a : fallback;
+    if (!(who == null ? void 0 : who.id)) continue;
+    if (fakeMessage(chat.id, who, line.content, clock)) sent++;
+    clock += 3e4 + Math.floor(Math.random() * 9e4);
+  }
+  return sent ? "Sent " + sent + " fake message(s)." : "Nothing sent: no sender available.";
+}
+function fakeMissedNow() {
+  const chat = openChat();
+  if (!chat) return "Open a chat first.";
+  return fakeCall(chat.id, sender(chat), me(), 0, true) ? "Sent a missed call." : "Discord is not ready yet.";
 }
 function clearNow() {
   const chat = openChat();
@@ -383,7 +435,7 @@ function patchChatInput(cleanup, logger) {
   cleanup(() => clearInterval(timer));
 }
 function SettingsComponent({ api } = {}) {
-  var _a, _b, _c, _d;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i;
   const [, bump] = (0, import_react.useState)(0);
   const [status, setStatus] = (0, import_react.useState)("");
   const settings = (_a = state.cfg) != null ? _a : DEFAULTS;
@@ -428,35 +480,64 @@ function SettingsComponent({ api } = {}) {
   );
   const on = settings.button !== false;
   const buttonState = !on ? "off" : state.actionButton ? "on" : "on (not found yet)";
-  const Group = (_c = import_design.Design) == null ? void 0 : _c.TableRowGroup;
-  const SwitchRow = (_d = import_design.Design) == null ? void 0 : _d.TableSwitchRow;
-  const rows = Group && SwitchRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Group, { children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      SwitchRow,
-      {
-        label: "Fake button in chat bar",
-        subLabel: "Tap it to drop a fake message in the chat. Now: " + buttonState,
-        value: on,
-        onValueChange: (value) => {
-          set({ button: value });
-          setStatus("Reload FakeDM to apply.");
-        }
+  const people = [];
+  for (const user of (_c = chat == null ? void 0 : chat.others) != null ? _c : []) {
+    if (!(user == null ? void 0 : user.id)) continue;
+    people.push({ id: String(user.id), name: user.globalName || user.username || String(user.id) });
+  }
+  const mine = (() => {
+    try {
+      return me();
+    } catch {
+      return null;
+    }
+  })();
+  if (mine == null ? void 0 : mine.id) people.push({ id: String(mine.id), name: "You" });
+  const fallback = settings.asThem ? (_d = people[0]) == null ? void 0 : _d.id : (mine == null ? void 0 : mine.id) ? String(mine.id) : (_e = people[0]) == null ? void 0 : _e.id;
+  const chosen = settings.senderId || fallback || "";
+  const senderName = (_g = (_f = people.find((p) => p.id === chosen)) == null ? void 0 : _f.name) != null ? _g : "nobody";
+  const chip = (person) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    import_react_native.Pressable,
+    {
+      accessibilityRole: "button",
+      accessibilityLabel: "Send as " + person.name,
+      onPress: () => set({ senderId: person.id }),
+      style: {
+        paddingHorizontal: 14,
+        paddingVertical: 8,
+        borderRadius: 16,
+        marginRight: 8,
+        backgroundColor: chosen === person.id ? "#5865F2" : "#3f4147"
+      },
+      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "600" }, children: person.name })
+    },
+    person.id
+  );
+  const Group = (_h = import_design.Design) == null ? void 0 : _h.TableRowGroup;
+  const SwitchRow = (_i = import_design.Design) == null ? void 0 : _i.TableSwitchRow;
+  const rows = Group && SwitchRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Group, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    SwitchRow,
+    {
+      label: "Fake button in chat bar",
+      subLabel: "Tap it to drop a fake message in the chat. Now: " + buttonState,
+      value: on,
+      onValueChange: (value) => {
+        set({ button: value });
+        setStatus("Reload FakeDM to apply.");
       }
-    ),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      SwitchRow,
-      {
-        label: "Send as the other person",
-        subLabel: settings.asThem ? "Off: the fake message is from you" : "On: it is from the person in the chat",
-        value: !!settings.asThem,
-        onValueChange: (value) => set({ asThem: value })
-      }
-    )
-  ] }) : null;
+    }
+  ) }) : null;
   return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { contentContainerStyle: { padding: 16, paddingBottom: 64 }, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontSize: 16, fontWeight: "700" }, children: "FakeDM" }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.7, marginTop: 4, marginBottom: 12 }, children: chat ? "Chat: " + chat.label : "Open a DM or group DM first, then come back here." }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontSize: 18, fontWeight: "700" }, children: "FakeDM" }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.7, marginTop: 4 }, children: chat ? "Chat: " + chat.label : "Open a DM or group DM first, then come back here." }),
     rows,
+    !rows && action(on ? "Fake button in chat bar: on" : "Fake button in chat bar: off", () => {
+      set({ button: !on });
+      setStatus("Reload FakeDM to apply.");
+    }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "700", marginTop: 16, marginBottom: 8 }, children: "Send as" }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, contentContainerStyle: { paddingVertical: 2 }, children: people.length ? people.map(chip) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.6 }, children: "Nobody here yet." }) }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "700", marginTop: 16, marginBottom: 6 }, children: "Quick message" }),
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
       import_react_native.TextInput,
       {
@@ -469,18 +550,41 @@ function SettingsComponent({ api } = {}) {
           borderWidth: 1,
           borderColor: "#555",
           borderRadius: 8,
-          padding: 8,
-          marginTop: 12
+          padding: 8
         }
       }
     ),
-    action("Fake message", () => run(fake)),
-    action("Fake call", () => run(fakeCallNow)),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.6, marginTop: 6 }, children: [
+      "One tap sends it as ",
+      senderName,
+      "."
+    ] }),
+    action("Send fake message", () => run(fake)),
+    action("Send fake call", () => run(fakeCallNow)),
+    action("Send missed call", () => run(fakeMissedNow)),
     action("Clear fakes in this chat", () => run(clearNow)),
-    !rows && action(on ? "Fake button in chat bar: on" : "Fake button in chat bar: off", () => {
-      set({ button: !on });
-      setStatus("Reload FakeDM to apply.");
-    }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "700", marginTop: 16, marginBottom: 6 }, children: "Batch" }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.6, marginBottom: 6 }, children: 'One message per line. "Name: text" picks who says it, a bare line uses the sender above.' }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      import_react_native.TextInput,
+      {
+        value: settings.batch,
+        onChangeText: (value) => set({ batch: value }),
+        placeholder: "Alice: hey\nBob: hi there\nsure",
+        placeholderTextColor: "#888",
+        multiline: true,
+        style: {
+          color: "#ffffff",
+          borderWidth: 1,
+          borderColor: "#555",
+          borderRadius: 8,
+          padding: 8,
+          minHeight: 110,
+          textAlignVertical: "top"
+        }
+      }
+    ),
+    action("Send batch", () => run(fakeBatch)),
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.7, marginTop: 8 }, children: status })
   ] });
 }
@@ -555,6 +659,6 @@ var index_default = plugin({
     }
   },
   SettingsComponent,
-  __engine: { fakeMessage, fakeCall, clear, openChat, addButton }
+  __engine: { fakeMessage, fakeCall, clear, openChat, addButton, fakeBatch, parseBatch, sender, resolvePerson }
 });
 ; const __plugin = (module.exports && module.exports.default) || module.exports; if (__plugin && typeof __plugin === 'object' && !__plugin.default) { try { __plugin.default = __plugin; } catch (ignored) {} } if (__plugin && typeof __plugin.start === 'function') { const __start = __plugin.start.bind(__plugin); __plugin.start = function (...args) { try { return __start(...args); } catch (error) { try { (args[0] && args[0].logger && args[0].logger.error) ? args[0].logger.error('[plugin] start failed', error) : console.error('[plugin] start failed', error); } catch (ignored) {} } }; } return __plugin; })()
