@@ -44,7 +44,9 @@ var import_jsx_runtime = (function () { const __g = () => { try { return ((valen
 var DEFAULTS = {
   text: "hello",
   asThem: true,
-  button: true,
+  // Off until asked for: with it off the plugin never touches the chat input
+  // at all, so the chat bar cannot break and only the settings page runs.
+  button: false,
   fakes: []
 };
 var BUTTON_PATH = "modules/chat_input/native/action_buttons/ChatInputActionButton.tsx";
@@ -283,11 +285,15 @@ function addButton(node, button) {
   return node;
 }
 function patchChatInput(cleanup, logger) {
-  var _a, _b, _c;
+  var _a, _b, _c, _d;
+  if (state.cfg.button === false) {
+    (_a = logger == null ? void 0 : logger.log) == null ? void 0 : _a.call(logger, "[FakeDM] chat bar button is off; the chat input is left alone.");
+    return;
+  }
   const finders = PathFinders;
   const get = finders == null ? void 0 : finders.getModuleWithImportedPath;
   if (typeof get !== "function") {
-    (_a = logger == null ? void 0 : logger.warn) == null ? void 0 : _a.call(logger, "[FakeDM] this build has no import-path lookup, so no chat button.");
+    (_b = logger == null ? void 0 : logger.warn) == null ? void 0 : _b.call(logger, "[FakeDM] this build has no import-path lookup, so no chat button.");
     return;
   }
   try {
@@ -298,7 +304,7 @@ function patchChatInput(cleanup, logger) {
     });
     if (typeof off === "function") cleanup(off);
   } catch (error) {
-    (_b = logger == null ? void 0 : logger.error) == null ? void 0 : _b.call(logger, "[FakeDM] could not find Discord's chat button component", error);
+    (_c = logger == null ? void 0 : logger.error) == null ? void 0 : _c.call(logger, "[FakeDM] could not find Discord's chat button component", error);
   }
   try {
     const off = get.call(finders, INPUT_PATH, (mod) => {
@@ -335,7 +341,7 @@ function patchChatInput(cleanup, logger) {
     });
     if (typeof off === "function") cleanup(off);
   } catch (error) {
-    (_c = logger == null ? void 0 : logger.error) == null ? void 0 : _c.call(logger, "[FakeDM] could not reach the chat input", error);
+    (_d = logger == null ? void 0 : logger.error) == null ? void 0 : _d.call(logger, "[FakeDM] could not reach the chat input", error);
   }
 }
 function SettingsComponent({ api } = {}) {
