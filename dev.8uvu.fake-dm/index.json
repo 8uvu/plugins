@@ -8,7 +8,7 @@
             "description": "Fake messages, calls and reactions in any chat.",
             "author": "cenotaph",
             "channels": {
-                "latest": "2.0.7"
+                "latest": "2.0.8"
             },
             "versions": {
                 "2.0.0": {
@@ -93,6 +93,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@2.0.7.zip",
                     "sha256": "9811e69812d81870712cf4ba25ff02c2cfd5125a8a7cd844a0d62ef914892ee7",
                     "size": 5908,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "2.0.8": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@2.0.8.zip",
+                    "sha256": "ef303a405ab462ba2521ca0837a4247bb17807721e5e2c7563f27f7a153b88fe",
+                    "size": 6615,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"

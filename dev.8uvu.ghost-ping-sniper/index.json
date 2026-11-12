@@ -8,7 +8,7 @@
             "description": "Catches pings deleted before you see them.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.2"
+                "latest": "1.0.3"
             },
             "versions": {
                 "1.0.0": {
@@ -41,6 +41,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.ghost-ping-sniper@1.0.2.zip",
                     "sha256": "568306e92df1c18d8f7184febb2ed3b8e5033847c092aac0e2b216dd86c09870",
                     "size": 3495,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.3": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.ghost-ping-sniper@1.0.3.zip",
+                    "sha256": "5777a50162b8405d4e8d67805844edc94b03cc39564f12ba1aa1f0623f478669",
+                    "size": 4002,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"

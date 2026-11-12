@@ -4,7 +4,7 @@
     "name": "ServerCloner",
     "description": "Copies a server's roles and channels into another.",
     "author": "cenotaph",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "dependencies": {
         "valenced.api": {
             "version": ">=1 <2"

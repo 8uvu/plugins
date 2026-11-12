@@ -4,7 +4,7 @@
     "name": "Snowflake Tools",
     "description": "Decodes a Discord ID into the exact time it was created, plus its type.",
     "author": "cenotaph",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "dependencies": {
         "valenced.api": {
             "version": ">=1 <2"

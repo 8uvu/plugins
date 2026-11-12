@@ -4,7 +4,7 @@
     "name": "SendPolish",
     "description": "Tidies what you send: trailing spaces, stacked blank lines, stray markdown.",
     "author": "cenotaph",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "dependencies": {
         "valenced.api": {
             "version": ">=1 <2"

@@ -8,7 +8,7 @@
             "description": "Tidies what you send: trailing spaces, stacked blank lines, stray markdown.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.2"
+                "latest": "1.0.3"
             },
             "versions": {
                 "1.0.0": {
@@ -41,6 +41,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.send-polish@1.0.2.zip",
                     "sha256": "12c25286b3baeeb52851a6340f7d2f0d6a44b07d962f6821c98df6016472b636",
                     "size": 2716,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.3": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.send-polish@1.0.3.zip",
+                    "sha256": "a16676e56c2f1c6cff6fd79c9e93d00b23b9001d74722daf542b5a5ef5c2d4fa",
+                    "size": 3343,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
