@@ -2,9 +2,9 @@
     "format": 1,
     "id": "dev.8uvu.fake-dm",
     "name": "FakeDM",
-    "description": "Fake messages, calls and reactions in any chat.",
+    "description": "Fake messages and calls in the chat you have open. Drawn locally, never sent.",
     "author": "cenotaph",
-    "version": "2.1.0",
+    "version": "3.0.0",
     "dependencies": {
         "valenced.api": {
             "version": ">=1 <2"

@@ -80,10 +80,10 @@
         },
         "dev.8uvu.fake-dm": {
             "name": "FakeDM",
-            "description": "Fake messages, calls and reactions in any chat.",
+            "description": "Fake messages and calls in the chat you have open. Drawn locally, never sent.",
             "author": "cenotaph",
             "channels": {
-                "latest": "2.1.0"
+                "latest": "3.0.0"
             },
             "versions": {
                 "2.0.0": {
@@ -207,6 +207,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@2.1.0.zip",
                     "sha256": "32a00f9ff5d5608c78ca2c23adbf271407799d87d430a547fd57a91725ba7a17",
                     "size": 7216,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "3.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@3.0.0.zip",
+                    "sha256": "244dc7564aba7b514e871b03d8a217f34c674bb110dc34333f270ed89896499c",
+                    "size": 6520,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
