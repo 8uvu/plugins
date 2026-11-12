@@ -37,7 +37,6 @@ var import_filters = (valenced.modules.finders.filters);
 var import_design = (valenced.discord.design);
 var SettingsModules = __toESM(((function () { const m = () => (valenced.discord && valenced.discord.modules && valenced.discord.modules.settings) || {}; return { get onSettingsModulesLoaded() { return m().onSettingsModulesLoaded }, get registerSettingsSection() { return m().registerSettingsSection }, get registerSettingsItem() { return m().registerSettingsItem } }; })()));
 var JsxRuntime = __toESM(((function () { const rt = () => (valenced.react && (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime)) || {}; return { get beforeJSX() { return rt().beforeJSX }, get afterJSX() { return rt().afterJSX }, get insteadJSX() { return rt().insteadJSX } }; })()));
-var UtilsDiscord = __toESM(((function () { const m = () => (valenced.utils && valenced.utils.discord) || {}; return { get lookupGeneratedIconComponent() { return m().lookupGeneratedIconComponent } }; })()));
 var import_react = ((function () { const R = (valenced.react && valenced.react.React) || {}; return { default: R, ...R }; })());
 var import_react_native = ((function () { return { ...((valenced.react && valenced.react.ReactNative) || {}) }; })());
 var import_jsx_runtime = ((function () { const rt = () => (valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime)) || {}; return { get jsx() { return rt().jsx }, get jsxs() { return rt().jsxs }, get Fragment() { return rt().Fragment } }; })());
@@ -339,7 +338,7 @@ function SettingsComponent({ api } = {}) {
   return D.TableRowGroup ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "FakeDM", children: body }) : body;
 }
 function installSettingsEntry(cleanup, logger) {
-  var _a, _b, _c;
+  var _a, _b;
   const settings = SettingsModules;
   const onLoaded = settings == null ? void 0 : settings.onSettingsModulesLoaded;
   const registerSection = settings == null ? void 0 : settings.registerSettingsSection;
@@ -347,13 +346,6 @@ function installSettingsEntry(cleanup, logger) {
   if (typeof onLoaded !== "function" || typeof registerSection !== "function" || typeof registerItem !== "function") {
     (_a = logger == null ? void 0 : logger.warn) == null ? void 0 : _a.call(logger, "[FakeDM] this build has no settings-module API, so the FakeDM settings page is unavailable.");
     return;
-  }
-  let IconComponent = null;
-  try {
-    const lookup = UtilsDiscord == null ? void 0 : UtilsDiscord.lookupGeneratedIconComponent;
-    if (typeof lookup === "function") IconComponent = (_b = lookup("SettingsIcon")) != null ? _b : null;
-  } catch {
-    IconComponent = null;
   }
   try {
     const off = onLoaded(() => {
@@ -364,7 +356,10 @@ function installSettingsEntry(cleanup, logger) {
           registerItem("FAKEDM_MAIN", {
             type: "route",
             title: () => "FakeDM",
-            IconComponent: IconComponent != null ? IconComponent : (() => null),
+            // A component this plugin owns: looking an icon up in
+            // Discord's registry can hand back something that is not
+            // a usable component, and that crashes the settings list.
+            IconComponent: NoopIcon,
             screen: { route: "FakeDMScreen", getComponent: () => FakeScreen }
           })
         );
@@ -375,24 +370,46 @@ function installSettingsEntry(cleanup, logger) {
     });
     if (typeof off === "function") cleanup(off);
   } catch (error) {
-    (_c = logger == null ? void 0 : logger.error) == null ? void 0 : _c.call(logger, "[FakeDM] settings registration failed", error);
+    (_b = logger == null ? void 0 : logger.error) == null ? void 0 : _b.call(logger, "[FakeDM] settings registration failed", error);
   }
 }
+function NoopIcon() {
+  return null;
+}
 function FakeScreen(props) {
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SettingsComponent, { ...props });
+  try {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SettingsComponent, { ...props });
+  } catch (error) {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", padding: 16 }, children: "FakeDM settings failed to render." });
+  }
 }
 var index_default = plugin({
   jsonStorage: { load: true, default: DEFAULTS },
+  // Nothing here may throw: an exception escaping start is what turns a
+  // plugin bug into a client crash, so every step is sealed on its own and
+  // a failure is reported to the log instead.
   start({ cleanup, jsonStorage, logger }) {
-    var _a;
-    state.storage = jsonStorage;
-    state.cfg = { ...DEFAULTS, ...(_a = jsonStorage.cache) != null ? _a : {} };
-    state.installed = false;
-    cleanup(() => {
+    var _a, _b, _c, _d;
+    try {
+      state.storage = jsonStorage;
+      state.cfg = { ...DEFAULTS, ...(_a = jsonStorage == null ? void 0 : jsonStorage.cache) != null ? _a : {} };
       state.installed = false;
-    });
-    installPill(cleanup, logger);
-    installSettingsEntry(cleanup, logger);
+      cleanup(() => {
+        state.installed = false;
+      });
+    } catch (error) {
+      (_b = logger == null ? void 0 : logger.error) == null ? void 0 : _b.call(logger, "[FakeDM] storage setup failed", error);
+    }
+    try {
+      installPill(cleanup, logger);
+    } catch (error) {
+      (_c = logger == null ? void 0 : logger.error) == null ? void 0 : _c.call(logger, "[FakeDM] chat-bar pill setup failed", error);
+    }
+    try {
+      installSettingsEntry(cleanup, logger);
+    } catch (error) {
+      (_d = logger == null ? void 0 : logger.error) == null ? void 0 : _d.call(logger, "[FakeDM] settings entry setup failed", error);
+    }
   },
   SettingsComponent,
   __engine: { injectMessage, injectReaction, injectCall, clearFakesInChannel, parseBatchScript }
