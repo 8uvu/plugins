@@ -35,6 +35,8 @@ module.exports = __toCommonJS(index_exports);
 var import_finders = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get lookupModule() { return __g().lookupModule }, get lookupModules() { return __g().lookupModules }, get getModules() { return __g().getModules }, get waitForModules() { return __g().waitForModules } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_filters = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders && valenced.modules.finders.filters) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get withProps() { return __g().withProps }, get withName() { return __g().withName }, get withoutProps() { return __g().withoutProps }, get withSingleProp() { return __g().withSingleProp }, get withDependencies() { return __g().withDependencies }, get anyOf() { return __g().anyOf }, get allOf() { return __g().allOf }, get namespaceOnly() { return __g().namespaceOnly }, get createFilterGenerator() { return __g().createFilterGenerator }, get partial() { return __g().partial } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_design = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.design) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Design() { return __g().Design } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_flux = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.flux) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Stores() { return __g().Stores }, get getStore() { return __g().getStore }, get onFluxEventDispatched() { return __g().onFluxEventDispatched }, get onAnyFluxEventDispatched() { return __g().onAnyFluxEventDispatched } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_flux2 = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.common && valenced.discord.common.flux) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Dispatcher() { return __g().Dispatcher } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var SettingsModules = __toESM((function () { const __g = () => { try { return (valenced.discord && valenced.discord.modules && valenced.discord.modules.settings) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get onSettingsModulesLoaded() { return __g().onSettingsModulesLoaded }, get registerSettingsSection() { return __g().registerSettingsSection }, get registerSettingsItem() { return __g().registerSettingsItem } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var PathFinders = __toESM((function () { const __g = () => { try { return (valenced.discord && valenced.discord.utils && valenced.discord.utils.modules && valenced.discord.utils.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get lookupModuleWithImportedPath() { return __g().lookupModuleWithImportedPath }, get getModuleWithImportedPath() { return __g().getModuleWithImportedPath }, get getModule() { return __g().getModule }, get getModulesWithImportedPath() { return __g().getModulesWithImportedPath }, get findModuleWithImportedPath() { return __g().findModuleWithImportedPath } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var Metro = __toESM((function () { const __g = () => { try { return (valenced.modules && valenced.modules.metro) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get onModuleInitialized() { return __g().onModuleInitialized }, get onAnyModuleInitialized() { return __g().onAnyModuleInitialized }, get onModuleFirstRequired() { return __g().onModuleFirstRequired }, get onAnyModuleFirstRequired() { return __g().onAnyModuleFirstRequired } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
@@ -85,7 +87,7 @@ var DEFAULTS = {
 };
 var BUTTON_PATH = "modules/chat_input/native/action_buttons/ChatInputActionButton.tsx";
 var INPUT_PATH = "modules/chat_input/native/ChatInput.tsx";
-var VERSION = "4.2.0";
+var VERSION = "4.3.0";
 var SYSTEM_TYPES = [
   { value: 1, label: "Added someone" },
   { value: 2, label: "Removed someone" },
@@ -124,10 +126,36 @@ function find(...props) {
   }
 }
 function flux() {
+  try {
+    if (import_flux2.Dispatcher && typeof import_flux2.Dispatcher.dispatch === "function") return import_flux2.Dispatcher;
+  } catch {
+  }
   return find("dispatch", "subscribe");
+}
+function storeOf(name) {
+  var _a, _b;
+  try {
+    const store = (_a = import_flux.Stores) == null ? void 0 : _a[name];
+    if (store) return store;
+  } catch {
+  }
+  try {
+    let found = null;
+    (_b = import_flux.getStore) == null ? void 0 : _b(name, (store) => {
+      found = store;
+    });
+    if (found) return found;
+  } catch {
+  }
+  return null;
 }
 function me() {
   var _a, _b, _c;
+  try {
+    const store = storeOf("UserStore");
+    if (store == null ? void 0 : store.getCurrentUser) return store.getCurrentUser();
+  } catch {
+  }
   try {
     return (_c = (_b = (_a = find("getCurrentUser")) == null ? void 0 : _a.getCurrentUser) == null ? void 0 : _b.call(_a)) != null ? _c : null;
   } catch {
@@ -136,6 +164,14 @@ function me() {
 }
 function currentChannelId() {
   const probes = [
+    () => {
+      var _a, _b;
+      return (_b = (_a = storeOf("SelectedChannelStore")) == null ? void 0 : _a.getChannelId) == null ? void 0 : _b.call(_a);
+    },
+    () => {
+      var _a, _b;
+      return (_b = (_a = storeOf("SelectedChannelStore")) == null ? void 0 : _a.getSelectedChannelId) == null ? void 0 : _b.call(_a);
+    },
     () => {
       var _a, _b;
       return (_b = (_a = find("getChannelId")) == null ? void 0 : _a.getChannelId) == null ? void 0 : _b.call(_a);
@@ -164,6 +200,10 @@ function currentChannelId() {
 }
 function channelById(id) {
   const probes = [
+    () => {
+      var _a, _b;
+      return (_b = (_a = storeOf("ChannelStore")) == null ? void 0 : _a.getChannel) == null ? void 0 : _b.call(_a, id);
+    },
     () => {
       var _a, _b;
       return (_b = (_a = find("getChannel")) == null ? void 0 : _a.getChannel) == null ? void 0 : _b.call(_a, id);
@@ -195,9 +235,15 @@ function channelById(id) {
   return null;
 }
 function userById(id) {
-  var _a, _b, _c;
+  var _a, _b, _c, _d;
   try {
-    return (_c = (_b = (_a = find("getUser")) == null ? void 0 : _a.getUser) == null ? void 0 : _b.call(_a, id)) != null ? _c : null;
+    const store = storeOf("UserStore");
+    const user = (_a = store == null ? void 0 : store.getUser) == null ? void 0 : _a.call(store, id);
+    if (user) return user;
+  } catch {
+  }
+  try {
+    return (_d = (_c = (_b = find("getUser")) == null ? void 0 : _b.getUser) == null ? void 0 : _c.call(_b, id)) != null ? _d : null;
   } catch {
     return null;
   }
@@ -217,12 +263,12 @@ function normalisePeople(list) {
   return out;
 }
 function guildMembers(channel) {
-  var _a, _b, _c, _d, _e;
+  var _a, _b, _c, _d, _e, _f;
   const guildId = (_a = channel == null ? void 0 : channel.guild_id) != null ? _a : channel == null ? void 0 : channel.guildId;
   if (!guildId) return [];
   try {
-    const store = (_c = (_b = find("getMembers", "getMember")) != null ? _b : find("getMembers")) != null ? _c : find("getMember");
-    const map = (_e = (_d = store == null ? void 0 : store.getMembers) == null ? void 0 : _d.call(store, guildId)) != null ? _e : {};
+    const store = (_d = (_c = (_b = storeOf("GuildMemberStore")) != null ? _b : find("getMembers", "getMember")) != null ? _c : find("getMembers")) != null ? _d : find("getMember");
+    const map = (_f = (_e = store == null ? void 0 : store.getMembers) == null ? void 0 : _e.call(store, guildId)) != null ? _f : {};
     const list = Object.values(map != null ? map : {}).map((m) => {
       var _a2, _b2;
       return (_b2 = m == null ? void 0 : m.user) != null ? _b2 : userById(String((_a2 = m == null ? void 0 : m.userId) != null ? _a2 : ""));
@@ -1074,6 +1120,8 @@ function Panel({ api } = {}) {
             state.patched ? state.actionButton ? "installed (Discord button)" : "installed (plain)" : "not installed"
           ),
           row("Discord dispatcher", flux() ? "found" : "not found"),
+          row("Channel store", storeOf("ChannelStore") ? "found" : "not found"),
+          row("User store", storeOf("UserStore") ? "found" : "not found"),
           row("Signed in as", mine ? mine.username || String(mine.id) : "unknown")
         ] })
       ),
