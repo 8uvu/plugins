@@ -42,7 +42,7 @@ var PathFinders = __toESM((function () { const __g = () => { try { return (valen
 var Metro = __toESM((function () { const __g = () => { try { return (valenced.modules && valenced.modules.metro) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get onModuleInitialized() { return __g().onModuleInitialized }, get onAnyModuleInitialized() { return __g().onAnyModuleInitialized }, get onModuleFirstRequired() { return __g().onModuleFirstRequired }, get onAnyModuleFirstRequired() { return __g().onAnyModuleFirstRequired } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var import_patcher = (function () { const __g = () => { try { return (valenced.patcher) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get after() { return __g().after }, get before() { return __g().before }, get instead() { return __g().instead } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get createElement() { return __g().createElement }, get isValidElement() { return __g().isValidElement }, get useState() { return __g().useState }, get cloneElement() { return __g().cloneElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Text() { return __g().Text }, get Pressable() { return __g().Pressable }, get View() { return __g().View }, get TextInput() { return __g().TextInput }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Image() { return __g().Image }, get Pressable() { return __g().Pressable }, get Text() { return __g().Text }, get View() { return __g().View }, get TextInput() { return __g().TextInput }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsx() { return __g().jsx }, get jsxs() { return __g().jsxs }, get Fragment() { return __g().Fragment }, get jsxDEV() { return __g().jsxDEV } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULTS = {
   text: "hello",
@@ -87,7 +87,8 @@ var DEFAULTS = {
 };
 var BUTTON_PATH = "modules/chat_input/native/action_buttons/ChatInputActionButton.tsx";
 var INPUT_PATH = "modules/chat_input/native/ChatInput.tsx";
-var VERSION = "4.4.0";
+var VERSION = "4.5.0";
+var ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAACUklEQVR4nO3cS3IbMQwE0EEq97/yZJFF/hVZ5gecfm/v4hhogrJE67oAAAAAAAAAAAAAAAAAAAAAgL7qauy+7/t6iKpqWet2D/Wkpp8QhhYPktD0rmHYunhy47sE4cu1ieb3qMeWAGh+n7osHTsa3+9IWDYBNL9nvZYEQPP71m16ADS/d/22/RVAD1MDYPf3r+O0AGj+GfWcEgDNn2NGXb0GCDc8AHb/XKPrawKEE4BwQwNg/K8xss4mQDgBCDcsAMb/WqPqbQKEE4BwX6+H3p6ZcSTVonVWqqPvs71wbWrEc9WidXZcGzv2CHj1l/9skWrROrscGwCCA/DR3fbu7qxF6+x0ZAAIDkD33VyHTYHjAsBYAhBOAMIJQLjjAvDuO24f/bl70Tq7HRcAxjoyAF13833Y7j82AIxzbABe3W2f3ZX3onV2Ofrj4PT7ADXgXcdHBCBVJd8HYAwBCCcA4QQgnACEE4BwAhBOAMINC8Bpd+FOV4PqbQKEE4BwQwPgGFhjZJ1NgHACEG54ABwDc42urwkQbkoATIE5ZtR12gQQgjPqOfUIEIL+dfQaINz0AJgCveu3ZAIIQd+6LTsChKBnvbZ8hOt/CPpslC0vAk2DPnXZ9leAEPSoR4tbPMlHQm2+SdUiAGlhqEbX59o8yNPDUI2a/rOWD9UlTNW0aSPFvBWc8L2/74gJAH8XFYCnf/f/O6ICwJ8EIFxcAP433ito/EcGgF8JQLjIAPxrzFfY+I8NAD/EBuD33V6Buz86AHwnAGS7H/SR8ztMAAAAAMjxDYaH2MbJO/xzAAAAAElFTkSuQmCC";
 var SYSTEM_TYPES = [
   { value: 1, label: "Added someone" },
   { value: 2, label: "Removed someone" },
@@ -596,9 +597,9 @@ function clearNow() {
   const removed = clear(chat.id);
   return removed ? "Removed " + removed + " fake(s)." : "No fakes in this chat.";
 }
-function FakeIcon() {
+function FakeIcon({ style } = {}) {
   try {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { fontSize: 16 }, children: "\u{1F3AD}" });
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Image, { source: { uri: ICON }, style: [{ width: 22, height: 22 }, style] });
   } catch {
     return null;
   }
@@ -624,7 +625,7 @@ function buildButton() {
     return (0, import_react.createElement)(
       import_react_native.Pressable,
       { accessibilityLabel: "FakeDM", accessibilityRole: "button", onPress: press, style: { paddingHorizontal: 10, paddingVertical: 6 } },
-      (0, import_react.createElement)(import_react_native.Text, { style: { fontSize: 18 } }, "\u{1F3AD}")
+      (0, import_react.createElement)(FakeIcon, {})
     );
   } catch {
     return null;
@@ -649,6 +650,12 @@ function addButton(node, button) {
   const { children } = node.props;
   const list = Array.isArray(children) ? children : [children];
   if (list.some(hasKey)) return node;
+  const at = list.findIndex(isButtonGroup);
+  if (at !== -1) {
+    const next = [...list];
+    next.splice(at, 0, button);
+    return { ...node, props: { ...node.props, children: next } };
+  }
   let last = -1;
   list.forEach((child, index) => {
     if (hasExpression(child)) last = index;
@@ -656,12 +663,6 @@ function addButton(node, button) {
   if (last !== -1) {
     const next = [...list];
     next.splice(last + 1, 0, button);
-    return { ...node, props: { ...node.props, children: next } };
-  }
-  const at = list.findIndex(isButtonGroup);
-  if (at !== -1) {
-    const next = [...list];
-    next.splice(at, 0, button);
     return { ...node, props: { ...node.props, children: next } };
   }
   for (let i = 0; i < list.length; i++) {
