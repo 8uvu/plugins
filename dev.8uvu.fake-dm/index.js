@@ -87,7 +87,7 @@ var DEFAULTS = {
 };
 var BUTTON_PATH = "modules/chat_input/native/action_buttons/ChatInputActionButton.tsx";
 var INPUT_PATH = "modules/chat_input/native/ChatInput.tsx";
-var VERSION = "4.3.0";
+var VERSION = "4.4.0";
 var SYSTEM_TYPES = [
   { value: 1, label: "Added someone" },
   { value: 2, label: "Removed someone" },
@@ -114,6 +114,7 @@ var state = {
   patched: false,
   cat: "message",
   lastChannelId: "",
+  watchingInput: false,
   diag: { chat: "", button: "", input: "", inputName: "", channel: false, recipients: 0 }
 };
 var seq = 0;
@@ -695,30 +696,30 @@ function moduleByName(name) {
     return null;
   }
 }
-function tryAttach(cleanup, logger) {
-  var _a, _b, _c, _d;
+function onModule(path, callback, cleanup) {
+  try {
+    const finder = PathFinders == null ? void 0 : PathFinders.getModuleWithImportedPath;
+    if (typeof finder !== "function") return false;
+    const off = finder(path, (mod) => {
+      try {
+        callback(mod);
+      } catch {
+      }
+    });
+    if (typeof off === "function") cleanup(off);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function installPatch(ChatInput, cleanup, logger) {
+  var _a, _b;
   if (state.patched) return true;
-  if (!state.actionButton) {
-    state.actionButton = moduleFromPath(BUTTON_PATH);
-    state.diag.button = state.actionButton ? "path" : "";
-    if (!state.actionButton) {
-      state.actionButton = moduleByName("ChatInputActionButton");
-      state.diag.button = state.actionButton ? "name" : "";
-    }
-  }
-  if (!state.button || state.actionButton && state.buttonKind !== "discord") state.button = buildButton();
-  let ChatInput = moduleFromPath(INPUT_PATH);
-  state.diag.input = ChatInput ? "path" : "";
-  if (!ChatInput) {
-    ChatInput = moduleByName("ChatInput");
-    state.diag.input = ChatInput ? "name" : "";
-  }
-  state.diag.inputName = ChatInput ? String((_b = (_a = ChatInput == null ? void 0 : ChatInput.displayName) != null ? _a : ChatInput == null ? void 0 : ChatInput.name) != null ? _b : "anonymous") : "";
   if (!ChatInput || typeof ChatInput.type !== "function") return false;
   try {
     cleanup(
       (0, import_patcher.after)(ChatInput, "type", (...params) => {
-        var _a2, _b2, _c2;
+        var _a2, _b2, _c;
         let result = (_a2 = params[1]) != null ? _a2 : params[0];
         try {
           const rendered = params.find((value) => {
@@ -731,18 +732,69 @@ function tryAttach(cleanup, logger) {
           if (!button) return result;
           return addButton(result, button);
         } catch (error) {
-          (_c2 = logger == null ? void 0 : logger.warn) == null ? void 0 : _c2.call(logger, "[FakeDM] chat button skipped this render", error);
+          (_c = logger == null ? void 0 : logger.warn) == null ? void 0 : _c.call(logger, "[FakeDM] chat button skipped this render", error);
           return result;
         }
       })
     );
     state.patched = true;
-    (_c = logger == null ? void 0 : logger.log) == null ? void 0 : _c.call(logger, "[FakeDM] chat button installed; open a chat to see it.");
+    (_a = logger == null ? void 0 : logger.log) == null ? void 0 : _a.call(logger, "[FakeDM] chat button installed; open a chat to see it.");
     return true;
   } catch (error) {
-    (_d = logger == null ? void 0 : logger.error) == null ? void 0 : _d.call(logger, "[FakeDM] could not patch the chat input", error);
+    (_b = logger == null ? void 0 : logger.error) == null ? void 0 : _b.call(logger, "[FakeDM] could not patch the chat input", error);
     return false;
   }
+}
+function tryAttach(cleanup, logger) {
+  var _a, _b;
+  if (state.patched) return true;
+  if (!state.actionButton) {
+    state.actionButton = moduleFromPath(BUTTON_PATH);
+    state.diag.button = state.actionButton ? "path" : "";
+    if (!state.actionButton) {
+      onModule(
+        BUTTON_PATH,
+        (mod) => {
+          var _a2;
+          const found = (_a2 = mod == null ? void 0 : mod.default) != null ? _a2 : mod;
+          if (!found || state.actionButton) return;
+          state.actionButton = found;
+          state.diag.button = "callback";
+          if (!state.button || state.buttonKind !== "discord") state.button = buildButton();
+        },
+        cleanup
+      );
+    }
+    if (!state.actionButton) {
+      state.actionButton = moduleByName("ChatInputActionButton");
+      state.diag.button = state.actionButton ? "name" : "";
+    }
+  }
+  if (!state.button || state.actionButton && state.buttonKind !== "discord") state.button = buildButton();
+  let ChatInput = moduleFromPath(INPUT_PATH);
+  state.diag.input = ChatInput ? "path" : "";
+  state.diag.inputName = ChatInput ? String((_b = (_a = ChatInput == null ? void 0 : ChatInput.displayName) != null ? _a : ChatInput == null ? void 0 : ChatInput.name) != null ? _b : "anonymous") : "";
+  if (!ChatInput) {
+    ChatInput = moduleByName("ChatInput");
+    state.diag.input = ChatInput ? "name" : "";
+  }
+  if (ChatInput) return installPatch(ChatInput, cleanup, logger);
+  if (!state.watchingInput) {
+    state.watchingInput = true;
+    onModule(
+      INPUT_PATH,
+      (mod) => {
+        var _a2, _b2, _c;
+        const found = (_a2 = mod == null ? void 0 : mod.default) != null ? _a2 : mod;
+        if (!found) return;
+        state.diag.input = "callback";
+        state.diag.inputName = String((_c = (_b2 = found == null ? void 0 : found.displayName) != null ? _b2 : found == null ? void 0 : found.name) != null ? _c : "anonymous");
+        installPatch(found, cleanup, logger);
+      },
+      cleanup
+    );
+  }
+  return state.patched;
 }
 function patchChatInput(cleanup, logger) {
   var _a, _b, _c;
@@ -994,7 +1046,8 @@ function Panel({ api } = {}) {
   return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { contentContainerStyle: { padding: 16, paddingBottom: 64 }, children: [
     heading("Chat"),
     /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: white }, children: chat ? chat.label : "No chat found yet." }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: white, fontSize: 16, fontWeight: "700" }, children: chat ? chat.label : "No chat found yet." }),
+      hint("FakeDM " + VERSION + " \xB7 " + people.length + " people in reach"),
       hint(
         chat ? "Follows the chat you open \u2014 tap a DM and this switches to it. Id " + chat.id : "Tap a DM or a channel in the list, then come back here. If it still finds nothing, paste the channel id below."
       ),
@@ -1189,6 +1242,7 @@ var index_default = plugin({
     var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
     state.button = null;
     state.buttonKind = "";
+    state.watchingInput = false;
     state.patched = false;
     try {
       state.storage = (_a = api == null ? void 0 : api.jsonStorage) != null ? _a : null;
