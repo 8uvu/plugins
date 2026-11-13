@@ -42,7 +42,7 @@ var PathFinders = __toESM((function () { const __g = () => { try { return (valen
 var Metro = __toESM((function () { const __g = () => { try { return (valenced.modules && valenced.modules.metro) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get onModuleInitialized() { return __g().onModuleInitialized }, get onAnyModuleInitialized() { return __g().onAnyModuleInitialized }, get onModuleFirstRequired() { return __g().onModuleFirstRequired }, get onAnyModuleFirstRequired() { return __g().onAnyModuleFirstRequired } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var import_patcher = (function () { const __g = () => { try { return (valenced.patcher) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get after() { return __g().after }, get before() { return __g().before }, get instead() { return __g().instead } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get createElement() { return __g().createElement }, get isValidElement() { return __g().isValidElement }, get useState() { return __g().useState }, get cloneElement() { return __g().cloneElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Image() { return __g().Image }, get Pressable() { return __g().Pressable }, get Text() { return __g().Text }, get View() { return __g().View }, get TextInput() { return __g().TextInput }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Image() { return __g().Image }, get Pressable() { return __g().Pressable }, get View() { return __g().View }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsx() { return __g().jsx }, get jsxs() { return __g().jsxs }, get Fragment() { return __g().Fragment }, get jsxDEV() { return __g().jsxDEV } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULTS = {
   text: "hello",
@@ -87,7 +87,7 @@ var DEFAULTS = {
 };
 var BUTTON_PATH = "modules/chat_input/native/action_buttons/ChatInputActionButton.tsx";
 var INPUT_PATH = "modules/chat_input/native/ChatInput.tsx";
-var VERSION = "4.5.0";
+var VERSION = "4.6.0";
 var ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAACUklEQVR4nO3cS3IbMQwE0EEq97/yZJFF/hVZ5gecfm/v4hhogrJE67oAAAAAAAAAAAAAAAAAAAAAgL7qauy+7/t6iKpqWet2D/Wkpp8QhhYPktD0rmHYunhy47sE4cu1ieb3qMeWAGh+n7osHTsa3+9IWDYBNL9nvZYEQPP71m16ADS/d/22/RVAD1MDYPf3r+O0AGj+GfWcEgDNn2NGXb0GCDc8AHb/XKPrawKEE4BwQwNg/K8xss4mQDgBCDcsAMb/WqPqbQKEE4BwX6+H3p6ZcSTVonVWqqPvs71wbWrEc9WidXZcGzv2CHj1l/9skWrROrscGwCCA/DR3fbu7qxF6+x0ZAAIDkD33VyHTYHjAsBYAhBOAMIJQLjjAvDuO24f/bl70Tq7HRcAxjoyAF13833Y7j82AIxzbABe3W2f3ZX3onV2Ofrj4PT7ADXgXcdHBCBVJd8HYAwBCCcA4QQgnACEE4BwAhBOAMINC8Bpd+FOV4PqbQKEE4BwQwPgGFhjZJ1NgHACEG54ABwDc42urwkQbkoATIE5ZtR12gQQgjPqOfUIEIL+dfQaINz0AJgCveu3ZAIIQd+6LTsChKBnvbZ8hOt/CPpslC0vAk2DPnXZ9leAEPSoR4tbPMlHQm2+SdUiAGlhqEbX59o8yNPDUI2a/rOWD9UlTNW0aSPFvBWc8L2/74gJAH8XFYCnf/f/O6ICwJ8EIFxcAP433ito/EcGgF8JQLjIAPxrzFfY+I8NAD/EBuD33V6Buz86AHwnAGS7H/SR8ztMAAAAAMjxDYaH2MbJO/xzAAAAAElFTkSuQmCC";
 var SYSTEM_TYPES = [
   { value: 1, label: "Added someone" },
@@ -599,7 +599,7 @@ function clearNow() {
 }
 function FakeIcon({ style } = {}) {
   try {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Image, { source: { uri: ICON }, style: [{ width: 22, height: 22 }, style] });
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Image, { source: { uri: ICON }, style: [{ width: 24, height: 24 }, style] });
   } catch {
     return null;
   }
@@ -841,20 +841,34 @@ function patchChatInput(cleanup, logger) {
   }, 1500);
   cleanup(() => clearInterval(timer));
 }
-var white = "#ffffff";
-var muted = "#b5bac1";
-var blue = "#5865F2";
+var PALETTE = {
+  text: "#ffffff",
+  muted: "#b5bac1",
+  accent: "#5865F2",
+  card: "#1e1f22",
+  input: "#2b2d31"
+};
+var WHEN_CHOICES = [
+  { label: "Now", minutes: "0" },
+  { label: "5 minutes ago", minutes: "5" },
+  { label: "1 hour ago", minutes: "60" },
+  { label: "3 hours ago", minutes: "180" },
+  { label: "Yesterday", minutes: "1440" }
+];
 function Panel({ api } = {}) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
   const [, bump] = (0, import_react.useState)(0);
   const [status, setStatus] = (0, import_react.useState)("");
   const settings = (_a = state.cfg) != null ? _a : DEFAULTS;
   const store = (_b = api == null ? void 0 : api.jsonStorage) != null ? _b : state.storage;
   const D = (_c = import_design.Design) != null ? _c : {};
-  const Row = D.TableRow;
   const Group = D.TableRowGroup;
+  const Row = D.TableRow;
   const SwitchRow = D.TableSwitchRow;
-  const Radio = D.FormRadio;
+  const RadioGroup = D.TableRadioGroup;
+  const RadioRow = D.TableRadioRow;
+  const DText = D.Text;
+  const StackView = (_d = D.Stack) != null ? _d : import_react_native.View;
   const set = (patch) => {
     var _a2, _b2, _c2;
     state.cfg = { ...state.cfg, ...patch };
@@ -887,96 +901,16 @@ function Panel({ api } = {}) {
   })();
   const people = [];
   const seen = /* @__PURE__ */ new Set();
-  for (const user of [...(_d = chat == null ? void 0 : chat.others) != null ? _d : [], ...(_e = chat == null ? void 0 : chat.members) != null ? _e : []]) {
+  for (const user of [...(_e = chat == null ? void 0 : chat.others) != null ? _e : [], ...(_f = chat == null ? void 0 : chat.members) != null ? _f : []]) {
     if (!(user == null ? void 0 : user.id) || seen.has(String(user.id))) continue;
     if ((mine == null ? void 0 : mine.id) && String(user.id) === String(mine.id)) continue;
     seen.add(String(user.id));
     people.push({ id: String(user.id), name: user.globalName || user.username || String(user.id) });
   }
   if (mine == null ? void 0 : mine.id) people.push({ id: String(mine.id), name: "You" });
-  const fallback = settings.asThem ? (_f = people[0]) == null ? void 0 : _f.id : String((_i = (_h = mine == null ? void 0 : mine.id) != null ? _h : (_g = people[0]) == null ? void 0 : _g.id) != null ? _i : "");
-  const chosen = settings.senderId || fallback || "";
-  const senderName = (_k = (_j = people.find((p) => p.id === chosen)) == null ? void 0 : _j.name) != null ? _k : "nobody";
+  const chosen = String(settings.senderId || (settings.asThem ? (_g = people[0]) == null ? void 0 : _g.id : mine == null ? void 0 : mine.id) || ((_h = people[0]) == null ? void 0 : _h.id) || "");
+  const senderName = (_j = (_i = people.find((p) => p.id === chosen)) == null ? void 0 : _i.name) != null ? _j : "nobody";
   const on = settings.button !== false;
-  const heading = (title) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-    import_react_native.Text,
-    {
-      style: {
-        color: muted,
-        fontSize: 13,
-        fontWeight: "700",
-        letterSpacing: 0.4,
-        marginTop: 18,
-        marginBottom: 8,
-        textTransform: "uppercase"
-      },
-      children: title
-    }
-  );
-  const hint = (text) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: muted, fontSize: 12, marginBottom: 6 }, children: text });
-  const card = (children) => Group ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Group, { children }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children });
-  const row = (label, subLabel, onPress, trailing) => Row ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label, subLabel, onPress, trailing }, label) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
-    import_react_native.Pressable,
-    {
-      accessibilityRole: "button",
-      accessibilityLabel: label,
-      onPress: () => {
-        try {
-          onPress == null ? void 0 : onPress();
-        } catch {
-        }
-      },
-      style: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: "#2b2d31" },
-      children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: white, fontWeight: "600" }, children: label }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: muted, fontSize: 12 }, children: subLabel })
-      ]
-    },
-    label
-  );
-  const button = (label, onPress, primary = false) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-    import_react_native.Pressable,
-    {
-      accessibilityRole: "button",
-      accessibilityLabel: label,
-      onPress: () => {
-        try {
-          onPress();
-        } catch {
-        }
-      },
-      style: {
-        backgroundColor: primary ? blue : "#2b2d31",
-        borderRadius: 10,
-        paddingVertical: 12,
-        alignItems: "center",
-        marginTop: 6
-      },
-      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: white, fontWeight: "700" }, children: label })
-    }
-  );
-  const field = (key, placeholder, multiline = false, extra = {}) => {
-    var _a2;
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      import_react_native.TextInput,
-      {
-        value: String((_a2 = settings[key]) != null ? _a2 : ""),
-        onChangeText: (value) => set({ [key]: value }),
-        placeholder,
-        placeholderTextColor: "#888",
-        multiline,
-        style: {
-          color: white,
-          backgroundColor: "#2b2d31",
-          borderRadius: 8,
-          padding: 8,
-          minHeight: multiline ? 90 : 0,
-          textAlignVertical: multiline ? "top" : "center",
-          ...extra
-        }
-      }
-    );
-  };
   const cat = state.cat;
   const callerId = String(settings.callerId || chosen || "");
   const receiverId = String(settings.receiverId || (mine == null ? void 0 : mine.id) || "");
@@ -984,56 +918,72 @@ function Panel({ api } = {}) {
     var _a2, _b2;
     return (_b2 = (_a2 = people.find((p) => p.id === id)) == null ? void 0 : _a2.name) != null ? _b2 : "nobody";
   };
-  const picker = (value, onPick, pickedLabel = "Selected", idleLabel = "Tap to pick") => card(
-    people.length ? people.map(
-      (person) => row(
-        person.name,
-        value === person.id ? pickedLabel : idleLabel,
-        () => onPick(person.id),
-        Radio ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Radio, { selected: value === person.id }) : void 0
-      )
-    ) : row("Nobody here yet", "Open a chat first")
-  );
-  const tab = (key, label) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+  const section = (title, children) => Group ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Group, { title, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.View, { style: { gap: 10, padding: 16 }, children }) }, title) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: PALETTE.card, borderRadius: 12, padding: 12, gap: 10 }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.muted, fontSize: 12, fontWeight: "700", letterSpacing: 0.4 }, children: title }),
+    children
+  ] }, title);
+  const info = (label, subLabel) => Row ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label, subLabel }, label) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { paddingVertical: 6 }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.text, fontWeight: "600" }, children: label }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.muted, fontSize: 12 }, children: subLabel })
+  ] }, label);
+  const hint = (text) => DText ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DText, { variant: "text-xs/medium", children: text }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.muted, fontSize: 12 }, children: text });
+  const action = (label, subLabel, onPress) => Row ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label, subLabel, arrow: true, onPress }, label) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     import_react_native.Pressable,
     {
       accessibilityRole: "button",
-      accessibilityLabel: "Category " + label,
-      onPress: () => {
-        state.cat = key;
-        bump((n) => n + 1);
-      },
-      style: {
-        paddingHorizontal: 14,
-        paddingVertical: 9,
-        borderRadius: 18,
-        backgroundColor: cat === key ? blue : "#1e1f22"
-      },
-      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: cat === key ? white : muted, fontWeight: "700" }, children: label })
+      accessibilityLabel: label,
+      onPress,
+      style: { backgroundColor: PALETTE.input, borderRadius: 10, paddingVertical: 12, alignItems: "center" },
+      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.text, fontWeight: "700" }, children: label })
     },
-    key
+    label
   );
-  const WHEN_CHOICES = [
-    { label: "Now", minutes: "0" },
-    { label: "5 minutes ago", minutes: "5" },
-    { label: "1 hour ago", minutes: "60" },
-    { label: "3 hours ago", minutes: "180" },
-    { label: "Yesterday", minutes: "1440" }
-  ];
-  const whenBlock = () => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-    heading("When"),
-    card(
-      WHEN_CHOICES.map(
-        (choice) => row(
-          choice.label,
-          String(settings.minutesAgo) === choice.minutes ? "Selected" : "Tap to pick",
-          () => set({ minutesAgo: choice.minutes }),
-          Radio ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Radio, { selected: String(settings.minutesAgo) === choice.minutes }) : void 0
-        )
-      )
-    ),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8, marginTop: 8 }, children: field("minutesAgo", "Minutes ago (0 = now)", false, { keyboardType: "number-pad" }) })
-  ] });
+  const field = (key, placeholder, options = {}) => {
+    var _a2;
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      import_react_native.TextInput,
+      {
+        value: String((_a2 = settings[key]) != null ? _a2 : ""),
+        onChangeText: (value) => set({ [key]: value }),
+        placeholder,
+        placeholderTextColor: PALETTE.muted,
+        multiline: !!options.multiline,
+        keyboardType: options.numeric ? "number-pad" : "default",
+        style: {
+          color: PALETTE.text,
+          backgroundColor: PALETTE.input,
+          borderRadius: 8,
+          paddingHorizontal: 12,
+          paddingVertical: 10,
+          minHeight: options.multiline ? 96 : 0,
+          textAlignVertical: options.multiline ? "top" : "center"
+        }
+      },
+      key
+    );
+  };
+  const pick = (title, value, entries, onPick) => RadioGroup && RadioRow && entries.length ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RadioGroup, { title, value, onChange: onPick, children: entries.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RadioRow, { label: entry.label, subLabel: entry.subLabel, value: entry.value }, entry.value)) }, title) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: PALETTE.card, borderRadius: 12, padding: 12, gap: 2 }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.muted, fontSize: 12, fontWeight: "700", letterSpacing: 0.4 }, children: title }),
+    entries.length ? entries.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+      import_react_native.Pressable,
+      {
+        accessibilityRole: "button",
+        accessibilityLabel: entry.label,
+        onPress: () => onPick(entry.value),
+        style: { flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 9 },
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.text, flex: 1 }, children: entry.label }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: value === entry.value ? PALETTE.accent : PALETTE.muted }, children: value === entry.value ? "\u2713" : "" })
+        ]
+      },
+      entry.value
+    )) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.muted, paddingVertical: 9 }, children: "Nobody here yet" })
+  ] }, title);
+  const personEntries = (selected, idle, picked) => people.map((person) => ({
+    value: person.id,
+    label: person.name,
+    subLabel: selected === person.id ? picked != null ? picked : "Selected" : idle
+  }));
   const findChat = () => {
     var _a2;
     const manual = String((_a2 = settings.chatId) != null ? _a2 : "").trim();
@@ -1044,147 +994,170 @@ function Panel({ api } = {}) {
     const id = currentChannelId();
     return id ? "Found chat " + id + "." : "Discord reported no open chat. Paste its id below.";
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { contentContainerStyle: { padding: 16, paddingBottom: 64 }, children: [
-    heading("Chat"),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: white, fontSize: 16, fontWeight: "700" }, children: chat ? chat.label : "No chat found yet." }),
-      hint("FakeDM " + VERSION + " \xB7 " + people.length + " people in reach"),
-      hint(
-        chat ? "Follows the chat you open \u2014 tap a DM and this switches to it. Id " + chat.id : "Tap a DM or a channel in the list, then come back here. If it still finds nothing, paste the channel id below."
-      ),
-      field("chatId", "Channel id (only if the chat is not found)"),
-      button("Find my chat", () => run(findChat)),
-      SwitchRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-        SwitchRow,
-        {
-          label: "Fake button in chat bar",
-          subLabel: "Tap it to send your message. Now: " + (on ? state.actionButton ? "on" : "on (not found yet)" : "off"),
-          value: on,
-          onValueChange: (value) => {
-            set({ button: value });
-            setStatus("Reload FakeDM to apply.");
-          }
-        }
-      ) : row(
-        "Fake button in chat bar",
-        on ? "On \u2014 tap to switch off" : "Off \u2014 tap to switch on",
-        () => {
-          set({ button: !on });
-          setStatus("Reload FakeDM to apply.");
-        }
-      )
-    ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.View, { style: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 16 }, children: CATEGORIES.map((entry) => tab(entry.key, entry.label)) }),
-    cat === "message" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-      heading("Send as"),
-      picker(chosen, (id) => set({ senderId: id }), "Sending as them", "Tap to send as them"),
-      heading("Message"),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children: [
-        field("text", "Message text", true),
+  const whenBlock = () => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+    pick(
+      "When",
+      String(settings.minutesAgo),
+      WHEN_CHOICES.map((choice) => ({
+        value: choice.minutes,
+        label: choice.label,
+        subLabel: String(settings.minutesAgo) === choice.minutes ? "Selected" : void 0
+      })),
+      (minutes) => set({ minutesAgo: minutes })
+    ),
+    section("Another time", field("minutesAgo", "Minutes ago (0 = now)", { numeric: true }))
+  ] });
+  const messagePage = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+    pick("Send as", chosen, personEntries(chosen, "Tap to send as them", "Sending as them"), (id) => set({ senderId: id })),
+    section("Message", field("text", "Message", { multiline: true })),
+    section(
+      "Extras",
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
         field("imageUrl", "Image URL (optional)"),
         field("replyId", "Reply to message ID (optional)"),
-        hint("Embed (optional)"),
-        field("embedTitle", "Embed title"),
-        field("embedDesc", "Embed description", true),
-        field("embedImage", "Embed image URL"),
-        button("Send as " + senderName, () => run(fakeFromPanel), true)
-      ] }),
-      whenBlock()
-    ] }),
-    cat === "call" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-      heading("Caller"),
-      picker(callerId, (id) => set({ callerId: id })),
-      heading("Receiver"),
-      picker(receiverId, (id) => set({ receiverId: id })),
-      heading("Call"),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children: [
-        hint("A call from " + nameOf(callerId) + " to " + nameOf(receiverId) + "."),
-        field("callSeconds", "Duration in seconds", false, { keyboardType: "number-pad" }),
-        button("Send fake call", () => run(fakeCallNow), true),
-        button("Send missed call", () => run(fakeMissedNow))
-      ] }),
-      whenBlock()
-    ] }),
-    cat === "batch" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-      heading("Batch"),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children: [
-        hint('One message per line. "Name: text" picks who says it, and a leading [14:30] sets the time.'),
-        field("batch", "[14:30] Alice: hey\n[14:31] Bob: hi there\nsure", true),
-        button("Send batch", () => run(fakeBatch), true)
+        field("embedTitle", "Embed title (optional)"),
+        field("embedDesc", "Embed description (optional)", { multiline: true }),
+        field("embedImage", "Embed image URL (optional)")
       ] })
-    ] }),
-    cat === "system" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-      heading("Who it is from"),
-      picker(chosen, (id) => set({ senderId: id }), "Sending as them", "Tap to send as them"),
-      heading("System message"),
-      card(
-        SYSTEM_TYPES.map(
-          (type) => row(
-            type.label,
-            Number(settings.systemType) === type.value ? "Selected" : "Tap to pick this one",
-            () => set({ systemType: type.value }),
-            Radio ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Radio, { selected: Number(settings.systemType) === type.value }) : void 0
-          )
-        )
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8, marginTop: 8 }, children: [
-        field("systemText", "Extra text, e.g. the new chat name"),
-        button("Send system message", () => run(fakeSystemNow), true)
-      ] }),
-      whenBlock()
-    ] }),
-    cat === "reaction" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-      heading("Who reacts"),
-      picker(chosen, (id) => set({ senderId: id }), "Sending as them", "Tap to send as them"),
-      heading("Reaction"),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children: [
+    ),
+    section("Send", action("Send as " + senderName, "Posts into the chat you have open, as them", () => run(fakeFromPanel))),
+    whenBlock()
+  ] });
+  const callPage = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+    pick("Caller", callerId, personEntries(callerId, "Tap to pick the caller"), (id) => set({ callerId: id })),
+    pick("Receiver", receiverId, personEntries(receiverId, "Tap to pick who receives it"), (id) => set({ receiverId: id })),
+    section(
+      "Call details",
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+        hint("A call from " + nameOf(callerId) + " to " + nameOf(receiverId) + "."),
+        field("callSeconds", "Duration in seconds", { numeric: true })
+      ] })
+    ),
+    section(
+      "Send",
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+        action("Send fake call", "Rings in the chat you have open", () => run(fakeCallNow)),
+        action("Send missed call", "A call they did not pick up", () => run(fakeMissedNow))
+      ] })
+    ),
+    whenBlock()
+  ] });
+  const batchPage = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+    section(
+      "Batch",
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+        hint('One message per line. "Name: text" picks who says it, and a leading [14:30] sets the time.'),
+        field("batch", "[14:30] Alice: hey\n[14:31] Bob: hi there\nsure", { multiline: true })
+      ] })
+    ),
+    section("Send", action("Send batch", "Every line lands in order", () => run(fakeBatch)))
+  ] });
+  const systemPage = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+    pick("Who it is from", chosen, personEntries(chosen, "Tap to send as them", "Sending as them"), (id) => set({ senderId: id })),
+    pick(
+      "System message",
+      String(settings.systemType),
+      SYSTEM_TYPES.map((type) => ({
+        value: String(type.value),
+        label: type.label,
+        subLabel: Number(settings.systemType) === type.value ? "Selected" : void 0
+      })),
+      (value) => set({ systemType: Number(value) })
+    ),
+    section("Extra text", field("systemText", "Extra text, e.g. the new chat name")),
+    section("Send", action("Send system message", "Shows up the way Discord writes it", () => run(fakeSystemNow))),
+    whenBlock()
+  ] });
+  const reactionPage = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+    pick("Who reacts", chosen, personEntries(chosen, "Tap to react as them", "Reacting as them"), (id) => set({ senderId: id })),
+    section(
+      "Reaction",
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
         hint("Paste the id of a message in this chat (long-press it \u2192 Copy ID)."),
         field("reactId", "Message ID"),
-        field("reactEmoji", "Emoji"),
-        button("Add reaction", () => run(fakeReactionNow), true)
+        field("reactEmoji", "Emoji")
       ] })
-    ] }),
-    cat === "diag" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-      heading("Diagnostics"),
-      hint("What this build found, read straight off your client. No computer needed."),
-      card(
-        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-          row("Installed version", VERSION),
-          row("Chat found", chat ? "yes" : "no"),
-          row("Chat id", (chat == null ? void 0 : chat.id) || "none"),
-          row("Chat name", (chat == null ? void 0 : chat.label) || "none"),
-          row(
-            "Found through",
-            state.diag.chat === "selected" ? "the chat you have open" : state.diag.chat === "last tapped" ? "the last chat you tapped" : state.diag.chat === "typed" ? "the id you typed" : "nothing yet"
-          ),
-          row("People it can see", String(people.length)),
-          row("Chat record found", state.diag.channel ? "yes" : "no"),
-          row("Recipients in that record", String(state.diag.recipients)),
-          row(
-            "Chat bar button module",
-            state.actionButton ? "found (" + (state.diag.button || "?") + ")" : "not found"
-          ),
-          row(
-            "Chat input module",
-            state.diag.input ? "found (" + state.diag.input + ")" : "not found"
-          ),
-          row("Chat input name", state.diag.inputName || "none"),
-          row(
-            "Chat bar button",
-            state.patched ? state.actionButton ? "installed (Discord button)" : "installed (plain)" : "not installed"
-          ),
-          row("Discord dispatcher", flux() ? "found" : "not found"),
-          row("Channel store", storeOf("ChannelStore") ? "found" : "not found"),
-          row("User store", storeOf("UserStore") ? "found" : "not found"),
-          row("Signed in as", mine ? mine.username || String(mine.id) : "unknown")
-        ] })
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: muted, marginTop: 10, fontSize: 12 }, children: "FakeDM " + VERSION + " \xB7 chat " + ((_l = chat == null ? void 0 : chat.id) != null ? _l : "none") + " \xB7 " + people.length + " people \xB7 button " + (state.actionButton ? "found" : "not found") })
-    ] }),
-    heading("Clean up"),
-    card(row("Clear fakes", "Remove every fake in this chat", () => run(clearNow))),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: muted, marginTop: 12 }, children: status })
+    ),
+    section("Send", action("Add reaction", "Adds it to that message", () => run(fakeReactionNow)))
   ] });
+  const diagPage = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, { children: section(
+    "Diagnostics",
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+      info("Installed version", VERSION),
+      info("Chat found", chat ? "yes" : "no"),
+      info("Chat id", (chat == null ? void 0 : chat.id) || "none"),
+      info("Chat name", (chat == null ? void 0 : chat.label) || "none"),
+      info(
+        "Found through",
+        state.diag.chat === "selected" ? "the chat you have open" : state.diag.chat === "last tapped" ? "the last chat you tapped" : state.diag.chat === "typed" ? "the id you typed" : "nothing yet"
+      ),
+      info("People it can see", String(people.length)),
+      info("Chat record found", state.diag.channel ? "yes" : "no"),
+      info("Recipients in that record", String(state.diag.recipients)),
+      info(
+        "Chat bar button module",
+        state.actionButton ? "found (" + (state.diag.button || "?") + ")" : "not found"
+      ),
+      info("Chat input module", state.diag.input ? "found (" + state.diag.input + ")" : "not found"),
+      info("Chat input name", state.diag.inputName || "none"),
+      info(
+        "Chat bar button",
+        state.patched ? state.actionButton ? "installed (Discord button)" : "installed (plain)" : "not installed"
+      ),
+      info("Discord dispatcher", flux() ? "found" : "not found"),
+      info("Channel store", storeOf("ChannelStore") ? "found" : "not found"),
+      info("User store", storeOf("UserStore") ? "found" : "not found"),
+      info("Signed in as", mine ? mine.username || String(mine.id) : "unknown")
+    ] })
+  ) });
+  const pages = {
+    message: messagePage,
+    call: callPage,
+    batch: batchPage,
+    system: systemPage,
+    reaction: reactionPage,
+    diag: diagPage
+  };
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.ScrollView, { contentContainerStyle: { padding: 16, paddingBottom: 80 }, keyboardShouldPersistTaps: "handled", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(StackView, { ...D.Stack ? { spacing: 24 } : { style: { gap: 24 } }, children: [
+    section(
+      "Chat",
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+        info(
+          chat ? chat.label : "No chat found yet",
+          chat ? "Follows the chat you open \xB7 id " + chat.id : "Tap a DM or a channel in the list, then come back here"
+        ),
+        SwitchRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          SwitchRow,
+          {
+            label: "Fake button in chat bar",
+            subLabel: "Tap it to send your message. Now: " + (on ? state.actionButton ? "on" : "on (not found yet)" : "off"),
+            value: on,
+            onValueChange: (value) => {
+              set({ button: value });
+              setStatus("Reload FakeDM to apply.");
+            }
+          }
+        ) : action("Fake button in chat bar", on ? "On \u2014 tap to switch off" : "Off \u2014 tap to switch on", () => {
+          set({ button: !on });
+          setStatus("Reload FakeDM to apply.");
+        }),
+        field("chatId", "Channel id (only if the chat is not found)"),
+        action("Find my chat", "Checks which chat is open", () => run(findChat))
+      ] })
+    ),
+    status ? hint(status) : null,
+    pick(
+      "What to send",
+      cat,
+      CATEGORIES.map((entry) => ({ value: entry.key, label: entry.label })),
+      (key) => {
+        state.cat = key;
+        bump((n) => n + 1);
+      }
+    ),
+    (_k = pages[cat]) != null ? _k : messagePage,
+    section("Clean up", action("Clear fakes", "Removes every fake in this chat", () => run(clearNow)))
+  ] }) });
 }
 function SettingsComponent(props = {}) {
   try {
@@ -1199,9 +1172,6 @@ function FakeScreen(props) {
   } catch {
     return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { padding: 16 }, children: "FakeDM could not draw its settings." });
   }
-}
-function NoopIcon() {
-  return null;
 }
 function installSettingsEntry(cleanup, logger) {
   var _a, _b;
@@ -1222,7 +1192,7 @@ function installSettingsEntry(cleanup, logger) {
           item("FAKEDM_MAIN", {
             type: "route",
             title: () => "FakeDM",
-            IconComponent: NoopIcon,
+            IconComponent: FakeIcon,
             screen: { route: "FakeDMScreen", getComponent: () => FakeScreen }
           })
         );
