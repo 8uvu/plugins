@@ -517,81 +517,6 @@
                 }
             }
         },
-        "dev.8uvu.last-online-tracker": {
-            "name": "LastOnlineTracker",
-            "description": "Shows when friends were last online.",
-            "author": "cenotaph",
-            "channels": {
-                "latest": "1.6.3"
-            },
-            "versions": {
-                "1.5.3": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.5.3.zip",
-                    "sha256": "3b497bf4cb31210f7f0333f67c8813ef1b1c36917f94ffdc9427757eced38259",
-                    "size": 11016,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.6.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.6.0.zip",
-                    "sha256": "4acea81e5958293916dd4eab51d156d89b195846fe99ce6ae1ee8af0ccf9e5dd",
-                    "size": 4196,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.6.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.6.1.zip",
-                    "sha256": "9f56124e59f5363e6961cf48329f5b9736e040bf3e8993b7f14a3f85a708267f",
-                    "size": 4253,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.6.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.6.2.zip",
-                    "sha256": "5d8179e8ea81ee74d4343d689718e6eb7b686860cad750d7d40cd3fc26919b00",
-                    "size": 4296,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.6.3": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.last-online-tracker@1.6.3.zip",
-                    "sha256": "31c740cbd9faad9365dfcde63ec2983a2ac7e0744c9999118adb12fc0e4f63a7",
-                    "size": 4812,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                }
-            }
-        },
         "dev.8uvu.message-bookmarks": {
             "name": "MessageBookmarks",
             "description": "Saves message links you want to keep.",
@@ -1133,55 +1058,6 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.mention-guard@1.0.2.zip",
                     "sha256": "f03aaf8753549ac0d13e84831efa1abf6ccd01d01ce80c0360d60d9f781dd558",
                     "size": 3049,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                }
-            }
-        },
-        "dev.8uvu.snowflake-tools": {
-            "name": "Snowflake Tools",
-            "description": "Decodes a Discord ID into the exact time it was created, plus its type.",
-            "author": "cenotaph",
-            "channels": {
-                "latest": "1.0.2"
-            },
-            "versions": {
-                "1.0.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snowflake-tools@1.0.0.zip",
-                    "sha256": "59a3be3ae7c95c88987eae16224d94f52771bcf03c106dcbc5ea4f6d42063a72",
-                    "size": 2351,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.0.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snowflake-tools@1.0.1.zip",
-                    "sha256": "4357eec80bc2a6623bb9f9e8478254cca6aaed8bf0062da7ebcb8bcbbbe74ce8",
-                    "size": 2398,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.0.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snowflake-tools@1.0.2.zip",
-                    "sha256": "70151ee19af34fcd808c6c44120adf132ad0d7196bc170ec48bd37754ac697fb",
-                    "size": 2974,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
