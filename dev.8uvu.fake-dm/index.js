@@ -67,6 +67,8 @@ var DEFAULTS = {
   // Reaction settings.
   reactId: "",
   reactEmoji: "\u{1F44D}",
+  // When the fake happened, counted back from now in minutes (0 = now).
+  minutesAgo: "0",
   // Only needed when Discord cannot report the open chat by itself.
   chatId: "",
   // The chat bar button. Installs that have never touched the switch get it
@@ -105,7 +107,8 @@ var state = {
   actionButton: null,
   button: null,
   patched: false,
-  cat: "message"
+  cat: "message",
+  lastChannelId: ""
 };
 var seq = 0;
 function find(...props) {
@@ -179,26 +182,47 @@ function channelById(id) {
   }
   return null;
 }
+function guildMembers(channel) {
+  var _a, _b, _c, _d;
+  const guildId = (_a = channel == null ? void 0 : channel.guild_id) != null ? _a : channel == null ? void 0 : channel.guildId;
+  if (!guildId) return [];
+  try {
+    const store = (_b = find("getMembers", "getMember")) != null ? _b : find("getMembers");
+    const map = (_d = (_c = store == null ? void 0 : store.getMembers) == null ? void 0 : _c.call(store, guildId)) != null ? _d : {};
+    const users = find("getUser");
+    const list = Object.values(map != null ? map : {}).map((m) => {
+      var _a2, _b2;
+      return (_b2 = m == null ? void 0 : m.user) != null ? _b2 : (_a2 = users == null ? void 0 : users.getUser) == null ? void 0 : _a2.call(users, m == null ? void 0 : m.userId);
+    });
+    return list.filter((u) => u == null ? void 0 : u.id).slice(0, 100);
+  } catch {
+    return [];
+  }
+}
 function openChat() {
   var _a, _b;
   try {
+    const selected = currentChannelId();
+    if (selected) state.lastChannelId = selected;
     const manual = String((_b = (_a = state.cfg) == null ? void 0 : _a.chatId) != null ? _b : "").trim();
-    const id = manual || currentChannelId();
+    const id = selected || state.lastChannelId || manual;
     if (!id) return null;
     const channel = channelById(id);
     const others = Array.isArray(channel == null ? void 0 : channel.recipients) ? channel.recipients : [];
+    const members = guildMembers(channel);
     const label = typeof (channel == null ? void 0 : channel.name) === "string" && channel.name || others.map((u) => (u == null ? void 0 : u.globalName) || (u == null ? void 0 : u.username) || (u == null ? void 0 : u.id)).filter(Boolean).join(", ") || "chat " + id;
-    return { id, label, others };
+    return { id, label, others, members };
   } catch {
     return null;
   }
 }
 function resolvePerson(chat, name) {
+  var _a;
   const wanted = String(name != null ? name : "").trim().toLowerCase();
   if (!wanted) return null;
   const mine = me();
   if (wanted === "me" || wanted === "you" || mine && wanted === String(mine.id).toLowerCase()) return mine;
-  for (const user of chat.others) {
+  for (const user of [...chat.others, ...(_a = chat.members) != null ? _a : []]) {
     if (!user) continue;
     const names = [user.id, user.username, user.globalName].filter(Boolean).map((v) => String(v).toLowerCase());
     if (names.includes(wanted)) return user;
@@ -245,7 +269,7 @@ function fakes() {
 function remember(channelId, id) {
   saveFakes([...fakes(), { channelId, id }]);
 }
-function fakeMessage(channelId, user, content, when, extras = {}) {
+function fakeMessage(channelId, user, content, when2, extras = {}) {
   var _a, _b, _c, _d, _e;
   const dispatch = (_a = flux()) == null ? void 0 : _a.dispatch;
   if (!dispatch || !channelId || !(user == null ? void 0 : user.id)) return null;
@@ -277,7 +301,7 @@ function fakeMessage(channelId, user, content, when, extras = {}) {
     id,
     nonce: id,
     pinned: false,
-    timestamp: new Date(when != null ? when : Date.now()).toISOString(),
+    timestamp: new Date(when2 != null ? when2 : Date.now()).toISOString(),
     tts: false,
     type: (_c = extras.systemType) != null ? _c : 0
   };
@@ -295,12 +319,12 @@ function fakeMessage(channelId, user, content, when, extras = {}) {
   remember(channelId, id);
   return id;
 }
-function fakeCall(channelId, caller, other, seconds = 90, missed = false) {
+function fakeCall(channelId, caller, other, seconds = 90, missed = false, at) {
   var _a, _b;
   const dispatch = (_a = flux()) == null ? void 0 : _a.dispatch;
   if (!dispatch || !channelId || !(caller == null ? void 0 : caller.id)) return null;
   const id = snowflake();
-  const now = Date.now();
+  const now = at != null ? at : Date.now();
   const participants = missed ? [String(caller.id)] : [String(caller.id), String((_b = other == null ? void 0 : other.id) != null ? _b : "")].filter(Boolean);
   const message = {
     attachments: [],
@@ -329,8 +353,13 @@ function fakeCall(channelId, caller, other, seconds = 90, missed = false) {
   remember(channelId, id);
   return id;
 }
-function fakeSystem(channelId, user, type, content) {
-  return fakeMessage(channelId, user, content, void 0, { systemType: Number(type) || 7 });
+function fakeSystem(channelId, user, type, content, at) {
+  return fakeMessage(channelId, user, content, at, { systemType: Number(type) || 7 });
+}
+function when() {
+  const minutes = Number(state.cfg.minutesAgo);
+  if (!Number.isFinite(minutes) || minutes <= 0) return Date.now();
+  return Date.now() - Math.round(minutes) * 6e4;
 }
 function fakeReaction(channelId, messageId, userId, emoji) {
   var _a;
@@ -391,7 +420,7 @@ function fakeFromPanel() {
   if (!chat) return 'No chat found yet: open a DM, then tap "Find my chat".';
   const user = sender(chat);
   if (!(user == null ? void 0 : user.id)) return "No one to send as yet.";
-  const id = fakeMessage(chat.id, user, state.cfg.text, void 0, {
+  const id = fakeMessage(chat.id, user, state.cfg.text, when(), {
     imageUrl: state.cfg.imageUrl,
     embeds: embedFromConfig(),
     replyToId: state.cfg.replyId,
@@ -414,21 +443,21 @@ function fakeCallNow() {
   if (!(caller == null ? void 0 : caller.id)) return "No one to send as yet.";
   const seconds = Math.max(0, Math.round(Number(state.cfg.callSeconds) || 0));
   const missed = !!state.cfg.callMissed;
-  return fakeCall(chat.id, caller, receiver, missed ? 0 : seconds, missed) ? missed ? "Sent a missed call." : "Sent a fake call." : "Discord is not ready yet.";
+  return fakeCall(chat.id, caller, receiver, missed ? 0 : seconds, missed, when()) ? missed ? "Sent a missed call." : "Sent a fake call." : "Discord is not ready yet.";
 }
 function fakeMissedNow() {
   const chat = openChat();
   if (!chat) return 'No chat found yet: open a DM, then tap "Find my chat".';
   const { caller } = callPeople(chat);
   if (!(caller == null ? void 0 : caller.id)) return "No one to send as yet.";
-  return fakeCall(chat.id, caller, me(), 0, true) ? "Sent a missed call." : "Discord is not ready yet.";
+  return fakeCall(chat.id, caller, me(), 0, true, when()) ? "Sent a missed call." : "Discord is not ready yet.";
 }
 function fakeSystemNow() {
   const chat = openChat();
   if (!chat) return 'No chat found yet: open a DM, then tap "Find my chat".';
   const user = sender(chat);
   if (!(user == null ? void 0 : user.id)) return "No one to send as yet.";
-  const id = fakeSystem(chat.id, user, Number(state.cfg.systemType), state.cfg.systemText);
+  const id = fakeSystem(chat.id, user, Number(state.cfg.systemType), state.cfg.systemText, when());
   return id ? "Sent a system message." : "Discord is not ready yet.";
 }
 function fakeReactionNow() {
@@ -447,9 +476,9 @@ function parseBatch(text) {
     let time;
     const clock = line.match(/^\[(\d{1,2}):(\d{2})\]\s*/);
     if (clock) {
-      const when = /* @__PURE__ */ new Date();
-      when.setHours(Math.min(23, Number(clock[1])), Math.min(59, Number(clock[2])), 0, 0);
-      time = when.getTime();
+      const when2 = /* @__PURE__ */ new Date();
+      when2.setHours(Math.min(23, Number(clock[1])), Math.min(59, Number(clock[2])), 0, 0);
+      time = when2.getTime();
       line = line.slice(clock[0].length).trim();
     }
     if (!line) continue;
@@ -467,13 +496,13 @@ function fakeBatch() {
   if (!lines.length) return "Nothing to send: put one message per line.";
   const fallback = sender(chat);
   let sent = 0;
-  let clock = Date.now();
+  let clock = when();
   for (const line of lines) {
     const who = (_a = resolvePerson(chat, line.name)) != null ? _a : fallback;
     if (!(who == null ? void 0 : who.id)) continue;
-    const when = (_b = line.time) != null ? _b : clock;
-    if (fakeMessage(chat.id, who, line.content, when)) sent++;
-    clock = when + 3e4 + Math.floor(Math.random() * 9e4);
+    const when2 = (_b = line.time) != null ? _b : clock;
+    if (fakeMessage(chat.id, who, line.content, when2)) sent++;
+    clock = when2 + 3e4 + Math.floor(Math.random() * 9e4);
   }
   return sent ? "Sent " + sent + " fake message(s)." : "Nothing sent: no sender available.";
 }
@@ -650,7 +679,7 @@ var white = "#ffffff";
 var muted = "#b5bac1";
 var blue = "#5865F2";
 function Panel({ api } = {}) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
   const [, bump] = (0, import_react.useState)(0);
   const [status, setStatus] = (0, import_react.useState)("");
   const settings = (_a = state.cfg) != null ? _a : DEFAULTS;
@@ -691,13 +720,17 @@ function Panel({ api } = {}) {
     }
   })();
   const people = [];
-  for (const user of (_d = chat == null ? void 0 : chat.others) != null ? _d : []) {
-    if (user == null ? void 0 : user.id) people.push({ id: String(user.id), name: user.globalName || user.username || String(user.id) });
+  const seen = /* @__PURE__ */ new Set();
+  for (const user of [...(_d = chat == null ? void 0 : chat.others) != null ? _d : [], ...(_e = chat == null ? void 0 : chat.members) != null ? _e : []]) {
+    if (!(user == null ? void 0 : user.id) || seen.has(String(user.id))) continue;
+    if ((mine == null ? void 0 : mine.id) && String(user.id) === String(mine.id)) continue;
+    seen.add(String(user.id));
+    people.push({ id: String(user.id), name: user.globalName || user.username || String(user.id) });
   }
   if (mine == null ? void 0 : mine.id) people.push({ id: String(mine.id), name: "You" });
-  const fallback = settings.asThem ? (_e = people[0]) == null ? void 0 : _e.id : String((_h = (_g = mine == null ? void 0 : mine.id) != null ? _g : (_f = people[0]) == null ? void 0 : _f.id) != null ? _h : "");
+  const fallback = settings.asThem ? (_f = people[0]) == null ? void 0 : _f.id : String((_i = (_h = mine == null ? void 0 : mine.id) != null ? _h : (_g = people[0]) == null ? void 0 : _g.id) != null ? _i : "");
   const chosen = settings.senderId || fallback || "";
-  const senderName = (_j = (_i = people.find((p) => p.id === chosen)) == null ? void 0 : _i.name) != null ? _j : "nobody";
+  const senderName = (_k = (_j = people.find((p) => p.id === chosen)) == null ? void 0 : _j.name) != null ? _k : "nobody";
   const on = settings.button !== false;
   const heading = (title) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     import_react_native.Text,
@@ -814,6 +847,27 @@ function Panel({ api } = {}) {
     },
     key
   );
+  const WHEN_CHOICES = [
+    { label: "Now", minutes: "0" },
+    { label: "5 minutes ago", minutes: "5" },
+    { label: "1 hour ago", minutes: "60" },
+    { label: "3 hours ago", minutes: "180" },
+    { label: "Yesterday", minutes: "1440" }
+  ];
+  const whenBlock = () => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+    heading("When"),
+    card(
+      WHEN_CHOICES.map(
+        (choice) => row(
+          choice.label,
+          String(settings.minutesAgo) === choice.minutes ? "Selected" : "Tap to pick",
+          () => set({ minutesAgo: choice.minutes }),
+          Radio ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Radio, { selected: String(settings.minutesAgo) === choice.minutes }) : void 0
+        )
+      )
+    ),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8, marginTop: 8 }, children: field("minutesAgo", "Minutes ago (0 = now)", false, { keyboardType: "number-pad" }) })
+  ] });
   const findChat = () => {
     var _a2;
     const manual = String((_a2 = settings.chatId) != null ? _a2 : "").trim();
@@ -829,7 +883,7 @@ function Panel({ api } = {}) {
     /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: white }, children: chat ? chat.label : "No chat found yet." }),
       hint(
-        chat ? "Working on this chat. Id " + chat.id : "Open a DM, then tap \u201CFind my chat\u201D. If it still finds nothing, paste the channel id below."
+        chat ? "Follows the chat you open \u2014 tap a DM and this switches to it. Id " + chat.id : "Tap a DM or a channel in the list, then come back here. If it still finds nothing, paste the channel id below."
       ),
       field("chatId", "Channel id (only if the chat is not found)"),
       button("Find my chat", () => run(findChat)),
@@ -867,7 +921,8 @@ function Panel({ api } = {}) {
         field("embedDesc", "Embed description", true),
         field("embedImage", "Embed image URL"),
         button("Send as " + senderName, () => run(fakeFromPanel), true)
-      ] })
+      ] }),
+      whenBlock()
     ] }),
     cat === "call" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
       heading("Caller"),
@@ -880,7 +935,8 @@ function Panel({ api } = {}) {
         field("callSeconds", "Duration in seconds", false, { keyboardType: "number-pad" }),
         button("Send fake call", () => run(fakeCallNow), true),
         button("Send missed call", () => run(fakeMissedNow))
-      ] })
+      ] }),
+      whenBlock()
     ] }),
     cat === "batch" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
       heading("Batch"),
@@ -907,7 +963,8 @@ function Panel({ api } = {}) {
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8, marginTop: 8 }, children: [
         field("systemText", "Extra text, e.g. the new chat name"),
         button("Send system message", () => run(fakeSystemNow), true)
-      ] })
+      ] }),
+      whenBlock()
     ] }),
     cat === "reaction" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
       heading("Who reacts"),
@@ -979,7 +1036,7 @@ var index_default = plugin({
   // Nothing in here may throw: an exception escaping start is what turns a
   // plugin bug into a client crash, so each step is sealed on its own.
   start(api) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
     state.button = null;
     state.patched = false;
     try {
@@ -995,15 +1052,28 @@ var index_default = plugin({
     } catch {
     }
     try {
+      const dispatcher = flux();
+      if (typeof (dispatcher == null ? void 0 : dispatcher.subscribe) === "function") {
+        const off = dispatcher.subscribe("CHANNEL_SELECT", (event) => {
+          var _a2;
+          const id = (_a2 = event == null ? void 0 : event.channelId) != null ? _a2 : event == null ? void 0 : event.channel_id;
+          if (id) state.lastChannelId = String(id);
+        });
+        if (typeof off === "function") (_h = api == null ? void 0 : api.cleanup) == null ? void 0 : _h.call(api, off);
+      }
+    } catch (error) {
+      (_j = (_i = api == null ? void 0 : api.logger) == null ? void 0 : _i.warn) == null ? void 0 : _j.call(_i, "[FakeDM] could not watch chat selection", error);
+    }
+    try {
       patchChatInput(api == null ? void 0 : api.cleanup, api == null ? void 0 : api.logger);
     } catch (error) {
-      (_i = (_h = api == null ? void 0 : api.logger) == null ? void 0 : _h.error) == null ? void 0 : _i.call(_h, "[FakeDM] chat bar button skipped", error);
+      (_l = (_k = api == null ? void 0 : api.logger) == null ? void 0 : _k.error) == null ? void 0 : _l.call(_k, "[FakeDM] chat bar button skipped", error);
     }
     if (state.cfg.section === true) {
       try {
         installSettingsEntry(api == null ? void 0 : api.cleanup, api == null ? void 0 : api.logger);
       } catch (error) {
-        (_k = (_j = api == null ? void 0 : api.logger) == null ? void 0 : _j.error) == null ? void 0 : _k.call(_j, "[FakeDM] settings entry skipped", error);
+        (_n = (_m = api == null ? void 0 : api.logger) == null ? void 0 : _m.error) == null ? void 0 : _n.call(_m, "[FakeDM] settings entry skipped", error);
       }
     }
   },
