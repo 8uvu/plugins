@@ -40,7 +40,7 @@ var PathFinders = __toESM((function () { const __g = () => { try { return (valen
 var Metro = __toESM((function () { const __g = () => { try { return (valenced.modules && valenced.modules.metro) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get onModuleInitialized() { return __g().onModuleInitialized }, get onAnyModuleInitialized() { return __g().onAnyModuleInitialized }, get onModuleFirstRequired() { return __g().onModuleFirstRequired }, get onAnyModuleFirstRequired() { return __g().onAnyModuleFirstRequired } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var import_patcher = (function () { const __g = () => { try { return (valenced.patcher) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get after() { return __g().after }, get before() { return __g().before }, get instead() { return __g().instead } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get createElement() { return __g().createElement }, get isValidElement() { return __g().isValidElement }, get useState() { return __g().useState }, get cloneElement() { return __g().cloneElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Text() { return __g().Text }, get View() { return __g().View }, get Pressable() { return __g().Pressable }, get TextInput() { return __g().TextInput }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Text() { return __g().Text }, get Pressable() { return __g().Pressable }, get View() { return __g().View }, get TextInput() { return __g().TextInput }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsx() { return __g().jsx }, get jsxs() { return __g().jsxs }, get Fragment() { return __g().Fragment }, get jsxDEV() { return __g().jsxDEV } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULTS = {
   text: "hello",
@@ -85,7 +85,7 @@ var DEFAULTS = {
 };
 var BUTTON_PATH = "modules/chat_input/native/action_buttons/ChatInputActionButton.tsx";
 var INPUT_PATH = "modules/chat_input/native/ChatInput.tsx";
-var VERSION = "4.1.0";
+var VERSION = "4.2.0";
 var SYSTEM_TYPES = [
   { value: 1, label: "Added someone" },
   { value: 2, label: "Removed someone" },
@@ -108,10 +108,11 @@ var state = {
   storage: null,
   actionButton: null,
   button: null,
+  buttonKind: "",
   patched: false,
   cat: "message",
   lastChannelId: "",
-  diag: { chat: "", button: "", input: "", inputName: "" }
+  diag: { chat: "", button: "", input: "", inputName: "", channel: false, recipients: 0 }
 };
 var seq = 0;
 function find(...props) {
@@ -174,6 +175,14 @@ function channelById(id) {
     () => {
       var _a, _b;
       return (_b = (_a = find("getChannel", "getDMFromUserId")) == null ? void 0 : _a.getChannel) == null ? void 0 : _b.call(_a, id);
+    },
+    () => {
+      var _a, _b;
+      return (_b = (_a = find("getChannel", "getChannels")) == null ? void 0 : _a.getChannel) == null ? void 0 : _b.call(_a, id);
+    },
+    () => {
+      var _a, _b;
+      return (_b = (_a = find("hasChannel", "getChannel")) == null ? void 0 : _a.getChannel) == null ? void 0 : _b.call(_a, id);
     }
   ];
   for (const probe of probes) {
@@ -185,17 +194,38 @@ function channelById(id) {
   }
   return null;
 }
+function userById(id) {
+  var _a, _b, _c;
+  try {
+    return (_c = (_b = (_a = find("getUser")) == null ? void 0 : _a.getUser) == null ? void 0 : _b.call(_a, id)) != null ? _c : null;
+  } catch {
+    return null;
+  }
+}
+function normalisePeople(list) {
+  var _a, _b, _c;
+  const out = [];
+  for (const entry of list != null ? list : []) {
+    if (!entry) continue;
+    if (typeof entry === "string") {
+      out.push((_a = userById(entry)) != null ? _a : { id: entry, username: entry });
+    } else if (entry.id || entry.userId) {
+      const id = String((_b = entry.id) != null ? _b : entry.userId);
+      out.push(entry.username ? entry : (_c = userById(id)) != null ? _c : entry);
+    }
+  }
+  return out;
+}
 function guildMembers(channel) {
-  var _a, _b, _c, _d;
+  var _a, _b, _c, _d, _e;
   const guildId = (_a = channel == null ? void 0 : channel.guild_id) != null ? _a : channel == null ? void 0 : channel.guildId;
   if (!guildId) return [];
   try {
-    const store = (_b = find("getMembers", "getMember")) != null ? _b : find("getMembers");
-    const map = (_d = (_c = store == null ? void 0 : store.getMembers) == null ? void 0 : _c.call(store, guildId)) != null ? _d : {};
-    const users = find("getUser");
+    const store = (_c = (_b = find("getMembers", "getMember")) != null ? _b : find("getMembers")) != null ? _c : find("getMember");
+    const map = (_e = (_d = store == null ? void 0 : store.getMembers) == null ? void 0 : _d.call(store, guildId)) != null ? _e : {};
     const list = Object.values(map != null ? map : {}).map((m) => {
       var _a2, _b2;
-      return (_b2 = m == null ? void 0 : m.user) != null ? _b2 : (_a2 = users == null ? void 0 : users.getUser) == null ? void 0 : _a2.call(users, m == null ? void 0 : m.userId);
+      return (_b2 = m == null ? void 0 : m.user) != null ? _b2 : userById(String((_a2 = m == null ? void 0 : m.userId) != null ? _a2 : ""));
     });
     return list.filter((u) => u == null ? void 0 : u.id).slice(0, 100);
   } catch {
@@ -212,8 +242,11 @@ function openChat() {
     state.diag.chat = selected ? "selected" : state.lastChannelId ? "last tapped" : manual ? "typed" : "";
     if (!id) return null;
     const channel = channelById(id);
-    const others = Array.isArray(channel == null ? void 0 : channel.recipients) ? channel.recipients : [];
+    const raw = Array.isArray(channel == null ? void 0 : channel.recipients) ? channel.recipients : Array.isArray(channel == null ? void 0 : channel.rawRecipients) ? channel.rawRecipients : [];
+    const others = normalisePeople(raw);
     const members = guildMembers(channel);
+    state.diag.channel = !!channel;
+    state.diag.recipients = others.length;
     const label = typeof (channel == null ? void 0 : channel.name) === "string" && channel.name || others.map((u) => (u == null ? void 0 : u.globalName) || (u == null ? void 0 : u.username) || (u == null ? void 0 : u.id)).filter(Boolean).join(", ") || "chat " + id;
     return { id, label, others, members };
   } catch {
@@ -524,18 +557,28 @@ function FakeIcon() {
   }
 }
 function buildButton() {
-  if (!state.actionButton || typeof import_react.createElement !== "function") return null;
+  if (typeof import_react.createElement !== "function") return null;
+  const press = () => {
+    try {
+      fake();
+    } catch {
+    }
+  };
   try {
-    return (0, import_react.createElement)(state.actionButton, {
-      accessibilityLabel: "FakeDM",
-      IconComponent: FakeIcon,
-      onPress: () => {
-        try {
-          fake();
-        } catch {
-        }
-      }
-    });
+    if (state.actionButton) {
+      state.buttonKind = "discord";
+      return (0, import_react.createElement)(state.actionButton, {
+        accessibilityLabel: "FakeDM",
+        IconComponent: FakeIcon,
+        onPress: press
+      });
+    }
+    state.buttonKind = "plain";
+    return (0, import_react.createElement)(
+      import_react_native.Pressable,
+      { accessibilityLabel: "FakeDM", accessibilityRole: "button", onPress: press, style: { paddingHorizontal: 10, paddingVertical: 6 } },
+      (0, import_react.createElement)(import_react_native.Text, { style: { fontSize: 18 } }, "\u{1F3AD}")
+    );
   } catch {
     return null;
   }
@@ -616,8 +659,8 @@ function tryAttach(cleanup, logger) {
       state.actionButton = moduleByName("ChatInputActionButton");
       state.diag.button = state.actionButton ? "name" : "";
     }
-    if (state.actionButton) state.button = buildButton();
   }
+  if (!state.button || state.actionButton && state.buttonKind !== "discord") state.button = buildButton();
   let ChatInput = moduleFromPath(INPUT_PATH);
   state.diag.input = ChatInput ? "path" : "";
   if (!ChatInput) {
@@ -1015,6 +1058,8 @@ function Panel({ api } = {}) {
             state.diag.chat === "selected" ? "the chat you have open" : state.diag.chat === "last tapped" ? "the last chat you tapped" : state.diag.chat === "typed" ? "the id you typed" : "nothing yet"
           ),
           row("People it can see", String(people.length)),
+          row("Chat record found", state.diag.channel ? "yes" : "no"),
+          row("Recipients in that record", String(state.diag.recipients)),
           row(
             "Chat bar button module",
             state.actionButton ? "found (" + (state.diag.button || "?") + ")" : "not found"
@@ -1024,7 +1069,10 @@ function Panel({ api } = {}) {
             state.diag.input ? "found (" + state.diag.input + ")" : "not found"
           ),
           row("Chat input name", state.diag.inputName || "none"),
-          row("Chat bar button", state.patched ? "installed" : "not installed"),
+          row(
+            "Chat bar button",
+            state.patched ? state.actionButton ? "installed (Discord button)" : "installed (plain)" : "not installed"
+          ),
           row("Discord dispatcher", flux() ? "found" : "not found"),
           row("Signed in as", mine ? mine.username || String(mine.id) : "unknown")
         ] })
@@ -1092,6 +1140,7 @@ var index_default = plugin({
   start(api) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
     state.button = null;
+    state.buttonKind = "";
     state.patched = false;
     try {
       state.storage = (_a = api == null ? void 0 : api.jsonStorage) != null ? _a : null;
