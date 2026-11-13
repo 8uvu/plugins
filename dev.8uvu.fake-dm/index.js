@@ -87,7 +87,7 @@ var DEFAULTS = {
 };
 var BUTTON_PATH = "modules/chat_input/native/action_buttons/ChatInputActionButton.tsx";
 var INPUT_PATH = "modules/chat_input/native/ChatInput.tsx";
-var VERSION = "4.6.0";
+var VERSION = "4.7.0";
 var ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAACUklEQVR4nO3cS3IbMQwE0EEq97/yZJFF/hVZ5gecfm/v4hhogrJE67oAAAAAAAAAAAAAAAAAAAAAgL7qauy+7/t6iKpqWet2D/Wkpp8QhhYPktD0rmHYunhy47sE4cu1ieb3qMeWAGh+n7osHTsa3+9IWDYBNL9nvZYEQPP71m16ADS/d/22/RVAD1MDYPf3r+O0AGj+GfWcEgDNn2NGXb0GCDc8AHb/XKPrawKEE4BwQwNg/K8xss4mQDgBCDcsAMb/WqPqbQKEE4BwX6+H3p6ZcSTVonVWqqPvs71wbWrEc9WidXZcGzv2CHj1l/9skWrROrscGwCCA/DR3fbu7qxF6+x0ZAAIDkD33VyHTYHjAsBYAhBOAMIJQLjjAvDuO24f/bl70Tq7HRcAxjoyAF13833Y7j82AIxzbABe3W2f3ZX3onV2Ofrj4PT7ADXgXcdHBCBVJd8HYAwBCCcA4QQgnACEE4BwAhBOAMINC8Bpd+FOV4PqbQKEE4BwQwPgGFhjZJ1NgHACEG54ABwDc42urwkQbkoATIE5ZtR12gQQgjPqOfUIEIL+dfQaINz0AJgCveu3ZAIIQd+6LTsChKBnvbZ8hOt/CPpslC0vAk2DPnXZ9leAEPSoR4tbPMlHQm2+SdUiAGlhqEbX59o8yNPDUI2a/rOWD9UlTNW0aSPFvBWc8L2/74gJAH8XFYCnf/f/O6ICwJ8EIFxcAP433ito/EcGgF8JQLjIAPxrzFfY+I8NAD/EBuD33V6Buz86AHwnAGS7H/SR8ztMAAAAAMjxDYaH2MbJO/xzAAAAAElFTkSuQmCC";
 var SYSTEM_TYPES = [
   { value: 1, label: "Added someone" },
@@ -678,6 +678,23 @@ function addButton(node, button) {
   }
   return node;
 }
+var PROBE_PATHS = [
+  INPUT_PATH,
+  BUTTON_PATH,
+  "modules/chat_input/native/action_buttons/ChatInputRightActions.tsx",
+  "modules/chat_input/native/action_buttons/ChatInputActions.tsx"
+];
+function probePaths() {
+  return PROBE_PATHS.map((path) => {
+    var _a, _b;
+    try {
+      const [mod] = (_b = (_a = PathFinders == null ? void 0 : PathFinders.lookupModuleWithImportedPath) == null ? void 0 : _a.call(PathFinders, path)) != null ? _b : [];
+      return { path, found: !!mod };
+    } catch {
+      return { path, found: false };
+    }
+  });
+}
 function moduleFromPath(path) {
   var _a, _b, _c, _d;
   try {
@@ -1097,6 +1114,13 @@ function Panel({ api } = {}) {
       info(
         "Chat bar button module",
         state.actionButton ? "found (" + (state.diag.button || "?") + ")" : "not found"
+      ),
+      info(
+        "Module finders",
+        typeof (PathFinders == null ? void 0 : PathFinders.getModuleWithImportedPath) === "function" ? "ready (" + Object.keys(PathFinders != null ? PathFinders : {}).length + " exports)" : "missing"
+      ),
+      probePaths().map(
+        (probe) => info(probe.path.split("/").slice(-1)[0], probe.found ? "resolves" : "not in this build")
       ),
       info("Chat input module", state.diag.input ? "found (" + state.diag.input + ")" : "not found"),
       info("Chat input name", state.diag.inputName || "none"),
