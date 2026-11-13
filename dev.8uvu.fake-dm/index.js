@@ -44,7 +44,7 @@ var PathFinders = __toESM((function () { const __g = () => { try { return (valen
 var Metro = __toESM((function () { const __g = () => { try { return (valenced.modules && valenced.modules.metro) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get onModuleInitialized() { return __g().onModuleInitialized }, get onAnyModuleInitialized() { return __g().onAnyModuleInitialized }, get onModuleFirstRequired() { return __g().onModuleFirstRequired }, get onAnyModuleFirstRequired() { return __g().onAnyModuleFirstRequired } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var import_patcher = (function () { const __g = () => { try { return (valenced.patcher) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get after() { return __g().after }, get before() { return __g().before }, get instead() { return __g().instead } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get useState() { return __g().useState }, get createElement() { return __g().createElement }, get isValidElement() { return __g().isValidElement }, get cloneElement() { return __g().cloneElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Image() { return __g().Image }, get View() { return __g().View }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Image() { return __g().Image }, get Text() { return __g().Text }, get View() { return __g().View }, get Pressable() { return __g().Pressable }, get TextInput() { return __g().TextInput }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsx() { return __g().jsx }, get jsxs() { return __g().jsxs }, get Fragment() { return __g().Fragment }, get jsxDEV() { return __g().jsxDEV } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULTS = {
   text: "hello",
@@ -89,7 +89,7 @@ var DEFAULTS = {
 };
 var BUTTON_PATH = "modules/chat_input/native/action_buttons/ChatInputActionButton.tsx";
 var INPUT_PATH = "modules/chat_input/native/ChatInput.tsx";
-var VERSION = "5.2.0";
+var VERSION = "5.3.0";
 var ICON = "data:image/png;base64,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";
 var SYSTEM_TYPES = [
   { value: 1, label: "Added someone" },
@@ -633,6 +633,24 @@ function saveCfg(patch) {
   } catch {
   }
 }
+function chatPeople() {
+  var _a, _b;
+  const list = [];
+  const you = me();
+  if (you == null ? void 0 : you.id) list.push({ id: String(you.id), name: (you.globalName || you.username || "You") + " (you)" });
+  const seen = new Set(list.map((person) => person.id));
+  let chat = null;
+  try {
+    chat = openChat();
+  } catch {
+  }
+  for (const user of [...(_a = chat == null ? void 0 : chat.others) != null ? _a : [], ...(_b = chat == null ? void 0 : chat.members) != null ? _b : []]) {
+    if (!(user == null ? void 0 : user.id) || seen.has(String(user.id))) continue;
+    seen.add(String(user.id));
+    list.push({ id: String(user.id), name: user.globalName || user.username || String(user.id) });
+  }
+  return list;
+}
 function Editor({ title, fields, onSend }) {
   var _a;
   const D = (_a = import_design.Design) != null ? _a : {};
@@ -641,32 +659,83 @@ function Editor({ title, fields, onSend }) {
   const [values, setValues] = (0, import_react.useState)(start);
   const Alert = D.AlertModal;
   const Action = D.AlertActionButton;
+  const RadioGroup = D.TableRadioGroup;
+  const RadioRow = D.TableRadioRow;
   if (!Alert) return null;
+  const label = (field) => (0, import_react.createElement)(
+    import_react_native.Text,
+    { style: { color: PALETTE.muted, fontSize: 12, fontWeight: "700", letterSpacing: 0.4, marginBottom: 6 } },
+    field.label
+  );
+  const peoplePicker = (field) => {
+    var _a2;
+    const people = (_a2 = field.people) != null ? _a2 : [];
+    const chosen = values[field.key];
+    const chose = (next) => setValues((prev) => ({ ...prev, [field.key]: next }));
+    if (RadioGroup && RadioRow && people.length) {
+      return (0, import_react.createElement)(
+        RadioGroup,
+        { key: field.key, title: field.label, value: chosen, onChange: chose },
+        ...people.map(
+          (person) => (0, import_react.createElement)(RadioRow, {
+            key: person.id,
+            label: person.name,
+            value: person.id,
+            subLabel: chosen === person.id ? "Selected" : "Tap to pick"
+          })
+        )
+      );
+    }
+    return (0, import_react.createElement)(
+      import_react_native.View,
+      { key: field.key, style: { backgroundColor: PALETTE.card, borderRadius: 12, padding: 12, marginTop: 12 } },
+      label(field),
+      ...people.length ? people.map(
+        (person) => (0, import_react.createElement)(
+          import_react_native.Pressable,
+          {
+            key: person.id,
+            accessibilityRole: "button",
+            accessibilityLabel: person.name,
+            onPress: () => chose(person.id),
+            style: { flexDirection: "row", alignItems: "center", paddingVertical: 9 }
+          },
+          (0, import_react.createElement)(import_react_native.Text, { style: { color: PALETTE.text, flex: 1 } }, person.name),
+          (0, import_react.createElement)(
+            import_react_native.Text,
+            { style: { color: chosen === person.id ? PALETTE.accent : PALETTE.muted } },
+            chosen === person.id ? "\u2713" : ""
+          )
+        )
+      ) : [(0, import_react.createElement)(import_react_native.Text, { key: "nobody", style: { color: PALETTE.muted } }, "Nobody here yet")]
+    );
+  };
+  const textField = (field) => (0, import_react.createElement)(
+    import_react_native.View,
+    { key: field.key, style: { marginTop: 12 } },
+    label(field),
+    (0, import_react.createElement)(import_react_native.TextInput, {
+      value: values[field.key],
+      onChangeText: (next) => setValues((prev) => ({ ...prev, [field.key]: next })),
+      multiline: !!field.multiline,
+      keyboardType: field.numeric ? "numeric" : "default",
+      placeholderTextColor: PALETTE.muted,
+      style: {
+        color: PALETTE.text,
+        backgroundColor: PALETTE.input,
+        borderRadius: 8,
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        fontSize: 16,
+        minHeight: field.multiline ? 88 : 0,
+        textAlignVertical: field.multiline ? "top" : "center"
+      }
+    })
+  );
   const content = (0, import_react.createElement)(
     import_react_native.View,
     { style: { width: "100%" } },
-    ...fields.map(
-      (field) => (0, import_react.createElement)(
-        import_react_native.View,
-        { key: field.key, style: { marginTop: 12 } },
-        (0, import_react.createElement)(import_react_native.Text, { style: { color: "#b5bac1", fontSize: 12, marginBottom: 6 } }, field.label),
-        (0, import_react.createElement)(import_react_native.TextInput, {
-          value: values[field.key],
-          onChangeText: (next) => setValues((prev) => ({ ...prev, [field.key]: next })),
-          multiline: !!field.multiline,
-          keyboardType: field.numeric ? "numeric" : "default",
-          placeholderTextColor: "#6d6f78",
-          style: {
-            color: "#f2f3f5",
-            backgroundColor: "#1e1f22",
-            borderRadius: 8,
-            paddingHorizontal: 12,
-            paddingVertical: 10,
-            fontSize: 16
-          }
-        })
-      )
-    )
+    ...fields.map((field) => field.people ? peoplePicker(field) : textField(field))
   );
   return (0, import_react.createElement)(Alert, {
     title,
@@ -699,36 +768,54 @@ function edit(title, fields, onSend) {
     }
   };
 }
-function withCaller(name, task) {
-  const before = state.cfg.callerId;
-  state.cfg = { ...state.cfg, callerId: name };
+function withSetting(key, value, task) {
+  const before = state.cfg[key];
+  state.cfg = { ...state.cfg, [key]: value };
   try {
     return task();
   } finally {
-    state.cfg = { ...state.cfg, callerId: before };
+    state.cfg = { ...state.cfg, [key]: before };
   }
 }
 function menuItems() {
+  const people = () => chatPeople();
+  const youAs = () => {
+    var _a, _b;
+    const list = people();
+    return state.cfg.senderId || ((_a = list.find((person) => / \(you\)$/.test(person.name))) == null ? void 0 : _a.id) || ((_b = list[0]) == null ? void 0 : _b.id) || "";
+  };
+  const whoCalls = () => {
+    var _a;
+    return state.cfg.callerId || ((_a = people()[0]) == null ? void 0 : _a.id) || "";
+  };
   return [
     {
       label: "Send the message",
-      action: edit("Send the message", [{ key: "text", label: "Message", value: state.cfg.text, multiline: true }], (values) => {
-        saveCfg({ text: values.text });
-        return fakeFromPanel();
-      })
+      action: edit(
+        "Send the message",
+        [
+          { key: "as", label: "Send as", value: youAs(), people: people() },
+          { key: "text", label: "Message", value: state.cfg.text, multiline: true }
+        ],
+        (values) => {
+          var _a;
+          saveCfg({ text: values.text });
+          return withSetting("senderId", String((_a = values.as) != null ? _a : ""), fakeFromPanel);
+        }
+      )
     },
     {
       label: "Send a call",
       action: edit(
         "Send a call",
         [
-          { key: "from", label: "Who calls (empty = the other person)", value: "" },
+          { key: "from", label: "Who calls", value: whoCalls(), people: people() },
           { key: "seconds", label: "Seconds it lasted", value: String(state.cfg.callSeconds), numeric: true }
         ],
         (values) => {
           var _a, _b;
           saveCfg({ callSeconds: String((_a = values.seconds) != null ? _a : "") });
-          return withCaller(String((_b = values.from) != null ? _b : "").trim(), fakeCallNow);
+          return withSetting("callerId", String((_b = values.from) != null ? _b : ""), fakeCallNow);
         }
       )
     },
@@ -736,31 +823,41 @@ function menuItems() {
       label: "Send a missed call",
       action: edit(
         "Send a missed call",
-        [{ key: "from", label: "Who called (empty = the other person)", value: "" }],
+        [{ key: "from", label: "Who called", value: whoCalls(), people: people() }],
         (values) => {
           var _a;
-          return withCaller(String((_a = values.from) != null ? _a : "").trim(), fakeMissedNow);
+          return withSetting("callerId", String((_a = values.from) != null ? _a : ""), fakeMissedNow);
         }
       )
     },
     {
       label: "Send the batch",
-      action: edit("Send the batch", [{ key: "batch", label: "One message per line", value: state.cfg.batch, multiline: true }], (values) => {
-        saveCfg({ batch: values.batch });
-        return fakeBatch();
-      })
+      action: edit(
+        "Send the batch",
+        [
+          { key: "as", label: "Send as", value: youAs(), people: people() },
+          { key: "batch", label: "One message per line", value: state.cfg.batch, multiline: true }
+        ],
+        (values) => {
+          var _a;
+          saveCfg({ batch: values.batch });
+          return withSetting("senderId", String((_a = values.as) != null ? _a : ""), fakeBatch);
+        }
+      )
     },
     {
       label: "Add a reaction",
       action: edit(
         "Add a reaction",
         [
+          { key: "as", label: "Who reacts", value: youAs(), people: people() },
           { key: "emoji", label: "Emoji", value: state.cfg.reactEmoji },
           { key: "message", label: "Message id", value: state.cfg.reactId }
         ],
         (values) => {
+          var _a;
           saveCfg({ reactEmoji: values.emoji, reactId: values.message });
-          return fakeReactionNow();
+          return withSetting("senderId", String((_a = values.as) != null ? _a : ""), fakeReactionNow);
         }
       )
     },
@@ -769,19 +866,6 @@ function menuItems() {
       action: edit("Clear fakes here", [], () => clearNow())
     }
   ];
-}
-function findButtonTemplate(node) {
-  var _a, _b;
-  if (!(0, import_react.isValidElement)(node)) return null;
-  const props = (_a = node.props) != null ? _a : {};
-  if (((_b = node.props) == null ? void 0 : _b.__fakedm) === true || node.key === "fakedm") return null;
-  if (typeof props.IconComponent === "function") return node;
-  const kids = props.children;
-  for (const child of Array.isArray(kids) ? kids : [kids]) {
-    const hit = findButtonTemplate(child);
-    if (hit) return hit;
-  }
-  return null;
 }
 function contextMenuComponent() {
   var _a, _b, _c;
@@ -795,6 +879,19 @@ function contextMenuComponent() {
     const component = (_c = mod == null ? void 0 : mod.ContextMenu) != null ? _c : mod == null ? void 0 : mod.default;
     if (typeof component === "function") return component;
   } catch {
+  }
+  return null;
+}
+function findButtonTemplate(node) {
+  var _a;
+  if (!(0, import_react.isValidElement)(node)) return null;
+  const props = (_a = node.props) != null ? _a : {};
+  if (props.__fakedm === true || node.key === "fakedm") return null;
+  if (typeof props.IconComponent === "function") return node;
+  const kids = props.children;
+  for (const child of Array.isArray(kids) ? kids : [kids]) {
+    const hit = findButtonTemplate(child);
+    if (hit) return hit;
   }
   return null;
 }
