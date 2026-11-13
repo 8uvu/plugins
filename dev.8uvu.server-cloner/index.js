@@ -31,10 +31,10 @@ var import_flux = (function () { const __g = () => { try { return (valenced.disc
 var import_design = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.design) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Design() { return __g().Design } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_finders = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get lookupModule() { return __g().lookupModule }, get lookupModules() { return __g().lookupModules }, get getModules() { return __g().getModules }, get waitForModules() { return __g().waitForModules } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_filters = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders && valenced.modules.finders.filters) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get withProps() { return __g().withProps }, get withoutProps() { return __g().withoutProps }, get withSingleProp() { return __g().withSingleProp }, get withName() { return __g().withName }, get withDependencies() { return __g().withDependencies }, get anyOf() { return __g().anyOf }, get allOf() { return __g().allOf }, get namespaceOnly() { return __g().namespaceOnly }, get createFilterGenerator() { return __g().createFilterGenerator }, get partial() { return __g().partial } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get View() { return __g().View }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get useState() { return __g().useState }, get createElement() { return __g().createElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get View() { return __g().View }, get Text() { return __g().Text }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get TextInput() { return __g().TextInput }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get useState() { return __g().useState }, get createElement() { return __g().createElement }, get cloneElement() { return __g().cloneElement }, get isValidElement() { return __g().isValidElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsxs() { return __g().jsxs }, get jsx() { return __g().jsx }, get jsxDEV() { return __g().jsxDEV }, get Fragment() { return __g().Fragment } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var DEFAULT_OPTIONS = { guildSettings: true, roles: true, channels: true };
+var DEFAULT_OPTIONS = { guildSettings: true, roles: true, channels: true, permissions: true };
 var SPACING_MS = 350;
 var running = false;
 var cancelled = false;
@@ -47,7 +47,25 @@ function guilds() {
     return Object.values(all).map((g) => {
       var _a2;
       return { id: String(g.id), name: String((_a2 = g.name) != null ? _a2 : g.id) };
-    });
+    }).sort((a, b) => a.name.localeCompare(b.name));
+  } catch {
+    return [];
+  }
+}
+function sourceRoles(guildId) {
+  var _a, _b, _c, _d, _e, _f;
+  try {
+    const roles = (_f = (_e = (_b = (_a = import_flux.Stores.GuildRoleStore) == null ? void 0 : _a.getRoles) == null ? void 0 : _b.call(_a, guildId)) != null ? _e : (_d = (_c = import_flux.Stores.GuildStore) == null ? void 0 : _c.getRoles) == null ? void 0 : _d.call(_c, guildId)) != null ? _f : {};
+    return Object.values(roles).filter((role) => !(role == null ? void 0 : role.managed) && String(role == null ? void 0 : role.id) !== String(guildId));
+  } catch {
+    return [];
+  }
+}
+function sourceChannels(guildId) {
+  var _a, _b, _c;
+  try {
+    const channels = (_c = (_b = (_a = import_flux.Stores.ChannelStore) == null ? void 0 : _a.getChannels) == null ? void 0 : _b.call(_a, guildId)) != null ? _c : [];
+    return Array.isArray(channels) ? channels : Object.values(channels);
   } catch {
     return [];
   }
@@ -67,75 +85,73 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 function planClone(sourceId, targetId, options) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
+  var _a, _b;
   const plan = { roles: [], categories: [], channels: [], warnings: [] };
   if (!sourceId || !targetId) {
-    plan.warnings.push("Pick a source and a target server first.");
+    plan.warnings.push("Pick a source server and a server to copy into first.");
     return plan;
   }
   if (sourceId === targetId) {
     plan.warnings.push("Source and target are the same server.");
     return plan;
   }
-  try {
-    if (options.roles) {
-      const roles = (_f = (_e = (_b = (_a = import_flux.Stores.GuildRoleStore) == null ? void 0 : _a.getRoles) == null ? void 0 : _b.call(_a, sourceId)) != null ? _e : (_d = (_c = import_flux.Stores.GuildStore) == null ? void 0 : _c.getRoles) == null ? void 0 : _d.call(_c, sourceId)) != null ? _f : {};
-      plan.roles = Object.values(roles).filter((r) => !r.managed).map((r) => {
-        var _a2;
-        return String((_a2 = r.name) != null ? _a2 : r.id);
-      });
-    }
-  } catch {
-    plan.warnings.push("Could not read source roles from the cache.");
+  const target = guilds().find((guild) => guild.id === targetId);
+  if (!target) plan.warnings.push("The target server is not in your list.");
+  if (options.roles) {
+    const roles = sourceRoles(sourceId);
+    plan.roles = roles.map((role) => {
+      var _a2;
+      return String((_a2 = role.name) != null ? _a2 : role.id);
+    });
+    if (!roles.length) plan.warnings.push("No roles could be read from the cache for the source.");
+    else if (roles.length > 20) plan.warnings.push(roles.length + " roles will be created; Discord rate-limits this, so it takes a while.");
   }
-  try {
-    if (options.channels) {
-      const channels = (_i = (_h = (_g = import_flux.Stores.ChannelStore) == null ? void 0 : _g.getChannels) == null ? void 0 : _h.call(_g, sourceId)) != null ? _i : [];
-      const list = Array.isArray(channels) ? channels : Object.values(channels);
-      for (const c of list) {
-        if (c.type === 4) plan.categories.push(String((_j = c.name) != null ? _j : c.id));
-        else plan.channels.push(String((_k = c.name) != null ? _k : c.id));
-      }
+  if (options.channels) {
+    const list = sourceChannels(sourceId);
+    for (const channel of list) {
+      if (channel.type === 4) plan.categories.push(String((_a = channel.name) != null ? _a : channel.id));
+      else plan.channels.push(String((_b = channel.name) != null ? _b : channel.id));
     }
-  } catch {
-    plan.warnings.push("Could not read source channels from the cache.");
+    if (!list.length) plan.warnings.push("No channels could be read from the cache for the source.");
   }
+  if (!options.roles && !options.channels && !options.guildSettings) plan.warnings.push("Nothing is switched on.");
   return plan;
 }
 async function restCall(rest, method, url, body) {
+  var _a, _b;
   try {
-    if (typeof rest[method] === "function") {
-      await rest[method]({ url, body });
-      return true;
-    }
-    if (typeof rest.doRequest === "function") {
-      await rest.doRequest({ method: method.toUpperCase(), url, body });
-      return true;
-    }
+    if (typeof rest[method] === "function") return (_a = await rest[method]({ url, body })) != null ? _a : {};
+    if (typeof rest.doRequest === "function") return (_b = await rest.doRequest({ method: method.toUpperCase(), url, body })) != null ? _b : {};
   } catch (error) {
     runLog.push({ text: `${method.toUpperCase()} ${url} failed`, ok: false });
     void error;
-    return false;
+    return null;
   }
-  return false;
+  return null;
 }
 async function runClone(sourceId, targetId, options, logger, spacing = SPACING_MS) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
+  var _a, _b, _c, _d, _e, _f, _g;
   let created = 0;
   let failed = 0;
   if (running) {
-    runLog.push({ text: "A clone is already running.", ok: false });
+    runLog.push({ text: "A copy is already running.", ok: false });
+    return { created, failed };
+  }
+  const plan = planClone(sourceId, targetId, options);
+  if (plan.warnings.some((warning) => warning.includes("same server") || warning.includes("Pick a source"))) {
+    runLog.push({ text: plan.warnings[0], ok: false });
     return { created, failed };
   }
   const rest = findRest();
   if (!rest) {
-    runLog.push({ text: "No REST module on this build; nothing can be cloned.", ok: false });
+    runLog.push({ text: "No REST module on this build; nothing can be copied.", ok: false });
     (_a = logger == null ? void 0 : logger.error) == null ? void 0 : _a.call(logger, "[ServerCloner] no REST module on this build");
     return { created, failed };
   }
   running = true;
   cancelled = false;
   const roleMap = /* @__PURE__ */ new Map();
+  const categoryMap = /* @__PURE__ */ new Map();
   try {
     if (options.guildSettings) {
       const source = (_c = (_b = import_flux.Stores.GuildStore) == null ? void 0 : _b.getGuild) == null ? void 0 : _c.call(_b, sourceId);
@@ -150,55 +166,58 @@ async function runClone(sourceId, targetId, options, logger, spacing = SPACING_M
       }
     }
     if (options.roles && !cancelled) {
-      const roles = (_f = (_e = (_d = import_flux.Stores.GuildRoleStore) == null ? void 0 : _d.getRoles) == null ? void 0 : _e.call(_d, sourceId)) != null ? _f : {};
-      for (const role of Object.values(roles)) {
+      for (const role of sourceRoles(sourceId)) {
         if (cancelled) break;
-        if (role.managed) continue;
-        const ok = await restCall(rest, "post", `/guilds/${targetId}/roles`, {
+        const made = await restCall(rest, "post", `/guilds/${targetId}/roles`, {
           name: role.name,
           color: role.color,
           hoist: role.hoist,
           mentionable: role.mentionable,
-          permissions: String((_g = role.permissions) != null ? _g : "0")
+          permissions: String((_d = role.permissions) != null ? _d : "0")
         });
-        ok ? created++ : failed++;
+        if (made && made.id) {
+          roleMap.set(String(role.id), String(made.id));
+          created++;
+        } else {
+          failed++;
+        }
         await sleep(spacing);
       }
     }
     if (options.channels && !cancelled) {
-      const channels = (_j = (_i = (_h = import_flux.Stores.ChannelStore) == null ? void 0 : _h.getChannels) == null ? void 0 : _i.call(_h, sourceId)) != null ? _j : [];
-      const list = Array.isArray(channels) ? channels : Object.values(channels);
-      const parents = /* @__PURE__ */ new Map();
-      for (const pass of [4, 0, 2, 5, 15]) {
-        for (const channel of list) {
-          if (cancelled) break;
-          if (channel.type !== pass) continue;
-          const overwrites = ((_k = channel.permissionOverwrites) != null ? _k : []).map((o) => {
-            var _a2;
-            return {
-              ...o,
-              id: (_a2 = roleMap.get(String(o.id))) != null ? _a2 : o.id
-            };
-          });
-          const ok = await restCall(rest, "post", `/guilds/${targetId}/channels`, {
-            name: channel.name,
-            type: channel.type,
-            topic: channel.topic,
-            nsfw: channel.nsfw,
-            parent_id: channel.parent_id ? (_l = parents.get(String(channel.parent_id))) != null ? _l : void 0 : void 0,
-            permission_overwrites: overwrites
-          });
-          ok ? created++ : failed++;
-          await sleep(spacing);
-          void parents;
+      const list = sourceChannels(sourceId);
+      const order = [4, 0, 2, 5, 15, 13];
+      const channels = [...list].sort((a, b) => order.indexOf(a.type) - order.indexOf(b.type));
+      for (const channel of channels) {
+        if (cancelled) break;
+        if (!order.includes(channel.type)) continue;
+        const overwrites = options.permissions ? ((_e = channel.permissionOverwrites) != null ? _e : []).map((overwrite) => ({
+          ...overwrite,
+          // Members do not exist in the target; roles do, under new ids.
+          id: roleMap.get(String(overwrite.id))
+        })).filter((overwrite) => !!overwrite.id) : [];
+        const parentId = channel.parent_id ? categoryMap.get(String(channel.parent_id)) : void 0;
+        const made = await restCall(rest, "post", `/guilds/${targetId}/channels`, {
+          name: channel.name,
+          type: channel.type,
+          topic: channel.topic,
+          nsfw: channel.nsfw,
+          parent_id: parentId,
+          permission_overwrites: overwrites
+        });
+        if (made) {
+          if (channel.type === 4 && made.id) categoryMap.set(String(channel.id), String(made.id));
+          created++;
+        } else {
+          failed++;
         }
+        await sleep(spacing);
       }
-      void roleMap;
     }
-    runLog.push({ text: `Clone finished: ${created} created, ${failed} failed.`, ok: failed === 0 });
+    runLog.push({ text: `Copy finished: ${created} made, ${failed} failed.`, ok: failed === 0 });
   } catch (error) {
-    runLog.push({ text: "Clone stopped: " + String((_m = error == null ? void 0 : error.message) != null ? _m : error), ok: false });
-    (_n = logger == null ? void 0 : logger.error) == null ? void 0 : _n.call(logger, "[ServerCloner] clone failed", error);
+    runLog.push({ text: "Copy stopped: " + String((_f = error == null ? void 0 : error.message) != null ? _f : error), ok: false });
+    (_g = logger == null ? void 0 : logger.error) == null ? void 0 : _g.call(logger, "[ServerCloner] copy failed", error);
   }
   running = false;
   return { created, failed };
@@ -207,7 +226,7 @@ function cancelClone() {
   cancelled = true;
 }
 function getLog() {
-  return [...runLog];
+  return runLog.slice(-40);
 }
 var index_default = plugin({
   jsonStorage: { load: true, default: {} },
@@ -217,64 +236,137 @@ var index_default = plugin({
     (_a = logger == null ? void 0 : logger.log) == null ? void 0 : _a.call(logger, "[ServerCloner] started");
   },
   SettingsComponent({ api }) {
-    var _a;
+    var _a, _b;
     const [sourceId, setSourceId] = (0, import_react.useState)("");
     const [targetId, setTargetId] = (0, import_react.useState)("");
     const [options, setOptions] = (0, import_react.useState)({ ...DEFAULT_OPTIONS });
     const [plan, setPlan] = (0, import_react.useState)(null);
+    const [busy, setBusy] = (0, import_react.useState)(false);
+    const [, bump] = (0, import_react.useState)(0);
     const D = (_a = import_design.Design) != null ? _a : {};
     const setOption = (patch) => setOptions({ ...options, ...patch });
-    const field = (label, value, onChange) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { marginVertical: 4 }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#9ba0a8", marginBottom: 2 }, children: label }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.TextInput, { style: { color: "#ffffff", backgroundColor: "#232428", borderRadius: 8, padding: 8 }, value, onChangeText: onChange })
-    ] }, label);
-    const toggles = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.View, { children: ["guildSettings", "roles", "channels"].map(
-      (key) => D.TableSwitchRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableSwitchRow, { label: key, value: options[key], onValueChange: (v) => setOption({ [key]: v }) }, key) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityLabel: key, onPress: () => setOption({ [key]: !options[key] }), style: { paddingVertical: 8 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#ffffff" }, children: [
-        key,
-        ": ",
-        options[key] ? "on" : "off"
-      ] }) }, key)
-    ) });
-    if (D.TableRowGroup) {
-      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(D.TableRowGroup, { title: "ServerCloner", children: [
-          field("Source server ID", sourceId, setSourceId),
-          field("Target server ID", targetId, setTargetId),
-          toggles,
-          D.Button ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.Button, { text: "Preview clone", onPress: () => setPlan(planClone(sourceId, targetId, options)) }) : null,
-          D.Button ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.Button, { text: "Start clone", onPress: () => void runClone(sourceId, targetId, options, api == null ? void 0 : api.logger) }) : null,
-          D.Button ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.Button, { text: "Cancel clone", onPress: () => cancelClone() }) : null
-        ] }),
-        plan ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(D.TableRowGroup, { title: "Preview", children: [
-          D.TableRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: `${plan.roles.length} roles`, subLabel: plan.roles.slice(0, 5).join(", ") }) : null,
-          D.TableRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: `${plan.channels.length} channels`, subLabel: plan.channels.slice(0, 5).join(", ") }) : null,
-          plan.warnings.map((w, i) => D.TableRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: "Warning", subLabel: w }, i) : null)
-        ] }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "Log", children: getLog().slice(-10).map((entry, i) => D.TableRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: entry.ok ? "Done" : "Error", subLabel: entry.text }, i) : null) })
-      ] });
-    }
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { style: { padding: 16 }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "bold", marginBottom: 8 }, children: "ServerCloner" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#9ba0a8", marginBottom: 8 }, children: "Copies one server's structure into another. Guilds on this device:" }),
-      guilds().map((g) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#9ba0a8" }, children: [
-        g.name,
-        " (",
-        g.id,
-        ")"
-      ] }, g.id)),
-      field("Source server ID", sourceId, setSourceId),
-      field("Target server ID", targetId, setTargetId),
-      toggles,
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityLabel: "Preview clone", onPress: () => setPlan(planClone(sourceId, targetId, options)), style: { padding: 12, backgroundColor: "#232428", borderRadius: 8, marginVertical: 4 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff" }, children: "Preview clone" }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-        import_react_native.Pressable,
+    const list = guilds();
+    const source = list.find((guild) => guild.id === sourceId);
+    const target = list.find((guild) => guild.id === targetId);
+    const preview = () => setPlan(planClone(sourceId, targetId, options));
+    const start = async () => {
+      setBusy(true);
+      await runClone(sourceId, targetId, options, api == null ? void 0 : api.logger);
+      setBusy(false);
+      setPlan(null);
+      bump((n) => n + 1);
+    };
+    const picker = (title, value, entries, onPick) => {
+      const RadioGroup = D.TableRadioGroup;
+      const RadioRow = D.TableRadioRow;
+      if (!RadioGroup || !RadioRow) {
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { marginBottom: 12 }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#b5bac1", marginBottom: 4 }, children: title }),
+          entries.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityLabel: entry.name, onPress: () => onPick(entry.id), style: { paddingVertical: 6 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: value === entry.id ? "#5865f2" : "#ffffff" }, children: [
+            value === entry.id ? "\u2713 " : "",
+            entry.name
+          ] }) }, entry.id))
+        ] }, title);
+      }
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RadioGroup, { title, value, onChange: onPick, children: entries.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        RadioRow,
         {
-          accessibilityLabel: "Start clone",
-          onPress: () => void runClone(sourceId, targetId, options, api == null ? void 0 : api.logger),
-          style: { padding: 12, backgroundColor: "#232428", borderRadius: 8, marginVertical: 4 },
-          children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff" }, children: "Start clone" })
+          label: entry.name,
+          subLabel: value === entry.id ? "Selected" : void 0,
+          value: entry.id
+        },
+        entry.id
+      )) }, title);
+    };
+    const planBlock = () => plan ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(D.TableRowGroup, { title: "What will be copied", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: plan.roles.length + " role(s)", subLabel: plan.roles.slice(0, 4).join(", ") || "none" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        D.TableRow,
+        {
+          label: plan.categories.length + " categor" + (plan.categories.length === 1 ? "y" : "ies"),
+          subLabel: plan.categories.slice(0, 4).join(", ") || "none"
         }
       ),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: plan.channels.length + " channel(s)", subLabel: plan.channels.slice(0, 4).join(", ") || "none" }),
+      plan.warnings.map((warning, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: "Heads up", subLabel: warning }, "warning-" + index))
+    ] }) : null;
+    const logBlock = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "Log", children: getLog().length ? getLog().slice(-10).reverse().map((entry, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: entry.ok ? "Done" : "Problem", subLabel: entry.text }, "log-" + index)) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: "Nothing copied yet", subLabel: "Pick a source and a target, preview, then copy." }) });
+    if (D.TableRowGroup && D.TableSwitchRow && D.TableRow && D.Button) {
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "ServerCloner", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          D.TableRow,
+          {
+            label: "Copying",
+            subLabel: source && target ? source.name + " \u2192 " + target.name : source ? "Now pick the server to copy into." : "Pick the server to copy from."
+          }
+        ) }),
+        list.length ? picker("Copy from", sourceId, list, (id) => {
+          setSourceId(id);
+          setPlan(null);
+          if (id === targetId) setTargetId("");
+        }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "Copy from", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: "No servers", subLabel: "Discord has not reported any servers yet." }) }),
+        list.filter((guild) => guild.id !== sourceId).length ? picker(
+          "Copy into",
+          targetId,
+          list.filter((guild) => guild.id !== sourceId),
+          (id) => {
+            setTargetId(id);
+            setPlan(null);
+          }
+        ) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(D.TableRowGroup, { title: "What to copy", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            D.TableSwitchRow,
+            {
+              label: "Server name and description",
+              value: options.guildSettings,
+              onValueChange: (value) => setOption({ guildSettings: value })
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableSwitchRow, { label: "Roles", value: options.roles, onValueChange: (value) => setOption({ roles: value }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            D.TableSwitchRow,
+            {
+              label: "Categories and channels",
+              value: options.channels,
+              onValueChange: (value) => setOption({ channels: value })
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            D.TableSwitchRow,
+            {
+              label: "Channel permissions",
+              subLabel: "Copies each role's access into the new channels.",
+              value: options.permissions,
+              onValueChange: (value) => setOption({ permissions: value })
+            }
+          )
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(D.TableRowGroup, { title: "Preview", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            D.TableRow,
+            {
+              label: plan ? "Preview ready" : "Nothing previewed yet",
+              subLabel: plan ? "Check the list below, then copy." : "A preview reads the source server without sending anything."
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.Button, { text: plan ? "Preview again" : "Preview clone", onPress: preview }),
+          plan && !busy ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.Button, { text: "Copy into " + ((_b = target == null ? void 0 : target.name) != null ? _b : "the target"), onPress: () => void start() }) : null,
+          busy ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.Button, { text: "Copying\u2026", onPress: () => cancelClone() }) : null
+        ] }),
+        planBlock(),
+        logBlock()
+      ] });
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { padding: 16 }, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "bold", marginBottom: 8 }, children: "ServerCloner" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#9ba0a8", marginBottom: 8 }, children: [
+        source ? source.name : "No source picked",
+        " \u2192 ",
+        target ? target.name : "no target picked"
+      ] }),
+      list.map((guild) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityLabel: guild.name, onPress: () => setSourceId(guild.id), style: { paddingVertical: 6 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: sourceId === guild.id ? "#5865f2" : "#ffffff" }, children: guild.name }) }, guild.id)),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityLabel: "Preview clone", onPress: preview, style: { padding: 12, backgroundColor: "#232428", borderRadius: 8, marginTop: 8 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff" }, children: "Preview clone" }) }),
       plan ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#ffffff", marginTop: 8 }, children: [
         plan.roles.length,
         " roles, ",

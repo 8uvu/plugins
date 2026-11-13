@@ -638,81 +638,6 @@
                 }
             }
         },
-        "dev.8uvu.platform-spoofer": {
-            "name": "PlatformSpoofer",
-            "description": "Spoofs the platform icon next to your name.",
-            "author": "cenotaph",
-            "channels": {
-                "latest": "1.5.3"
-            },
-            "versions": {
-                "1.4.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.4.2.zip",
-                    "sha256": "6382c5511fcc9508e173521d2f7521e5c56ac3e75417fa3031985ae78d00b698",
-                    "size": 6663,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.5.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.5.0.zip",
-                    "sha256": "a68a418f87f6b3d5a1fe778825ea47f649bf30b0da6418e5f9a81609fd70fe08",
-                    "size": 2388,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.5.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.5.1.zip",
-                    "sha256": "e38e2cb4931320d2be57b9bf6dda157b878bacb3648ecc6fc67fbb9156593e4d",
-                    "size": 2440,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.5.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.5.2.zip",
-                    "sha256": "5fbc04c8528297cd29b4e8a1cda046b5fa18e03e2fb8c427f42afcce60bcde75",
-                    "size": 2481,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.5.3": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.platform-spoofer@1.5.3.zip",
-                    "sha256": "2458115460e42f162a2e4bdaf31ce1d31a63db278ac6d6a40cbfb9b9c2596f90",
-                    "size": 3119,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                }
-            }
-        },
         "dev.8uvu.user-change-alerts": {
             "name": "UserChangeAlerts",
             "description": "Toasts when a user changes name or avatar.",
@@ -883,143 +808,6 @@
                 }
             }
         },
-        "dev.8uvu.typing-guard": {
-            "name": "TypingGuard",
-            "description": "Stops your typing indicator from reaching other people.",
-            "author": "cenotaph",
-            "channels": {
-                "latest": "1.1.3"
-            },
-            "versions": {
-                "1.0.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-guard@1.0.0.zip",
-                    "sha256": "d57b02e83d7595f35e7b9bdb3889fde1223ae7e35bca41313c34ab40a1ca72e3",
-                    "size": 1943,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.1.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-guard@1.1.0.zip",
-                    "sha256": "38c25520b84409e7ae79363d0ac7a7c3cdc7e538868428893578cc544abdd693",
-                    "size": 1999,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.1.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-guard@1.1.1.zip",
-                    "sha256": "a8837554f981dcc351d313f6336902b41c286830558fdcd723836d59e7040c6d",
-                    "size": 2054,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.1.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-guard@1.1.2.zip",
-                    "sha256": "715ab6e88d8f2141975b7ce5430e06a29f4ecbad74602ff2299bb32bb01295fb",
-                    "size": 2096,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.1.3": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-guard@1.1.3.zip",
-                    "sha256": "4df6c0a6f4fac9f131594594318f0a4df1a54fc2670cec50736ef69872df357a",
-                    "size": 2778,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                }
-            }
-        },
-        "dev.8uvu.send-polish": {
-            "name": "SendPolish",
-            "description": "Tidies what you send: trailing spaces, stacked blank lines, stray markdown.",
-            "author": "cenotaph",
-            "channels": {
-                "latest": "1.0.3"
-            },
-            "versions": {
-                "1.0.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.send-polish@1.0.0.zip",
-                    "sha256": "d201f4c9d0a3d83def09678c6f86a3b7f2b62bc14d28487ca1fb6efd434d5651",
-                    "size": 2617,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.0.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.send-polish@1.0.1.zip",
-                    "sha256": "e9aef3148349c488829ee2a618150442bfe3fa8a020051338625a39e6a683aa4",
-                    "size": 2671,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.0.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.send-polish@1.0.2.zip",
-                    "sha256": "12c25286b3baeeb52851a6340f7d2f0d6a44b07d962f6821c98df6016472b636",
-                    "size": 2716,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.0.3": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.send-polish@1.0.3.zip",
-                    "sha256": "a16676e56c2f1c6cff6fd79c9e93d00b23b9001d74722daf542b5a5ef5c2d4fa",
-                    "size": 3343,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                }
-            }
-        },
         "dev.8uvu.typing-watch": {
             "name": "TypingWatch",
             "description": "Remembers who started typing, in case the indicator vanished before you looked.",
@@ -1100,7 +888,7 @@
             "description": "Keeps you in your voice channel.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.3"
+                "latest": "1.1.0"
             },
             "versions": {
                 "1.0.0": {
@@ -1154,135 +942,11 @@
                             "version": "*"
                         }
                     }
-                }
-            }
-        },
-        "dev.8uvu.ghost-ping-sniper": {
-            "name": "GhostPingSniper",
-            "description": "Catches pings deleted before you see them.",
-            "author": "cenotaph",
-            "channels": {
-                "latest": "1.0.3"
-            },
-            "versions": {
-                "1.0.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.ghost-ping-sniper@1.0.0.zip",
-                    "sha256": "eaaad80426f917eeef87cd4de174a10f26df09577bd6c3d2715d870e2e309ceb",
-                    "size": 3387,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
                 },
-                "1.0.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.ghost-ping-sniper@1.0.1.zip",
-                    "sha256": "06c1725141acd1b2618867f99099595e0b9784a0b27b7fdaa0010e342f3892a1",
-                    "size": 3446,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.0.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.ghost-ping-sniper@1.0.2.zip",
-                    "sha256": "568306e92df1c18d8f7184febb2ed3b8e5033847c092aac0e2b216dd86c09870",
-                    "size": 3495,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.0.3": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.ghost-ping-sniper@1.0.3.zip",
-                    "sha256": "5777a50162b8405d4e8d67805844edc94b03cc39564f12ba1aa1f0623f478669",
-                    "size": 4002,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                }
-            }
-        },
-        "dev.8uvu.message-logger": {
-            "name": "MessageLogger",
-            "description": "Logs deleted and edited messages, searchable.",
-            "author": "cenotaph",
-            "channels": {
-                "latest": "1.8.4"
-            },
-            "versions": {
-                "1.8.0": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.8.0.zip",
-                    "sha256": "b96de569e47878a302628e91ffcb5789c459d0eb298e67ec0bbf706214967e67",
-                    "size": 3579,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.8.1": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.8.1.zip",
-                    "sha256": "3639c52b221594d80e40183b3da2104478e282508ff7889514b54b117169cb8e",
-                    "size": 3574,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.8.2": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.8.2.zip",
-                    "sha256": "a90d91d171dcef06b901b151b289f2b8c12c6ddb7081b87773af74e30bb7f7b6",
-                    "size": 3633,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.8.3": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.8.3.zip",
-                    "sha256": "407a07411b9442e43ad494a202d1e36d64e4598ef152a7d9336b0a5a9a25ae8a",
-                    "size": 3685,
-                    "dependencies": {
-                        "valenced.api": {
-                            "version": ">=1 <2"
-                        },
-                        "discord": {
-                            "version": "*"
-                        }
-                    }
-                },
-                "1.8.4": {
-                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.message-logger@1.8.4.zip",
-                    "sha256": "bc56d8e79fd891d8b83ec685f2a29f6a14b42488aa179b2d25b0de48bddbb18e",
-                    "size": 4292,
+                "1.1.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.dont-control-me@1.1.0.zip",
+                    "sha256": "f36801163644606144d7e1e622662d5d6de91a7660dc33ea9938000dfe5b0019",
+                    "size": 4527,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
@@ -1299,7 +963,7 @@
             "description": "Copies a server's roles and channels into another.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.3"
+                "latest": "2.0.0"
             },
             "versions": {
                 "1.0.0": {
@@ -1345,6 +1009,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.server-cloner@1.0.3.zip",
                     "sha256": "6ac292a42d1b7a3bfb7dcb6a8e8832a3403a67c6ed521fe834ffc667d685b84c",
                     "size": 5150,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "2.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.server-cloner@2.0.0.zip",
+                    "sha256": "e8220551d59c2a4bc387d4044e4320adacde207a5d9140fff0fbf4d2b00c427b",
+                    "size": 6254,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"

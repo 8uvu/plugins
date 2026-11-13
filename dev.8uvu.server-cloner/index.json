@@ -8,7 +8,7 @@
             "description": "Copies a server's roles and channels into another.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.3"
+                "latest": "2.0.0"
             },
             "versions": {
                 "1.0.0": {
@@ -54,6 +54,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.server-cloner@1.0.3.zip",
                     "sha256": "6ac292a42d1b7a3bfb7dcb6a8e8832a3403a67c6ed521fe834ffc667d685b84c",
                     "size": 5150,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "2.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.server-cloner@2.0.0.zip",
+                    "sha256": "e8220551d59c2a4bc387d4044e4320adacde207a5d9140fff0fbf4d2b00c427b",
+                    "size": 6254,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
