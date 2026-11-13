@@ -1,0 +1,22 @@
+{
+    "format": 1,
+    "id": "dev.8uvu.themes",
+    "name": "Cenotaph Themes",
+    "description": "Colour themes that recolour Discord's own palette instead of covering it.",
+    "author": "cenotaph",
+    "version": "1.0.0",
+    "dependencies": {
+        "valenced.api": {
+            "version": ">=1"
+        },
+        "discord": {
+            "version": "*"
+        },
+        "valenced.api.themes": {
+            "version": "*"
+        }
+    },
+    "dist": {
+        "script": "index.js"
+    }
+}

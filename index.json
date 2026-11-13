@@ -1068,6 +1068,32 @@
                     }
                 }
             }
+        },
+        "dev.8uvu.themes": {
+            "name": "Cenotaph Themes",
+            "description": "Colour themes that recolour Discord's own palette instead of covering it.",
+            "author": "cenotaph",
+            "channels": {
+                "latest": "1.0.0"
+            },
+            "versions": {
+                "1.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.themes@1.0.0.zip",
+                    "sha256": "0a0fceb2cacad85d57d0cf94fb4efbbc8a2dd24d2419832d48fc9ab906b1b15a",
+                    "size": 3648,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        },
+                        "valenced.api.themes": {
+                            "version": "*"
+                        }
+                    }
+                }
+            }
         }
     }
 }
