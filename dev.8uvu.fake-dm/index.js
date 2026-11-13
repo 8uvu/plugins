@@ -33,7 +33,7 @@ __export(index_exports, {
 });
 module.exports = __toCommonJS(index_exports);
 var import_finders = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get lookupModule() { return __g().lookupModule }, get lookupModules() { return __g().lookupModules }, get getModules() { return __g().getModules }, get waitForModules() { return __g().waitForModules } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_filters = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders && valenced.modules.finders.filters) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get withProps() { return __g().withProps }, get withoutProps() { return __g().withoutProps }, get withSingleProp() { return __g().withSingleProp }, get withName() { return __g().withName }, get withDependencies() { return __g().withDependencies }, get anyOf() { return __g().anyOf }, get allOf() { return __g().allOf }, get namespaceOnly() { return __g().namespaceOnly }, get createFilterGenerator() { return __g().createFilterGenerator }, get partial() { return __g().partial } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_filters = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders && valenced.modules.finders.filters) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get withProps() { return __g().withProps }, get withName() { return __g().withName }, get withoutProps() { return __g().withoutProps }, get withSingleProp() { return __g().withSingleProp }, get withDependencies() { return __g().withDependencies }, get anyOf() { return __g().anyOf }, get allOf() { return __g().allOf }, get namespaceOnly() { return __g().namespaceOnly }, get createFilterGenerator() { return __g().createFilterGenerator }, get partial() { return __g().partial } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_design = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.design) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Design() { return __g().Design } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var SettingsModules = __toESM((function () { const __g = () => { try { return (valenced.discord && valenced.discord.modules && valenced.discord.modules.settings) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get onSettingsModulesLoaded() { return __g().onSettingsModulesLoaded }, get registerSettingsSection() { return __g().registerSettingsSection }, get registerSettingsItem() { return __g().registerSettingsItem } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var PathFinders = __toESM((function () { const __g = () => { try { return (valenced.discord && valenced.discord.utils && valenced.discord.utils.modules && valenced.discord.utils.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get lookupModuleWithImportedPath() { return __g().lookupModuleWithImportedPath }, get getModuleWithImportedPath() { return __g().getModuleWithImportedPath }, get getModule() { return __g().getModule }, get getModulesWithImportedPath() { return __g().getModulesWithImportedPath }, get findModuleWithImportedPath() { return __g().findModuleWithImportedPath } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
@@ -85,6 +85,7 @@ var DEFAULTS = {
 };
 var BUTTON_PATH = "modules/chat_input/native/action_buttons/ChatInputActionButton.tsx";
 var INPUT_PATH = "modules/chat_input/native/ChatInput.tsx";
+var VERSION = "4.1.0";
 var SYSTEM_TYPES = [
   { value: 1, label: "Added someone" },
   { value: 2, label: "Removed someone" },
@@ -99,7 +100,8 @@ var CATEGORIES = [
   { key: "call", label: "Call" },
   { key: "batch", label: "Batch" },
   { key: "system", label: "System" },
-  { key: "reaction", label: "Reaction" }
+  { key: "reaction", label: "Reaction" },
+  { key: "diag", label: "Diagnostics" }
 ];
 var state = {
   cfg: { ...DEFAULTS },
@@ -108,7 +110,8 @@ var state = {
   button: null,
   patched: false,
   cat: "message",
-  lastChannelId: ""
+  lastChannelId: "",
+  diag: { chat: "", button: "", input: "", inputName: "" }
 };
 var seq = 0;
 function find(...props) {
@@ -206,6 +209,7 @@ function openChat() {
     if (selected) state.lastChannelId = selected;
     const manual = String((_b = (_a = state.cfg) == null ? void 0 : _a.chatId) != null ? _b : "").trim();
     const id = selected || state.lastChannelId || manual;
+    state.diag.chat = selected ? "selected" : state.lastChannelId ? "last tapped" : manual ? "typed" : "";
     if (!id) return null;
     const channel = channelById(id);
     const others = Array.isArray(channel == null ? void 0 : channel.recipients) ? channel.recipients : [];
@@ -583,24 +587,44 @@ function addButton(node, button) {
   }
   return node;
 }
-function tryAttach(cleanup, logger) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
-  if (state.patched) return true;
-  const finders = PathFinders;
-  if (!state.actionButton) {
-    try {
-      const [mod] = (_b = (_a = finders == null ? void 0 : finders.lookupModuleWithImportedPath) == null ? void 0 : _a.call(finders, BUTTON_PATH)) != null ? _b : [];
-      state.actionButton = (_d = (_c = mod == null ? void 0 : mod.default) != null ? _c : mod) != null ? _d : null;
-      if (state.actionButton) state.button = buildButton();
-    } catch {
-    }
-  }
-  let ChatInput = null;
+function moduleFromPath(path) {
+  var _a, _b, _c, _d;
   try {
-    const [mod] = (_f = (_e = finders == null ? void 0 : finders.lookupModuleWithImportedPath) == null ? void 0 : _e.call(finders, INPUT_PATH)) != null ? _f : [];
-    ChatInput = (_h = (_g = mod == null ? void 0 : mod.default) != null ? _g : mod) != null ? _h : null;
+    const finders = PathFinders;
+    const [mod] = (_b = (_a = finders == null ? void 0 : finders.lookupModuleWithImportedPath) == null ? void 0 : _a.call(finders, path)) != null ? _b : [];
+    return (_d = (_c = mod == null ? void 0 : mod.default) != null ? _c : mod) != null ? _d : null;
   } catch {
+    return null;
   }
+}
+function moduleByName(name) {
+  var _a, _b, _c;
+  try {
+    const [mod] = (_a = (0, import_finders.lookupModule)((0, import_filters.withName)(name))) != null ? _a : [];
+    return (_c = (_b = mod == null ? void 0 : mod.default) != null ? _b : mod) != null ? _c : null;
+  } catch {
+    return null;
+  }
+}
+function tryAttach(cleanup, logger) {
+  var _a, _b, _c, _d;
+  if (state.patched) return true;
+  if (!state.actionButton) {
+    state.actionButton = moduleFromPath(BUTTON_PATH);
+    state.diag.button = state.actionButton ? "path" : "";
+    if (!state.actionButton) {
+      state.actionButton = moduleByName("ChatInputActionButton");
+      state.diag.button = state.actionButton ? "name" : "";
+    }
+    if (state.actionButton) state.button = buildButton();
+  }
+  let ChatInput = moduleFromPath(INPUT_PATH);
+  state.diag.input = ChatInput ? "path" : "";
+  if (!ChatInput) {
+    ChatInput = moduleByName("ChatInput");
+    state.diag.input = ChatInput ? "name" : "";
+  }
+  state.diag.inputName = ChatInput ? String((_b = (_a = ChatInput == null ? void 0 : ChatInput.displayName) != null ? _a : ChatInput == null ? void 0 : ChatInput.name) != null ? _b : "anonymous") : "";
   if (!ChatInput || typeof ChatInput.type !== "function") return false;
   try {
     cleanup(
@@ -624,10 +648,10 @@ function tryAttach(cleanup, logger) {
       })
     );
     state.patched = true;
-    (_i = logger == null ? void 0 : logger.log) == null ? void 0 : _i.call(logger, "[FakeDM] chat button installed; open a chat to see it.");
+    (_c = logger == null ? void 0 : logger.log) == null ? void 0 : _c.call(logger, "[FakeDM] chat button installed; open a chat to see it.");
     return true;
   } catch (error) {
-    (_j = logger == null ? void 0 : logger.error) == null ? void 0 : _j.call(logger, "[FakeDM] could not patch the chat input", error);
+    (_d = logger == null ? void 0 : logger.error) == null ? void 0 : _d.call(logger, "[FakeDM] could not patch the chat input", error);
     return false;
   }
 }
@@ -679,7 +703,7 @@ var white = "#ffffff";
 var muted = "#b5bac1";
 var blue = "#5865F2";
 function Panel({ api } = {}) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
   const [, bump] = (0, import_react.useState)(0);
   const [status, setStatus] = (0, import_react.useState)("");
   const settings = (_a = state.cfg) != null ? _a : DEFAULTS;
@@ -976,6 +1000,36 @@ function Panel({ api } = {}) {
         field("reactEmoji", "Emoji"),
         button("Add reaction", () => run(fakeReactionNow), true)
       ] })
+    ] }),
+    cat === "diag" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+      heading("Diagnostics"),
+      hint("What this build found, read straight off your client. No computer needed."),
+      card(
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+          row("Installed version", VERSION),
+          row("Chat found", chat ? "yes" : "no"),
+          row("Chat id", (chat == null ? void 0 : chat.id) || "none"),
+          row("Chat name", (chat == null ? void 0 : chat.label) || "none"),
+          row(
+            "Found through",
+            state.diag.chat === "selected" ? "the chat you have open" : state.diag.chat === "last tapped" ? "the last chat you tapped" : state.diag.chat === "typed" ? "the id you typed" : "nothing yet"
+          ),
+          row("People it can see", String(people.length)),
+          row(
+            "Chat bar button module",
+            state.actionButton ? "found (" + (state.diag.button || "?") + ")" : "not found"
+          ),
+          row(
+            "Chat input module",
+            state.diag.input ? "found (" + state.diag.input + ")" : "not found"
+          ),
+          row("Chat input name", state.diag.inputName || "none"),
+          row("Chat bar button", state.patched ? "installed" : "not installed"),
+          row("Discord dispatcher", flux() ? "found" : "not found"),
+          row("Signed in as", mine ? mine.username || String(mine.id) : "unknown")
+        ] })
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: muted, marginTop: 10, fontSize: 12 }, children: "FakeDM " + VERSION + " \xB7 chat " + ((_l = chat == null ? void 0 : chat.id) != null ? _l : "none") + " \xB7 " + people.length + " people \xB7 button " + (state.actionButton ? "found" : "not found") })
     ] }),
     heading("Clean up"),
     card(row("Clear fakes", "Remove every fake in this chat", () => run(clearNow))),
