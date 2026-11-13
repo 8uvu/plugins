@@ -34,7 +34,7 @@ __export(index_exports, {
 module.exports = __toCommonJS(index_exports);
 var import_finders = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get lookupModule() { return __g().lookupModule }, get getModules() { return __g().getModules }, get lookupModules() { return __g().lookupModules }, get waitForModules() { return __g().waitForModules } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_filters = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders && valenced.modules.finders.filters) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get withProps() { return __g().withProps }, get createFilterGenerator() { return __g().createFilterGenerator }, get withName() { return __g().withName }, get withoutProps() { return __g().withoutProps }, get withSingleProp() { return __g().withSingleProp }, get withDependencies() { return __g().withDependencies }, get anyOf() { return __g().anyOf }, get allOf() { return __g().allOf }, get namespaceOnly() { return __g().namespaceOnly }, get partial() { return __g().partial } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_actions = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.actions) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get ToastActionCreators() { return __g().ToastActionCreators }, get ActionSheetActionCreators() { return __g().ActionSheetActionCreators }, get AlertActionCreators() { return __g().AlertActionCreators } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_actions = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.actions) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get ToastActionCreators() { return __g().ToastActionCreators }, get AlertActionCreators() { return __g().AlertActionCreators }, get ActionSheetActionCreators() { return __g().ActionSheetActionCreators } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_design = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.design) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Design() { return __g().Design } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_flux = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.flux) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Stores() { return __g().Stores }, get getStore() { return __g().getStore }, get onFluxEventDispatched() { return __g().onFluxEventDispatched }, get onAnyFluxEventDispatched() { return __g().onAnyFluxEventDispatched } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_flux2 = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.common && valenced.discord.common.flux) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Dispatcher() { return __g().Dispatcher } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
@@ -43,8 +43,8 @@ var SettingsModules = __toESM((function () { const __g = () => { try { return (v
 var PathFinders = __toESM((function () { const __g = () => { try { return (valenced.discord && valenced.discord.utils && valenced.discord.utils.modules && valenced.discord.utils.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get lookupModuleWithImportedPath() { return __g().lookupModuleWithImportedPath }, get getModuleWithImportedPath() { return __g().getModuleWithImportedPath }, get getModule() { return __g().getModule }, get getModulesWithImportedPath() { return __g().getModulesWithImportedPath }, get findModuleWithImportedPath() { return __g().findModuleWithImportedPath } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var Metro = __toESM((function () { const __g = () => { try { return (valenced.modules && valenced.modules.metro) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get onModuleInitialized() { return __g().onModuleInitialized }, get onAnyModuleInitialized() { return __g().onAnyModuleInitialized }, get onModuleFirstRequired() { return __g().onModuleFirstRequired }, get onAnyModuleFirstRequired() { return __g().onAnyModuleFirstRequired } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var import_patcher = (function () { const __g = () => { try { return (valenced.patcher) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get after() { return __g().after }, get before() { return __g().before }, get instead() { return __g().instead } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get isValidElement() { return __g().isValidElement }, get createElement() { return __g().createElement }, get cloneElement() { return __g().cloneElement }, get useState() { return __g().useState }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Image() { return __g().Image }, get Pressable() { return __g().Pressable }, get View() { return __g().View }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get useState() { return __g().useState }, get createElement() { return __g().createElement }, get isValidElement() { return __g().isValidElement }, get cloneElement() { return __g().cloneElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Image() { return __g().Image }, get View() { return __g().View }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsx() { return __g().jsx }, get jsxs() { return __g().jsxs }, get Fragment() { return __g().Fragment }, get jsxDEV() { return __g().jsxDEV } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULTS = {
   text: "hello",
@@ -89,8 +89,8 @@ var DEFAULTS = {
 };
 var BUTTON_PATH = "modules/chat_input/native/action_buttons/ChatInputActionButton.tsx";
 var INPUT_PATH = "modules/chat_input/native/ChatInput.tsx";
-var VERSION = "5.1.0";
-var ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAACUklEQVR4nO3cS3IbMQwE0EEq97/yZJFF/hVZ5gecfm/v4hhogrJE67oAAAAAAAAAAAAAAAAAAAAAgL7qauy+7/t6iKpqWet2D/Wkpp8QhhYPktD0rmHYunhy47sE4cu1ieb3qMeWAGh+n7osHTsa3+9IWDYBNL9nvZYEQPP71m16ADS/d/22/RVAD1MDYPf3r+O0AGj+GfWcEgDNn2NGXb0GCDc8AHb/XKPrawKEE4BwQwNg/K8xss4mQDgBCDcsAMb/WqPqbQKEE4BwX6+H3p6ZcSTVonVWqqPvs71wbWrEc9WidXZcGzv2CHj1l/9skWrROrscGwCCA/DR3fbu7qxF6+x0ZAAIDkD33VyHTYHjAsBYAhBOAMIJQLjjAvDuO24f/bl70Tq7HRcAxjoyAF13833Y7j82AIxzbABe3W2f3ZX3onV2Ofrj4PT7ADXgXcdHBCBVJd8HYAwBCCcA4QQgnACEE4BwAhBOAMINC8Bpd+FOV4PqbQKEE4BwQwPgGFhjZJ1NgHACEG54ABwDc42urwkQbkoATIE5ZtR12gQQgjPqOfUIEIL+dfQaINz0AJgCveu3ZAIIQd+6LTsChKBnvbZ8hOt/CPpslC0vAk2DPnXZ9leAEPSoR4tbPMlHQm2+SdUiAGlhqEbX59o8yNPDUI2a/rOWD9UlTNW0aSPFvBWc8L2/74gJAH8XFYCnf/f/O6ICwJ8EIFxcAP433ito/EcGgF8JQLjIAPxrzFfY+I8NAD/EBuD33V6Buz86AHwnAGS7H/SR8ztMAAAAAMjxDYaH2MbJO/xzAAAAAElFTkSuQmCC";
+var VERSION = "5.2.0";
+var ICON = "data:image/png;base64,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";
 var SYSTEM_TYPES = [
   { value: 1, label: "Added someone" },
   { value: 2, label: "Removed someone" },
@@ -603,9 +603,10 @@ function clearNow() {
   const removed = clear(chat.id);
   return removed ? "Removed " + removed + " fake(s)." : "No fakes in this chat.";
 }
-function FakeIcon({ style } = {}) {
+function FakeIcon({ style, size } = {}) {
   try {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Image, { source: { uri: ICON }, style: [{ width: 24, height: 24 }, style] });
+    const side = typeof size === "number" && size > 0 ? size : 24;
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Image, { source: { uri: ICON }, style: [{ width: side, height: side }, style] });
   } catch {
     return null;
   }
@@ -623,24 +624,150 @@ function toast(text) {
   } catch {
   }
 }
-function menuItems() {
-  const run = (task) => () => {
+function saveCfg(patch) {
+  var _a, _b, _c, _d, _e;
+  state.cfg = { ...DEFAULTS, ...(_a = state.cfg) != null ? _a : {}, ...patch };
+  try {
+    void ((_e = (_d = (_c = (_b = state.storage) == null ? void 0 : _b.set) == null ? void 0 : _c.call(_b, patch)) == null ? void 0 : _d.catch) == null ? void 0 : _e.call(_d, () => {
+    }));
+  } catch {
+  }
+}
+function Editor({ title, fields, onSend }) {
+  var _a;
+  const D = (_a = import_design.Design) != null ? _a : {};
+  const start = {};
+  for (const field of fields) start[field.key] = field.value;
+  const [values, setValues] = (0, import_react.useState)(start);
+  const Alert = D.AlertModal;
+  const Action = D.AlertActionButton;
+  if (!Alert) return null;
+  const content = (0, import_react.createElement)(
+    import_react_native.View,
+    { style: { width: "100%" } },
+    ...fields.map(
+      (field) => (0, import_react.createElement)(
+        import_react_native.View,
+        { key: field.key, style: { marginTop: 12 } },
+        (0, import_react.createElement)(import_react_native.Text, { style: { color: "#b5bac1", fontSize: 12, marginBottom: 6 } }, field.label),
+        (0, import_react.createElement)(import_react_native.TextInput, {
+          value: values[field.key],
+          onChangeText: (next) => setValues((prev) => ({ ...prev, [field.key]: next })),
+          multiline: !!field.multiline,
+          keyboardType: field.numeric ? "numeric" : "default",
+          placeholderTextColor: "#6d6f78",
+          style: {
+            color: "#f2f3f5",
+            backgroundColor: "#1e1f22",
+            borderRadius: 8,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
+            fontSize: 16
+          }
+        })
+      )
+    )
+  );
+  return (0, import_react.createElement)(Alert, {
+    title,
+    content,
+    actions: Action ? (0, import_react.createElement)(Action, { text: "Send", onPress: () => toast(onSend(values)) }) : void 0
+  });
+}
+var editors = 0;
+function openEditor(title, fields, onSend) {
+  try {
+    const actions = import_actions.AlertActionCreators;
+    if (typeof (actions == null ? void 0 : actions.openAlert) !== "function") return false;
+    editors += 1;
+    actions.openAlert("fakedm-editor-" + editors, (0, import_react.createElement)(Editor, { title, fields, onSend }));
+    return true;
+  } catch {
+    return false;
+  }
+}
+function edit(title, fields, onSend) {
+  return () => {
     var _a;
-    let text = "";
+    if (openEditor(title, fields, onSend)) return;
+    const start = {};
+    for (const field of fields) start[field.key] = field.value;
     try {
-      text = task();
+      toast(onSend(start));
     } catch (error) {
-      text = "Failed: " + ((_a = error == null ? void 0 : error.message) != null ? _a : "unknown error");
+      toast("Failed: " + ((_a = error == null ? void 0 : error.message) != null ? _a : "unknown error"));
     }
-    toast(text);
   };
+}
+function withCaller(name, task) {
+  const before = state.cfg.callerId;
+  state.cfg = { ...state.cfg, callerId: name };
+  try {
+    return task();
+  } finally {
+    state.cfg = { ...state.cfg, callerId: before };
+  }
+}
+function menuItems() {
   return [
-    { label: "Send the message", action: run(fakeFromPanel) },
-    { label: "Send a call", action: run(fakeCallNow) },
-    { label: "Send a missed call", action: run(fakeMissedNow) },
-    { label: "Send the batch", action: run(fakeBatch) },
-    { label: "Add the reaction", action: run(fakeReactionNow) },
-    { label: "Clear fakes here", action: run(clearNow) }
+    {
+      label: "Send the message",
+      action: edit("Send the message", [{ key: "text", label: "Message", value: state.cfg.text, multiline: true }], (values) => {
+        saveCfg({ text: values.text });
+        return fakeFromPanel();
+      })
+    },
+    {
+      label: "Send a call",
+      action: edit(
+        "Send a call",
+        [
+          { key: "from", label: "Who calls (empty = the other person)", value: "" },
+          { key: "seconds", label: "Seconds it lasted", value: String(state.cfg.callSeconds), numeric: true }
+        ],
+        (values) => {
+          var _a, _b;
+          saveCfg({ callSeconds: String((_a = values.seconds) != null ? _a : "") });
+          return withCaller(String((_b = values.from) != null ? _b : "").trim(), fakeCallNow);
+        }
+      )
+    },
+    {
+      label: "Send a missed call",
+      action: edit(
+        "Send a missed call",
+        [{ key: "from", label: "Who called (empty = the other person)", value: "" }],
+        (values) => {
+          var _a;
+          return withCaller(String((_a = values.from) != null ? _a : "").trim(), fakeMissedNow);
+        }
+      )
+    },
+    {
+      label: "Send the batch",
+      action: edit("Send the batch", [{ key: "batch", label: "One message per line", value: state.cfg.batch, multiline: true }], (values) => {
+        saveCfg({ batch: values.batch });
+        return fakeBatch();
+      })
+    },
+    {
+      label: "Add a reaction",
+      action: edit(
+        "Add a reaction",
+        [
+          { key: "emoji", label: "Emoji", value: state.cfg.reactEmoji },
+          { key: "message", label: "Message id", value: state.cfg.reactId }
+        ],
+        (values) => {
+          saveCfg({ reactEmoji: values.emoji, reactId: values.message });
+          return fakeReactionNow();
+        }
+      )
+    },
+    {
+      label: "Clear fakes here",
+      action: edit("Clear fakes here", [], () => clearNow())
+    }
   ];
 }
 function findButtonTemplate(node) {
