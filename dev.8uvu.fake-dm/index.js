@@ -40,7 +40,7 @@ var PathFinders = __toESM((function () { const __g = () => { try { return (valen
 var Metro = __toESM((function () { const __g = () => { try { return (valenced.modules && valenced.modules.metro) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get onModuleInitialized() { return __g().onModuleInitialized }, get onAnyModuleInitialized() { return __g().onAnyModuleInitialized }, get onModuleFirstRequired() { return __g().onModuleFirstRequired }, get onAnyModuleFirstRequired() { return __g().onAnyModuleFirstRequired } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var import_patcher = (function () { const __g = () => { try { return (valenced.patcher) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get after() { return __g().after }, get before() { return __g().before }, get instead() { return __g().instead } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get createElement() { return __g().createElement }, get isValidElement() { return __g().isValidElement }, get useState() { return __g().useState }, get cloneElement() { return __g().cloneElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Text() { return __g().Text }, get View() { return __g().View }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get TextInput() { return __g().TextInput }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Text() { return __g().Text }, get View() { return __g().View }, get Pressable() { return __g().Pressable }, get TextInput() { return __g().TextInput }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsx() { return __g().jsx }, get jsxs() { return __g().jsxs }, get Fragment() { return __g().Fragment }, get jsxDEV() { return __g().jsxDEV } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULTS = {
   text: "hello",
@@ -48,9 +48,29 @@ var DEFAULTS = {
   senderId: "",
   batch: "",
   asThem: true,
-  // Off until asked for: with it off the plugin never touches the chat input
-  // at all, so the chat bar cannot break and only the settings page runs.
+  // A picture on the fake message: any URL Discord can load.
+  imageUrl: "",
+  // Reply to a message that is already in the chat.
+  replyId: "",
+  // A link embed under the message.
+  embedTitle: "",
+  embedDesc: "",
+  embedImage: "",
+  // Call settings.
+  callSeconds: "90",
+  callMissed: false,
+  // System message settings.
+  systemType: 7,
+  systemText: "",
+  // Reaction settings.
+  reactId: "",
+  reactEmoji: "\u{1F44D}",
+  // The chat bar button. Installs that have never touched the switch get it
+  // switched on once (see barDefault below), so the plugin shows up in the
+  // composer without anyone hunting for a setting; after that the user wins.
   button: false,
+  // Marks that the one-time switch-on has happened.
+  barDefault: 0,
   // Also off until asked for: adding a row to Discord's own settings list is
   // what made opening normal Settings crash on 352.6, so the plugin page in
   // the Valenced plugin list is the entry that is always used.
@@ -59,6 +79,15 @@ var DEFAULTS = {
 };
 var BUTTON_PATH = "modules/chat_input/native/action_buttons/ChatInputActionButton.tsx";
 var INPUT_PATH = "modules/chat_input/native/ChatInput.tsx";
+var SYSTEM_TYPES = [
+  { value: 1, label: "Added someone" },
+  { value: 2, label: "Removed someone" },
+  { value: 4, label: "Changed the chat name" },
+  { value: 5, label: "Changed the chat icon" },
+  { value: 6, label: "Pinned a message" },
+  { value: 7, label: "New member joined" },
+  { value: 8, label: "Server boosted" }
+];
 var state = {
   cfg: { ...DEFAULTS },
   storage: null,
@@ -103,7 +132,7 @@ function resolvePerson(chat, name) {
   const wanted = String(name != null ? name : "").trim().toLowerCase();
   if (!wanted) return null;
   const mine = me();
-  if (wanted === "me" || wanted === "you" || mine && wanted === String(mine.id)) return mine;
+  if (wanted === "me" || wanted === "you" || mine && wanted === String(mine.id).toLowerCase()) return mine;
   for (const user of chat.others) {
     if (!user) continue;
     const names = [user.id, user.username, user.globalName].filter(Boolean).map((v) => String(v).toLowerCase());
@@ -148,15 +177,31 @@ function fakes() {
   const list = state.cfg.fakes;
   return Array.isArray(list) ? list.filter((f) => f && f.channelId && f.id) : [];
 }
-function fakeMessage(channelId, user, content, when) {
-  var _a;
+function remember(channelId, id) {
+  saveFakes([...fakes(), { channelId, id }]);
+}
+function fakeMessage(channelId, user, content, when, extras = {}) {
+  var _a, _b, _c, _d, _e;
   const dispatch = (_a = flux()) == null ? void 0 : _a.dispatch;
   if (!dispatch || !channelId || !(user == null ? void 0 : user.id)) return null;
   const id = snowflake();
+  const url = String((_b = extras.imageUrl) != null ? _b : "").trim();
+  const attachments = url ? [
+    {
+      id: "1",
+      filename: "image.png",
+      size: 0,
+      url,
+      proxy_url: url,
+      width: 800,
+      height: 600,
+      content_type: "image/png"
+    }
+  ] : [];
   const message = {
-    attachments: [],
+    attachments,
     components: [],
-    embeds: [],
+    embeds: Array.isArray(extras.embeds) ? extras.embeds : [],
     mention_roles: [],
     mentions: [],
     author: author(user),
@@ -169,10 +214,20 @@ function fakeMessage(channelId, user, content, when) {
     pinned: false,
     timestamp: new Date(when != null ? when : Date.now()).toISOString(),
     tts: false,
-    type: 0
+    type: (_c = extras.systemType) != null ? _c : 0
   };
+  if (extras.replyToId) {
+    message.message_reference = { channel_id: channelId, message_id: String(extras.replyToId) };
+    message.referenced_message = {
+      id: String(extras.replyToId),
+      channel_id: channelId,
+      content: String((_d = extras.replyToContent) != null ? _d : ""),
+      author: author((_e = extras.replyToAuthor) != null ? _e : user),
+      type: 0
+    };
+  }
   dispatch({ type: "MESSAGE_CREATE", channelId, message, optimistic: false, isPushNotification: false });
-  saveFakes([...fakes(), { channelId, id }]);
+  remember(channelId, id);
   return id;
 }
 function fakeCall(channelId, caller, other, seconds = 90, missed = false) {
@@ -206,8 +261,27 @@ function fakeCall(channelId, caller, other, seconds = 90, missed = false) {
     }
   };
   dispatch({ type: "MESSAGE_CREATE", channelId, message, optimistic: false, isPushNotification: false });
-  saveFakes([...fakes(), { channelId, id }]);
+  remember(channelId, id);
   return id;
+}
+function fakeSystem(channelId, user, type, content) {
+  return fakeMessage(channelId, user, content, void 0, { systemType: Number(type) || 7 });
+}
+function fakeReaction(channelId, messageId, userId, emoji) {
+  var _a;
+  const dispatch = (_a = flux()) == null ? void 0 : _a.dispatch;
+  const target = String(messageId != null ? messageId : "").trim();
+  const who = String(userId != null ? userId : "").trim();
+  const name = String(emoji != null ? emoji : "").trim();
+  if (!dispatch || !channelId || !target || !who || !name) return false;
+  dispatch({
+    type: "MESSAGE_REACTION_ADD",
+    channelId,
+    messageId: target,
+    userId: who,
+    emoji: { name, id: null, animated: false }
+  });
+  return true;
 }
 function clear(channelId) {
   var _a;
@@ -229,6 +303,17 @@ function clear(channelId) {
   saveFakes(keep);
   return removed;
 }
+function embedFromConfig() {
+  const { embedTitle, embedDesc, embedImage } = state.cfg;
+  if (!embedTitle && !embedDesc && !embedImage) return [];
+  const embed = {};
+  if (embedTitle) embed.title = embedTitle;
+  if (embedDesc) embed.description = embedDesc;
+  if (embedImage) {
+    embed.image = { url: embedImage, proxy_url: embedImage };
+  }
+  return [embed];
+}
 function fake() {
   const chat = openChat();
   if (!chat) return "Open a chat first.";
@@ -236,24 +321,70 @@ function fake() {
   if (!(user == null ? void 0 : user.id)) return "No one to send as yet.";
   return fakeMessage(chat.id, user, state.cfg.text) ? "Sent a fake message." : "Discord is not ready yet.";
 }
+function fakeFromPanel() {
+  const chat = openChat();
+  if (!chat) return "Open a chat first.";
+  const user = sender(chat);
+  if (!(user == null ? void 0 : user.id)) return "No one to send as yet.";
+  const id = fakeMessage(chat.id, user, state.cfg.text, void 0, {
+    imageUrl: state.cfg.imageUrl,
+    embeds: embedFromConfig(),
+    replyToId: state.cfg.replyId,
+    replyToContent: "a message in this chat",
+    replyToAuthor: user
+  });
+  return id ? "Sent as " + (user.globalName || user.username || "them") + "." : "Discord is not ready yet.";
+}
 function fakeCallNow() {
   const chat = openChat();
   if (!chat) return "Open a chat first.";
-  return fakeCall(chat.id, sender(chat), me(), 90) ? "Sent a fake call." : "Discord is not ready yet.";
+  const seconds = Math.max(0, Math.round(Number(state.cfg.callSeconds) || 0));
+  const missed = !!state.cfg.callMissed;
+  return fakeCall(chat.id, sender(chat), me(), missed ? 0 : seconds, missed) ? missed ? "Sent a missed call." : "Sent a fake call." : "Discord is not ready yet.";
+}
+function fakeMissedNow() {
+  const chat = openChat();
+  if (!chat) return "Open a chat first.";
+  return fakeCall(chat.id, sender(chat), me(), 0, true) ? "Sent a missed call." : "Discord is not ready yet.";
+}
+function fakeSystemNow() {
+  const chat = openChat();
+  if (!chat) return "Open a chat first.";
+  const user = sender(chat);
+  if (!(user == null ? void 0 : user.id)) return "No one to send as yet.";
+  const id = fakeSystem(chat.id, user, Number(state.cfg.systemType), state.cfg.systemText);
+  return id ? "Sent a system message." : "Discord is not ready yet.";
+}
+function fakeReactionNow() {
+  var _a, _b, _c;
+  const chat = openChat();
+  if (!chat) return "Open a chat first.";
+  if (!String((_a = state.cfg.reactId) != null ? _a : "").trim()) return "Paste the id of a message first.";
+  const ok = fakeReaction(chat.id, state.cfg.reactId, String((_c = (_b = sender(chat)) == null ? void 0 : _b.id) != null ? _c : ""), state.cfg.reactEmoji);
+  return ok ? "Added a fake reaction." : "Discord is not ready yet.";
 }
 function parseBatch(text) {
   const out = [];
   for (const raw of String(text != null ? text : "").split("\n")) {
-    const line = raw.replace(/^\s*\[[^\]]*\]\s*/, "").trim();
+    let line = raw.trim();
+    if (!line) continue;
+    let time;
+    const clock = line.match(/^\[(\d{1,2}):(\d{2})\]\s*/);
+    if (clock) {
+      const when = /* @__PURE__ */ new Date();
+      when.setHours(Math.min(23, Number(clock[1])), Math.min(59, Number(clock[2])), 0, 0);
+      time = when.getTime();
+      line = line.slice(clock[0].length).trim();
+    }
     if (!line) continue;
     const match = line.match(/^([^:]{1,40}):\s*(.+)$/);
-    if (match) out.push({ name: match[1].trim(), content: match[2] });
-    else out.push({ name: "", content: line });
+    if (match) out.push({ name: match[1].trim(), content: match[2], time });
+    else out.push({ name: "", content: line, time });
   }
   return out;
 }
 function fakeBatch() {
-  var _a;
+  var _a, _b;
   const chat = openChat();
   if (!chat) return "Open a chat first.";
   const lines = parseBatch(state.cfg.batch);
@@ -264,15 +395,11 @@ function fakeBatch() {
   for (const line of lines) {
     const who = (_a = resolvePerson(chat, line.name)) != null ? _a : fallback;
     if (!(who == null ? void 0 : who.id)) continue;
-    if (fakeMessage(chat.id, who, line.content, clock)) sent++;
-    clock += 3e4 + Math.floor(Math.random() * 9e4);
+    const when = (_b = line.time) != null ? _b : clock;
+    if (fakeMessage(chat.id, who, line.content, when)) sent++;
+    clock = when + 3e4 + Math.floor(Math.random() * 9e4);
   }
   return sent ? "Sent " + sent + " fake message(s)." : "Nothing sent: no sender available.";
-}
-function fakeMissedNow() {
-  const chat = openChat();
-  if (!chat) return "Open a chat first.";
-  return fakeCall(chat.id, sender(chat), me(), 0, true) ? "Sent a missed call." : "Discord is not ready yet.";
 }
 function clearNow() {
   const chat = openChat();
@@ -443,7 +570,10 @@ function patchChatInput(cleanup, logger) {
   }, 1500);
   cleanup(() => clearInterval(timer));
 }
-function FancyPanel({ api } = {}) {
+var white = "#ffffff";
+var muted = "#b5bac1";
+var blue = "#5865F2";
+function Panel({ api } = {}) {
   var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
   const [, bump] = (0, import_react.useState)(0);
   const [status, setStatus] = (0, import_react.useState)("");
@@ -477,10 +607,6 @@ function FancyPanel({ api } = {}) {
     chat = openChat();
   } catch {
   }
-  const people = [];
-  for (const user of (_d = chat == null ? void 0 : chat.others) != null ? _d : []) {
-    if (user == null ? void 0 : user.id) people.push({ id: String(user.id), name: user.globalName || user.username || String(user.id) });
-  }
   const mine = (() => {
     try {
       return me();
@@ -488,14 +614,15 @@ function FancyPanel({ api } = {}) {
       return null;
     }
   })();
+  const people = [];
+  for (const user of (_d = chat == null ? void 0 : chat.others) != null ? _d : []) {
+    if (user == null ? void 0 : user.id) people.push({ id: String(user.id), name: user.globalName || user.username || String(user.id) });
+  }
   if (mine == null ? void 0 : mine.id) people.push({ id: String(mine.id), name: "You" });
   const fallback = settings.asThem ? (_e = people[0]) == null ? void 0 : _e.id : String((_h = (_g = mine == null ? void 0 : mine.id) != null ? _g : (_f = people[0]) == null ? void 0 : _f.id) != null ? _h : "");
   const chosen = settings.senderId || fallback || "";
   const senderName = (_j = (_i = people.find((p) => p.id === chosen)) == null ? void 0 : _i.name) != null ? _j : "nobody";
   const on = settings.button !== false;
-  const white = "#ffffff";
-  const muted = "#b5bac1";
-  const blue = "#5865F2";
   const heading = (title) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     import_react_native.Text,
     {
@@ -511,7 +638,27 @@ function FancyPanel({ api } = {}) {
       children: title
     }
   );
-  const box = (children) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children });
+  const hint = (text) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: muted, fontSize: 12, marginBottom: 6 }, children: text });
+  const card = (children) => Group ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Group, { children }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children });
+  const row = (label, subLabel, onPress, trailing) => Row ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label, subLabel, onPress, trailing }, label) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+    import_react_native.Pressable,
+    {
+      accessibilityRole: "button",
+      accessibilityLabel: label,
+      onPress: () => {
+        try {
+          onPress == null ? void 0 : onPress();
+        } catch {
+        }
+      },
+      style: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: "#2b2d31" },
+      children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: white, fontWeight: "600" }, children: label }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: muted, fontSize: 12 }, children: subLabel })
+      ]
+    },
+    label
+  );
   const button = (label, onPress, primary = false) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     import_react_native.Pressable,
     {
@@ -527,248 +674,132 @@ function FancyPanel({ api } = {}) {
         backgroundColor: primary ? blue : "#2b2d31",
         borderRadius: 10,
         paddingVertical: 12,
-        alignItems: "center"
+        alignItems: "center",
+        marginTop: 6
       },
       children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: white, fontWeight: "700" }, children: label })
     }
   );
+  const field = (key, placeholder, multiline = false, extra = {}) => {
+    var _a2;
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      import_react_native.TextInput,
+      {
+        value: String((_a2 = settings[key]) != null ? _a2 : ""),
+        onChangeText: (value) => set({ [key]: value }),
+        placeholder,
+        placeholderTextColor: "#888",
+        multiline,
+        style: {
+          color: white,
+          backgroundColor: "#2b2d31",
+          borderRadius: 8,
+          padding: 8,
+          minHeight: multiline ? 90 : 0,
+          textAlignVertical: multiline ? "top" : "center",
+          ...extra
+        }
+      }
+    );
+  };
   return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { contentContainerStyle: { padding: 16, paddingBottom: 64 }, children: [
     heading("Chat"),
-    box(
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: white }, children: chat ? chat.label : "Open a DM or group DM first, then come back here." })
-    ),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: white }, children: chat ? chat.label : "Open a DM or group DM first, then come back here." }) }),
     heading("Send as"),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Group, { children: people.length ? people.map((person) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      Row,
-      {
-        label: person.name,
-        subLabel: chosen === person.id ? "Sending as them" : "Tap to send as them",
-        onPress: () => set({ senderId: person.id }),
-        trailing: Radio ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Radio, { selected: chosen === person.id }) : void 0
-      },
-      person.id
-    )) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Nobody here yet", subLabel: "Open a chat first" }) }),
-    heading("Message"),
-    box(
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-          import_react_native.TextInput,
-          {
-            value: settings.text,
-            onChangeText: (value) => set({ text: value }),
-            placeholder: "Message text",
-            placeholderTextColor: "#888",
-            multiline: true,
-            style: { color: white, minHeight: 44, padding: 6 }
-          }
-        ),
-        button("Send as " + senderName, () => run(fake), true)
-      ] })
+    card(
+      people.length ? people.map(
+        (person) => row(
+          person.name,
+          chosen === person.id ? "Sending as them" : "Tap to send as them",
+          () => set({ senderId: person.id }),
+          Radio ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Radio, { selected: chosen === person.id }) : void 0
+        )
+      ) : row("Nobody here yet", "Open a chat first")
     ),
-    heading("Quick actions"),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Group, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Fake call", subLabel: "A 90 second call in this chat", onPress: () => run(fakeCallNow) }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Missed call", subLabel: "A call nobody picked up", onPress: () => run(fakeMissedNow) }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Clear fakes", subLabel: "Remove every fake in this chat", onPress: () => run(clearNow) })
+    heading("Message"),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children: [
+      field("text", "Message text", true),
+      field("imageUrl", "Image URL (optional)"),
+      field("replyId", "Reply to message ID (optional)"),
+      hint("Embed (optional)"),
+      field("embedTitle", "Embed title"),
+      field("embedDesc", "Embed description", true),
+      field("embedImage", "Embed image URL"),
+      button("Send as " + senderName, () => run(fakeFromPanel), true)
+    ] }),
+    heading("Call"),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children: [
+      field("callSeconds", "Duration in seconds", false, { keyboardType: "number-pad" }),
+      button("Send fake call", () => run(fakeCallNow)),
+      button("Send missed call", () => run(fakeMissedNow))
     ] }),
     heading("Batch"),
-    box(
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children: [
+      hint('One message per line. "Name: text" picks who says it, and a leading [14:30] sets the time.'),
+      field("batch", "[14:30] Alice: hey\n[14:31] Bob: hi there\nsure", true),
+      button("Send batch", () => run(fakeBatch))
+    ] }),
+    heading("System message"),
+    card(
+      SYSTEM_TYPES.map(
+        (type) => row(
+          type.label,
+          Number(settings.systemType) === type.value ? "Selected" : "Tap to pick this one",
+          () => set({ systemType: type.value }),
+          Radio ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Radio, { selected: Number(settings.systemType) === type.value }) : void 0
+        )
+      )
+    ),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8, marginTop: 8 }, children: [
+      field("systemText", "Extra text, e.g. the new chat name"),
+      button("Send system message", () => run(fakeSystemNow))
+    ] }),
+    heading("Reaction"),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: "#1e1f22", borderRadius: 12, padding: 12, gap: 8 }, children: [
+      hint("Paste the id of a message in this chat (long-press it \u2192 Copy ID)."),
+      field("reactId", "Message ID"),
+      field("reactEmoji", "Emoji"),
+      button("Add reaction", () => run(fakeReactionNow))
+    ] }),
+    heading("Quick actions"),
+    card(
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: muted }, children: 'One message per line. "Name: text" picks who says it.' }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-          import_react_native.TextInput,
-          {
-            value: settings.batch,
-            onChangeText: (value) => set({ batch: value }),
-            placeholder: "Alice: hey\nBob: hi there\nsure",
-            placeholderTextColor: "#888",
-            multiline: true,
-            style: { color: white, minHeight: 110, padding: 6, textAlignVertical: "top" }
-          }
-        ),
-        button("Send batch", () => run(fakeBatch))
+        row("Fake call", "A call in this chat", () => run(fakeCallNow)),
+        row("Missed call", "A call nobody picked up", () => run(fakeMissedNow)),
+        row("Clear fakes", "Remove every fake in this chat", () => run(clearNow))
       ] })
     ),
     heading("Chat bar"),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Group, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      SwitchRow,
-      {
-        label: "Fake button in chat bar",
-        subLabel: "Tap it to send your message. Now: " + (on ? state.actionButton ? "on" : "on (not found yet)" : "off"),
-        value: on,
-        onValueChange: (value) => {
-          set({ button: value });
+    card(
+      SwitchRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        SwitchRow,
+        {
+          label: "Fake button in chat bar",
+          subLabel: "Tap it to send your message. Now: " + (on ? state.actionButton ? "on" : "on (not found yet)" : "off"),
+          value: on,
+          onValueChange: (value) => {
+            set({ button: value });
+            setStatus("Reload FakeDM to apply.");
+          }
+        }
+      ) : row(
+        "Fake button in chat bar",
+        on ? "On \u2014 tap to switch off" : "Off \u2014 tap to switch on",
+        () => {
+          set({ button: !on });
           setStatus("Reload FakeDM to apply.");
         }
-      }
-    ) }),
+      )
+    ),
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: muted, marginTop: 12 }, children: status })
   ] });
 }
 function SettingsComponent(props = {}) {
-  var _a;
-  const D = (_a = import_design.Design) != null ? _a : {};
-  if (D.TableRow && D.TableRowGroup && D.TableSwitchRow) {
-    try {
-      return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FancyPanel, { ...props });
-    } catch {
-    }
-  }
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlainPanel, { ...props });
-}
-function PlainPanel({ api } = {}) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i;
-  const [, bump] = (0, import_react.useState)(0);
-  const [status, setStatus] = (0, import_react.useState)("");
-  const settings = (_a = state.cfg) != null ? _a : DEFAULTS;
-  const store = (_b = api == null ? void 0 : api.jsonStorage) != null ? _b : state.storage;
-  const set = (patch) => {
-    var _a2, _b2, _c2;
-    state.cfg = { ...state.cfg, ...patch };
-    try {
-      void ((_c2 = (_b2 = (_a2 = store == null ? void 0 : store.set) == null ? void 0 : _a2.call(store, patch)) == null ? void 0 : _b2.catch) == null ? void 0 : _c2.call(_b2, () => {
-      }));
-    } catch {
-    }
-    bump((n) => n + 1);
-  };
-  const run = (fn) => {
-    var _a2;
-    try {
-      setStatus(fn());
-    } catch (error) {
-      setStatus("Failed: " + ((_a2 = error == null ? void 0 : error.message) != null ? _a2 : "unknown error"));
-    }
-  };
-  let chat = null;
   try {
-    chat = openChat();
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Panel, { ...props });
   } catch {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { padding: 16 }, children: "FakeDM could not draw its settings." });
   }
-  const action = (label, onPress) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-    import_react_native.Pressable,
-    {
-      accessibilityRole: "button",
-      accessibilityLabel: label,
-      onPress: () => {
-        try {
-          onPress();
-        } catch {
-        }
-      },
-      style: { paddingVertical: 10 },
-      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#00a8fc", fontWeight: "600" }, children: label })
-    }
-  );
-  const on = settings.button !== false;
-  const buttonState = !on ? "off" : state.actionButton ? "on" : "on (not found yet)";
-  const people = [];
-  for (const user of (_c = chat == null ? void 0 : chat.others) != null ? _c : []) {
-    if (!(user == null ? void 0 : user.id)) continue;
-    people.push({ id: String(user.id), name: user.globalName || user.username || String(user.id) });
-  }
-  const mine = (() => {
-    try {
-      return me();
-    } catch {
-      return null;
-    }
-  })();
-  if (mine == null ? void 0 : mine.id) people.push({ id: String(mine.id), name: "You" });
-  const fallback = settings.asThem ? (_d = people[0]) == null ? void 0 : _d.id : (mine == null ? void 0 : mine.id) ? String(mine.id) : (_e = people[0]) == null ? void 0 : _e.id;
-  const chosen = settings.senderId || fallback || "";
-  const senderName = (_g = (_f = people.find((p) => p.id === chosen)) == null ? void 0 : _f.name) != null ? _g : "nobody";
-  const chip = (person) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-    import_react_native.Pressable,
-    {
-      accessibilityRole: "button",
-      accessibilityLabel: "Send as " + person.name,
-      onPress: () => set({ senderId: person.id }),
-      style: {
-        paddingHorizontal: 14,
-        paddingVertical: 8,
-        borderRadius: 16,
-        marginRight: 8,
-        backgroundColor: chosen === person.id ? "#5865F2" : "#3f4147"
-      },
-      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "600" }, children: person.name })
-    },
-    person.id
-  );
-  const Group = (_h = import_design.Design) == null ? void 0 : _h.TableRowGroup;
-  const SwitchRow = (_i = import_design.Design) == null ? void 0 : _i.TableSwitchRow;
-  const rows = Group && SwitchRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Group, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-    SwitchRow,
-    {
-      label: "Fake button in chat bar",
-      subLabel: "Tap it to drop a fake message in the chat. Now: " + buttonState,
-      value: on,
-      onValueChange: (value) => {
-        set({ button: value });
-        setStatus("Reload FakeDM to apply.");
-      }
-    }
-  ) }) : null;
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { contentContainerStyle: { padding: 16, paddingBottom: 64 }, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontSize: 18, fontWeight: "700" }, children: "FakeDM" }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.7, marginTop: 4 }, children: chat ? "Chat: " + chat.label : "Open a DM or group DM first, then come back here." }),
-    rows,
-    !rows && action(on ? "Fake button in chat bar: on" : "Fake button in chat bar: off", () => {
-      set({ button: !on });
-      setStatus("Reload FakeDM to apply.");
-    }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "700", marginTop: 16, marginBottom: 8 }, children: "Send as" }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, contentContainerStyle: { paddingVertical: 2 }, children: people.length ? people.map(chip) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.6 }, children: "Nobody here yet." }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "700", marginTop: 16, marginBottom: 6 }, children: "Quick message" }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      import_react_native.TextInput,
-      {
-        value: settings.text,
-        onChangeText: (value) => set({ text: value }),
-        placeholder: "Message text",
-        placeholderTextColor: "#888",
-        style: {
-          color: "#ffffff",
-          borderWidth: 1,
-          borderColor: "#555",
-          borderRadius: 8,
-          padding: 8
-        }
-      }
-    ),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.6, marginTop: 6 }, children: [
-      "One tap sends it as ",
-      senderName,
-      "."
-    ] }),
-    action("Send fake message", () => run(fake)),
-    action("Send fake call", () => run(fakeCallNow)),
-    action("Send missed call", () => run(fakeMissedNow)),
-    action("Clear fakes in this chat", () => run(clearNow)),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "700", marginTop: 16, marginBottom: 6 }, children: "Batch" }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.6, marginBottom: 6 }, children: 'One message per line. "Name: text" picks who says it, a bare line uses the sender above.' }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      import_react_native.TextInput,
-      {
-        value: settings.batch,
-        onChangeText: (value) => set({ batch: value }),
-        placeholder: "Alice: hey\nBob: hi there\nsure",
-        placeholderTextColor: "#888",
-        multiline: true,
-        style: {
-          color: "#ffffff",
-          borderWidth: 1,
-          borderColor: "#555",
-          borderRadius: 8,
-          padding: 8,
-          minHeight: 110,
-          textAlignVertical: "top"
-        }
-      }
-    ),
-    action("Send batch", () => run(fakeBatch)),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", opacity: 0.7, marginTop: 8 }, children: status })
-  ] });
 }
 function FakeScreen(props) {
   try {
@@ -817,7 +848,7 @@ var index_default = plugin({
   // Nothing in here may throw: an exception escaping start is what turns a
   // plugin bug into a client crash, so each step is sealed on its own.
   start(api) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
     state.button = null;
     state.patched = false;
     try {
@@ -825,22 +856,39 @@ var index_default = plugin({
       const cached = (_c = (_b = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _b.cache) != null ? _c : {};
       state.cfg = { ...DEFAULTS, ...cached };
       if (!Array.isArray(state.cfg.fakes)) state.cfg.fakes = [];
+      if ((cached == null ? void 0 : cached.barDefault) !== 1 && (cached == null ? void 0 : cached.button) === void 0) {
+        state.cfg = { ...state.cfg, button: true, barDefault: 1 };
+        void ((_g = (_f = (_e = (_d = api == null ? void 0 : api.jsonStorage) == null ? void 0 : _d.set) == null ? void 0 : _e.call(_d, { button: true, barDefault: 1 })) == null ? void 0 : _f.catch) == null ? void 0 : _g.call(_f, () => {
+        }));
+      }
     } catch {
     }
     try {
       patchChatInput(api == null ? void 0 : api.cleanup, api == null ? void 0 : api.logger);
     } catch (error) {
-      (_e = (_d = api == null ? void 0 : api.logger) == null ? void 0 : _d.error) == null ? void 0 : _e.call(_d, "[FakeDM] chat bar button skipped", error);
+      (_i = (_h = api == null ? void 0 : api.logger) == null ? void 0 : _h.error) == null ? void 0 : _i.call(_h, "[FakeDM] chat bar button skipped", error);
     }
     if (state.cfg.section === true) {
       try {
         installSettingsEntry(api == null ? void 0 : api.cleanup, api == null ? void 0 : api.logger);
       } catch (error) {
-        (_g = (_f = api == null ? void 0 : api.logger) == null ? void 0 : _f.error) == null ? void 0 : _g.call(_f, "[FakeDM] settings entry skipped", error);
+        (_k = (_j = api == null ? void 0 : api.logger) == null ? void 0 : _j.error) == null ? void 0 : _k.call(_j, "[FakeDM] settings entry skipped", error);
       }
     }
   },
   SettingsComponent,
-  __engine: { fakeMessage, fakeCall, clear, openChat, addButton, fakeBatch, parseBatch, sender, resolvePerson }
+  __engine: {
+    fakeMessage,
+    fakeCall,
+    fakeSystem,
+    fakeReaction,
+    clear,
+    openChat,
+    addButton,
+    fakeBatch,
+    parseBatch,
+    sender,
+    resolvePerson
+  }
 });
 ; const __plugin = (module.exports && module.exports.default) || module.exports; if (__plugin && typeof __plugin === 'object' && !__plugin.default) { try { __plugin.default = __plugin; } catch (ignored) {} } if (__plugin && typeof __plugin.start === 'function') { const __start = __plugin.start.bind(__plugin); __plugin.start = function (...args) { try { return __start(...args); } catch (error) { try { (args[0] && args[0].logger && args[0].logger.error) ? args[0].logger.error('[plugin] start failed', error) : console.error('[plugin] start failed', error); } catch (ignored) {} } }; } return __plugin; })()
