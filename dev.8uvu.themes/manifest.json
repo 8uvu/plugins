@@ -4,7 +4,7 @@
     "name": "Cenotaph Themes",
     "description": "Colour themes that recolour Discord's own palette instead of covering it.",
     "author": "cenotaph",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"

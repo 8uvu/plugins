@@ -33,42 +33,48 @@ var THEMES = [
     name: "Midnight Blue",
     description: "Discord blue, made colder and deeper.",
     accent: "#5b8cff",
-    surface: "#12141c"
+    surface: "#12141c",
+    wallpaper: "assets/midnight-blue.jpg"
   },
   {
     id: "blood-moon",
     name: "Blood Moon",
     description: "Red accent on near-black wine.",
     accent: "#e5484d",
-    surface: "#1a1012"
+    surface: "#1a1012",
+    wallpaper: "assets/blood-moon.jpg"
   },
   {
     id: "forest",
     name: "Forest",
     description: "Green accent on deep moss.",
     accent: "#2fbf71",
-    surface: "#0f1613"
+    surface: "#0f1613",
+    wallpaper: "assets/forest.jpg"
   },
   {
     id: "vaporwave",
     name: "Vaporwave",
     description: "Magenta accent on dark violet.",
     accent: "#e24bf0",
-    surface: "#171227"
+    surface: "#171227",
+    wallpaper: "assets/vaporwave.jpg"
   },
   {
     id: "ember",
     name: "Ember",
     description: "Warm orange accent on burnt brown.",
     accent: "#ff9f45",
-    surface: "#1a1310"
+    surface: "#1a1310",
+    wallpaper: "assets/ember.jpg"
   },
   {
     id: "mono",
     name: "Mono",
     description: "Greyscale everything, no colour accents.",
     accent: "#b9bbbe",
-    surface: "#161718"
+    surface: "#161718",
+    wallpaper: "assets/mono.jpg"
   }
 ];
 var clamp = (value) => Math.max(0, Math.min(255, Math.round(value)));
@@ -135,7 +141,7 @@ function colorsFor(palette) {
 var index_default = plugin({
   jsonStorage: { load: true, default: { note: "themes" } },
   preInit({ themes }) {
-    var _a, _b;
+    var _a, _b, _c;
     try {
       (_a = themes == null ? void 0 : themes.registerGroup) == null ? void 0 : _a.call(themes, GROUP, {
         name: "Cenotaph",
@@ -148,6 +154,12 @@ var index_default = plugin({
           // Token names only exist from init onwards, so the palette is
           // built when the picker asks for it.
           getColors: () => colorsFor(palette)
+        });
+        (_c = themes == null ? void 0 : themes.registerTheme) == null ? void 0 : _c.call(themes, GROUP, palette.id + "-wallpaper", {
+          name: palette.name + " Wallpaper",
+          description: palette.description + " On its own wallpaper.",
+          getColors: () => colorsFor(palette),
+          background: { path: palette.wallpaper, opacity: 0.7, dimming: 0.4, blur: 0 }
         });
       }
     } catch (error) {
