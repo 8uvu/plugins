@@ -27,6 +27,7 @@ __export(index_exports, {
   elementForGate: () => elementForGate,
   elementForList: () => elementForList,
   hasPasscode: () => hasPasscode,
+  hidesFromList: () => hidesFromList,
   isLockedNow: () => isLockedNow,
   lockNow: () => lockNow,
   locks: () => locks,
@@ -84,6 +85,7 @@ var DEFAULTS = {
   iterations: 1e4,
   locks: [],
   autoLockMinutes: 0,
+  mode: "place",
   hideFromList: false
 };
 var CHAT_SCREENS = ["Messages", "MessageList", "MessagesList", "ChannelMessages"];
@@ -254,6 +256,10 @@ function persist(patch) {
     } catch {
     }
   }
+}
+function hidesFromList() {
+  const settings = storage();
+  return settings.mode === "hidden" || settings.hideFromList === true;
 }
 function subscribe(listener) {
   listeners.add(listener);
@@ -456,7 +462,7 @@ function elementForList(element) {
   try {
     const props = (_a = element == null ? void 0 : element.props) != null ? _a : {};
     const id = (_e = (_d = (_c = (_b = props.channel) == null ? void 0 : _b.id) != null ? _c : props.channelId) != null ? _d : props.id) != null ? _e : "";
-    if (!storage().hideFromList || !isLockedNow(id)) return element;
+    if (!hidesFromList() || !isLockedNow(id)) return element;
     return null;
   } catch {
     return element;
@@ -560,7 +566,7 @@ function privateChannels() {
   }
 }
 function SettingsPage() {
-  var _a, _b, _c;
+  var _a, _b, _c, _d;
   const [, setVersion] = (0, import_react.useState)(0);
   const refresh = () => setVersion((value) => value + 1);
   const [pinMode, setPinMode] = (0, import_react.useState)("");
@@ -643,18 +649,35 @@ function SettingsPage() {
             })
           }
         ) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-          SwitchRow,
+        RadioGroup && RadioRow ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+          RadioGroup,
           {
-            label: "Hide locked chats from the list",
-            subLabel: "They disappear from your chat list. Turn this off if you would rather see them with a lock.",
-            value: settings.hideFromList === true,
-            onValueChange: (value) => {
-              persist({ hideFromList: value });
+            title: "Where a locked chat lives",
+            value: (_d = settings.mode) != null ? _d : "place",
+            onChange: (value) => {
+              persist({ mode: value === "hidden" ? "hidden" : "place", hideFromList: false });
               refresh();
-            }
+            },
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                RadioRow,
+                {
+                  label: "Keep it in place",
+                  value: "place",
+                  subLabel: "Stays in your chat list; opening it asks for the passcode."
+                }
+              ),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                RadioRow,
+                {
+                  label: "Hide it from the list",
+                  value: "hidden",
+                  subLabel: "Leaves the list and appears under Locked chats below. Opening it still asks."
+                }
+              )
+            ]
           }
-        )
+        ) : null
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Rows, { title: "Locked chats", children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
@@ -686,6 +709,8 @@ function SettingsPage() {
           lockNow();
           refresh();
         } }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Row, { label: "Fingerprint", subLabel: "Not available: the plugin runtime has no biometric API, so the passcode is the only check." }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Row, { label: "Folders", subLabel: "Discord has no folder API for plugins; hiding a chat and listing it under Locked chats is the closest equivalent." }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           Row,
           {
@@ -819,9 +844,10 @@ Object.defineProperty(definition, "__test", {
     LockScreen,
     storage,
     elementForGate,
-    elementForList
+    elementForList,
+    hidesFromList
   },
   enumerable: false
 });
 var index_default = plugin(definition);
-; const __plugin = (module.exports && module.exports.default) || module.exports; if (__plugin && (typeof __plugin === 'object' || typeof __plugin === 'function')) { try { Object.defineProperty(__plugin, 'default', { value: __plugin, enumerable: false, configurable: true }); } catch (ignored) { try { __plugin.default = __plugin; } catch (ignored2) {} } } if (__plugin && typeof __plugin.start === 'function') { const __start = __plugin.start.bind(__plugin); __plugin.start = function (...args) { try { return __start(...args); } catch (error) { try { (args[0] && args[0].logger && args[0].logger.error) ? args[0].logger.error('[plugin] start failed', error) : console.error('[plugin] start failed', error); } catch (ignored) {} } }; } return __plugin; })()
+; const __plugin = (module.exports && module.exports.default) || module.exports; if (__plugin && (typeof __plugin === 'object' || typeof __plugin === 'function')) { try { Object.defineProperty(__plugin, 'default', { value: __plugin, enumerable: false, configurable: true }); } catch (ignored) { try { __plugin.default = __plugin; } catch (ignored2) {} } } if (__plugin && typeof __plugin.start === 'function') { const __start = __plugin.start.bind(__plugin); __plugin.start = function (...args) { try { return __start(...args); } catch (error) { try { (args[0] && args[0].logger && args[0].logger.error) ? args[0].logger.error('[plugin] start failed', error) : console.error('[plugin] start failed', error); } catch (ignored) {} } }; } return { default: __plugin }; })()
