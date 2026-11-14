@@ -8,7 +8,7 @@
             "description": "Turn a short trigger into a full message when you send it.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.7"
+                "latest": "1.0.8"
             },
             "versions": {
                 "1.0.0": {
@@ -106,6 +106,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snippets@1.0.7.zip",
                     "sha256": "151227763e0b5dcdb2dc1ea054b00d8c90fc742be91f52f8658ac47ce9bf2ef5",
                     "size": 4411,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.8": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snippets@1.0.8.zip",
+                    "sha256": "5aacab9dd7f60e6c6e53343933b193d61ec50b88532ba62ed67e9b56095d7122",
+                    "size": 4458,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"

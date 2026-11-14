@@ -8,7 +8,7 @@
             "description": "Strips tracking parameters from links.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.1.4"
+                "latest": "1.1.5"
             },
             "versions": {
                 "1.0.4": {
@@ -80,6 +80,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.clean-urls@1.1.4.zip",
                     "sha256": "446dd4e01e2d9d87f208e4fabbfe8ca310f8fb1f215d017cb0824d6168a49bf7",
                     "size": 4171,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.1.5": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.clean-urls@1.1.5.zip",
+                    "sha256": "3d22524a9055a133f99637545cf63cffc102de5705ad2ac8b44c23899eec40bd",
+                    "size": 4215,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"

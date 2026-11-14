@@ -24,6 +24,8 @@ __export(index_exports, {
   clearPasscode: () => clearPasscode,
   default: () => index_default,
   derivePin: () => derivePin,
+  elementForGate: () => elementForGate,
+  elementForList: () => elementForList,
   hasPasscode: () => hasPasscode,
   isLockedNow: () => isLockedNow,
   lockNow: () => lockNow,
@@ -39,7 +41,8 @@ var import_filters = (function () { const __g = () => { try { return (valenced.m
 var import_design = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.design) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Design() { return __g().Design } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_flux = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.flux) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Stores() { return __g().Stores }, get getStore() { return __g().getStore }, get onFluxEventDispatched() { return __g().onFluxEventDispatched }, get onAnyFluxEventDispatched() { return __g().onAnyFluxEventDispatched } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_patcher = (function () { const __g = () => { try { return (valenced.patcher) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get after() { return __g().after }, get before() { return __g().before }, get instead() { return __g().instead } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get useState() { return __g().useState }, get isValidElement() { return __g().isValidElement }, get createElement() { return __g().createElement }, get cloneElement() { return __g().cloneElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_jsx_runtime = (function () { const __g = () => { try { return (valenced.react && (valenced.react.jsxRuntime || valenced.react.ReactJSXRuntime)) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get afterJSX() { return __g().afterJSX }, get beforeJSX() { return __g().beforeJSX }, get insteadJSX() { return __g().insteadJSX } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get useState() { return __g().useState }, get createElement() { return __g().createElement }, get isValidElement() { return __g().isValidElement }, get cloneElement() { return __g().cloneElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_react_native2 = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get View() { return __g().View }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get Pressable() { return __g().Pressable }, get Modal() { return __g().Modal }, get ScrollView() { return __g().ScrollView }, get AppState() { return __g().AppState }, get Appearance() { return __g().Appearance }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 
 // plugins/_shared/theme.ts
@@ -73,7 +76,7 @@ function token(name) {
 var settingsScroll = { paddingHorizontal: 16, paddingTop: 16, gap: 16 };
 
 // plugins/dev.8uvu.chat-lock/js/index.tsx
-var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsxs() { return __g().jsxs }, get jsx() { return __g().jsx }, get jsxDEV() { return __g().jsxDEV }, get Fragment() { return __g().Fragment } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_jsx_runtime2 = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsxs() { return __g().jsxs }, get jsx() { return __g().jsx }, get jsxDEV() { return __g().jsxDEV }, get Fragment() { return __g().Fragment } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULTS = {
   enabled: true,
   salt: "",
@@ -228,7 +231,7 @@ var cfg = { ...DEFAULTS };
 var unlocked = /* @__PURE__ */ new Set();
 var unlockedAt = 0;
 var listeners = /* @__PURE__ */ new Set();
-var diag = { chatScreen: "", listRow: "" };
+var diag = { chatScreen: "", listRow: "", gate: "" };
 function storage() {
   var _a, _b;
   try {
@@ -359,7 +362,7 @@ function channelName(id) {
     return "this chat";
   }
 }
-function withComponentName(names) {
+var componentNamed = (() => {
   try {
     const make = import_filters.createFilterGenerator;
     if (typeof make !== "function") return null;
@@ -373,7 +376,7 @@ function withComponentName(names) {
   } catch {
     return null;
   }
-}
+})();
 function LockScreen({ id, onUnlocked }) {
   const [pin, setPin] = (0, import_react.useState)("");
   const [error, setError] = (0, import_react.useState)("");
@@ -387,13 +390,13 @@ function LockScreen({ id, onUnlocked }) {
     }
     setError("That passcode is not right.");
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.View, { style: { flex: 1, paddingHorizontal: 16, paddingTop: 16, gap: 16, justifyContent: "center" }, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_NORMAL"), fontSize: 18, fontWeight: "600" }, children: "This chat is locked" }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.Text, { style: { color: token("TEXT_MUTED") }, children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_react_native2.View, { style: { flex: 1, paddingHorizontal: 16, paddingTop: 16, gap: 16, justifyContent: "center" }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react_native2.Text, { style: { color: token("TEXT_NORMAL"), fontSize: 18, fontWeight: "600" }, children: "This chat is locked" }),
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_react_native2.Text, { style: { color: token("TEXT_MUTED") }, children: [
       name,
       " is hidden until you enter your passcode."
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
       import_react_native2.TextInput,
       {
         accessibilityLabel: "Passcode",
@@ -416,15 +419,15 @@ function LockScreen({ id, onUnlocked }) {
         }
       }
     ),
-    error ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_DANGER") }, children: error }) : null,
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    error ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react_native2.Text, { style: { color: token("TEXT_DANGER") }, children: error }) : null,
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
       import_react_native2.Pressable,
       {
         accessibilityLabel: "Unlock chat",
         accessibilityRole: "button",
         onPress: submit,
         style: { backgroundColor: token("BRAND_500"), borderRadius: 4, paddingVertical: 10, alignItems: "center" },
-        children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_NORMAL"), fontWeight: "600" }, children: "Unlock" })
+        children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react_native2.Text, { style: { color: token("TEXT_NORMAL"), fontWeight: "600" }, children: "Unlock" })
       }
     )
   ] });
@@ -436,40 +439,90 @@ function Gate({ id }) {
     return 0;
   });
   void tick;
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LockScreen, { id, onUnlocked: () => setTick((value) => value + 1) });
+  return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LockScreen, { id, onUnlocked: () => setTick((value) => value + 1) });
+}
+function elementForGate(element) {
+  var _a;
+  try {
+    const id = channelIdOf((_a = element == null ? void 0 : element.props) != null ? _a : {});
+    if (!id || !isLockedNow(id)) return element;
+    return (0, import_react.createElement)(Gate, { key: "chatlock-gate", id });
+  } catch {
+    return element;
+  }
+}
+function elementForList(element) {
+  var _a, _b, _c, _d, _e;
+  try {
+    const props = (_a = element == null ? void 0 : element.props) != null ? _a : {};
+    const id = (_e = (_d = (_c = (_b = props.channel) == null ? void 0 : _b.id) != null ? _c : props.channelId) != null ? _d : props.id) != null ? _e : "";
+    if (!storage().hideFromList || !isLockedNow(id)) return element;
+    return null;
+  } catch {
+    return element;
+  }
+}
+function elementTypes(mod) {
+  const types = [];
+  for (const candidate of [mod == null ? void 0 : mod.default, mod == null ? void 0 : mod.type, typeof mod === "function" ? mod : null]) {
+    if (!candidate || types.includes(candidate)) continue;
+    if (typeof candidate === "function" || typeof candidate === "object") types.push(candidate);
+  }
+  return types;
+}
+function hookModule(mod, hook, cleanup) {
+  const types = elementTypes(mod);
+  if (!types.length) return false;
+  if (typeof import_jsx_runtime.afterJSX === "function") {
+    let hooked = 0;
+    for (const type of types) {
+      try {
+        const stop = (0, import_jsx_runtime.afterJSX)(type, hook);
+        if (typeof stop === "function") cleanup(stop);
+        hooked++;
+      } catch {
+      }
+    }
+    if (hooked) {
+      diag.gate = "jsx";
+      return true;
+    }
+  }
+  if (typeof (mod == null ? void 0 : mod.type) === "function") {
+    try {
+      const unhook = (0, import_patcher.after)(
+        mod,
+        "type",
+        (...params) => {
+          var _a;
+          return hook((_a = params.find((value) => {
+            var _a2;
+            return (_a2 = import_react.isValidElement) == null ? void 0 : _a2(value);
+          })) != null ? _a : params[1]);
+        }
+      );
+      if (typeof unhook === "function") cleanup(unhook);
+      diag.gate = "render";
+      return true;
+    } catch {
+    }
+  }
+  return false;
 }
 function installChatGate(cleanup) {
-  const filter = withComponentName(CHAT_SCREENS);
-  if (!filter) return false;
   for (const name of CHAT_SCREENS) {
+    let handled = false;
     try {
-      const stop = (0, import_finders.getModules)(
-        withComponentName([name]),
+      (0, import_finders.getModules)(
+        componentNamed(name),
         (mod) => {
-          try {
-            if (typeof (mod == null ? void 0 : mod.type) !== "function") return;
-            diag.chatScreen = name;
-            const unhook = (0, import_patcher.after)(mod, "type", (...params) => {
-              const rendered = params.find((value) => {
-                var _a;
-                return (_a = import_react.isValidElement) == null ? void 0 : _a(value);
-              });
-              try {
-                const id = channelIdOf(params[0]);
-                if (!id || !isLockedNow(id)) return rendered != null ? rendered : params[1];
-                return (0, import_react.createElement)(Gate, { key: "chatlock-gate", id });
-              } catch {
-                return rendered != null ? rendered : params[1];
-              }
-            });
-            if (typeof unhook === "function") cleanup(unhook);
-          } catch {
-          }
+          if (handled) return;
+          handled = hookModule(mod, elementForGate, cleanup);
+          if (handled) diag.chatScreen = name;
         },
         { max: 1 }
       );
-      if (typeof stop === "function") cleanup(stop);
-      return true;
+      if (handled) return true;
     } catch {
     }
   }
@@ -477,32 +530,18 @@ function installChatGate(cleanup) {
 }
 function installListHiding(cleanup) {
   for (const name of LIST_ROWS) {
+    let handled = false;
     try {
-      const stop = (0, import_finders.getModules)(
-        withComponentName([name]),
+      (0, import_finders.getModules)(
+        componentNamed(name),
         (mod) => {
-          try {
-            if (typeof (mod == null ? void 0 : mod.type) !== "function") return;
-            diag.listRow = name;
-            const unhook = (0, import_patcher.after)(mod, "type", (...params) => {
-              var _a, _b, _c, _d, _e, _f, _g;
-              try {
-                const props = (_a = params[0]) != null ? _a : {};
-                const id = (_e = (_d = (_c = (_b = props.channel) == null ? void 0 : _b.id) != null ? _c : props.channelId) != null ? _d : props.id) != null ? _e : "";
-                if (!storage().hideFromList || !isLockedNow(id)) return (_f = params[1]) != null ? _f : params[0];
-                return null;
-              } catch {
-                return (_g = params[1]) != null ? _g : params[0];
-              }
-            });
-            if (typeof unhook === "function") cleanup(unhook);
-          } catch {
-          }
+          if (handled) return;
+          handled = hookModule(mod, elementForList, cleanup);
+          if (handled) diag.listRow = name;
         },
         { max: 1 }
       );
-      if (typeof stop === "function") cleanup(stop);
-      return;
+      if (handled) return;
     } catch {
     }
   }
@@ -559,9 +598,9 @@ function SettingsPage() {
     setPicking(true);
   };
   if (Rows && Row && SwitchRow) {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.ScrollView, { style: settingsScroll, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Rows, { title: "Chat Lock", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_react_native2.ScrollView, { style: settingsScroll, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Rows, { title: "Chat Lock", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           SwitchRow,
           {
             label: "Lock chats",
@@ -573,7 +612,7 @@ function SettingsPage() {
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           Row,
           {
             label: hasPasscode() ? "Change passcode" : "Set a passcode",
@@ -581,7 +620,7 @@ function SettingsPage() {
             onPress: () => setPinMode("set")
           }
         ),
-        RadioGroup && RadioRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        RadioGroup && RadioRow ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           RadioGroup,
           {
             title: "Lock again",
@@ -592,7 +631,7 @@ function SettingsPage() {
             },
             children: AUTO_LOCK.map((option) => {
               var _a2;
-              return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+              return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
                 RadioRow,
                 {
                   label: option.label,
@@ -604,7 +643,7 @@ function SettingsPage() {
             })
           }
         ) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           SwitchRow,
           {
             label: "Hide locked chats from the list",
@@ -617,8 +656,8 @@ function SettingsPage() {
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Rows, { title: "Locked chats", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Rows, { title: "Locked chats", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           Row,
           {
             label: "Add a chat",
@@ -626,8 +665,8 @@ function SettingsPage() {
             onPress: openPicker
           }
         ),
-        locks().length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "No chats locked yet", subLabel: "Add one above." }) : null,
-        locks().map((lock) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        locks().length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Row, { label: "No chats locked yet", subLabel: "Add one above." }) : null,
+        locks().map((lock) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           Row,
           {
             label: lock.name,
@@ -640,18 +679,24 @@ function SettingsPage() {
           lock.id
         ))
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Rows, { title: "Good to know", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "This is a screen lock", subLabel: "Messages are not encrypted, and they stay on Discord's servers." }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Who it stops", subLabel: "Someone who picks up your phone. Not someone with your account." }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Lock now", subLabel: "Locks every chat again straight away.", onPress: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Rows, { title: "Good to know", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Row, { label: "This is a screen lock", subLabel: "Messages are not encrypted, and they stay on Discord's servers." }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Row, { label: "Who it stops", subLabel: "Someone who picks up your phone. Not someone with your account." }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Row, { label: "Lock now", subLabel: "Locks every chat again straight away.", onPress: () => {
           lockNow();
           refresh();
         } }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Chat screen", subLabel: diag.chatScreen ? "Found: " + diag.chatScreen : "Not found on this build yet. Open a chat once, then come back." })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+          Row,
+          {
+            label: "Chat screen",
+            subLabel: diag.chatScreen ? "Found: " + diag.chatScreen + (diag.gate ? " via " + diag.gate : "") : "Not found on this build yet. Open a chat once, then come back."
+          }
+        )
       ] }),
-      picking ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Rows, { title: "Choose a chat", children: [
-        choices.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "No chats to choose", subLabel: "Your DM list has not loaded yet. Open your messages once, then try again." }) : null,
-        choices.map((choice) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      picking ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Rows, { title: "Choose a chat", children: [
+        choices.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Row, { label: "No chats to choose", subLabel: "Your DM list has not loaded yet. Open your messages once, then try again." }) : null,
+        choices.map((choice) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           Row,
           {
             label: choice.label,
@@ -663,11 +708,11 @@ function SettingsPage() {
           },
           choice.id
         )),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Done", onPress: () => setPicking(false) })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Row, { label: "Done", onPress: () => setPicking(false) })
       ] }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ModalC, { visible: pinMode === "set", transparent: true, animationType: "fade", onRequestClose: () => setPinMode(""), children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.View, { style: { flex: 1, justifyContent: "center", paddingHorizontal: 16, backgroundColor: token("BACKGROUND_PRIMARY") }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.View, { style: { backgroundColor: token("BACKGROUND_SECONDARY"), borderRadius: 8, padding: 16, gap: 12 }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_NORMAL"), fontSize: 16, fontWeight: "600" }, children: "Set a passcode" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ModalC, { visible: pinMode === "set", transparent: true, animationType: "fade", onRequestClose: () => setPinMode(""), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react_native2.View, { style: { flex: 1, justifyContent: "center", paddingHorizontal: 16, backgroundColor: token("BACKGROUND_PRIMARY") }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_react_native2.View, { style: { backgroundColor: token("BACKGROUND_SECONDARY"), borderRadius: 8, padding: 16, gap: 12 }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react_native2.Text, { style: { color: token("TEXT_NORMAL"), fontSize: 16, fontWeight: "600" }, children: "Set a passcode" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           import_react_native2.TextInput,
           {
             accessibilityLabel: "New passcode",
@@ -681,7 +726,7 @@ function SettingsPage() {
             style: { color: token("TEXT_NORMAL"), backgroundColor: token("BACKGROUND_TERTIARY"), borderRadius: 8, padding: 10 }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           import_react_native2.TextInput,
           {
             accessibilityLabel: "Repeat passcode",
@@ -695,26 +740,26 @@ function SettingsPage() {
             style: { color: token("TEXT_NORMAL"), backgroundColor: token("BACKGROUND_TERTIARY"), borderRadius: 8, padding: 10 }
           }
         ),
-        pinError ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_DANGER") }, children: pinError }) : null,
-        Button ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, { text: "Save passcode", onPress: savePin }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Pressable, { accessibilityLabel: "Save passcode", onPress: savePin, style: { paddingVertical: 10 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("BRAND_500"), fontWeight: "600" }, children: "Save passcode" }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Pressable, { accessibilityLabel: "Cancel", onPress: () => {
+        pinError ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react_native2.Text, { style: { color: token("TEXT_DANGER") }, children: pinError }) : null,
+        Button ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Button, { text: "Save passcode", onPress: savePin }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react_native2.Pressable, { accessibilityLabel: "Save passcode", onPress: savePin, style: { paddingVertical: 10 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react_native2.Text, { style: { color: token("BRAND_500"), fontWeight: "600" }, children: "Save passcode" }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react_native2.Pressable, { accessibilityLabel: "Cancel", onPress: () => {
           setPinMode("");
           setPin("");
           setConfirm("");
           setPinError("");
-        }, style: { paddingVertical: 6 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_MUTED") }, children: "Cancel" }) })
+        }, style: { paddingVertical: 6 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react_native2.Text, { style: { color: token("TEXT_MUTED") }, children: "Cancel" }) })
       ] }) }) })
     ] });
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.ScrollView, { style: settingsScroll, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_NORMAL"), fontWeight: "600" }, children: "Chat Lock" }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.Text, { style: { color: token("TEXT_MUTED") }, children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_react_native2.ScrollView, { style: settingsScroll, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react_native2.Text, { style: { color: token("TEXT_NORMAL"), fontWeight: "600" }, children: "Chat Lock" }),
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_react_native2.Text, { style: { color: token("TEXT_MUTED") }, children: [
       hasPasscode() ? "Passcode set." : "No passcode yet.",
       " ",
       locks().length,
       " chat(s) locked."
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_MUTED") }, children: "Discord's settings rows were not available, so this is a summary only." })
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_react_native2.Text, { style: { color: token("TEXT_MUTED") }, children: "Discord's settings rows were not available, so this is a summary only." })
   ] });
 }
 var definition = {
@@ -772,7 +817,9 @@ Object.defineProperty(definition, "__test", {
     hasPasscode,
     diag,
     LockScreen,
-    storage
+    storage,
+    elementForGate,
+    elementForList
   },
   enumerable: false
 });

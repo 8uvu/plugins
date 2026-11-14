@@ -8,7 +8,7 @@
             "description": "Counts how often you start typing in each channel today. Stays on this device.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.4"
+                "latest": "1.0.5"
             },
             "versions": {
                 "1.0.0": {
@@ -67,6 +67,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-tally@1.0.4.zip",
                     "sha256": "10c970f7fcb21b1c0099cdb6342bd961af27ee16212a0fd8a2b879d001685773",
                     "size": 3602,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.5": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-tally@1.0.5.zip",
+                    "sha256": "9305ad6a4a271187cf4478ca70a632602598dd71b16f9866bf57affd1b0a7ddd",
+                    "size": 3643,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"

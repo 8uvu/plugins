@@ -4,7 +4,7 @@
     "name": "Snippets",
     "description": "Turn a short trigger into a full message when you send it.",
     "author": "cenotaph",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "dependencies": {
         "valenced.api": {
             "version": ">=1 <2"
