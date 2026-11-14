@@ -8,7 +8,7 @@
             "description": "Put a passcode on chosen chats, so opening one asks for it first.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.5"
+                "latest": "1.0.6"
             },
             "versions": {
                 "1.0.0": {
@@ -80,6 +80,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.chat-lock@1.0.5.zip",
                     "sha256": "5c4561e0874245f471c57f298b98c16b8294a8f3d81fc2dc7efa06fa79f24028",
                     "size": 10007,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.6": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.chat-lock@1.0.6.zip",
+                    "sha256": "7a70ab11df5858f6d5c6c6dd689fc63adc620500dfa1ca02efd2d39436993238",
+                    "size": 9908,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

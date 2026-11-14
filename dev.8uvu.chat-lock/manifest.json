@@ -4,7 +4,7 @@
     "name": "Chat Lock",
     "description": "Put a passcode on chosen chats, so opening one asks for it first.",
     "author": "cenotaph",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"

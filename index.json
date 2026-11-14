@@ -8,7 +8,7 @@
             "description": "Strips tracking parameters from links.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.1.7"
+                "latest": "1.1.8"
             },
             "versions": {
                 "1.0.4": {
@@ -127,6 +127,19 @@
                             "version": "*"
                         }
                     }
+                },
+                "1.1.8": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.clean-urls@1.1.8.zip",
+                    "sha256": "00a6ba37f4af423e1cb93ab94bf07c2ceba94d1268ec3a170987acc0bbb8af9d",
+                    "size": 4218,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
                 }
             }
         },
@@ -135,7 +148,7 @@
             "description": "Fake messages and calls in the chat you have open. Drawn locally, never sent.",
             "author": "cenotaph",
             "channels": {
-                "latest": "6.0.4"
+                "latest": "6.0.5"
             },
             "versions": {
                 "2.0.0": {
@@ -618,6 +631,19 @@
                             "version": "*"
                         }
                     }
+                },
+                "6.0.5": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.fake-dm@6.0.5.zip",
+                    "sha256": "7d1b019f741d8dce1370ae3d0295ff92a86373c11ca79d7f869a13091deda106",
+                    "size": 24364,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
                 }
             }
         },
@@ -741,7 +767,7 @@
             "description": "Turn a short trigger into a full message when you send it.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.10"
+                "latest": "1.0.11"
             },
             "versions": {
                 "1.0.0": {
@@ -774,6 +800,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snippets@1.0.10.zip",
                     "sha256": "6d0dde98ee275f0fd96c4748e3bba12b81dfaba711cdbb7ed8b1e321ef343573",
                     "size": 4462,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.11": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.snippets@1.0.11.zip",
+                    "sha256": "911403ecde4fa4b782831cb22bd277a9cb25286e3ef01aad5a116e8d8a452fc2",
+                    "size": 4461,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
@@ -894,7 +933,7 @@
             "description": "Remembers who started typing, in case the indicator vanished before you looked.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.8"
+                "latest": "1.0.9"
             },
             "versions": {
                 "1.0.0": {
@@ -1013,6 +1052,19 @@
                             "version": "*"
                         }
                     }
+                },
+                "1.0.9": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-watch@1.0.9.zip",
+                    "sha256": "e35c4c952cb15a72bb6277159fd123b50a6352e56c4b20532154102c06e23fd1",
+                    "size": 3697,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
                 }
             }
         },
@@ -1021,7 +1073,7 @@
             "description": "Keeps you in your voice channel.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.1.4"
+                "latest": "1.1.5"
             },
             "versions": {
                 "1.0.0": {
@@ -1140,6 +1192,19 @@
                             "version": "*"
                         }
                     }
+                },
+                "1.1.5": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.dont-control-me@1.1.5.zip",
+                    "sha256": "8294ea81406bc7ebf817509d45778e417e61ee770588720d51c8f341580efb11",
+                    "size": 4969,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
                 }
             }
         },
@@ -1148,7 +1213,7 @@
             "description": "Copies a server's roles and channels into another.",
             "author": "cenotaph",
             "channels": {
-                "latest": "2.0.4"
+                "latest": "2.0.5"
             },
             "versions": {
                 "1.0.0": {
@@ -1267,6 +1332,19 @@
                             "version": "*"
                         }
                     }
+                },
+                "2.0.5": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.server-cloner@2.0.5.zip",
+                    "sha256": "736504b2c85992649d7cc17d7d55c0806a0b4acc644cff6f0f7f44ad69f95d9f",
+                    "size": 6699,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
                 }
             }
         },
@@ -1275,7 +1353,7 @@
             "description": "Counts how often you start typing in each channel today. Stays on this device.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.7"
+                "latest": "1.0.8"
             },
             "versions": {
                 "1.0.0": {
@@ -1381,6 +1459,19 @@
                             "version": "*"
                         }
                     }
+                },
+                "1.0.8": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-tally@1.0.8.zip",
+                    "sha256": "0c3be9a48a2ae96d598a0999e2bc4c763ba9afb6f7bf0105eec138d6a69a932b",
+                    "size": 3647,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
                 }
             }
         },
@@ -1389,7 +1480,7 @@
             "description": "Strips an accidental @everyone or @here from your message before it sends.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.6"
+                "latest": "1.0.7"
             },
             "versions": {
                 "1.0.0": {
@@ -1482,6 +1573,19 @@
                             "version": "*"
                         }
                     }
+                },
+                "1.0.7": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.mention-guard@1.0.7.zip",
+                    "sha256": "2e435d3552fbd73f21d8d13cea36614be2c4d7b383dee8e7cba20357245ba58b",
+                    "size": 3496,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
                 }
             }
         },
@@ -1490,7 +1594,7 @@
             "description": "Clean colour themes: Discord surface ladder, one accent, overlays untouched.",
             "author": "cenotaph",
             "channels": {
-                "latest": "2.0.4"
+                "latest": "2.0.5"
             },
             "versions": {
                 "1.0.0": {
@@ -1604,6 +1708,22 @@
                             "version": "*"
                         }
                     }
+                },
+                "2.0.5": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.themes@2.0.5.zip",
+                    "sha256": "5b88048a8157519aa340b694c8f5c8952577cf8fba73d9f2295aeff35e49512d",
+                    "size": 8139,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        },
+                        "valenced.api.themes": {
+                            "version": "*"
+                        }
+                    }
                 }
             }
         },
@@ -1612,7 +1732,7 @@
             "description": "Put a passcode on chosen chats, so opening one asks for it first.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.5"
+                "latest": "1.0.6"
             },
             "versions": {
                 "1.0.0": {
@@ -1684,6 +1804,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.chat-lock@1.0.5.zip",
                     "sha256": "5c4561e0874245f471c57f298b98c16b8294a8f3d81fc2dc7efa06fa79f24028",
                     "size": 10007,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.6": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.chat-lock@1.0.6.zip",
+                    "sha256": "7a70ab11df5858f6d5c6c6dd689fc63adc620500dfa1ca02efd2d39436993238",
+                    "size": 9908,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
