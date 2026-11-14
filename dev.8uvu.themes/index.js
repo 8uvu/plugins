@@ -22,66 +22,76 @@ __export(index_exports, {
   default: () => index_default
 });
 module.exports = __toCommonJS(index_exports);
-var import_tokens = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.common && valenced.discord.common.tokens) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Tokens() { return __g().Tokens } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_common = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.common) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Tokens() { return __g().Tokens }, get Logger() { return __g().Logger }, get Constants() { return __g().Constants } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_design = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.design) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Design() { return __g().Design } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get ScrollView() { return __g().ScrollView }, get View() { return __g().View }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get Pressable() { return __g().Pressable }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsxs() { return __g().jsxs }, get jsx() { return __g().jsx }, get jsxDEV() { return __g().jsxDEV }, get Fragment() { return __g().Fragment } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var GROUP = "cenotaph";
 var THEMES = [
   {
-    id: "midnight-blue",
-    name: "Midnight Blue",
-    description: "Discord blue, made colder and deeper.",
+    id: "slate",
+    name: "Slate",
+    description: "Cool neutral greys, one quiet blue accent.",
+    accent: "#6b8afd",
+    bases: ["dark", "darker", "midnight"],
+    ladder: { primary: "#26282c", secondary: "#202225", tertiary: "#1a1c1f", raised: "#2c2f34", text: "#dcddde" },
+    wallpaper: "assets/slate.jpg"
+  },
+  {
+    id: "graphite",
+    name: "Graphite",
+    description: "True greys, no colour anywhere. Accent is a light grey.",
+    accent: "#9aa0a6",
+    bases: ["dark", "darker", "midnight"],
+    ladder: { primary: "#2b2b2e", secondary: "#252528", tertiary: "#1f1f22", raised: "#313134", text: "#dbdbde" },
+    wallpaper: "assets/graphite.jpg"
+  },
+  {
+    id: "ink",
+    name: "Ink",
+    description: "Near-black for OLED screens, still layered.",
+    accent: "#6c7bff",
+    bases: ["darker", "midnight"],
+    ladder: { primary: "#0a0a0c", secondary: "#08080a", tertiary: "#050506", raised: "#121215", text: "#e6e6e9" },
+    wallpaper: "assets/ink.jpg"
+  },
+  {
+    id: "sand",
+    name: "Sand",
+    description: "Warm neutral greys with a muted amber accent.",
+    accent: "#d8a35c",
+    bases: ["dark", "darker", "midnight"],
+    ladder: { primary: "#26221f", secondary: "#211d1a", tertiary: "#1a1714", raised: "#2c2724", text: "#e2ded9" },
+    wallpaper: "assets/sand.jpg"
+  },
+  {
+    id: "paper",
+    name: "Paper",
+    description: "Light mode as Discord draws it: white, grey steps, blue accent.",
+    accent: "#5865f2",
+    bases: ["light"],
+    ladder: { primary: "#ffffff", secondary: "#f5f6f8", tertiary: "#e3e5e8", raised: "#fafbfc", text: "#2e3338" },
+    wallpaper: "assets/paper.jpg"
+  },
+  {
+    id: "mist",
+    name: "Mist",
+    description: "Cool light greys, slightly bluer than Paper.",
     accent: "#5b8cff",
-    surface: "#12141c",
-    wallpaper: "assets/midnight-blue.jpg"
-  },
-  {
-    id: "blood-moon",
-    name: "Blood Moon",
-    description: "Red accent on near-black wine.",
-    accent: "#e5484d",
-    surface: "#1a1012",
-    wallpaper: "assets/blood-moon.jpg"
-  },
-  {
-    id: "forest",
-    name: "Forest",
-    description: "Green accent on deep moss.",
-    accent: "#2fbf71",
-    surface: "#0f1613",
-    wallpaper: "assets/forest.jpg"
-  },
-  {
-    id: "vaporwave",
-    name: "Vaporwave",
-    description: "Magenta accent on dark violet.",
-    accent: "#e24bf0",
-    surface: "#171227",
-    wallpaper: "assets/vaporwave.jpg"
-  },
-  {
-    id: "ember",
-    name: "Ember",
-    description: "Warm orange accent on burnt brown.",
-    accent: "#ff9f45",
-    surface: "#1a1310",
-    wallpaper: "assets/ember.jpg"
-  },
-  {
-    id: "mono",
-    name: "Mono",
-    description: "Greyscale everything, no colour accents.",
-    accent: "#b9bbbe",
-    surface: "#161718",
-    wallpaper: "assets/mono.jpg"
+    bases: ["light"],
+    ladder: { primary: "#f7f8fa", secondary: "#eef0f3", tertiary: "#e4e7eb", raised: "#ffffff", text: "#313338" },
+    wallpaper: "assets/mist.jpg"
   }
 ];
 var clamp = (value) => Math.max(0, Math.min(255, Math.round(value)));
 function parseHex(hex) {
   const clean = String(hex != null ? hex : "").replace("#", "");
   const value = clean.length >= 6 ? clean.slice(0, 6) : "000000";
-  return [parseInt(value.slice(0, 2), 16) || 0, parseInt(value.slice(2, 4), 16) || 0, parseInt(value.slice(4, 6), 16) || 0];
+  return [
+    parseInt(value.slice(0, 2), 16) || 0,
+    parseInt(value.slice(2, 4), 16) || 0,
+    parseInt(value.slice(4, 6), 16) || 0
+  ];
 }
 function toHex(r, g, b) {
   return "#" + [r, g, b].map((channel) => clamp(channel).toString(16).padStart(2, "0")).join("");
@@ -95,15 +105,16 @@ function shade(hex, amount) {
 function semanticNames() {
   var _a, _b;
   try {
-    const source = (_b = (_a = import_tokens.Tokens) == null ? void 0 : _a.SemanticColor) != null ? _b : {};
-    return Object.keys(source);
+    return Object.keys((_b = (_a = import_common.Tokens) == null ? void 0 : _a.SemanticColor) != null ? _b : {});
   } catch {
     return [];
   }
 }
-var ACCENT = /ACCENT|BRAND|BLURPLE|LINK|MENTION|SELECTED|INTERACTIVE_ACTIVE|BUTTON_PRIMARY/;
-var SURFACE = /BACKGROUND|SURFACE|CARD|MODAL|ELEVATION|POPOUT|FLOATING|SIDEBAR|CHANNEL|INPUT/;
+var ACCENT = /ACCENT|BRAND|BLURPLE|LINK|MENTION|BUTTON_PRIMARY/;
+var RAISED = /MODAL|POPOUT|CARD|ELEVATION|FLOATING|SHEET/;
+var SURFACE = /BACKGROUND|SURFACE|SIDEBAR|CHANNEL|INPUT/;
 var TEXT = /TEXT/;
+var OVERLAY = /MODIFIER|OPACITY|TRANSPARENT|SHADOW|BORDER|SCRIM/;
 var BASES = ["dark", "darker", "light", "midnight"];
 function colorsFor(palette) {
   const semantic = {};
@@ -111,29 +122,36 @@ function colorsFor(palette) {
   const names = semanticNames();
   for (const name of names) {
     const upper = name.toUpperCase();
-    if (ACCENT.test(upper)) {
-      semantic.dark[name] = palette.accent;
-      semantic.darker[name] = palette.accent;
-      semantic.midnight[name] = shade(palette.accent, -0.1);
-      semantic.light[name] = shade(palette.accent, -0.18);
-      continue;
-    }
-    if (SURFACE.test(upper)) {
-      semantic.dark[name] = palette.surface;
-      semantic.darker[name] = shade(palette.surface, -0.22);
-      semantic.midnight[name] = shade(palette.surface, -0.4);
-      semantic.light[name] = shade(palette.accent, 0.94);
-      continue;
-    }
-    if (TEXT.test(upper)) {
-      semantic.light[name] = shade(palette.surface, -0.78);
+    if (OVERLAY.test(upper)) continue;
+    const accent = ACCENT.test(upper);
+    const text = !accent && TEXT.test(upper);
+    const surface = !accent && !text && SURFACE.test(upper);
+    if (!accent && !text && !surface) continue;
+    for (const base of palette.bases) {
+      const bias = base === "midnight" ? -0.28 : base === "darker" ? -0.1 : 0;
+      const ladder = palette.ladder;
+      const step = (value) => bias ? shade(value, bias) : value;
+      if (accent) {
+        semantic[base][name] = step(palette.accent);
+        continue;
+      }
+      if (text) {
+        semantic[base][name] = ladder.text;
+        continue;
+      }
+      if (RAISED.test(upper)) semantic[base][name] = step(ladder.raised);
+      else if (/TERTIARY/.test(upper)) semantic[base][name] = step(ladder.tertiary);
+      else if (/SECONDARY/.test(upper)) semantic[base][name] = step(ladder.secondary);
+      else semantic[base][name] = step(ladder.primary);
     }
   }
   if (!names.length) {
-    for (const name of ["BACKGROUND_PRIMARY", "BACKGROUND_SECONDARY", "BACKGROUND_TERTIARY", "BRAND_500", "BRAND_560"]) {
-      semantic.dark[name] = SURFACE.test(name) ? palette.surface : palette.accent;
-      semantic.darker[name] = SURFACE.test(name) ? shade(palette.surface, -0.22) : palette.accent;
-      semantic.midnight[name] = SURFACE.test(name) ? shade(palette.surface, -0.4) : palette.accent;
+    for (const base of palette.bases) {
+      semantic[base].BACKGROUND_PRIMARY = palette.ladder.primary;
+      semantic[base].BACKGROUND_SECONDARY = palette.ladder.secondary;
+      semantic[base].BACKGROUND_TERTIARY = palette.ladder.tertiary;
+      semantic[base].CARD_BACKGROUND_DEFAULT = palette.ladder.raised;
+      semantic[base].BRAND_500 = palette.accent;
     }
   }
   return { semantic };
@@ -145,21 +163,19 @@ var index_default = plugin({
     try {
       (_a = themes == null ? void 0 : themes.registerGroup) == null ? void 0 : _a.call(themes, GROUP, {
         name: "Cenotaph",
-        description: "Colour themes by cenotaph \u2014 Discord layouts, recoloured."
+        description: "Clean themes by cenotaph \u2014 Discord layouts, recoloured."
       });
       for (const palette of THEMES) {
         (_b = themes == null ? void 0 : themes.registerTheme) == null ? void 0 : _b.call(themes, GROUP, palette.id, {
           name: palette.name,
           description: palette.description,
-          // Token names only exist from init onwards, so the palette is
-          // built when the picker asks for it.
           getColors: () => colorsFor(palette)
         });
         (_c = themes == null ? void 0 : themes.registerTheme) == null ? void 0 : _c.call(themes, GROUP, palette.id + "-wallpaper", {
           name: palette.name + " Wallpaper",
-          description: palette.description + " On its own wallpaper.",
+          description: palette.description + " On a quiet wallpaper.",
           getColors: () => colorsFor(palette),
-          background: { path: palette.wallpaper, opacity: 0.7, dimming: 0.4, blur: 0 }
+          background: { path: palette.wallpaper, opacity: 0.85, dimming: 0.55, blur: 0 }
         });
       }
     } catch (error) {
@@ -176,21 +192,23 @@ var index_default = plugin({
     if (Rows && Row) {
       return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(D.TableRowGroup, { title: "Cenotaph Themes", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Where to apply one", subLabel: "Valenced settings \u2192 Appearance \u2192 Colours \u2192 Cenotaph." }),
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             Row,
             {
-              label: "Where to apply one",
-              subLabel: "Valenced settings \u2192 Appearance \u2192 Colours \u2192 Cenotaph."
+              label: "How it works",
+              subLabel: "Discord's own surface ladder and text colours, one accent. Overlays are left alone."
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "How it works", subLabel: "Recolours Discord's semantic tokens; layout and contrast stay Discord's." })
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: "Bases", subLabel: "Dark themes leave light mode alone, and the light themes leave dark alone." })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "Included", children: THEMES.map((palette) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: palette.name, subLabel: palette.description }, palette.id)) })
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "Included", children: THEMES.map((palette) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: palette.name, subLabel: palette.description }, palette.id)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "With wallpapers", children: THEMES.map((palette) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label: palette.name + " Wallpaper", subLabel: "Same colours, still background." }, palette.id)) })
       ] });
     }
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { padding: 16 }, children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "bold", marginBottom: 8 }, children: "Cenotaph Themes" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#9ba0a8", marginBottom: 8 }, children: "Settings \u2192 Appearance \u2192 Colours \u2192 Cenotaph. Recolours Discord's semantic tokens." }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#9ba0a8", marginBottom: 8 }, children: "Settings \u2192 Appearance \u2192 Colours \u2192 Cenotaph. Discord's surface ladder, one accent, overlays untouched." }),
       THEMES.map((palette) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#ffffff", marginVertical: 2 }, children: [
         palette.name,
         " \u2014 ",

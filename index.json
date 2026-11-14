@@ -1071,10 +1071,10 @@
         },
         "dev.8uvu.themes": {
             "name": "Cenotaph Themes",
-            "description": "Colour themes that recolour Discord's own palette instead of covering it.",
+            "description": "Clean colour themes: Discord surface ladder, one accent, overlays untouched.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.1.0"
+                "latest": "2.0.0"
             },
             "versions": {
                 "1.0.0": {
@@ -1097,6 +1097,22 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.themes@1.1.0.zip",
                     "sha256": "ab5aaf7b40118d3759e8457e615bfe3b6e5b3af89caf8fa516f02ad1ab004389",
                     "size": 56640,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        },
+                        "valenced.api.themes": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "2.0.0": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.themes@2.0.0.zip",
+                    "sha256": "fbb6fbc60a6a129a1ff62d86a17dc819f5c1b1199f369b2f6568e6f288714ede",
+                    "size": 7747,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"
