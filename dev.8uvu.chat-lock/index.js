@@ -58,14 +58,14 @@ function token(name) {
   try {
     const module2 = import_common.Tokens;
     if (!module2) return void 0;
-    const definition = (_a = module2 == null ? void 0 : module2.SemanticColor) == null ? void 0 : _a[name];
+    const definition2 = (_a = module2 == null ? void 0 : module2.SemanticColor) == null ? void 0 : _a[name];
     const resolve = (_c = (_b = module2 == null ? void 0 : module2.default) == null ? void 0 : _b.internal) == null ? void 0 : _c.resolveSemanticColor;
-    if (typeof resolve === "function" && definition) {
-      return resolve(activeBase(), definition);
+    if (typeof resolve === "function" && definition2) {
+      return resolve(activeBase(), definition2);
     }
     const colours = (_e = (_d = module2 == null ? void 0 : module2.default) == null ? void 0 : _d.colors) == null ? void 0 : _e[name];
     if (typeof colours === "string") return colours;
-    if (typeof definition === "string") return definition;
+    if (typeof definition2 === "string") return definition2;
   } catch {
   }
   return void 0;
@@ -717,7 +717,7 @@ function SettingsPage() {
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_MUTED") }, children: "Discord's settings rows were not available, so this is a summary only." })
   ] });
 }
-var index_default = plugin({
+var definition = {
   jsonStorage: { load: true, default: DEFAULTS },
   start(pluginApi) {
     var _a, _b, _c, _d, _e, _f, _g;
@@ -754,8 +754,10 @@ var index_default = plugin({
   stop() {
     lockNow();
   },
-  SettingsComponent: SettingsPage,
-  __test: {
+  SettingsComponent: SettingsPage
+};
+Object.defineProperty(definition, "__test", {
+  value: {
     sha256,
     derivePin,
     setPasscode,
@@ -771,6 +773,8 @@ var index_default = plugin({
     diag,
     LockScreen,
     storage
-  }
+  },
+  enumerable: false
 });
-; const __plugin = (module.exports && module.exports.default) || module.exports; if (__plugin && typeof __plugin === 'object' && !__plugin.default) { try { __plugin.default = __plugin; } catch (ignored) {} } if (__plugin && typeof __plugin.start === 'function') { const __start = __plugin.start.bind(__plugin); __plugin.start = function (...args) { try { return __start(...args); } catch (error) { try { (args[0] && args[0].logger && args[0].logger.error) ? args[0].logger.error('[plugin] start failed', error) : console.error('[plugin] start failed', error); } catch (ignored) {} } }; } return __plugin; })()
+var index_default = plugin(definition);
+; const __plugin = (module.exports && module.exports.default) || module.exports; if (__plugin && (typeof __plugin === 'object' || typeof __plugin === 'function')) { try { Object.defineProperty(__plugin, 'default', { value: __plugin, enumerable: false, configurable: true }); } catch (ignored) { try { __plugin.default = __plugin; } catch (ignored2) {} } } if (__plugin && typeof __plugin.start === 'function') { const __start = __plugin.start.bind(__plugin); __plugin.start = function (...args) { try { return __start(...args); } catch (error) { try { (args[0] && args[0].logger && args[0].logger.error) ? args[0].logger.error('[plugin] start failed', error) : console.error('[plugin] start failed', error); } catch (ignored) {} } }; } return __plugin; })()
