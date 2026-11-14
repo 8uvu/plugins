@@ -27,8 +27,39 @@ var import_design = (function () { const __g = () => { try { return (valenced.di
 var import_finders = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get getModules() { return __g().getModules }, get lookupModule() { return __g().lookupModule }, get lookupModules() { return __g().lookupModules }, get waitForModules() { return __g().waitForModules } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_filters = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders && valenced.modules.finders.filters) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get withProps() { return __g().withProps }, get withoutProps() { return __g().withoutProps }, get withSingleProp() { return __g().withSingleProp }, get withName() { return __g().withName }, get withDependencies() { return __g().withDependencies }, get anyOf() { return __g().anyOf }, get allOf() { return __g().allOf }, get namespaceOnly() { return __g().namespaceOnly }, get createFilterGenerator() { return __g().createFilterGenerator }, get partial() { return __g().partial } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_patcher = (function () { const __g = () => { try { return (valenced.patcher) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get before() { return __g().before }, get after() { return __g().after }, get instead() { return __g().instead } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get View() { return __g().View }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get useState() { return __g().useState }, get createElement() { return __g().createElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native2 = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get View() { return __g().View }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get Appearance() { return __g().Appearance }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+
+// plugins/_shared/theme.ts
+var import_common = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.common) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Tokens() { return __g().Tokens }, get Logger() { return __g().Logger }, get Constants() { return __g().Constants } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get View() { return __g().View }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get Appearance() { return __g().Appearance }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+function activeBase() {
+  var _a, _b;
+  try {
+    if (((_b = (_a = import_react_native.Appearance) == null ? void 0 : _a.getColorScheme) == null ? void 0 : _b.call(_a)) === "light") return "light";
+  } catch {
+  }
+  return "dark";
+}
+function token(name) {
+  var _a, _b, _c, _d, _e;
+  try {
+    const module2 = import_common.Tokens;
+    if (!module2) return void 0;
+    const definition = (_a = module2 == null ? void 0 : module2.SemanticColor) == null ? void 0 : _a[name];
+    const resolve = (_c = (_b = module2 == null ? void 0 : module2.default) == null ? void 0 : _b.internal) == null ? void 0 : _c.resolveSemanticColor;
+    if (typeof resolve === "function" && definition) {
+      return resolve(activeBase(), definition);
+    }
+    const colours = (_e = (_d = module2 == null ? void 0 : module2.default) == null ? void 0 : _d.colors) == null ? void 0 : _e[name];
+    if (typeof colours === "string") return colours;
+    if (typeof definition === "string") return definition;
+  } catch {
+  }
+  return void 0;
+}
+
+// plugins/dev.8uvu.snippets/js/index.tsx
+var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get useState() { return __g().useState }, get createElement() { return __g().createElement }, get cloneElement() { return __g().cloneElement }, get isValidElement() { return __g().isValidElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsxs() { return __g().jsxs }, get jsx() { return __g().jsx }, get jsxDEV() { return __g().jsxDEV }, get Fragment() { return __g().Fragment } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULTS = { pairs: [], caseSensitive: false };
 var text = (value) => typeof value === "string" ? value : "";
@@ -103,18 +134,18 @@ var index_default = plugin({
     };
     const remove = (name) => save({ pairs: pairs.filter((pair) => clean(pair == null ? void 0 : pair.trigger) !== name) });
     const canAdd = clean(trigger).length > 0 && text(replacement).trim().length > 0;
-    const field = (label, value, onChange) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { marginVertical: 4 }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#9ba0a8", marginBottom: 2 }, children: label }),
+    const field = (label, value, onChange) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.View, { style: { marginVertical: 4 }, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_MUTED"), marginBottom: 2 }, children: label }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-        import_react_native.TextInput,
+        import_react_native2.TextInput,
         {
-          style: { color: "#ffffff", backgroundColor: "#232428", borderRadius: 8, padding: 8 },
+          style: { color: token("TEXT_NORMAL"), backgroundColor: token("BACKGROUND_TERTIARY"), borderRadius: 8, padding: 8 },
           value,
           onChangeText: onChange
         }
       )
     ] });
-    const body = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { padding: 16 }, children: [
+    const body = /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.View, { style: { padding: 16 }, children: [
       field("Trigger", trigger, setTrigger),
       field("Sends instead", replacement, setReplacement),
       D.Button ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.Button, { text: "Add snippet", onPress: add }) : (
@@ -124,33 +155,32 @@ var index_default = plugin({
         // drawn here in Discord's own style: blurple fill, bold white
         // label, dimmed while the fields are still empty.
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-          import_react_native.Pressable,
+          import_react_native2.Pressable,
           {
             accessibilityLabel: "Add snippet",
             accessibilityRole: "button",
             accessibilityState: { disabled: !canAdd },
             disabled: !canAdd,
             onPress: add,
-            android_ripple: { color: "#ffffff33" },
             style: ({ pressed }) => ({
               alignSelf: "flex-start",
               marginTop: 12,
               paddingVertical: 10,
               paddingHorizontal: 16,
               borderRadius: 4,
-              backgroundColor: !canAdd ? "#4e5058" : pressed ? "#4752C4" : "#5865F2"
+              backgroundColor: !canAdd ? token("BACKGROUND_MODIFIER_PRESSED") : pressed ? token("BRAND_560") : token("BRAND_500")
             }),
-            children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontSize: 14, fontWeight: "600" }, children: "Add snippet" })
+            children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_NORMAL"), fontSize: 14, fontWeight: "600" }, children: "Add snippet" })
           }
         )
       ),
-      pairs.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#9ba0a8", marginTop: 12 }, children: "No snippets yet." }) : pairs.map((pair) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { flexDirection: "row", alignItems: "center", marginTop: 10 }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", flex: 1 }, children: pair.trigger + " \u2192 " + pair.replacement }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityLabel: "Remove " + pair.trigger, onPress: () => remove(pair.trigger), children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ff6b6b" }, children: "Remove" }) })
+      pairs.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_MUTED"), marginTop: 12 }, children: "No snippets yet." }) : pairs.map((pair) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.View, { style: { flexDirection: "row", alignItems: "center", marginTop: 10 }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_NORMAL"), flex: 1 }, children: pair.trigger + " \u2192 " + pair.replacement }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Pressable, { accessibilityLabel: "Remove " + pair.trigger, onPress: () => remove(pair.trigger), children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_DANGER") }, children: "Remove" }) })
       ] }, pair.trigger))
     ] });
     if (D.TableRowGroup) {
-      return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.ScrollView, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(D.TableRowGroup, { title: "Snippets", children: [
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.ScrollView, { style: { paddingHorizontal: 16, paddingTop: 16, gap: 16 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(D.TableRowGroup, { title: "Snippets", children: [
         D.TableSwitchRow ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           D.TableSwitchRow,
           {
@@ -163,7 +193,7 @@ var index_default = plugin({
         body
       ] }) });
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.ScrollView, { children: body });
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.ScrollView, { children: body });
   }
 });
 ; const __plugin = (module.exports && module.exports.default) || module.exports; if (__plugin && typeof __plugin === 'object' && !__plugin.default) { try { __plugin.default = __plugin; } catch (ignored) {} } if (__plugin && typeof __plugin.start === 'function') { const __start = __plugin.start.bind(__plugin); __plugin.start = function (...args) { try { return __start(...args); } catch (error) { try { (args[0] && args[0].logger && args[0].logger.error) ? args[0].logger.error('[plugin] start failed', error) : console.error('[plugin] start failed', error); } catch (ignored) {} } }; } return __plugin; })()

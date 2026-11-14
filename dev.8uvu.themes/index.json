@@ -8,7 +8,7 @@
             "description": "Clean colour themes: Discord surface ladder, one accent, overlays untouched.",
             "author": "cenotaph",
             "channels": {
-                "latest": "2.0.0"
+                "latest": "2.0.1"
             },
             "versions": {
                 "1.0.0": {
@@ -47,6 +47,22 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.themes@2.0.0.zip",
                     "sha256": "fbb6fbc60a6a129a1ff62d86a17dc819f5c1b1199f369b2f6568e6f288714ede",
                     "size": 7747,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1"
+                        },
+                        "discord": {
+                            "version": "*"
+                        },
+                        "valenced.api.themes": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "2.0.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.themes@2.0.1.zip",
+                    "sha256": "11712cbd24cd052b86b779c6dd99cfc46c2a59c370867114dd823ea9447d36b6",
+                    "size": 8087,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1"

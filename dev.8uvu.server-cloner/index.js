@@ -31,7 +31,38 @@ var import_flux = (function () { const __g = () => { try { return (valenced.disc
 var import_design = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.design) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Design() { return __g().Design } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_finders = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get lookupModule() { return __g().lookupModule }, get lookupModules() { return __g().lookupModules }, get getModules() { return __g().getModules }, get waitForModules() { return __g().waitForModules } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_filters = (function () { const __g = () => { try { return (valenced.modules && valenced.modules.finders && valenced.modules.finders.filters) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get withProps() { return __g().withProps }, get withoutProps() { return __g().withoutProps }, get withSingleProp() { return __g().withSingleProp }, get withName() { return __g().withName }, get withDependencies() { return __g().withDependencies }, get anyOf() { return __g().anyOf }, get allOf() { return __g().allOf }, get namespaceOnly() { return __g().namespaceOnly }, get createFilterGenerator() { return __g().createFilterGenerator }, get partial() { return __g().partial } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get View() { return __g().View }, get Text() { return __g().Text }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get TextInput() { return __g().TextInput }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native2 = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get View() { return __g().View }, get Text() { return __g().Text }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get Appearance() { return __g().Appearance }, get TextInput() { return __g().TextInput }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+
+// plugins/_shared/theme.ts
+var import_common = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.common) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Tokens() { return __g().Tokens }, get Logger() { return __g().Logger }, get Constants() { return __g().Constants } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get View() { return __g().View }, get Text() { return __g().Text }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get Appearance() { return __g().Appearance }, get TextInput() { return __g().TextInput }, get Switch() { return __g().Switch }, get Image() { return __g().Image }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+function activeBase() {
+  var _a, _b;
+  try {
+    if (((_b = (_a = import_react_native.Appearance) == null ? void 0 : _a.getColorScheme) == null ? void 0 : _b.call(_a)) === "light") return "light";
+  } catch {
+  }
+  return "dark";
+}
+function token(name) {
+  var _a, _b, _c, _d, _e;
+  try {
+    const module2 = import_common.Tokens;
+    if (!module2) return void 0;
+    const definition = (_a = module2 == null ? void 0 : module2.SemanticColor) == null ? void 0 : _a[name];
+    const resolve = (_c = (_b = module2 == null ? void 0 : module2.default) == null ? void 0 : _b.internal) == null ? void 0 : _c.resolveSemanticColor;
+    if (typeof resolve === "function" && definition) {
+      return resolve(activeBase(), definition);
+    }
+    const colours = (_e = (_d = module2 == null ? void 0 : module2.default) == null ? void 0 : _d.colors) == null ? void 0 : _e[name];
+    if (typeof colours === "string") return colours;
+    if (typeof definition === "string") return definition;
+  } catch {
+  }
+  return void 0;
+}
+
+// plugins/dev.8uvu.server-cloner/js/index.tsx
 var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get useState() { return __g().useState }, get createElement() { return __g().createElement }, get cloneElement() { return __g().cloneElement }, get isValidElement() { return __g().isValidElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsxs() { return __g().jsxs }, get jsx() { return __g().jsx }, get jsxDEV() { return __g().jsxDEV }, get Fragment() { return __g().Fragment } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULT_OPTIONS = { guildSettings: true, roles: true, channels: true, permissions: true };
@@ -260,9 +291,9 @@ var index_default = plugin({
       const RadioGroup = D.TableRadioGroup;
       const RadioRow = D.TableRadioRow;
       if (!RadioGroup || !RadioRow) {
-        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { marginBottom: 12 }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#b5bac1", marginBottom: 4 }, children: title }),
-          entries.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityLabel: entry.name, onPress: () => onPick(entry.id), style: { paddingVertical: 6 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: value === entry.id ? "#5865f2" : "#ffffff" }, children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.View, { style: { marginBottom: 12 }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_MUTED"), marginBottom: 4 }, children: title }),
+          entries.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Pressable, { accessibilityLabel: entry.name, onPress: () => onPick(entry.id), style: { paddingVertical: 6 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.Text, { style: { color: value === entry.id ? token("BRAND_500") : token("TEXT_NORMAL") }, children: [
             value === entry.id ? "\u2713 " : "",
             entry.name
           ] }) }, entry.id))
@@ -292,7 +323,7 @@ var index_default = plugin({
     ] }) : null;
     const logBlock = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "Log", children: getLog().length ? getLog().slice(-10).reverse().map((entry, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: entry.ok ? "Done" : "Problem", subLabel: entry.text }, "log-" + index)) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRow, { label: "Nothing copied yet", subLabel: "Pick a source and a target, preview, then copy." }) });
     if (D.TableRowGroup && D.TableSwitchRow && D.TableRow && D.Button) {
-      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.ScrollView, { children: [
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.ScrollView, { style: { paddingHorizontal: 16, paddingTop: 16, gap: 16 }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(D.TableRowGroup, { title: "ServerCloner", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           D.TableRow,
           {
@@ -358,16 +389,16 @@ var index_default = plugin({
         logBlock()
       ] });
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { padding: 16 }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff", fontWeight: "bold", marginBottom: 8 }, children: "ServerCloner" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#9ba0a8", marginBottom: 8 }, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.View, { style: { padding: 16 }, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_NORMAL"), fontWeight: "bold", marginBottom: 8 }, children: "ServerCloner" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.Text, { style: { color: token("TEXT_MUTED"), marginBottom: 8 }, children: [
         source ? source.name : "No source picked",
         " \u2192 ",
         target ? target.name : "no target picked"
       ] }),
-      list.map((guild) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityLabel: guild.name, onPress: () => setSourceId(guild.id), style: { paddingVertical: 6 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: sourceId === guild.id ? "#5865f2" : "#ffffff" }, children: guild.name }) }, guild.id)),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Pressable, { accessibilityLabel: "Preview clone", onPress: preview, style: { padding: 12, backgroundColor: "#232428", borderRadius: 8, marginTop: 8 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: "#ffffff" }, children: "Preview clone" }) }),
-      plan ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.Text, { style: { color: "#ffffff", marginTop: 8 }, children: [
+      list.map((guild) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Pressable, { accessibilityLabel: guild.name, onPress: () => setSourceId(guild.id), style: { paddingVertical: 6 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: sourceId === guild.id ? token("BRAND_500") : token("TEXT_NORMAL") }, children: guild.name }) }, guild.id)),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Pressable, { accessibilityLabel: "Preview clone", onPress: preview, style: { padding: 12, backgroundColor: token("BACKGROUND_TERTIARY"), borderRadius: 8, marginTop: 8 }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: token("TEXT_NORMAL") }, children: "Preview clone" }) }),
+      plan ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.Text, { style: { color: token("TEXT_NORMAL"), marginTop: 8 }, children: [
         plan.roles.length,
         " roles, ",
         plan.channels.length,

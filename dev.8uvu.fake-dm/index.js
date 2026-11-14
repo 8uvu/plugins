@@ -44,7 +44,38 @@ var PathFinders = __toESM((function () { const __g = () => { try { return (valen
 var Metro = __toESM((function () { const __g = () => { try { return (valenced.modules && valenced.modules.metro) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get onModuleInitialized() { return __g().onModuleInitialized }, get onAnyModuleInitialized() { return __g().onAnyModuleInitialized }, get onModuleFirstRequired() { return __g().onModuleFirstRequired }, get onAnyModuleFirstRequired() { return __g().onAnyModuleFirstRequired } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })());
 var import_patcher = (function () { const __g = () => { try { return (valenced.patcher) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get after() { return __g().after }, get before() { return __g().before }, get instead() { return __g().instead } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var import_react = (function () { const __g = () => { try { return (valenced.react && valenced.react.React) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get useState() { return __g().useState }, get createElement() { return __g().createElement }, get isValidElement() { return __g().isValidElement }, get cloneElement() { return __g().cloneElement }, get Fragment() { return __g().Fragment }, get Component() { return __g().Component }, get memo() { return __g().memo }, get forwardRef() { return __g().forwardRef }, get createContext() { return __g().createContext }, get useEffect() { return __g().useEffect }, get useRef() { return __g().useRef }, get useMemo() { return __g().useMemo }, get useCallback() { return __g().useCallback }, get useReducer() { return __g().useReducer }, get useContext() { return __g().useContext }, get useLayoutEffect() { return __g().useLayoutEffect } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
-var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Image() { return __g().Image }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get View() { return __g().View }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get Switch() { return __g().Switch }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Appearance() { return __g().Appearance }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native2 = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Image() { return __g().Image }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get View() { return __g().View }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get Appearance() { return __g().Appearance }, get Switch() { return __g().Switch }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+
+// plugins/_shared/theme.ts
+var import_common = (function () { const __g = () => { try { return (valenced.discord && valenced.discord.common) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Tokens() { return __g().Tokens }, get Logger() { return __g().Logger }, get Constants() { return __g().Constants } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+var import_react_native = (function () { const __g = () => { try { return (valenced.react && valenced.react.ReactNative) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get Image() { return __g().Image }, get Text() { return __g().Text }, get TextInput() { return __g().TextInput }, get View() { return __g().View }, get Pressable() { return __g().Pressable }, get ScrollView() { return __g().ScrollView }, get Appearance() { return __g().Appearance }, get Switch() { return __g().Switch }, get Modal() { return __g().Modal }, get FlatList() { return __g().FlatList }, get StyleSheet() { return __g().StyleSheet }, get Platform() { return __g().Platform }, get Dimensions() { return __g().Dimensions }, get Alert() { return __g().Alert }, get Linking() { return __g().Linking }, get Animated() { return __g().Animated }, get Vibration() { return __g().Vibration }, get RefreshControl() { return __g().RefreshControl }, get SafeAreaView() { return __g().SafeAreaView }, get TouchableOpacity() { return __g().TouchableOpacity }, get ActivityIndicator() { return __g().ActivityIndicator }, get KeyboardAvoidingView() { return __g().KeyboardAvoidingView } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
+function activeBase() {
+  var _a, _b;
+  try {
+    if (((_b = (_a = import_react_native.Appearance) == null ? void 0 : _a.getColorScheme) == null ? void 0 : _b.call(_a)) === "light") return "light";
+  } catch {
+  }
+  return "dark";
+}
+function token(name) {
+  var _a, _b, _c, _d, _e;
+  try {
+    const module2 = import_common.Tokens;
+    if (!module2) return void 0;
+    const definition = (_a = module2 == null ? void 0 : module2.SemanticColor) == null ? void 0 : _a[name];
+    const resolve = (_c = (_b = module2 == null ? void 0 : module2.default) == null ? void 0 : _b.internal) == null ? void 0 : _c.resolveSemanticColor;
+    if (typeof resolve === "function" && definition) {
+      return resolve(activeBase(), definition);
+    }
+    const colours = (_e = (_d = module2 == null ? void 0 : module2.default) == null ? void 0 : _d.colors) == null ? void 0 : _e[name];
+    if (typeof colours === "string") return colours;
+    if (typeof definition === "string") return definition;
+  } catch {
+  }
+  return void 0;
+}
+
+// plugins/dev.8uvu.fake-dm/js/index.tsx
 var import_jsx_runtime = (function () { const __g = () => { try { return ((valenced.react && (valenced.react.ReactJSXRuntime || valenced.react.jsxRuntime))) || {}; } catch (error) { return {}; } }; const __ns = { get default() { return __g().default }, get jsx() { return __g().jsx }, get jsxs() { return __g().jsxs }, get Fragment() { return __g().Fragment }, get jsxDEV() { return __g().jsxDEV } }; return typeof Proxy === 'function' ? new Proxy(__ns, { get(target, key) { return key in target ? target[key] : __g()[key]; } }) : __ns; })();
 var DEFAULTS = {
   text: "hello",
@@ -606,7 +637,7 @@ function clearNow() {
 function FakeIcon({ style, size } = {}) {
   try {
     const side = typeof size === "number" && size > 0 ? size : 24;
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Image, { source: { uri: ICON }, style: [{ width: side, height: side }, style] });
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Image, { source: { uri: ICON }, style: [{ width: side, height: side }, style] });
   } catch {
     return null;
   }
@@ -664,7 +695,7 @@ function Editor({ title, fields, onSend }) {
   const RadioRow = D.TableRadioRow;
   if (!Alert) return null;
   const label = (field) => (0, import_react.createElement)(
-    import_react_native.Text,
+    import_react_native2.Text,
     { style: { color: PALETTE.muted, fontSize: 12, fontWeight: "700", letterSpacing: 0.4, marginBottom: 6 } },
     field.label
   );
@@ -677,7 +708,7 @@ function Editor({ title, fields, onSend }) {
     const typed = (next) => setQueries((prev) => ({ ...prev, [field.key]: next }));
     const needle = query.trim().toLowerCase();
     const shown = needle ? people.filter((person) => person.name.toLowerCase().includes(needle) || person.id.includes(needle)) : people;
-    const search = (0, import_react.createElement)(import_react_native.TextInput, {
+    const search = (0, import_react.createElement)(import_react_native2.TextInput, {
       key: field.key + "-search",
       value: query,
       onChangeText: typed,
@@ -707,12 +738,12 @@ function Editor({ title, fields, onSend }) {
       )
     );
     const byHand = () => (0, import_react.createElement)(
-      import_react_native.View,
+      import_react_native2.View,
       { key: field.key + "-rows", style: { backgroundColor: PALETTE.card, borderRadius: 12, padding: 12 } },
       label(field),
       ...shown.length ? shown.map(
         (person) => (0, import_react.createElement)(
-          import_react_native.Pressable,
+          import_react_native2.Pressable,
           {
             key: person.id,
             accessibilityRole: "button",
@@ -720,34 +751,34 @@ function Editor({ title, fields, onSend }) {
             onPress: () => chose(person.id),
             style: { flexDirection: "row", alignItems: "center", paddingVertical: 9 }
           },
-          (0, import_react.createElement)(import_react_native.Text, { style: { color: PALETTE.text, flex: 1 } }, person.name),
+          (0, import_react.createElement)(import_react_native2.Text, { style: { color: PALETTE.text, flex: 1 } }, person.name),
           (0, import_react.createElement)(
-            import_react_native.Text,
+            import_react_native2.Text,
             { style: { color: chosen === person.id ? PALETTE.accent : PALETTE.muted } },
             chosen === person.id ? "\u2713" : ""
           )
         )
-      ) : [(0, import_react.createElement)(import_react_native.Text, { key: "nobody", style: { color: PALETTE.muted } }, "Nobody here yet")]
+      ) : [(0, import_react.createElement)(import_react_native2.Text, { key: "nobody", style: { color: PALETTE.muted } }, "Nobody here yet")]
     );
     const body = RadioGroup && RadioRow && people.length ? rows(RadioGroup, RadioRow) : byHand();
     return (0, import_react.createElement)(
-      import_react_native.View,
+      import_react_native2.View,
       { key: field.key, style: { marginTop: 12 } },
       RadioGroup && RadioRow && people.length ? null : null,
       search,
       body,
       needle && !shown.length ? (0, import_react.createElement)(
-        import_react_native.Text,
+        import_react_native2.Text,
         { key: field.key + "-none", style: { color: PALETTE.muted, fontSize: 13, marginTop: 6 } },
         'Nobody matches "' + query.trim() + '".'
       ) : null
     );
   };
   const textField = (field) => (0, import_react.createElement)(
-    import_react_native.View,
+    import_react_native2.View,
     { key: field.key, style: { marginTop: 12 } },
     label(field),
-    (0, import_react.createElement)(import_react_native.TextInput, {
+    (0, import_react.createElement)(import_react_native2.TextInput, {
       value: values[field.key],
       onChangeText: (next) => setValues((prev) => ({ ...prev, [field.key]: next })),
       multiline: !!field.multiline,
@@ -766,7 +797,7 @@ function Editor({ title, fields, onSend }) {
     })
   );
   const content = (0, import_react.createElement)(
-    import_react_native.View,
+    import_react_native2.View,
     { style: { width: "100%" } },
     ...fields.map((field) => field.people ? peoplePicker(field) : textField(field))
   );
@@ -983,7 +1014,7 @@ function buildButton() {
     }
     state.buttonKind = "plain";
     return (0, import_react.createElement)(
-      import_react_native.Pressable,
+      import_react_native2.Pressable,
       { accessibilityLabel: "FakeDM", accessibilityRole: "button", onPress: press, style: { paddingHorizontal: 10, paddingVertical: 6 } },
       (0, import_react.createElement)(FakeIcon, {})
     );
@@ -1345,11 +1376,21 @@ function patchChatInput(cleanup, logger) {
   cleanup(() => clearInterval(timer));
 }
 var PALETTE = {
-  text: "#ffffff",
-  muted: "#b5bac1",
-  accent: "#5865F2",
-  card: "#1e1f22",
-  input: "#2b2d31"
+  get text() {
+    return token("TEXT_NORMAL");
+  },
+  get muted() {
+    return token("TEXT_MUTED");
+  },
+  get accent() {
+    return token("BRAND_500");
+  },
+  get card() {
+    return token("BACKGROUND_SECONDARY");
+  },
+  get input() {
+    return token("BACKGROUND_TERTIARY");
+  }
 };
 var WHEN_CHOICES = [
   { label: "Now", minutes: "0" },
@@ -1371,7 +1412,7 @@ function Panel({ api } = {}) {
   const RadioGroup = D.TableRadioGroup;
   const RadioRow = D.TableRadioRow;
   const DText = D.Text;
-  const StackView = (_d = D.Stack) != null ? _d : import_react_native.View;
+  const StackView = (_d = D.Stack) != null ? _d : import_react_native2.View;
   const set = (patch) => {
     var _a2, _b2, _c2;
     state.cfg = { ...state.cfg, ...patch };
@@ -1421,30 +1462,30 @@ function Panel({ api } = {}) {
     var _a2, _b2;
     return (_b2 = (_a2 = people.find((p) => p.id === id)) == null ? void 0 : _a2.name) != null ? _b2 : "nobody";
   };
-  const section = (title, children) => Group ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Group, { title, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.View, { style: { gap: 10, padding: 16 }, children }) }, title) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: PALETTE.card, borderRadius: 12, padding: 12, gap: 10 }, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.muted, fontSize: 12, fontWeight: "700", letterSpacing: 0.4 }, children: title }),
+  const section = (title, children) => Group ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Group, { title, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.View, { style: { gap: 10, padding: 16 }, children }) }, title) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.View, { style: { backgroundColor: PALETTE.card, borderRadius: 12, padding: 12, gap: 10 }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: PALETTE.muted, fontSize: 12, fontWeight: "700", letterSpacing: 0.4 }, children: title }),
     children
   ] }, title);
-  const info = (label, subLabel) => Row ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label, subLabel }, label) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { paddingVertical: 6 }, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.text, fontWeight: "600" }, children: label }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.muted, fontSize: 12 }, children: subLabel })
+  const info = (label, subLabel) => Row ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label, subLabel }, label) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.View, { style: { paddingVertical: 6 }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: PALETTE.text, fontWeight: "600" }, children: label }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: PALETTE.muted, fontSize: 12 }, children: subLabel })
   ] }, label);
-  const hint = (text) => DText ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DText, { variant: "text-xs/medium", children: text }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.muted, fontSize: 12 }, children: text });
+  const hint = (text) => DText ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DText, { variant: "text-xs/medium", children: text }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: PALETTE.muted, fontSize: 12 }, children: text });
   const action = (label, subLabel, onPress) => Row ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { label, subLabel, arrow: true, onPress }, label) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-    import_react_native.Pressable,
+    import_react_native2.Pressable,
     {
       accessibilityRole: "button",
       accessibilityLabel: label,
       onPress,
       style: { backgroundColor: PALETTE.input, borderRadius: 10, paddingVertical: 12, alignItems: "center" },
-      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.text, fontWeight: "700" }, children: label })
+      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: PALETTE.text, fontWeight: "700" }, children: label })
     },
     label
   );
   const field = (key, placeholder, options = {}) => {
     var _a2;
     return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      import_react_native.TextInput,
+      import_react_native2.TextInput,
       {
         value: String((_a2 = settings[key]) != null ? _a2 : ""),
         onChangeText: (value) => set({ [key]: value }),
@@ -1465,22 +1506,22 @@ function Panel({ api } = {}) {
       key
     );
   };
-  const pick = (title, value, entries, onPick) => RadioGroup && RadioRow && entries.length ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RadioGroup, { title, value, onChange: onPick, children: entries.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RadioRow, { label: entry.label, subLabel: entry.subLabel, value: entry.value }, entry.value)) }, title) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native.View, { style: { backgroundColor: PALETTE.card, borderRadius: 12, padding: 12, gap: 2 }, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.muted, fontSize: 12, fontWeight: "700", letterSpacing: 0.4 }, children: title }),
+  const pick = (title, value, entries, onPick) => RadioGroup && RadioRow && entries.length ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RadioGroup, { title, value, onChange: onPick, children: entries.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RadioRow, { label: entry.label, subLabel: entry.subLabel, value: entry.value }, entry.value)) }, title) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_react_native2.View, { style: { backgroundColor: PALETTE.card, borderRadius: 12, padding: 12, gap: 2 }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: PALETTE.muted, fontSize: 12, fontWeight: "700", letterSpacing: 0.4 }, children: title }),
     entries.length ? entries.map((entry) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
-      import_react_native.Pressable,
+      import_react_native2.Pressable,
       {
         accessibilityRole: "button",
         accessibilityLabel: entry.label,
         onPress: () => onPick(entry.value),
         style: { flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 9 },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.text, flex: 1 }, children: entry.label }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: value === entry.value ? PALETTE.accent : PALETTE.muted }, children: value === entry.value ? "\u2713" : "" })
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: PALETTE.text, flex: 1 }, children: entry.label }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: value === entry.value ? PALETTE.accent : PALETTE.muted }, children: value === entry.value ? "\u2713" : "" })
         ]
       },
       entry.value
-    )) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { color: PALETTE.muted, paddingVertical: 9 }, children: "Nobody here yet" })
+    )) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { color: PALETTE.muted, paddingVertical: 9 }, children: "Nobody here yet" })
   ] }, title);
   const personEntries = (selected, idle, picked) => people.map((person) => ({
     value: person.id,
@@ -1633,7 +1674,7 @@ function Panel({ api } = {}) {
     reaction: reactionPage,
     diag: diagPage
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.ScrollView, { contentContainerStyle: { padding: 16, paddingBottom: 80 }, keyboardShouldPersistTaps: "handled", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(StackView, { ...D.Stack ? { spacing: 24 } : { style: { gap: 24 } }, children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.ScrollView, { contentContainerStyle: { paddingHorizontal: 16, paddingTop: 16, gap: 16, paddingBottom: 80 }, keyboardShouldPersistTaps: "handled", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(StackView, { ...D.Stack ? { spacing: 24 } : { style: { gap: 24 } }, children: [
     section(
       "Chat",
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
@@ -1678,14 +1719,14 @@ function SettingsComponent(props = {}) {
   try {
     return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Panel, { ...props });
   } catch {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { padding: 16 }, children: "FakeDM could not draw its settings." });
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { padding: 16 }, children: "FakeDM could not draw its settings." });
   }
 }
 function FakeScreen(props) {
   try {
     return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SettingsComponent, { ...props });
   } catch {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native.Text, { style: { padding: 16 }, children: "FakeDM could not draw its settings." });
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_native2.Text, { style: { padding: 16 }, children: "FakeDM could not draw its settings." });
   }
 }
 function installSettingsEntry(cleanup, logger) {

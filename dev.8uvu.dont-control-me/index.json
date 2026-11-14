@@ -8,7 +8,7 @@
             "description": "Keeps you in your voice channel.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.1.0"
+                "latest": "1.1.1"
             },
             "versions": {
                 "1.0.0": {
@@ -67,6 +67,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.dont-control-me@1.1.0.zip",
                     "sha256": "f36801163644606144d7e1e622662d5d6de91a7660dc33ea9938000dfe5b0019",
                     "size": 4527,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.1.1": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.dont-control-me@1.1.1.zip",
+                    "sha256": "81329429bb1f7cb135c9da956014dde1b2d3981fdd9df1cb664e9bd2274b6ed9",
+                    "size": 4917,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
