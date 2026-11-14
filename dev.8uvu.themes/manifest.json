@@ -4,7 +4,7 @@
     "name": "Cenotaph Themes",
     "description": "Clean colour themes: Discord surface ladder, one accent, overlays untouched.",
     "author": "cenotaph",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "dependencies": {
         "valenced.api": {
             "version": ">=1"

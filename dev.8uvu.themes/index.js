@@ -187,7 +187,7 @@ function colorsFor(palette) {
   }
   return { semantic };
 }
-var index_default = plugin({
+var index_default = {
   jsonStorage: { load: true, default: { note: "themes" } },
   preInit({ themes }) {
     var _a, _b, _c;
@@ -247,5 +247,5 @@ var index_default = plugin({
       ] }, palette.id))
     ] });
   }
-});
+};
 ; const __plugin = (module.exports && module.exports.default) || module.exports; if (__plugin && (typeof __plugin === 'object' || typeof __plugin === 'function')) { try { Object.defineProperty(__plugin, 'default', { value: __plugin, enumerable: false, configurable: true }); } catch (ignored) { try { __plugin.default = __plugin; } catch (ignored2) {} } } if (__plugin && typeof __plugin.start === 'function') { const __start = __plugin.start.bind(__plugin); __plugin.start = function (...args) { try { return __start(...args); } catch (error) { try { (args[0] && args[0].logger && args[0].logger.error) ? args[0].logger.error('[plugin] start failed', error) : console.error('[plugin] start failed', error); } catch (ignored) {} } }; } return { default: __plugin }; })()

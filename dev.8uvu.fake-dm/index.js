@@ -1761,7 +1761,7 @@ function installSettingsEntry(cleanup, logger) {
     (_b = logger == null ? void 0 : logger.error) == null ? void 0 : _b.call(logger, "[FakeDM] settings registration failed", error);
   }
 }
-var index_default = plugin({
+var index_default = {
   jsonStorage: { load: true, default: DEFAULTS },
   // Nothing in here may throw: an exception escaping start is what turns a
   // plugin bug into a client crash, so each step is sealed on its own.
@@ -1830,5 +1830,5 @@ var index_default = plugin({
     sender,
     resolvePerson
   }
-});
+};
 ; const __plugin = (module.exports && module.exports.default) || module.exports; if (__plugin && (typeof __plugin === 'object' || typeof __plugin === 'function')) { try { Object.defineProperty(__plugin, 'default', { value: __plugin, enumerable: false, configurable: true }); } catch (ignored) { try { __plugin.default = __plugin; } catch (ignored2) {} } } if (__plugin && typeof __plugin.start === 'function') { const __start = __plugin.start.bind(__plugin); __plugin.start = function (...args) { try { return __start(...args); } catch (error) { try { (args[0] && args[0].logger && args[0].logger.error) ? args[0].logger.error('[plugin] start failed', error) : console.error('[plugin] start failed', error); } catch (ignored) {} } }; } return { default: __plugin }; })()

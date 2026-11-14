@@ -4,7 +4,7 @@
     "name": "Clean URLs",
     "description": "Strips tracking parameters from links.",
     "author": "cenotaph",
-    "version": "1.1.6",
+    "version": "1.1.7",
     "dependencies": {
         "valenced.api": {
             "version": ">=1 <2"

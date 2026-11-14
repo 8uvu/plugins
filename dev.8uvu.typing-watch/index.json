@@ -8,7 +8,7 @@
             "description": "Remembers who started typing, in case the indicator vanished before you looked.",
             "author": "cenotaph",
             "channels": {
-                "latest": "1.0.7"
+                "latest": "1.0.8"
             },
             "versions": {
                 "1.0.0": {
@@ -106,6 +106,19 @@
                     "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-watch@1.0.7.zip",
                     "sha256": "a64071fb301716972939c7ee94b893c810cb5175727944a3baffe7e18ef4ac28",
                     "size": 3698,
+                    "dependencies": {
+                        "valenced.api": {
+                            "version": ">=1 <2"
+                        },
+                        "discord": {
+                            "version": "*"
+                        }
+                    }
+                },
+                "1.0.8": {
+                    "url": "https://8uvu.github.io/plugins/pool/dev.8uvu.typing-watch@1.0.8.zip",
+                    "sha256": "e9c38fe8016986f59a465af4e6ff811bc6dcb789e86fe7ae890872489f3debbd",
+                    "size": 3697,
                     "dependencies": {
                         "valenced.api": {
                             "version": ">=1 <2"
